@@ -1,0 +1,32 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (too large for Git — keep on Drive)
+data/raw/
+data/processed/*.pkl
+data/processed/*.csv
+
+# Trained models
+*.pt
+*.pth
+
+# Results (optional — keep figures/tables out if large)
+results/figures/*.png
+results/figures/*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code (optional)
+.vscode/
+.cluade/
