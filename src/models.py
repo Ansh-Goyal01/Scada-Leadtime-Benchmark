@@ -544,6 +544,15 @@ def get_all_models(config: dict) -> list:
             detectors.append(OneClassSVMDetector(**p))
         elif method == "lstm_ae":
             detectors.append(LSTMAEDetector(**p))
+        elif method == "rms_trend":
+            from src.baselines_extra import RMSTrendDetector
+            detectors.append(RMSTrendDetector(**p))
+        elif method == "spectral_kurtosis":
+            from src.baselines_extra import SpectralKurtosisDetector
+            detectors.append(SpectralKurtosisDetector(**p))
+        elif method == "deep_svdd":
+            from src.baselines_extra import DeepSVDDDetector
+            detectors.append(DeepSVDDDetector(**p))
         else:
             logger.warning(f"Unknown method '{method}' — skipping.")
 

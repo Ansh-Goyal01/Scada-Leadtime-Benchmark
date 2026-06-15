@@ -238,6 +238,155 @@ def build_feature_matrix(feat_df: pd.DataFrame,
     return X, feature_names, feat_df.index
 
 
+import re
+
+
+def extract_invariant_features(df: pd.DataFrame,
+                               window_size: int = 10,
+                               overlap: float = 0.5,
+                               channel_aggs: tuple = ("mean", "max"),
+                               window_summaries: tuple = ("mean", "std", "max", "slope"),
+                               exclude_cols: tuple = ("hours_to_failure",)) -> pd.DataFrame:
+    """
+    Channel-count-INVARIANT rolling features (fixes W4 p≫n + cross-dataset comparability).
+
+    The legacy extract_rolling_features treats every per-snapshot stat column as an
+    independent "channel" and cross-correlates all pairs, producing 445 features for a
+    4-channel run and 1465 for an 8-channel run (p ≫ n) and a feature dimension that
+    DIFFERS with channel count (so cross-run/cross-dataset pooling is ill-posed).
+
+    This extractor instead:
+      1. Groups snapshot columns into stat FAMILIES by stripping the trailing `_ch{n}`
+         (rms, kurt, skew, p2p, crest, var, and any spectral families like sk_max,
+         env_BPFO, band_hi, ...).
+      2. Collapses each family ACROSS physical channels into a fixed set of channel
+         aggregates (default mean + max — the worst-channel max is the classic fault
+         indicator), giving series that do NOT depend on the channel count.
+      3. Summarises each aggregated series over the rolling window (mean, std, max, and
+         linear-trend slope), plus one cross-channel coherence feature (mean pairwise
+         correlation of the physical rms channels within the window).
+
+    The result has a FIXED, modest dimensionality regardless of whether the asset has
+    2, 4, or 8 channels — directly comparable across IMS / ONGC / XJTU / FEMTO.
+
+    Feature count (time-domain, defaults): 6 families × 2 aggs × 4 summaries + 1 = 49.
+    """
+    cols = [c for c in df.columns if c not in exclude_cols]
+
+    # 1. group into families by stripping _ch{n}
+    families: dict = {}
+    plain: list = []
+    for c in cols:
+        m = re.match(r"^(.*)_ch(\d+)$", c)
+        if m:
+            families.setdefault(m.group(1), []).append(c)
+        else:
+            plain.append(c)
+
+    # 2. channel-aggregate each family into fixed series
+    agg_cols: dict = {}
+    for fam, fcols in families.items():
+        sub = df[fcols]
+        for agg in channel_aggs:
+            if agg == "mean":
+                s = sub.mean(axis=1)
+            elif agg == "max":
+                s = sub.max(axis=1)
+            elif agg == "min":
+                s = sub.min(axis=1)
+            elif agg == "std":
+                s = sub.std(axis=1) if sub.shape[1] > 1 else pd.Series(0.0, index=df.index)
+            else:
+                raise ValueError(f"Unknown channel agg {agg!r}")
+            agg_cols[f"{fam}_ch{agg}"] = s
+    for c in plain:                       # non-channel columns kept as single series
+        agg_cols[c] = df[c]
+    agg_df = pd.DataFrame(agg_cols)
+
+    rms_cols = [c for c in df.columns if re.match(r"^rms_ch\d+$", c)]
+
+    # 3. rolling-window summaries
+    values = agg_df.values
+    names = list(agg_df.columns)
+    timestamps = df.index
+    rms_idx = [df.columns.get_loc(c) for c in rms_cols]
+    rms_vals = df[rms_cols].values if rms_cols else None
+
+    step = max(1, int(window_size * (1.0 - overlap)))
+    n_windows = (len(values) - window_size) // step + 1
+    if n_windows <= 0:
+        raise ValueError(
+            f"Not enough data: {len(values)} rows with window_size={window_size}."
+        )
+
+    x_axis = np.arange(window_size, dtype=np.float64)
+    x_centered = x_axis - x_axis.mean()
+    x_ss = (x_centered ** 2).sum() or 1.0
+
+    records, win_ts = [], []
+    for w in range(n_windows):
+        s = w * step
+        e = s + window_size
+        win = values[s:e, :]
+        center_ts = timestamps[s + window_size // 2]
+        row = {}
+        for j, nm in enumerate(names):
+            col = win[:, j].astype(np.float64)
+            for summ in window_summaries:
+                if summ == "mean":
+                    row[f"{nm}_wmean"] = float(np.nanmean(col))
+                elif summ == "std":
+                    row[f"{nm}_wstd"] = float(np.nanstd(col))
+                elif summ == "max":
+                    row[f"{nm}_wmax"] = float(np.nanmax(col))
+                elif summ == "slope":
+                    cc = np.nan_to_num(col - np.nanmean(col))
+                    row[f"{nm}_wslope"] = float((x_centered * cc).sum() / x_ss)
+                else:
+                    raise ValueError(f"Unknown window summary {summ!r}")
+        # cross-channel coherence: mean pairwise corr of physical rms channels in window
+        if rms_vals is not None and len(rms_idx) > 1:
+            wr = rms_vals[s:e, :]
+            with np.errstate(invalid="ignore", divide="ignore"):
+                cmat = np.corrcoef(wr.T)
+            iu = np.triu_indices(cmat.shape[0], k=1)
+            row["rms_coherence"] = float(np.nanmean(cmat[iu])) if cmat.ndim == 2 else 0.0
+        else:
+            row["rms_coherence"] = 0.0
+        records.append(row)
+        win_ts.append(center_ts)
+
+    feat_df = pd.DataFrame(records, index=pd.DatetimeIndex(win_ts)).fillna(0.0)
+
+    if "hours_to_failure" in df.columns:
+        htf = df["hours_to_failure"].reindex(feat_df.index, method="nearest")
+        feat_df["hours_to_failure"] = htf.values
+
+    logger.info(
+        "Invariant features: %d windows × %d features (channel-count-invariant)",
+        n_windows, feat_df.shape[1] - ("hours_to_failure" in feat_df.columns),
+    )
+    return feat_df
+
+
+def select_top_k_features(X_train: np.ndarray,
+                          feature_names: List[str],
+                          k: int = 50,
+                          var_floor: float = 1e-8) -> List[int]:
+    """
+    Unsupervised, leakage-free feature selection: drop near-constant columns (training
+    variance < ``var_floor``) then keep the top-``k`` by training variance. Returns the
+    selected column INDICES (fit on train, applied to cal/test). Guarantees p < n when
+    k < n_train, removing the residual p≫n degeneracy after the invariant schema.
+    """
+    var = np.nanvar(X_train, axis=0)
+    keep = np.where(var >= var_floor)[0]
+    if len(keep) == 0:
+        return list(range(min(k, X_train.shape[1])))
+    order = keep[np.argsort(var[keep])[::-1]]
+    return sorted(order[:min(k, len(order))].tolist())
+
+
 def get_feature_subset(X: np.ndarray,
                        feature_names: List[str],
                        prefix: str) -> tuple:

@@ -42,7 +42,7 @@ from src.config import (
 from src.models import get_all_models
 from src.lead_time import evaluate_all_methods
 from src.onset import onset_for_run
-from src.sampling import derive_counts
+from src.sampling import derive_counts, load_pipeline_controlled
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +98,7 @@ def run_benchmark(dataset: str = "IMS",
                   modes: list = None,
                   factors: list = None,
                   far_budget: float = DEFAULT_FAR_BUDGET,
+                  control: bool = False,
                   save: bool = True) -> pd.DataFrame:
     """
     Run the full (run × mode × factor × seed × method) benchmark with onset-relative,
@@ -141,7 +142,7 @@ def run_benchmark(dataset: str = "IMS",
             for factor in factors:
                 c = derive_counts(base_min, factor, window_minutes,
                                   persistence_minutes, overlap, min_window_rows)
-                if c["window_floored"]:
+                if c["window_floored"] and not control:
                     logger.warning("[%s] mode=%s factor=%d: window floored to %d rows",
                                    run_name, mode, factor, c["window_rows"])
 
@@ -152,12 +153,23 @@ def run_benchmark(dataset: str = "IMS",
                     if not methods_this_seed:
                         continue
                     try:
-                        pipe = load_pipeline(
-                            run_name,
-                            window_size=c["window_rows"],
-                            downsample_factor=factor,
-                            downsample_mode=dmode,
-                        )
+                        if control:
+                            # CONTROLLED path: feature-level resampling — window content and
+                            # alarm persistence held constant; only the logging interval changes.
+                            pipe = load_pipeline_controlled(run_name, factor=factor, mode=dmode)
+                            persistence_windows = THRESHOLD["alarm_persistence"]
+                            window_rows = pipe["window_size_used"]
+                            window_floored = False
+                        else:
+                            pipe = load_pipeline(
+                                run_name,
+                                window_size=c["window_rows"],
+                                downsample_factor=factor,
+                                downsample_mode=dmode,
+                            )
+                            persistence_windows = c["persistence_windows"]
+                            window_rows = c["window_rows"]
+                            window_floored = c["window_floored"]
                     except Exception as e:
                         logger.error("[%s] load failed mode=%s factor=%d: %s",
                                      run_name, mode, factor, e)
@@ -171,7 +183,7 @@ def run_benchmark(dataset: str = "IMS",
                         normal_period_fraction=SPLIT["normal_period_fraction"],
                         threshold_strategy=THRESHOLD["strategy"],
                         threshold_percentile=THRESHOLD["percentile"],
-                        alarm_persistence=c["persistence_windows"],
+                        alarm_persistence=persistence_windows,
                         t_onset=onset, far_budget=far_budget,
                         X_cal=pipe.get("X_cal"),
                     )
@@ -192,9 +204,10 @@ def run_benchmark(dataset: str = "IMS",
                             "far_legacy_pct": r["FAR_pct"],
                             "valid_alarm": r["valid_alarm"],
                             "n_test_windows": len(pipe["ts_test"]),
-                            "window_rows": c["window_rows"],
-                            "persistence_windows": c["persistence_windows"],
-                            "window_floored": c["window_floored"],
+                            "window_rows": window_rows,
+                            "persistence_windows": persistence_windows,
+                            "window_floored": window_floored,
+                            "control": control,
                             "onset_method": info["onset_method"],
                         })
                 logger.info("[%s] mode=%s factor=%d (~%.0f min) done",
@@ -332,6 +345,8 @@ def main():
     ap.add_argument("--dataset", default="IMS")
     ap.add_argument("--seeds", default=None, help="comma-separated, e.g. 42,1,7")
     ap.add_argument("--far-budget", type=float, default=DEFAULT_FAR_BUDGET)
+    ap.add_argument("--control", action="store_true",
+                    help="controlled feature-level sampling sweep (W7 fix)")
     ap.add_argument("--quick", action="store_true", help="2nd_test only, factors 1,2,10")
     args = ap.parse_args()
 
@@ -340,7 +355,8 @@ def main():
     factors = [1, 2, 10] if args.quick else None
 
     df = run_benchmark(dataset=args.dataset, runs=runs, seeds=seeds,
-                       factors=factors, far_budget=args.far_budget, save=True)
+                       factors=factors, far_budget=args.far_budget,
+                       control=args.control, save=True)
     if df.empty:
         print("No results produced.")
         return

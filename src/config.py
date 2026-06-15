@@ -58,6 +58,30 @@ DATASET = {
     },
 }
 
+# ─── Bearing Geometry (for spectral defect frequencies, src/spectral_features.py) ─
+# Stored as plain dicts; the loader constructs BearingGeometry(**geom) at use time
+# (keeps config import-light — no dependency on the spectral module).
+DATASETS_GEOMETRY = {
+    "IMS": {   # Rexnord ZA-2115 double-row, shaft 2000 RPM
+        "geom": {"n_balls": 16, "ball_diameter_mm": 8.4,
+                 "pitch_diameter_mm": 71.5, "contact_angle_deg": 15.17},
+        "shaft_speed_hz": 2000.0 / 60.0,        # 33.333 Hz
+        "fs": 20480.0,
+    },
+    "XJTU-SY": {  # LDK UER204; shaft speed varies per operating condition
+        "geom": {"n_balls": 8, "ball_diameter_mm": 7.92,
+                 "pitch_diameter_mm": 34.55, "contact_angle_deg": 0.0},
+        "shaft_speed_hz": {"35Hz": 35.0, "37.5Hz": 37.5, "40Hz": 40.0},
+        "fs": 25600.0,
+    },
+    "FEMTO": {  # PRONOSTIA; shaft speed per condition
+        "geom": {"n_balls": 13, "ball_diameter_mm": 3.5,
+                 "pitch_diameter_mm": 25.6, "contact_angle_deg": 0.0},
+        "shaft_speed_hz": {"cond1": 30.0, "cond2": 27.5, "cond3": 25.0},
+        "fs": 25600.0,
+    },
+}
+
 # ─── Feature Extraction ───────────────────────────────────────────────────────
 FEATURES = {
     "window_size": 10,         # samples per rolling window
@@ -73,6 +97,17 @@ FEATURES = {
     ],
     "include_cross_channel": True,   # correlation between channel pairs
     "channels_to_use": [0, 1, 2, 3, 4, 5, 6, 7],   # use all 8
+    "use_spectral": False,           # augment snapshots with spectral/envelope features
+                                     # (raw-waveform datasets only; cached to *_spectral.parquet)
+
+    # Feature schema (W4 fix). "invariant" = channel-count-invariant aggregation →
+    # fixed, low-dim, cross-dataset-comparable feature space (default). "legacy" = the
+    # original stats-of-stats + all-pairs correlations (445/1465 dims; p≫n — kept for
+    # back-compat and the appendix comparison only).
+    "mode": "invariant",
+    "select_top_k": 50,              # train-fit variance top-k cap (guarantees p<n)
+    "invariant_channel_aggs":     ["mean", "max"],
+    "invariant_window_summaries": ["mean", "std", "max", "slope"],
 }
 
 # ─── Train / Test Split ───────────────────────────────────────────────────────
@@ -90,7 +125,9 @@ SPLIT = {
 # (leakage-free). All onset-relative metrics (detection delay, pre-onset FAR) anchor
 # to it. See src/onset.py.
 ONSET = {
-    "health_indicator": "rms_mean",   # mean of rms_* channel columns
+    "health_indicator": "rms_kurt",   # amplitude-OR-impulsiveness HI (rms & kurt z-max);
+                                      # leads pure rms when kurtosis rises early. Other:
+                                      # "rms_mean" | "rms_max" | "pca1"
     "method": "terminal",             # "terminal" | "sigma" | "cusum" | "pelt"
     "sigma_k": 4.0,                    # band = train_mean + k*train_std (defines excursion)
     "cusum_k": 0.5,                    # CUSUM slack (in train-std units)
@@ -144,6 +181,24 @@ MODELS = {
         "learning_rate": 1e-3,
         "dropout": 0.1,
     },
+    # ─ Extra baselines (src/baselines_extra.py) ─
+    "rms_trend": {                 # naive "RMS > kσ" floor baseline
+        "n_sigma": 3.0,
+    },
+    "spectral_kurtosis": {         # alarm on spectral-kurtosis features (sk_* cols)
+        "key": "sk_",              # select spectral-kurtosis cols by name substring
+        "n_sigma": 3.0,
+        # feature_names injected at call time so it becomes a true spectral alarm
+    },
+    "deep_svdd": {                 # one-class deep model (requires torch)
+        "hidden_dim": 32,
+        "latent_dim": 8,
+        "epochs": 40,              # CPU-friendly
+        "batch_size": 32,
+        "learning_rate": 1e-3,
+        "random_state": 42,
+        "device": "auto",
+    },
 }
 
 # ─── Uncertainty ──────────────────────────────────────────────────────────────
@@ -158,11 +213,13 @@ EXPERIMENT = {
     "random_seed": 42,
     "runs_to_evaluate": ["1st_test", "2nd_test", "3rd_test"],
     "methods_to_run": [
+        "rms_trend",       # naive RMS>kσ floor baseline (reviewer-requested)
         "three_sigma",
         "ewma",
         "hotelling_t2",
         "isolation_forest",
-        # "lstm_ae",       # comment out for local CPU runs
+        # "deep_svdd",     # one-class deep model (torch); enable for full runs
+        # "lstm_ae",       # deep AE (torch); enable for full runs
     ],
     "run_threshold_sweep": True,
     "run_feature_ablation": True,

@@ -87,12 +87,42 @@ def _median_spacing_minutes(index) -> float:
     return float(np.median(diffs)) if len(diffs) else float("nan")
 
 
+def ensure_spectral_cache(run_name: str):
+    """
+    Build (or load) the spectral-augmented snapshot parquet for an IMS run: join the
+    cached time-domain snapshot stats with frequency-domain features (spectral kurtosis,
+    envelope defect-band amplitudes, FFT band energies) computed from the raw 20.48 kHz
+    waveforms, resampled onto the same 10-min grid. Cached to *_features_spectral.parquet.
+    Addresses reviewer W10 (spectral information discarded).
+    """
+    import os
+    from src.config import PATHS, DATASETS_GEOMETRY
+    from src.preprocessing import load_processed, save_processed, resample_uniform
+
+    spec_path = os.path.join(PATHS["processed"], f"{run_name}_features_spectral.parquet")
+    if os.path.exists(spec_path):
+        return load_processed(spec_path)
+
+    base = load_processed(os.path.join(PATHS["processed"], f"{run_name}_features.parquet"))
+    n_ch = sum(1 for c in base.columns if c.startswith("rms_ch"))
+    from src.spectral_features import compute_spectral_for_run, BearingGeometry
+    g = DATASETS_GEOMETRY["IMS"]
+    run_dir = os.path.join(PATHS["raw_ims"], run_name)
+    spec = compute_spectral_for_run(run_dir, BearingGeometry(**g["geom"]),
+                                    g["shaft_speed_hz"], n_channels=n_ch, fs=g["fs"])
+    spec = resample_uniform(spec, "10min")                 # align to the snapshot grid
+    joined = base.join(spec, how="left").ffill().bfill()
+    save_processed(joined, spec_path)
+    return joined
+
+
 def load_pipeline(run_name: str = "2nd_test",
                   window_size: int = None,
                   overlap: float = None,
                   resample_freq: str = "10min",
                   downsample_factor: int = 1,
-                  downsample_mode: str = "none") -> dict:
+                  downsample_mode: str = "none",
+                  use_spectral: bool = None) -> dict:
     """
     One-call loader: preprocess → (SCADA-rate downsample) → feature extract → split → scale.
 
@@ -114,13 +144,17 @@ def load_pipeline(run_name: str = "2nd_test",
 
     ws  = window_size or FEATURES["window_size"]
     ovl = overlap     or FEATURES["overlap"]
+    if use_spectral is None:
+        use_spectral = FEATURES.get("use_spectral", False)
 
     # Load and preprocess
     processed_path = os.path.join(
         PATHS["processed"], f"{run_name}_features.parquet"
     )
 
-    if os.path.exists(processed_path):
+    if use_spectral:
+        df = ensure_spectral_cache(run_name)
+    elif os.path.exists(processed_path):
         from src.preprocessing import load_processed
         df = load_processed(processed_path)
     else:
@@ -145,14 +179,25 @@ def load_pipeline(run_name: str = "2nd_test",
             df = df.iloc[::downsample_factor].copy()
     effective_interval_min = _median_spacing_minutes(df.index)
 
-    # Feature extraction
-    feat_df = extract_rolling_features(
-        df,
-        window_size=ws,
-        overlap=ovl,
-        feature_list=FEATURES["feature_list"],
-        include_cross_channel=FEATURES["include_cross_channel"],
-    )
+    # Feature extraction — channel-count-invariant schema (W4 fix) or legacy.
+    if FEATURES.get("mode", "invariant") == "invariant":
+        from src.features import extract_invariant_features
+        feat_df = extract_invariant_features(
+            df,
+            window_size=ws,
+            overlap=ovl,
+            channel_aggs=tuple(FEATURES.get("invariant_channel_aggs", ("mean", "max"))),
+            window_summaries=tuple(FEATURES.get("invariant_window_summaries",
+                                                ("mean", "std", "max", "slope"))),
+        )
+    else:
+        feat_df = extract_rolling_features(
+            df,
+            window_size=ws,
+            overlap=ovl,
+            feature_list=FEATURES["feature_list"],
+            include_cross_channel=FEATURES["include_cross_channel"],
+        )
 
     # Temporal split on feature DataFrame
     df_train, df_cal, df_test = temporal_split(
@@ -172,6 +217,16 @@ def load_pipeline(run_name: str = "2nd_test",
     X_train = apply_scaler(df_train, scaler, feat_cols)[feat_cols].values
     X_cal   = apply_scaler(df_cal,   scaler, feat_cols)[feat_cols].values
     X_test  = apply_scaler(df_test,  scaler, feat_cols)[feat_cols].values
+    feature_names = list(feat_cols)
+
+    # Train-fit feature selection (variance top-k) — guarantees p < n even after the
+    # invariant schema, removing the residual p≫n degeneracy. Leakage-free (fit on train).
+    top_k = FEATURES.get("select_top_k")
+    if top_k and X_train.shape[1] > top_k:
+        from src.features import select_top_k_features
+        sel = select_top_k_features(X_train, feature_names, k=top_k)
+        X_train, X_cal, X_test = X_train[:, sel], X_cal[:, sel], X_test[:, sel]
+        feature_names = [feature_names[i] for i in sel]
 
     # Failure reference timestamps
     failure_time = DATASET["failure_times"].get(run_name)
