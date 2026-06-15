@@ -9,6 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PATHS = {
     "raw_ims":        os.path.join(BASE_DIR, "data", "raw", "IMS"),
+    "raw_ongc":       os.path.join(BASE_DIR, "data", "raw", "ONGC"),
     "processed":      os.path.join(BASE_DIR, "data", "processed"),
     "results_figures":os.path.join(BASE_DIR, "results", "figures"),
     "results_tables": os.path.join(BASE_DIR, "results", "tables"),
@@ -105,7 +106,8 @@ FEATURES = {
     # original stats-of-stats + all-pairs correlations (445/1465 dims; p≫n — kept for
     # back-compat and the appendix comparison only).
     "mode": "invariant",
-    "select_top_k": 50,              # train-fit variance top-k cap (guarantees p<n)
+    "select_top_k": 50,              # train-fit feature cap (guarantees p<n)
+    "select_strategy": "stratified", # "stratified" (per-family quota) | "variance" (global)
     "invariant_channel_aggs":     ["mean", "max"],
     "invariant_window_summaries": ["mean", "std", "max", "slope"],
 }

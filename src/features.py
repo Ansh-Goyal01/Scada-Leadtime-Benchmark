@@ -387,6 +387,45 @@ def select_top_k_features(X_train: np.ndarray,
     return sorted(order[:min(k, len(order))].tolist())
 
 
+def _feature_family(name: str) -> str:
+    """Coarse family of a feature: 'spectral' (sk_/env_/band_) else 'time'."""
+    return "spectral" if any(k in name for k in ("sk_", "env_", "band_")) else "time"
+
+
+def select_stratified_features(X_train: np.ndarray,
+                               feature_names: List[str],
+                               k: int = 50,
+                               var_floor: float = 1e-8,
+                               group_fn=None) -> List[int]:
+    """
+    Stratified, leakage-free selection: split a budget of ``k`` features across feature
+    FAMILIES (default time vs spectral) so no single family is starved by global variance
+    ranking. Within each family, keep the top-by-training-variance columns (above
+    ``var_floor``). Budget is allocated proportionally to each family's availability, with
+    at least 1 slot per non-empty family. Returns selected column indices.
+
+    Motivation: pure variance top-k keeps only the sharp flat-then-ramp time-RMS features
+    and discards every spectral feature, making a spectral ablation meaningless. Stratified
+    selection guarantees spectral features participate so their contribution can be judged.
+    """
+    if group_fn is None:
+        group_fn = _feature_family
+    var = np.nanvar(X_train, axis=0)
+    groups: dict = {}
+    for i, nm in enumerate(feature_names):
+        if var[i] >= var_floor:
+            groups.setdefault(group_fn(nm), []).append(i)
+    if not groups:
+        return list(range(min(k, X_train.shape[1])))
+    total = sum(len(v) for v in groups.values())
+    selected: list = []
+    for g, idxs in groups.items():
+        quota = max(1, int(round(k * len(idxs) / total)))
+        ranked = sorted(idxs, key=lambda i: var[i], reverse=True)
+        selected.extend(ranked[:quota])
+    return sorted(selected[:k])
+
+
 def get_feature_subset(X: np.ndarray,
                        feature_names: List[str],
                        prefix: str) -> tuple:

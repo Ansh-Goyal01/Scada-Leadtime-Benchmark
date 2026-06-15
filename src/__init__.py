@@ -96,8 +96,9 @@ def ensure_spectral_cache(run_name: str):
     Addresses reviewer W10 (spectral information discarded).
     """
     import os
+    import pandas as pd
     from src.config import PATHS, DATASETS_GEOMETRY
-    from src.preprocessing import load_processed, save_processed, resample_uniform
+    from src.preprocessing import load_processed, save_processed
 
     spec_path = os.path.join(PATHS["processed"], f"{run_name}_features_spectral.parquet")
     if os.path.exists(spec_path):
@@ -105,13 +106,36 @@ def ensure_spectral_cache(run_name: str):
 
     base = load_processed(os.path.join(PATHS["processed"], f"{run_name}_features.parquet"))
     n_ch = sum(1 for c in base.columns if c.startswith("rms_ch"))
-    from src.spectral_features import compute_spectral_for_run, BearingGeometry
-    g = DATASETS_GEOMETRY["IMS"]
-    run_dir = os.path.join(PATHS["raw_ims"], run_name)
-    spec = compute_spectral_for_run(run_dir, BearingGeometry(**g["geom"]),
-                                    g["shaft_speed_hz"], n_channels=n_ch, fs=g["fs"])
-    spec = resample_uniform(spec, "10min")                 # align to the snapshot grid
-    joined = base.join(spec, how="left").ffill().bfill()
+
+    # Cache the (slow) raw spectral computation separately so a re-join is cheap.
+    raw_spec_path = os.path.join(PATHS["processed"], f"{run_name}_spectral_raw.parquet")
+    if os.path.exists(raw_spec_path):
+        spec = load_processed(raw_spec_path)
+    else:
+        from src.spectral_features import compute_spectral_for_run, BearingGeometry
+        g = DATASETS_GEOMETRY["IMS"]
+        run_dir = os.path.join(PATHS["raw_ims"], run_name)
+        spec = compute_spectral_for_run(run_dir, BearingGeometry(**g["geom"]),
+                                        g["shaft_speed_hz"], n_channels=n_ch, fs=g["fs"])
+        save_processed(spec, raw_spec_path)
+
+    # Align spectral rows (same raw-file timestamps) to the base snapshot grid by NEAREST
+    # within tolerance. Use merge_asof (not reindex) because IMS timestamps can contain
+    # duplicates (minute-truncated collisions), which reindex rejects. The base index and
+    # spec index derive from the same files but may differ by seconds.
+    spec_cols = list(spec.columns)
+    b = base.reset_index()
+    ts_b = b.columns[0]
+    s = spec.reset_index()
+    ts_s = s.columns[0]
+    b = b.sort_values(ts_b)
+    s = s.sort_values(ts_s)
+    merged = pd.merge_asof(b, s, left_on=ts_b, right_on=ts_s,
+                           direction="nearest", tolerance=pd.Timedelta("5min"),
+                           suffixes=("", "_specidx"))
+    merged = merged.set_index(ts_b)
+    joined = merged[list(base.columns) + spec_cols].copy()
+    joined[spec_cols] = joined[spec_cols].ffill().bfill()
     save_processed(joined, spec_path)
     return joined
 
@@ -223,8 +247,13 @@ def load_pipeline(run_name: str = "2nd_test",
     # invariant schema, removing the residual p≫n degeneracy. Leakage-free (fit on train).
     top_k = FEATURES.get("select_top_k")
     if top_k and X_train.shape[1] > top_k:
-        from src.features import select_top_k_features
-        sel = select_top_k_features(X_train, feature_names, k=top_k)
+        strategy = FEATURES.get("select_strategy", "stratified")
+        if strategy == "stratified":
+            from src.features import select_stratified_features
+            sel = select_stratified_features(X_train, feature_names, k=top_k)
+        else:
+            from src.features import select_top_k_features
+            sel = select_top_k_features(X_train, feature_names, k=top_k)
         X_train, X_cal, X_test = X_train[:, sel], X_cal[:, sel], X_test[:, sel]
         feature_names = [feature_names[i] for i in sel]
 
