@@ -146,7 +146,8 @@ def load_pipeline(run_name: str = "2nd_test",
                   resample_freq: str = "10min",
                   downsample_factor: int = 1,
                   downsample_mode: str = "none",
-                  use_spectral: bool = None) -> dict:
+                  use_spectral: bool = None,
+                  dataset: str = "IMS") -> dict:
     """
     One-call loader: preprocess → (SCADA-rate downsample) → feature extract → split → scale.
 
@@ -171,25 +172,14 @@ def load_pipeline(run_name: str = "2nd_test",
     if use_spectral is None:
         use_spectral = FEATURES.get("use_spectral", False)
 
-    # Load and preprocess
-    processed_path = os.path.join(
-        PATHS["processed"], f"{run_name}_features.parquet"
-    )
-
-    if use_spectral:
-        df = ensure_spectral_cache(run_name)
-    elif os.path.exists(processed_path):
-        from src.preprocessing import load_processed
-        df = load_processed(processed_path)
-    else:
-        runs = run_preprocessing_pipeline(
-            raw_ims_dir=PATHS["raw_ims"],
-            run_names=[run_name],
-            processed_dir=PATHS["processed"],
-            failure_times=DATASET["failure_times"],
-            resample_freq=resample_freq,
-        )
-        df = runs[run_name]
+    # Load the run via the dataset registry (IMS / ONGC / XJTU-SY / FEMTO). Every loader
+    # yields a RunBundle whose snapshot_df carries rms_ch* signal columns, so the rest of
+    # the pipeline is dataset-agnostic. ONGC etc. have no raw waveform → use_spectral off.
+    from src.datasets import load_run
+    bundle = load_run(dataset, run_name, use_spectral=bool(use_spectral))
+    df = bundle.snapshot_df
+    failure_time = bundle.failure_time
+    train_fraction = bundle.train_fraction
 
     # SCADA-rate sampling constraint: coarsen the grid before feature extraction.
     base_min = _median_spacing_minutes(df.index)
@@ -223,10 +213,10 @@ def load_pipeline(run_name: str = "2nd_test",
             include_cross_channel=FEATURES["include_cross_channel"],
         )
 
-    # Temporal split on feature DataFrame
+    # Temporal split on feature DataFrame (train fraction is per-dataset, from the bundle)
     df_train, df_cal, df_test = temporal_split(
         feat_df,
-        train_frac=SPLIT["train_fraction"],
+        train_frac=train_fraction,
         cal_frac=SPLIT["calibration_fraction"],
     )
 
@@ -257,8 +247,7 @@ def load_pipeline(run_name: str = "2nd_test",
         X_train, X_cal, X_test = X_train[:, sel], X_cal[:, sel], X_test[:, sel]
         feature_names = [feature_names[i] for i in sel]
 
-    # Failure reference timestamps
-    failure_time = DATASET["failure_times"].get(run_name)
+    # Failure reference timestamps (failure_time comes from the bundle)
     n_normal = int(len(ts_test) * SPLIT["normal_period_fraction"])
     t_normal_end = ts_test[min(n_normal, len(ts_test) - 1)]
 
@@ -276,6 +265,8 @@ def load_pipeline(run_name: str = "2nd_test",
         "t_normal_end":  t_normal_end,
         "scaler":        scaler,
         "run_name":      run_name,
+        "dataset":       dataset,
+        "train_fraction": train_fraction,
         "effective_interval_min": effective_interval_min,
         "window_size_used":       ws,
     }

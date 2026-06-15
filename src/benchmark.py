@@ -73,10 +73,11 @@ def compute_run_onset(run_name: str, dataset: str = "IMS") -> dict:
     Returns dict: t_onset, t_fail, base_min, available info. The onset baseline is the
     training window only (leakage-free).
     """
-    base = load_pipeline(run_name)                       # factor=1, no downsample
+    base = load_pipeline(run_name, dataset=dataset)       # factor=1, no downsample
     df = base["df_full"]
     n = len(df)
-    train_end = df.index[min(int(n * SPLIT["train_fraction"]), n - 1)]
+    train_frac = base.get("train_fraction", SPLIT["train_fraction"])
+    train_end = df.index[min(int(n * train_frac), n - 1)]
     t_fail = pd.Timestamp(base["failure_time"])
     onset = onset_for_run(df, train_end=train_end, t_fail=t_fail)
     max_lead = ((t_fail - onset).total_seconds() / 3600.0) if onset is not None else float("nan")
@@ -108,12 +109,11 @@ def run_benchmark(dataset: str = "IMS",
     Deterministic detectors are evaluated once (seed=seeds[0]) and broadcast across the
     seed axis to avoid wasted compute; only Isolation Forest / LSTM-AE vary with seed.
     """
-    if dataset != "IMS":
-        raise NotImplementedError(
-            f"dataset={dataset!r} not yet wired into load_pipeline (Phase C). "
-            "Phase A targets IMS; ONGC/XJTU/FEMTO arrive with src/datasets.py."
-        )
-    runs    = runs    or EXPERIMENT["runs_to_evaluate"]
+    if runs is None:
+        runs = ["LPC"] if dataset == "ONGC" else EXPERIMENT["runs_to_evaluate"]
+    if control and dataset != "IMS":
+        logger.warning("controlled sweep currently supports IMS only; using standard path for %s", dataset)
+        control = False
     methods = methods or EXPERIMENT["methods_to_run"]
     seeds   = seeds   or [EXPERIMENT["random_seed"]]
     modes   = modes   or SAMPLING["modes"]
@@ -163,6 +163,7 @@ def run_benchmark(dataset: str = "IMS",
                         else:
                             pipe = load_pipeline(
                                 run_name,
+                                dataset=dataset,
                                 window_size=c["window_rows"],
                                 downsample_factor=factor,
                                 downsample_mode=dmode,
