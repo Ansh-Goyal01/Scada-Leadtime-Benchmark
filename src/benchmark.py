@@ -61,6 +61,8 @@ def make_detectors(methods: list, seed: int):
         params["isolation_forest"]["random_state"] = seed
     if "lstm_ae" in params:
         params["lstm_ae"]["random_state"] = seed
+    if "conformal_if" in params:
+        params["conformal_if"]["random_state"] = seed
     return get_all_models({"methods_to_run": methods, "model_params": params})
 
 

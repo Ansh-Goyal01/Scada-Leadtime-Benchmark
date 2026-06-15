@@ -553,6 +553,15 @@ def get_all_models(config: dict) -> list:
         elif method == "deep_svdd":
             from src.baselines_extra import DeepSVDDDetector
             detectors.append(DeepSVDDDetector(**p))
+        elif method == "conformal_if":
+            # Distribution-free wrapper around Isolation Forest. Calibrated on X_cal,
+            # exposes .calibrate/.alarm so evaluate_method bypasses the percentile
+            # threshold and uses the conformal p-value < alpha alarm (FAR ≤ alpha).
+            from src.uncertainty import ConformalDetector
+            base_kwargs = {k: v for k, v in p.items() if k != "alpha"}
+            base_seed = base_kwargs.pop("random_state", 42)
+            base = IsolationForestDetector(random_state=base_seed, **base_kwargs)
+            detectors.append(ConformalDetector(base, alpha=p.get("alpha", 0.05)))
         else:
             logger.warning(f"Unknown method '{method}' — skipping.")
 

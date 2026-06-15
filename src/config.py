@@ -203,6 +203,13 @@ MODELS = {
         "random_state": 42,
         "device": "auto",
     },
+    "conformal_if": {              # distribution-free Isolation Forest (FAR ≤ alpha)
+        "n_estimators": 200,
+        "contamination": "auto",
+        "random_state": 42,
+        "max_samples": "auto",
+        "alpha": 0.05,             # target false-alarm rate (conformal guarantee)
+    },
 }
 
 # ─── Uncertainty ──────────────────────────────────────────────────────────────
