@@ -74,14 +74,15 @@ def main():
                 all_df[all_df["run"] == run_name], run_name=run_name, value="raw",
                 save_path=os.path.join(fig_dir, f"lead_time_vs_sampling_{run_name}.png"),
             )
-        # Headline aggregate figure: normalized VLT, median across runs (+ min–max band).
+        # Headline aggregate figure: normalized VLT, median across runs. Median-only
+        # (no min–max band) — with four methods the bands overlap too heavily to read.
         plot_lead_time_vs_sampling(
-            agg, value="normalized",
+            agg, value="normalized", show_band=False,
             save_path=os.path.join(fig_dir, "lead_time_vs_sampling_aggregate.png"),
         )
-        # Appendix comparison: raw hours, mean ± std (shows the scale-dominated view).
+        # Appendix comparison: raw hours, mean ± std band (shows the scale-dominated view).
         plot_lead_time_vs_sampling(
-            agg, value="raw",
+            agg, value="raw", show_band=True,
             save_path=os.path.join(fig_dir, "lead_time_vs_sampling_aggregate_raw.png"),
         )
         print("\n=== Aggregate across runs (normalized median + raw) ===")
