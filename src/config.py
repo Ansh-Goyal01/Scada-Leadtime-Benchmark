@@ -141,6 +141,30 @@ EXPERIMENT = {
     "sampling_downsample_factors": [1, 2, 5, 10, 20],  # 1 = no downsampling
 }
 
+# ─── SCADA-Rate Sampling Sweep ────────────────────────────────────────────────
+# The core experiment behind the paper title: progressively coarsen the logging
+# rate (simulating a SCADA historian that records less often) and measure how
+# detection lead time degrades.
+SAMPLING = {
+    # Effective sampling interval at each step = base_grid_spacing × factor.
+    "factors": EXPERIMENT["sampling_downsample_factors"],   # [1, 2, 5, 10, 20]
+
+    # Two constraint mechanisms, compared:
+    #   "aggregate" — mean over each coarser bin (what real SCADA historians store;
+    #                 smooths away transient kurtosis/crest spikes → realistic worst case)
+    #   "decimate"  — keep every k-th sample (lower logging frequency, values intact)
+    "modes": ["aggregate", "decimate"],
+
+    # Window + persistence are held constant in WALL-CLOCK time across all rates so
+    # lead-time differences reflect information loss, not a window-counting artifact.
+    # Both default to None → derived from the base grid so that factor=1 exactly
+    # reproduces the standard pipeline (FEATURES window_size, THRESHOLD persistence),
+    # giving a clean regression anchor. Override with explicit minutes if desired.
+    "window_minutes":      None,   # None → FEATURES["window_size"] × base spacing
+    "persistence_minutes": None,   # None → THRESHOLD["alarm_persistence"] × base window-stride
+    "min_window_rows":     3,      # floor so higher-order features stay defined (logged if hit)
+}
+
 # ─── Plotting ─────────────────────────────────────────────────────────────────
 PLOT = {
     "dpi": 150,

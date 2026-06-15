@@ -412,6 +412,121 @@ def plot_vlt_vs_far(sweep_df: pd.DataFrame,
     return fig
 
 
+def plot_lead_time_vs_sampling(sweep_df: pd.DataFrame,
+                               run_name: Optional[str] = None,
+                               methods: Optional[List[str]] = None,
+                               save_path: Optional[str] = None,
+                               value: str = "raw",
+                               figsize: tuple = (13, 5)) -> plt.Figure:
+    """
+    HEADLINE FIGURE (paper): detection lead time vs effective SCADA sampling interval.
+
+    One panel per constraint mechanism (aggregate / decimate), one line per method,
+    x-axis = effective logging interval in minutes (log scale).
+
+    ``value`` selects the y-quantity:
+      "raw"        — Valid Lead Time in hours. For an aggregate DataFrame, the line is the
+                     cross-run mean with a ±std band (scale-dominated; appendix use).
+      "normalized" — VLT as a fraction of each run's max achievable lead time, so runs with
+                     very different test-window lengths are comparable. For an aggregate
+                     DataFrame, the line is the cross-run *median* with a min–max band
+                     (robust to the n=3 outlier); this is the clean headline story.
+
+    Accepts either a per-run / combined sweep DataFrame (raw columns ``VLT_hours`` /
+    ``VLT_norm``) or an aggregate-across-runs DataFrame (the *_mean / *_std / *_median /
+    *_min / *_max columns produced by run_sampling_sweep_all_runs).
+
+    Required columns: mode, effective_interval_min, method, and a matching VLT column.
+    """
+    from src.config import PLOT
+
+    cols = sweep_df.columns
+
+    def _pick(*names):
+        for n in names:
+            if n in cols:
+                return n
+        return None
+
+    # Resolve the center line and (optional) band columns for the requested quantity.
+    if value == "normalized":
+        center = _pick("VLT_norm_median", "VLT_norm")
+        lo_col, hi_col = _pick("VLT_norm_min"), _pick("VLT_norm_max")
+        std_col = _pick("VLT_norm_std")
+        ylabel = "Normalized lead time  (VLT ÷ max achievable)"
+    elif value == "raw":
+        center = _pick("VLT_hours_mean", "VLT_hours_median", "VLT_hours")
+        lo_col = hi_col = None
+        std_col = _pick("VLT_hours_std")
+        ylabel = "Valid Lead Time (hours)"
+    else:
+        raise ValueError(f"value must be 'raw' or 'normalized', got {value!r}")
+
+    if center is None:
+        raise ValueError(
+            f"sweep_df has no column for value={value!r} "
+            f"(looked for VLT_norm* / VLT_hours*); columns present: {list(cols)}"
+        )
+    has_band = lo_col is not None and hi_col is not None
+
+    modes = list(pd.unique(sweep_df["mode"]))
+    method_colors = PLOT.get("method_colors", {})
+
+    fig, axes = plt.subplots(1, len(modes), figsize=figsize, sharey=True, squeeze=False)
+    axes = axes[0]
+
+    method_to_key = {
+        "Isolation Forest": "isolation_forest",
+        "EWMA (λ=0.2, k=3.0)": "ewma",
+        "Hotelling T²": "hotelling_t2",
+        "3σ Rule (σ=3.0)": "three_sigma",
+    }
+
+    for ax, mode in zip(axes, modes):
+        sub = sweep_df[sweep_df["mode"] == mode]
+        plot_methods = methods or list(pd.unique(sub["method"]))
+
+        for m in plot_methods:
+            ms = sub[sub["method"] == m].sort_values("effective_interval_min")
+            if ms.empty:
+                continue
+            color = method_colors.get(method_to_key.get(m, ""), None)
+            x = ms["effective_interval_min"].values
+            y = ms[center].values
+            ax.plot(x, y, marker="o", linewidth=1.8, label=m, color=color, zorder=3)
+            if has_band:
+                ax.fill_between(x, ms[lo_col].values, ms[hi_col].values,
+                                alpha=0.15, color=color, zorder=2)
+            elif std_col and std_col in ms.columns:
+                s = ms[std_col].values
+                ax.fill_between(x, y - s, y + s, alpha=0.15, color=color, zorder=2)
+
+        ax.set_xscale("log")
+        ax.set_xlabel("SCADA logging interval (min)", fontsize=11)
+        ax.set_title(f"{mode.capitalize()}", fontsize=12, fontweight="bold")
+        ax.grid(True, which="both", alpha=0.3)
+
+    axes[0].set_ylabel(ylabel, fontsize=11)
+    if value == "normalized":
+        axes[0].set_ylim(0, 1.02)
+    axes[-1].legend(fontsize=9, loc="best")
+
+    title = "Detection Lead Time vs SCADA-Rate Sampling Constraint"
+    if value == "normalized":
+        title += "  (normalized, median across runs)"
+    if run_name:
+        title += f" — {run_name}"
+    plt.suptitle(title, fontsize=13, fontweight="bold", y=1.02)
+    plt.tight_layout()
+
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        fig.savefig(save_path, dpi=150, bbox_inches="tight")
+        logger.info(f"Saved lead-time vs sampling figure → {save_path}")
+
+    return fig
+
+
 def plot_score_with_rms(result: dict,
                         rms_series: pd.Series,
                         save_path: Optional[str] = None,
