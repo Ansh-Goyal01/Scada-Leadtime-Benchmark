@@ -18,6 +18,7 @@ from src.preprocessing import (
     load_ims_run,
     load_all_runs,
     run_preprocessing_pipeline,
+    resample_uniform,
     temporal_split,
     fit_scaler,
     apply_scaler,
@@ -61,6 +62,7 @@ from src.lead_time import (
     plot_alarm_timeline,
     plot_lead_time_comparison,
     plot_vlt_vs_far,
+    plot_lead_time_vs_sampling,
 )
 
 from src.uncertainty import (
@@ -76,18 +78,37 @@ from src.uncertainty import (
 
 # Convenience pipeline wrappers
 
+def _median_spacing_minutes(index) -> float:
+    """Median spacing of a DatetimeIndex in minutes (robust to gaps)."""
+    import numpy as np
+    if len(index) < 2:
+        return float("nan")
+    diffs = index.to_series().diff().dropna().dt.total_seconds() / 60.0
+    return float(np.median(diffs)) if len(diffs) else float("nan")
+
+
 def load_pipeline(run_name: str = "2nd_test",
                   window_size: int = None,
                   overlap: float = None,
-                  resample_freq: str = "10min") -> dict:
+                  resample_freq: str = "10min",
+                  downsample_factor: int = 1,
+                  downsample_mode: str = "none") -> dict:
     """
-    One-call loader: preprocess → feature extract → split → scale.
+    One-call loader: preprocess → (SCADA-rate downsample) → feature extract → split → scale.
+
+    downsample_factor / downsample_mode simulate a SCADA-rate sampling constraint by
+    coarsening the time grid BEFORE feature extraction. The effective sampling interval
+    becomes ``base_spacing × downsample_factor``.
+        mode "none"      — no downsampling (default; baseline behavior unchanged)
+        mode "aggregate" — mean over each coarser bin (realistic SCADA averaging)
+        mode "decimate"  — keep every k-th sample (lower logging frequency)
 
     Returns a dict with keys:
         X_train, X_cal, X_test,
         feature_names, ts_train, ts_cal, ts_test,
         df_full, feat_df_full,
-        failure_time, t_normal_end
+        failure_time, t_normal_end, scaler, run_name,
+        effective_interval_min, window_size_used
     """
     import os
 
@@ -111,6 +132,18 @@ def load_pipeline(run_name: str = "2nd_test",
             resample_freq=resample_freq,
         )
         df = runs[run_name]
+
+    # SCADA-rate sampling constraint: coarsen the grid before feature extraction.
+    base_min = _median_spacing_minutes(df.index)
+    if downsample_mode not in ("none", "aggregate", "decimate"):
+        raise ValueError(f"Unknown downsample_mode '{downsample_mode}'")
+    if downsample_mode != "none" and downsample_factor > 1:
+        if downsample_mode == "aggregate":
+            target_min = max(1, int(round(base_min * downsample_factor)))
+            df = resample_uniform(df, f"{target_min}min")
+        else:  # decimate — keep every k-th row of the uniform grid
+            df = df.iloc[::downsample_factor].copy()
+    effective_interval_min = _median_spacing_minutes(df.index)
 
     # Feature extraction
     feat_df = extract_rolling_features(
@@ -159,6 +192,8 @@ def load_pipeline(run_name: str = "2nd_test",
         "t_normal_end":  t_normal_end,
         "scaler":        scaler,
         "run_name":      run_name,
+        "effective_interval_min": effective_interval_min,
+        "window_size_used":       ws,
     }
 
 
