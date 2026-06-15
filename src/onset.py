@@ -47,7 +47,18 @@ def health_indicator(df: pd.DataFrame,
     ----------
     df : snapshot-level DataFrame indexed by timestamp, with rms_ch0, rms_ch1, ...
     channels : explicit list of HI columns; defaults to all columns starting "rms_ch".
-    kind : "rms_mean" (default) | "rms_max"
+               (Only consulted for the rms-based kinds; the multi-feature kinds
+               'rms_kurt' and 'pca1' build their own rms_*/kurt_* column sets.)
+    kind : "rms_mean" (default) | "rms_max" | "rms_kurt" | "pca1"
+        * "rms_mean" : mean of the rms_* channels (amplitude only).
+        * "rms_max"  : max of the rms_* channels.
+        * "rms_kurt" : z-score the mean-rms trend and the mean-kurtosis trend each
+                       over an early baseline, then take their element-wise MAX, so
+                       the HI rises on EITHER an amplitude (rms) OR an impulsiveness
+                       (kurtosis) increase. Catches incipient defects that raise
+                       kurtosis days before RMS climbs.
+        * "pca1"     : first principal component of the standardized rms_*+kurt_*
+                       columns, sign-oriented so that degradation increases it.
 
     Returns
     -------
@@ -64,7 +75,69 @@ def health_indicator(df: pd.DataFrame,
         return sub.mean(axis=1)
     if kind == "rms_max":
         return sub.max(axis=1)
+    if kind == "rms_kurt":
+        return _hi_rms_kurt(df, channels)
+    if kind == "pca1":
+        return _hi_pca1(df, channels)
     raise ValueError(f"Unknown health-indicator kind: {kind!r}")
+
+
+def _baseline_z(series: pd.Series, baseline_fraction: float = 0.2) -> pd.Series:
+    """Standardize ``series`` to z-scores using the mean/std of its early baseline."""
+    n_base = max(5, int(len(series) * baseline_fraction))
+    base = series.iloc[:n_base]
+    mu = float(base.mean())
+    sd = float(base.std())
+    if not np.isfinite(sd) or sd < 1e-12:
+        sd = float(series.std()) or 1.0
+    return (series - mu) / sd
+
+
+def _hi_rms_kurt(df: pd.DataFrame,
+                 rms_channels: List[str],
+                 baseline_fraction: float = 0.2) -> pd.Series:
+    """
+    Amplitude-OR-impulsiveness HI: max of the baseline-z mean-rms trend and the
+    baseline-z mean-kurtosis trend. Responds to whichever degradation mode appears
+    first, so it leads a pure-RMS HI when kurtosis rises early (incipient defects).
+    """
+    kurt_channels = [c for c in df.columns if c.startswith("kurt_ch")]
+    rms_trend = df[rms_channels].mean(axis=1)
+    z_rms = _baseline_z(rms_trend, baseline_fraction)
+    if not kurt_channels:
+        logger.warning("No kurt_ch* columns found; 'rms_kurt' HI falls back to rms-only z.")
+        return z_rms
+    kurt_trend = df[kurt_channels].mean(axis=1)
+    z_kurt = _baseline_z(kurt_trend, baseline_fraction)
+    combined = pd.concat([z_rms, z_kurt], axis=1).max(axis=1)
+    combined.name = "rms_kurt_hi"
+    return combined
+
+
+def _hi_pca1(df: pd.DataFrame, rms_channels: List[str]) -> pd.Series:
+    """
+    First principal component of the standardized rms_*+kurt_* columns, sign-oriented
+    so degradation increases it. PCA is fit on the whole series (acceptable for a
+    descriptive HI — no detector is trained on it). The sign is fixed by correlating
+    PC1 with the mean-rms trend (which monotonically increases toward failure).
+    """
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.decomposition import PCA
+
+    kurt_channels = [c for c in df.columns if c.startswith("kurt_ch")]
+    feat_cols = list(rms_channels) + list(kurt_channels)
+    X = df[feat_cols].to_numpy(dtype=float)
+    # guard against NaNs/Infs that would poison the fit
+    X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
+    Xs = StandardScaler().fit_transform(X)
+    pc1 = PCA(n_components=1, random_state=0).fit_transform(Xs).ravel()
+    pc1 = pd.Series(pc1, index=df.index, name="pca1_hi")
+    # sign-orient: degradation should make the HI increase. Use mean-rms as the
+    # known-increasing reference; flip PC1 if it is anti-correlated with it.
+    rms_trend = df[rms_channels].mean(axis=1).to_numpy(dtype=float)
+    if np.corrcoef(pc1.to_numpy(), rms_trend)[0, 1] < 0:
+        pc1 = -pc1
+    return pc1
 
 
 def detect_onset(hi: pd.Series,
