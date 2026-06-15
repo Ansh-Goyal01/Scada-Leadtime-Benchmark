@@ -103,6 +103,7 @@ MODELS = {
     },
     "hotelling_t2": {
         "alpha": 0.01,           # significance level for chi2 threshold
+        "n_components": 10,      # PCA rank for the T² subspace (k << n; avoids singular cov when p >> n)
     },
     "lstm_ae": {
         "seq_len": 30,           # number of feature-windows per sequence
