@@ -417,6 +417,7 @@ def plot_lead_time_vs_sampling(sweep_df: pd.DataFrame,
                                methods: Optional[List[str]] = None,
                                save_path: Optional[str] = None,
                                value: str = "raw",
+                               show_band: bool = True,
                                figsize: tuple = (13, 5)) -> plt.Figure:
     """
     HEADLINE FIGURE (paper): detection lead time vs effective SCADA sampling interval.
@@ -431,6 +432,10 @@ def plot_lead_time_vs_sampling(sweep_df: pd.DataFrame,
                      very different test-window lengths are comparable. For an aggregate
                      DataFrame, the line is the cross-run *median* with a min–max band
                      (robust to the n=3 outlier); this is the clean headline story.
+
+    ``show_band`` toggles the shaded spread (min–max for normalized, ±std for raw). With
+    four methods the bands overlap heavily, so the headline figure sets show_band=False
+    for clean median-only lines; the raw appendix figure keeps the bands.
 
     Accepts either a per-run / combined sweep DataFrame (raw columns ``VLT_hours`` /
     ``VLT_norm``) or an aggregate-across-runs DataFrame (the *_mean / *_std / *_median /
@@ -494,12 +499,13 @@ def plot_lead_time_vs_sampling(sweep_df: pd.DataFrame,
             x = ms["effective_interval_min"].values
             y = ms[center].values
             ax.plot(x, y, marker="o", linewidth=1.8, label=m, color=color, zorder=3)
-            if has_band:
-                ax.fill_between(x, ms[lo_col].values, ms[hi_col].values,
-                                alpha=0.15, color=color, zorder=2)
-            elif std_col and std_col in ms.columns:
-                s = ms[std_col].values
-                ax.fill_between(x, y - s, y + s, alpha=0.15, color=color, zorder=2)
+            if show_band:
+                if has_band:
+                    ax.fill_between(x, ms[lo_col].values, ms[hi_col].values,
+                                    alpha=0.15, color=color, zorder=2)
+                elif std_col and std_col in ms.columns:
+                    s = ms[std_col].values
+                    ax.fill_between(x, y - s, y + s, alpha=0.15, color=color, zorder=2)
 
         ax.set_xscale("log")
         ax.set_xlabel("SCADA logging interval (min)", fontsize=11)
