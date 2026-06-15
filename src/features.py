@@ -286,3 +286,80 @@ def build_ablation_matrices(df: pd.DataFrame,
         logger.info(f"  Ablation group '{group_name}': X shape = {X.shape}")
 
     return results
+
+def extract_multiscale_features(df,
+                                 window_sizes,
+                                 overlap=0.5,
+                                 feature_list=None,
+                                 channel_cols=None):
+    """
+    Multi-scale feature fusion (C2 contribution).
+
+    Runs extract_rolling_features() at each window size, aligns all outputs
+    to the coarsest window time grid, and concatenates column-wise.
+    Each feature column is suffixed with its window size to avoid collisions:
+    e.g. rms_LPCDEXVib_w30, rms_LPCDEXVib_w180.
+
+    Why multi-scale: small W captures transient spikes, large W captures slow
+    drift trends. Neither alone is sufficient for bearing degradation detection.
+
+    Alignment: finer-scale frames are reindexed to the coarse grid via
+    nearest-neighbour with 5-minute tolerance, so the fused matrix has the
+    same row count as the coarsest-scale extraction.
+
+    Parameters
+    ----------
+    df           : time-indexed DataFrame (output of load_ongc_run or load_ims_run)
+    window_sizes : list[int] e.g. [30, 60, 180] for ONGC or [5, 10, 30] for IMS
+    overlap      : window overlap fraction (default 0.5)
+    feature_list : list[str] features to compute (default: rms, kurtosis, crest_factor)
+    channel_cols : list[str] columns to use as signal channels (default: all numeric)
+
+    Returns
+    -------
+    pd.DataFrame  — fused feature matrix indexed by coarse-window center timestamps.
+    Shape: (n_windows_coarsest, n_features_per_scale * n_scales [+ hours_to_failure])
+    """
+    if feature_list is None:
+        feature_list = ["rms", "kurtosis", "crest_factor"]
+
+    scale_dfs = []
+    for W in window_sizes:
+        feat_df = extract_rolling_features(
+            df,
+            window_size=W,
+            overlap=overlap,
+            feature_list=feature_list,
+            include_cross_channel=False,
+            channel_cols=channel_cols,
+        )
+        if "hours_to_failure" in feat_df.columns:
+            feat_df = feat_df.drop(columns=["hours_to_failure"])
+        feat_df = feat_df.add_suffix(f"_w{W}")
+        scale_dfs.append((W, feat_df))
+
+    # Coarsest scale = last entry (largest W) — used as reference grid
+    _, coarsest_df = scale_dfs[-1]
+    coarse_index   = coarsest_df.index
+
+    aligned = [coarsest_df]
+    for W, feat_df in scale_dfs[:-1]:
+        reindexed = feat_df.reindex(
+            coarse_index,
+            method="nearest",
+            tolerance=pd.Timedelta("5min"),
+        )
+        aligned.append(reindexed)
+
+    fused = pd.concat(aligned, axis=1)
+
+    # Re-attach hours_to_failure if present in original df
+    if "hours_to_failure" in df.columns:
+        htf = df["hours_to_failure"].reindex(fused.index, method="nearest")
+        fused["hours_to_failure"] = htf.values
+
+    logger.info(
+        f"Multi-scale fusion: W={window_sizes} -> "
+        f"{fused.shape[0]} windows x {fused.shape[1]} features"
+    )
+    return fused
