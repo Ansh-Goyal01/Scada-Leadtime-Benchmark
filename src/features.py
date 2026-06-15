@@ -82,8 +82,10 @@ def _compute_cross_channel_features(window: np.ndarray,
     for i, j in combinations(range(n_ch), 2):
         x_i = window[:, i]
         x_j = window[:, j]
-        # Pearson correlation — robust even for short windows
-        corr_matrix = np.corrcoef(x_i, x_j)
+        # Pearson correlation — robust even for short windows. A zero-variance window
+        # (e.g. a floored 3-row window at coarse sampling) yields a 0/0 NaN; treat as 0.
+        with np.errstate(invalid="ignore", divide="ignore"):
+            corr_matrix = np.corrcoef(x_i, x_j)
         corr = corr_matrix[0, 1]
         if np.isnan(corr):
             corr = 0.0

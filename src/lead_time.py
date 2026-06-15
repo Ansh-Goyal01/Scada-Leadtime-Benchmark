@@ -102,6 +102,50 @@ def compute_detection_delay(fat: Optional[pd.Timestamp],
     return float(delay) if delay >= 0 else None
 
 
+def compute_lead_time(fat: Optional[pd.Timestamp],
+                      t_fail: pd.Timestamp) -> float:
+    """
+    Lead Time (hours) = warning time between the first sustained alarm and failure.
+
+      - No alarm (FAT is None)   → 0
+      - Alarm at/after failure   → 0 (too late)
+      - otherwise                → (t_fail - FAT) in hours
+
+    NOTE: lead time alone is intentionally NOT the validity criterion — a latch-on
+    detector also earns large lead time. Gameability is defeated by reporting lead time
+    *jointly* with the pre-onset false-alarm rate (compute_FAR_preonset) and crediting a
+    "valid" early warning only when that FAR is within a stated budget (see
+    evaluate_method). This mirrors the First-Predicting-Time + false-alarm-budget
+    convention in the prognostics literature and, unlike hard onset-gating, does not
+    penalise detectors that genuinely sense degradation before the RMS health indicator
+    does (e.g. kurtosis/spectral signatures of incipient inner-race faults).
+    """
+    if fat is None:
+        return 0.0
+    if fat >= t_fail:
+        return 0.0
+    return float((t_fail - fat).total_seconds() / 3600.0)
+
+
+def compute_FAR_preonset(alarm_signal: np.ndarray,
+                         timestamps: pd.DatetimeIndex,
+                         t_onset: pd.Timestamp) -> float:
+    """
+    Pre-onset False Alarm Rate: fraction of windows STRICTLY before the degradation
+    onset that are flagged. Unlike the legacy compute_FAR (first 5% of the test window),
+    this spans the FULL apparently-normal region [test start, t_onset), so it has real
+    statistical resolution and exposes latch-on detectors (their FAR ≈ 1.0 here).
+
+    Returns float in [0, 1]. Returns NaN if there is no pre-onset window to score.
+    """
+    alarm_signal = np.asarray(alarm_signal, dtype=bool)
+    mask = np.asarray(timestamps < t_onset)
+    n = int(mask.sum())
+    if n == 0:
+        return float("nan")
+    return float(alarm_signal[mask].sum()) / float(n)
+
+
 
 # Full Evaluation Loop
 
@@ -113,57 +157,105 @@ def evaluate_method(detector,
                     normal_period_fraction: float = 0.20,
                     threshold_strategy: str = "percentile",
                     threshold_percentile: float = 97.5,
-                    alarm_persistence: int = 3) -> dict:
+                    alarm_persistence: int = 3,
+                    t_onset: Optional[pd.Timestamp] = None,
+                    far_budget: float = 0.10,
+                    X_cal: Optional[np.ndarray] = None) -> dict:
     """
     Full pipeline for a single detector on a single test run.
 
     Steps:
-      1. Fit detector on X_train
+      1. Fit detector on X_train (or calibrate, for conformal-style detectors)
       2. Score X_test
       3. Compute threshold from training scores
       4. Generate alarm signal
-      5. Compute FAT, VLT, FAR
+      5. Compute lead-time metrics
+
+    Metric layers
+    -------------
+    * Onset-relative (headline, when ``t_onset`` is given): ``lead_time_hours``
+      (ungameable, anchored to the degradation onset), ``detection_delay_hours``
+      (delay after onset), ``far_preonset_pct`` (FAR over the full pre-onset region),
+      ``lead_norm`` (lead ÷ max achievable). ``valid_alarm`` is gated on lead_time > 0.
+    * Legacy (always emitted for back-compat with the old sampling figures): ``VLT_hours``
+      and ``FAR_pct`` computed against the positional ``normal_period_fraction`` marker.
+
+    ``X_cal`` enables conformal-style detectors that expose ``.calibrate``/``.alarm``
+    (e.g. ConformalDetector); for them the percentile threshold step is bypassed.
 
     Returns a result dict with all metrics.
     """
     from src.thresholds import compute_threshold, generate_alarm_signal
 
-    # Fit
-    detector.fit(X_train)
-
-    # Score both sets
-    scores_train = detector.score(X_train)
-    scores_test  = detector.score(X_test)
-
-    # Threshold
-    threshold = compute_threshold(
-        scores_train,
-        strategy=threshold_strategy,
-        percentile=threshold_percentile,
-    )
-
-    # Alarm
-    alarm = generate_alarm_signal(scores_test, threshold, persistence=alarm_persistence)
+    # --- conformal-style detectors carry their own alpha-calibrated alarm ---
+    is_conformal = hasattr(detector, "calibrate") and hasattr(detector, "alarm")
+    if is_conformal:
+        cal = X_cal if X_cal is not None else X_train
+        detector.calibrate(X_train, cal)
+        alarm, _pvals, scores_test = detector.alarm(X_test, persistence=alarm_persistence)
+        scores_train = None
+        threshold = float("nan")
+    else:
+        detector.fit(X_train)
+        scores_train = detector.score(X_train)
+        scores_test  = detector.score(X_test)
+        threshold = compute_threshold(
+            scores_train,
+            strategy=threshold_strategy,
+            percentile=threshold_percentile,
+        )
+        alarm = generate_alarm_signal(scores_test, threshold, persistence=alarm_persistence)
 
     # Key timestamps
     t_fail = pd.Timestamp(failure_time)
     n_normal = int(len(timestamps_test) * normal_period_fraction)
     t_normal_end = timestamps_test[min(n_normal, len(timestamps_test) - 1)]
 
-    # Metrics
     fat = compute_FAT(alarm, timestamps_test)
-    vlt = compute_VLT(fat, t_fail, t_normal_end)
-    far = compute_FAR(alarm, timestamps_test, t_normal_end)
+
+    # --- legacy metrics (positional 5% marker) ---
+    vlt_legacy = compute_VLT(fat, t_fail, t_normal_end)
+    far_legacy = compute_FAR(alarm, timestamps_test, t_normal_end)
+
+    # --- onset-relative metrics (headline) ---
+    lead_time = compute_lead_time(fat, t_fail)
+    if t_onset is not None:
+        det_delay     = compute_detection_delay(fat, t_onset)
+        far_preonset  = compute_FAR_preonset(alarm, timestamps_test, t_onset)
+        max_lead      = (t_fail - t_onset).total_seconds() / 3600.0
+        max_lead      = max_lead if max_lead > 0 else float("nan")
+        lead_norm     = (lead_time / max_lead) if (max_lead and max_lead > 0) else float("nan")
+        # Valid early warning = a lead-time alarm achieved within the false-alarm budget.
+        # A latch-on detector floods the pre-onset region (far_preonset ≈ 1) and fails
+        # the budget; a genuine early detector (low pre-onset FAR) passes. NaN FAR
+        # (no pre-onset window to score) does not by itself invalidate the alarm.
+        far_ok        = (far_preonset != far_preonset) or (far_preonset <= far_budget)
+        valid_alarm   = (lead_time > 0) and far_ok
+    else:
+        # No onset available → fall back to legacy as the headline so callers still work.
+        det_delay     = None
+        far_preonset  = far_legacy
+        max_lead      = float("nan")
+        lead_norm     = float("nan")
+        valid_alarm   = vlt_legacy > 0
 
     result = {
         "method":         detector.name,
         "short_name":     detector.short_name,
         "threshold":      threshold,
         "FAT":            fat,
-        "VLT_hours":      vlt,
-        "FAR_pct":        far * 100.0,
+        # onset-relative (headline)
+        "lead_time_hours":      lead_time,
+        "detection_delay_hours": det_delay,
+        "far_preonset_pct":     (far_preonset * 100.0) if far_preonset == far_preonset else float("nan"),
+        "max_lead_hours":       max_lead,
+        "lead_norm":            lead_norm,
+        "t_onset":              t_onset,
+        # legacy (appendix / back-compat)
+        "VLT_hours":      vlt_legacy,
+        "FAR_pct":        far_legacy * 100.0,
         "alarm_raised":   fat is not None,
-        "valid_alarm":    vlt > 0,
+        "valid_alarm":    valid_alarm,
         "scores_train":   scores_train,
         "scores_test":    scores_test,
         "alarm_signal":   alarm,
@@ -172,9 +264,11 @@ def evaluate_method(detector,
         "normal_end":     t_normal_end,
     }
 
+    _dd = f"{det_delay:.2f}h" if det_delay is not None else "n/a"
+    _fp = result["far_preonset_pct"]
     logger.info(
-        f"[{detector.name}] FAT={fat} | VLT={vlt:.2f}h | "
-        f"FAR={far*100:.1f}% | valid={vlt > 0}"
+        f"[{detector.name}] FAT={fat} | lead={lead_time:.2f}h | "
+        f"delay={_dd} | FAR_preonset={_fp:.1f}% | valid={valid_alarm}"
     )
 
     return result
@@ -188,9 +282,12 @@ def evaluate_all_methods(detectors: list,
                          normal_period_fraction: float = 0.20,
                          threshold_strategy: str = "percentile",
                          threshold_percentile: float = 97.5,
-                         alarm_persistence: int = 3) -> pd.DataFrame:
+                         alarm_persistence: int = 3,
+                         t_onset: Optional[pd.Timestamp] = None,
+                         far_budget: float = 0.10,
+                         X_cal: Optional[np.ndarray] = None) -> tuple:
     """
-    Run evaluate_method() for all detectors, return summary DataFrame.
+    Run evaluate_method() for all detectors, return (summary_df, all_results).
     """
     rows = []
     all_results = []
@@ -207,20 +304,31 @@ def evaluate_all_methods(detectors: list,
                 threshold_strategy=threshold_strategy,
                 threshold_percentile=threshold_percentile,
                 alarm_persistence=alarm_persistence,
+                t_onset=t_onset,
+                far_budget=far_budget,
+                X_cal=X_cal,
             )
             all_results.append(result)
+            thr = result["threshold"]
             rows.append({
-                "Method":       result["method"],
-                "VLT (hours)":  round(result["VLT_hours"], 2),
-                "FAR (%)":      round(result["FAR_pct"], 2),
-                "Valid Alarm":  result["valid_alarm"],
-                "FAT":          result["FAT"],
-                "Threshold":    round(result["threshold"], 4),
+                "Method":             result["method"],
+                "Lead Time (hours)":  round(result["lead_time_hours"], 2),
+                "Detection Delay (h)": (round(result["detection_delay_hours"], 2)
+                                        if result["detection_delay_hours"] is not None else None),
+                "FAR pre-onset (%)":  round(result["far_preonset_pct"], 2),
+                "Valid Alarm":        result["valid_alarm"],
+                "FAT":                result["FAT"],
+                "Threshold":          (round(thr, 4) if thr == thr else None),  # NaN-safe
+                # legacy column names kept so src/sampling.py keeps working unchanged
+                "VLT (hours)":        round(result["VLT_hours"], 2),
+                "FAR (%)":            round(result["FAR_pct"], 2),
             })
         except Exception as e:
             logger.error(f"Method {det.name} failed: {e}")
 
-    summary_df = pd.DataFrame(rows).sort_values("VLT (hours)", ascending=False)
+    summary_df = pd.DataFrame(rows)
+    if not summary_df.empty:
+        summary_df = summary_df.sort_values("Lead Time (hours)", ascending=False)
     return summary_df, all_results
 
 

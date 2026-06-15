@@ -27,21 +27,34 @@ DATASET = {
     "sampling_rate_hz": 20480,      # raw acquisition rate
     "samples_per_file": 20480,      # one second of data per snapshot file
 
-    # Known failure channels (from PRONOSTIA / original paper)
-    # Run 1: Bearing 3 (ch4,ch5) and Bearing 4 (ch6,ch7)
-    # Run 2: Bearing 1 (ch0,ch1)
-    # Run 3: Bearing 3 (ch4,ch5)
+    # Known failure channels. NOTE channel layout differs by set:
+    #   Set 1 (1st_test): 8 channels — 2 accelerometers per bearing
+    #       Bearing1=ch0,1  Bearing2=ch2,3  Bearing3=ch4,5  Bearing4=ch6,7
+    #   Set 2/3 (2nd/3rd_test): 4 channels — 1 accelerometer per bearing
+    #       Bearing1=ch0  Bearing2=ch1  Bearing3=ch2  Bearing4=ch3
+    # Documented failures (Qiu et al. 2006, NASA IMS readme):
+    #   Run 1: Bearing 3 (inner race) + Bearing 4 (rolling element) → ch4,5,6,7
+    #   Run 2: Bearing 1 (outer race)                                → ch0
+    #   Run 3: Bearing 3 (outer race)                                → ch2
+    # (Used for documentation/diagnostics only; the pipeline uses all channels.)
     "failure_channels": {
         "1st_test": [4, 5, 6, 7],
-        "2nd_test": [0, 1],
-        "3rd_test": [4, 5],
+        "2nd_test": [0],
+        "3rd_test": [2],
     },
 
-    # Known failure times (approximate, from literature)
+    # Known failure times.
+    #   1st/2nd: last recording before test stop (matches data span).
+    #   3rd_test: CORRECTED. The prior label "2004-04-08 09:16" placed the failure
+    #     ~10 days before the end of the run — 1,359 rows (21.5%) lay *after* it,
+    #     impossible for a run-to-failure series. Verified empirically: the mean-RMS
+    #     health indicator is flat (~0.068) for weeks, then ramps to ~0.228 by
+    #     2004-04-18 02:32; the final 02:42 row drops to ~0.004 (machine off). The
+    #     bearing-3 outer-race failure is at the END of the run, near 2004-04-18.
     "failure_times": {
         "1st_test": "2003-11-25 23:39:56",
         "2nd_test": "2004-02-19 06:22:00",
-        "3rd_test": "2004-04-08 09:16:00",
+        "3rd_test": "2004-04-18 02:42:00",
     },
 }
 
@@ -68,6 +81,23 @@ SPLIT = {
     "calibration_fraction": 0.10,   # next 10% = calibration (for conformal)
     "test_fraction": 0.40,          # last 400% = test (contains failure)
     "normal_period_fraction": 0.05, # first 5% of TEST used to measure FAR
+}
+
+# ─── Degradation-Onset Detection ──────────────────────────────────────────────
+# The onset is a data-anchored, detector-independent change point that replaces the
+# old arbitrary "first 5% of test" normal-period marker. It is computed ONCE per run
+# on a health indicator (mean RMS trend), using ONLY the training-baseline statistics
+# (leakage-free). All onset-relative metrics (detection delay, pre-onset FAR) anchor
+# to it. See src/onset.py.
+ONSET = {
+    "health_indicator": "rms_mean",   # mean of rms_* channel columns
+    "method": "terminal",             # "terminal" | "sigma" | "cusum" | "pelt"
+    "sigma_k": 4.0,                    # band = train_mean + k*train_std (defines excursion)
+    "cusum_k": 0.5,                    # CUSUM slack (in train-std units)
+    "cusum_h": 5.0,                    # CUSUM decision threshold (in train-std units)
+    "persistence": 5,                 # min sustained samples for a valid excursion
+    "gap_tol": 10,                    # merge excursions separated by < this many samples
+    "baseline_fraction": 0.2,         # early fraction of run treated as the normal baseline
 }
 
 # ─── Thresholding ─────────────────────────────────────────────────────────────
