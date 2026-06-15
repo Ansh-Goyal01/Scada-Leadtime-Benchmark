@@ -59,6 +59,16 @@ def load_run(dataset: str, run_name: str, **kw) -> RunBundle:
     return _LOADERS[dataset](run_name, **kw)
 
 
+def default_runs(dataset: str) -> list:
+    """Default run list per dataset (the unit over which we aggregate/bootstrap)."""
+    if dataset == "ONGC":
+        return ["LPC"]
+    if dataset == "XJTU-SY":
+        return list(XJTU_NPY_RUNS.keys())   # 10 run-to-failure bearings, conditions 1 & 2
+    from src.config import EXPERIMENT
+    return EXPERIMENT["runs_to_evaluate"]   # IMS
+
+
 # ───────────────────────────────── IMS ────────────────────────────────────────
 
 @register_loader("IMS")
@@ -180,33 +190,92 @@ def _numkey(name: str):
 
 # ─────────────────────────── XJTU-SY / FEMTO (download) ────────────────────────
 
+# XJTU-SY canonical 10 run-to-failure bearings (conditions 1 & 2, bearings 1-5).
+# The .npy download stores each bearing's full life as x<split><cond>_<bearing>.npy of
+# shape (n_snapshots, 32768, 2). The non-`b` file stems below map to the bearings whose
+# snapshot counts EXACTLY match the published XJTU-SY lifetimes (Wang et al. 2020); the
+# `b1..b5` files are the uploader's augmented copies (lifetimes do not match) and are
+# deliberately excluded so each physical bearing is counted once.
+XJTU_NPY_RUNS = {
+    "Bearing1_1": "xtr1_1", "Bearing1_2": "xtr1_2", "Bearing1_3": "xte1_3",
+    "Bearing1_4": "xte1_4", "Bearing1_5": "xte1_5",
+    "Bearing2_1": "xtr2_1", "Bearing2_2": "xtr2_2", "Bearing2_3": "xte2_3",
+    "Bearing2_4": "xte2_4", "Bearing2_5": "xte2_5",
+}
+
+
 @register_loader("XJTU-SY")
 def _load_xjtu(run_name: str, **kw) -> RunBundle:
     """
-    XJTU-SY run-to-failure bearing. Each snapshot CSV holds 32768 samples (1.28 s @
-    25.6 kHz) in two columns (horizontal, vertical); files are recorded once per minute.
-    run_name is a bearing folder, e.g. 'Bearing1_1' under a condition dir. Failure = last
-    snapshot (run-to-failure). See scripts/download_data.py.
+    XJTU-SY run-to-failure bearing (2 ch, 32768 samples/snapshot @ 25.6 kHz, 1/min).
+    Failure = last snapshot (RUL → 0). ``run_name`` e.g. 'Bearing1_3'.
+
+    Two on-disk layouts are supported:
+      * .npy bundle (this download): flat dir of x<...>.npy arrays of shape
+        (n_snapshots, 32768, 2). Canonical bearings resolved via XJTU_NPY_RUNS.
+      * per-CSV run folders (official MediaFire release): handled by the CSV path.
     """
     import os
     from src.config import PATHS
     root = PATHS.get("raw_xjtu", os.path.join(os.path.dirname(PATHS["processed"]), "raw", "XJTU-SY"))
-    run_dir = _find_run_dir(root, run_name)
 
-    def reader(path):
-        d = pd.read_csv(path)
-        return d.select_dtypes(include=[np.number]).values[:, :2]
+    npy_path = _resolve_xjtu_npy(root, run_name)
+    if npy_path is not None:
+        df = _ingest_run_npy(npy_path, start=pd.Timestamp("2019-01-01"),
+                             step=pd.Timedelta(minutes=1),
+                             cache_name=f"XJTU_{run_name}_features.parquet")
+    else:
+        run_dir = _find_run_dir(root, run_name)
 
-    start = pd.Timestamp("2019-01-01")
-    df = _ingest_run_csvs(run_dir, reader, start, pd.Timedelta(minutes=1),
-                          f"XJTU_{run_name}_features.parquet")
+        def reader(path):
+            d = pd.read_csv(path)
+            return d.select_dtypes(include=[np.number]).values[:, :2]
+
+        df = _ingest_run_csvs(run_dir, reader, pd.Timestamp("2019-01-01"),
+                              pd.Timedelta(minutes=1), f"XJTU_{run_name}_features.parquet")
+
+    cond = "35Hz" if "1_" in run_name or "1." in run_name else "37.5Hz"
     return RunBundle(
         snapshot_df=df, failure_time=str(df.index[-1]),
         dataset="XJTU-SY", run_name=run_name,
         train_fraction=0.5, raw_waveform_available=True,
         channels=[c for c in df.columns if c.startswith("rms_ch")],
-        meta={"fs": 25600, "snapshot_s": 1.28, "interval": "1min"},
+        meta={"fs": 25600, "snapshot_s": 1.28, "interval": "1min", "condition": cond},
     )
+
+
+def _resolve_xjtu_npy(root: str, run_name: str) -> Optional[str]:
+    """Return the .npy file path for a run if the bundle layout is present, else None."""
+    import os
+    stem = XJTU_NPY_RUNS.get(run_name, run_name)
+    if not stem.startswith("x"):
+        stem = "x" + stem.lstrip("xy")
+    cand = os.path.join(root, f"{stem}.npy")
+    return cand if os.path.exists(cand) else None
+
+
+def _ingest_run_npy(npy_path: str, start: pd.Timestamp, step: pd.Timedelta,
+                    cache_name: str) -> pd.DataFrame:
+    """
+    Ingest a (n_snapshots, n_samples, n_channels) .npy array: per-snapshot time-domain
+    stats indexed by a synthetic uniform clock. Cached to processed/.
+    """
+    import os
+    from src.config import PATHS
+    from src.preprocessing import save_processed, load_processed
+    cache = os.path.join(PATHS["processed"], cache_name)
+    if os.path.exists(cache):
+        return load_processed(cache)
+    arr = np.load(npy_path, allow_pickle=True)
+    if arr.ndim != 3:
+        raise ValueError(f"{npy_path}: expected (n,samples,channels), got {arr.shape}")
+    recs = []
+    for k in range(arr.shape[0]):
+        recs.append(_snapshot_stats(arr[k], start + k * step))
+    df = pd.DataFrame(recs).set_index("timestamp").sort_index()
+    save_processed(df, cache)
+    logger.info("XJTU ingest %s → %d snapshots", os.path.basename(npy_path), len(df))
+    return df
 
 
 @register_loader("FEMTO")

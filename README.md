@@ -9,15 +9,17 @@ This repository asks a different question than most anomaly-detection benchmarks
 give, at an acceptable false-alarm rate?"* — and *"does storing data at a coarse SCADA
 logging rate destroy that warning time?"*
 
-> **Headline finding (honest, and opposite to our original hypothesis).** Under a corrected
-> label, an ungameable onset-relative metric, and a *controlled* sampling sweep, bin
-> **aggregation does not destroy lead time on IMS — it significantly *extends* it** for
+> **Headline finding (honest, and opposite to our original hypothesis).** The original claim
+> that SCADA averaging *destroys* detection lead time is **refuted on all three datasets**.
+> Under a corrected label, an ungameable onset-relative metric, and a *controlled* sampling
+> sweep, bin aggregation on IMS does not hurt — it significantly *extends* lead time for
 > several detectors (3σ: +17.5 h median, *p* = 0.003; EWMA: +2.5 h, *p* = 0.006; Hotelling
-> T²: +0.8 h, *p* = 0.05; Isolation Forest: n.s.). On real ONGC turbine SCADA data the
-> aggregate-vs-decimate difference is sub-minute and not significant (*p* ≥ 0.125, n = 5).
-> Averaging stabilizes the health signal more than it smears the transient. With n = 3 IMS
-> runs this is a motivating result, not a closed case — hence the XJTU-SY / FEMTO loaders
-> for generalization.
+> T²: +0.8 h, *p* = 0.05; IF: n.s.). On the real **ONGC** turbine the aggregate-vs-decimate
+> difference is sub-minute and not significant (*p* ≥ 0.125). On **XJTU-SY (n = 10
+> run-to-failure bearings)** the difference is again **not significant** for any detector
+> (*p* ≈ 0.08–1.0) — the IMS "averaging *helps*" effect does **not** generalize, but neither
+> does "averaging hurts." The defensible cross-dataset conclusion is **non-destruction**:
+> coarse SCADA-rate logging does not cost you bearing-fault warning time.
 
 This is a revision of an earlier version that a reviewer scored 3/10. The defects were
 real and are documented and fixed below; nothing here is tuned to produce a positive
@@ -44,7 +46,9 @@ result.
 |---|---|---|
 | **IMS** (NASA, 20.48 kHz run-to-failure) | Controlled benchmark; raw waveforms make the sampling sweep valid and enable spectral features | Included (processed parquet) |
 | **ONGC Solar Turbine** | Real industrial SCADA: 4 vibration channels, 10-s logging, ~5 days, ending in a real operator shutdown (2023-11-13) | Included (gitignored raw `.xlsx`) |
-| **XJTU-SY**, **FEMTO/PRONOSTIA** | Cross-condition generalization | Loaders implemented; data is a multi-GB local download — see `scripts/download_data.py` |
+| **XJTU-SY** (10 run-to-failure bearings, 25.6 kHz) | Cross-condition generalization of the lead-time / sampling claim | Included (`.npy` bundle, conditions 1 & 2); loader auto-caches per-bearing parquet |
+| **FEMTO/PRONOSTIA** | Further run-to-failure generalization | Loader implemented; multi-GB local download — see `scripts/download_data.py` |
+| **Paderborn (KAt)** | *Fault classification* (pre-damaged bearings at fixed conditions) — **not run-to-failure**, so it cannot test a lead-time/sampling claim | Present on disk (`archive (5)/`); usable only for a separate healthy-vs-damaged detection study |
 
 ---
 
@@ -112,8 +116,11 @@ paper/                methods + results write-up with all tables/figures
 
 ## Honest caveats
 
-- **n = 3 IMS runs.** The reversed aggregation finding is significant under a paired test
-  but rests on three runs; treat it as motivating until XJTU-SY/FEMTO are run.
+- **The "aggregation helps" effect is IMS-specific.** It is significant on IMS (n = 3)
+  under the controlled sweep but does **not** replicate on XJTU-SY (n = 10) or ONGC, where
+  the difference is null. The cross-dataset claim is therefore *non-destruction*, not
+  "averaging helps." XJTU bearings are also short-lived (52–533 min), so absolute lead
+  times there are small and some abrupt-failure bearings are essentially unwarnable.
 - **1st_test onset is late.** Its mean-RMS onset fires ~12 h before failure, so its
   "pre-onset" region already contains degradation. This inflates its pre-onset FAR and
   breaks the conformal exchangeability assumption *on that run only* (2nd/3rd_test are

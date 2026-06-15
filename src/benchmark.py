@@ -112,7 +112,8 @@ def run_benchmark(dataset: str = "IMS",
     seed axis to avoid wasted compute; only Isolation Forest / LSTM-AE vary with seed.
     """
     if runs is None:
-        runs = ["LPC"] if dataset == "ONGC" else EXPERIMENT["runs_to_evaluate"]
+        from src.datasets import default_runs
+        runs = default_runs(dataset)
     if control and dataset != "IMS":
         logger.warning("controlled sweep currently supports IMS only; using standard path for %s", dataset)
         control = False

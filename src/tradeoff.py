@@ -85,7 +85,8 @@ def run_tradeoff(dataset: str = "IMS",
     from src.config import PATHS, EXPERIMENT
 
     if runs is None:
-        runs = ["LPC"] if dataset == "ONGC" else EXPERIMENT["runs_to_evaluate"]
+        from src.datasets import default_runs
+        runs = default_runs(dataset)
     percentiles = percentiles or DEFAULT_PERCENTILES
 
     frames = []
