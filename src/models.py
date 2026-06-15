@@ -69,16 +69,28 @@ class BaseDetector(ABC):
 class ThreeSigmaDetector(BaseDetector):
     """
     Univariate 3σ rule applied to the L2-norm of the feature vector.
-    Anomaly score = max z-score across all features (worst-channel logic).
+
+    The monitored statistic is a single scalar health index — the L2-norm
+    (overall vibration energy) of each sample's feature vector — which is then
+    standardized against its training mean/std. The anomaly score is the absolute
+    z-deviation of that index, so the natural alarm level is n_sigma.
+
+    NOTE: an earlier version scored the *maximum* z-score across all features
+    ("worst-channel" logic). With a high-dimensional feature set (hundreds of
+    features) that statistic is dominated by the single most non-stationary
+    feature and saturates far above n_sigma on out-of-sample normal data, pinning
+    the false-alarm rate at 100%. The univariate L2 index documented above is
+    stable under p ≫ n and matches this detector's intended design.
 
     Pro: Fully interpretable, SCADA operators know this.
-    Con: Assumes Gaussian, no multivariate structure.
+    Con: Assumes Gaussian, collapses all channels into one index (no multivariate
+         covariance structure — see HotellingT2Detector for that).
     """
 
     def __init__(self, n_sigma: float = 3.0):
         self.n_sigma = n_sigma
-        self._mu = None
-        self._sigma = None
+        self._mu_norm = None       # training mean of the L2-norm health index
+        self._sigma_norm = None    # training std of the L2-norm health index
 
     @property
     def name(self):
@@ -88,17 +100,23 @@ class ThreeSigmaDetector(BaseDetector):
     def short_name(self):
         return "three_sigma"
 
+    @staticmethod
+    def _health_index(X: np.ndarray) -> np.ndarray:
+        """Univariate health index: L2-norm of each sample's feature vector."""
+        return np.linalg.norm(X, axis=1)
+
     def fit(self, X: np.ndarray) -> "ThreeSigmaDetector":
-        self._mu    = np.mean(X, axis=0)
-        self._sigma = np.std(X, axis=0) + 1e-12
+        h = self._health_index(X)
+        self._mu_norm    = float(np.mean(h))
+        self._sigma_norm = float(np.std(h)) + 1e-12
         return self
 
     def score(self, X: np.ndarray) -> np.ndarray:
-        if self._mu is None:
+        if self._mu_norm is None:
             raise RuntimeError("Call fit() before score().")
-        z_scores = np.abs((X - self._mu) / self._sigma)   # (n, n_feat)
-        # Return maximum z-score across features per sample (most anomalous feature)
-        return z_scores.max(axis=1)
+        h = self._health_index(X)
+        # Absolute z-deviation of the univariate health index (natural level = n_sigma)
+        return np.abs((h - self._mu_norm) / self._sigma_norm)
 
 
 
@@ -163,17 +181,31 @@ class EWMADetector(BaseDetector):
 
 class HotellingT2Detector(BaseDetector):
     """
-    Multivariate Hotelling T² statistic.
-    Score = Mahalanobis distance from training mean.
-    Follows chi² distribution → principled threshold via chi² quantile.
+    Multivariate Hotelling T² statistic computed in a PCA-reduced subspace.
 
-    Better than 3σ because it captures covariance structure.
+    Score = T² = Σ_i (proj_i / σ_i)²  over the top-k principal components, i.e. the
+    squared Mahalanobis distance from the training mean within the retained subspace.
+    Follows a χ²(k) distribution → principled threshold via χ² quantile.
+
+    Why PCA first? On a high-dimensional feature set the raw covariance is singular
+    whenever p ≥ n (here p can be several hundred features against ~100 training
+    samples). Inverting it — even with a tiny ridge — produces enormous eigenvalues
+    in the null space, so out-of-sample T² explodes by many orders of magnitude and
+    the false-alarm rate pins at 100%. Reducing to a fixed rank k ≪ n yields a
+    well-conditioned, full-rank covariance in the subspace and restores a meaningful,
+    χ²-calibrated statistic. This is the standard PCA-based T² formulation used in
+    multivariate statistical process control.
+
+    Better than 3σ because it captures covariance structure (across the retained PCs).
     """
 
-    def __init__(self, alpha: float = 0.01):
+    def __init__(self, alpha: float = 0.01, n_components: int = 10):
         self.alpha = alpha
-        self._mu = None
-        self._cov_inv = None
+        self.n_components = n_components   # retained PCA rank (k ≪ n keeps T² well-conditioned)
+        self._pca = None
+        self._proj_mu = None    # training mean of PC projections
+        self._proj_sd = None    # training std of PC projections (per-PC scaling)
+        self._k = None
 
     @property
     def name(self):
@@ -184,28 +216,33 @@ class HotellingT2Detector(BaseDetector):
         return "hotelling_t2"
 
     def fit(self, X: np.ndarray) -> "HotellingT2Detector":
-        self._mu = np.mean(X, axis=0)
-        cov = np.cov(X.T) + np.eye(X.shape[1]) * 1e-6  # regularize
-        try:
-            self._cov_inv = np.linalg.inv(cov)
-        except np.linalg.LinAlgError:
-            self._cov_inv = np.linalg.pinv(cov)
-        self._n_features = X.shape[1]
+        from sklearn.decomposition import PCA
+        # Cap the rank so the subspace covariance stays estimable (need k < n).
+        k = int(min(self.n_components, X.shape[0] - 2, X.shape[1]))
+        k = max(1, k)
+        if k < self.n_components:
+            logger.info(
+                f"HotellingT2: capping PCA rank {self.n_components} → {k} "
+                f"(n_train={X.shape[0]}, p={X.shape[1]})"
+            )
+        self._pca = PCA(n_components=k, svd_solver="full").fit(X)
+        Z = self._pca.transform(X)
+        self._proj_mu = Z.mean(axis=0)
+        self._proj_sd = Z.std(axis=0) + 1e-12
+        self._k = k
         return self
 
     def score(self, X: np.ndarray) -> np.ndarray:
-        if self._mu is None:
+        if self._pca is None:
             raise RuntimeError("Call fit() before score().")
-        diff = X - self._mu                              # (n, p)
-        # T² = (x - μ)^T * Σ^{-1} * (x - μ)
-        scores = np.array([
-            float(d @ self._cov_inv @ d) for d in diff
-        ])
-        return scores
+        Z = self._pca.transform(X)
+        # T² = sum of squared standardized PC projections = Mahalanobis² in the subspace
+        z = (Z - self._proj_mu) / self._proj_sd
+        return np.sum(z ** 2, axis=1)
 
     def chi2_threshold(self) -> float:
-        """Chi-squared threshold at the given significance level."""
-        return chi2.ppf(1.0 - self.alpha, df=self._n_features)
+        """Chi-squared threshold at the given significance level (df = retained PCA rank)."""
+        return chi2.ppf(1.0 - self.alpha, df=self._k)
 
 
 
