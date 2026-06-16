@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: >-
+  Lead-Time-Centric Evaluation of Bearing Anomaly Detectors and the Effect of
+  SCADA-Rate Logging on Warning Time: An Ungameable Metric and a Multi-Dataset
+  Study
+type: software
+authors:
+  - given-names: Ansh
+    family-names: Goyal
+    affiliation: "Jaypee Institute of Information Technology, Noida, India"
+    email: anshgoyal500@gmail.com
+    # orcid: "https://orcid.org/0000-0000-0000-0000"  # add your ORCID, then uncomment
+repository-code: "https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark"
+abstract: >-
+  A reproducible benchmark that makes lead time, gated by a leakage-free
+  false-alarm rate, the primary metric for evaluating rolling-element bearing
+  anomaly detectors, and uses it to test whether SCADA-rate bin-averaging
+  destroys detection lead time. Across four run-to-failure datasets (NASA IMS,
+  a real ONGC gas-turbine SCADA record, XJTU-SY, and FEMTO/PRONOSTIA) with
+  run-level statistics and Holm correction, the headline finding is
+  non-destruction: coarse SCADA-rate logging does not cost bearing-fault warning
+  time.
+keywords:
+  - predictive maintenance
+  - prognostics and health management
+  - lead time
+  - anomaly detection
+  - condition monitoring
+  - rolling-element bearing
+  - SCADA
+  - conformal prediction
+  - statistical process control
+license: MIT
+version: 1.0.0
+date-released: "2026-06-16"
