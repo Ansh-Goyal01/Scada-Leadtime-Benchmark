@@ -47,7 +47,7 @@ from src.sampling import derive_counts, load_pipeline_controlled
 logger = logging.getLogger(__name__)
 
 # Detectors whose output does not depend on the RNG seed — run once, broadcast.
-_DETERMINISTIC = {"three_sigma", "ewma", "hotelling_t2", "one_class_svm"}
+_DETERMINISTIC = {"three_sigma", "ewma", "cusum", "hotelling_t2", "one_class_svm", "rms_trend"}
 
 DEFAULT_FAR_BUDGET = 0.10
 
@@ -57,12 +57,10 @@ DEFAULT_FAR_BUDGET = 0.10
 def make_detectors(methods: list, seed: int):
     """Instantiate detectors with the RNG seed injected into stochastic models."""
     params = copy.deepcopy(MODELS)
-    if "isolation_forest" in params:
-        params["isolation_forest"]["random_state"] = seed
-    if "lstm_ae" in params:
-        params["lstm_ae"]["random_state"] = seed
-    if "conformal_if" in params:
-        params["conformal_if"]["random_state"] = seed
+    for stochastic in ("isolation_forest", "lstm_ae", "conformal_if",
+                       "deep_svdd", "tcn", "transformer_ad"):
+        if stochastic in params:
+            params[stochastic]["random_state"] = seed
     return get_all_models({"methods_to_run": methods, "model_params": params})
 
 
@@ -180,6 +178,7 @@ def run_benchmark(dataset: str = "IMS",
                         continue
 
                     dets = make_detectors(methods_this_seed, seed)
+                    name_by_short = {d.short_name: d.name for d in dets}
                     _, results = evaluate_all_methods(
                         detectors=dets,
                         X_train=pipe["X_train"], X_test=pipe["X_test"],
@@ -207,6 +206,35 @@ def run_benchmark(dataset: str = "IMS",
                             "vlt_legacy_hours": r["VLT_hours"],
                             "far_legacy_pct": r["FAR_pct"],
                             "valid_alarm": r["valid_alarm"],
+                            "n_test_windows": len(pipe["ts_test"]),
+                            "window_rows": window_rows,
+                            "persistence_windows": persistence_windows,
+                            "window_floored": window_floored,
+                            "control": control,
+                            "onset_method": info["onset_method"],
+                        })
+                    # Honest N/A: any requested method that produced no result
+                    # (e.g. ShortRunError on a too-short run, or a fit failure) is
+                    # recorded as an explicit NaN row rather than silently dropped.
+                    produced = {r["short_name"] for r in results}
+                    for short in methods_this_seed:
+                        if short in produced:
+                            continue
+                        rows.append({
+                            "dataset": dataset, "run": run_name, "seed": seed,
+                            "method": name_by_short.get(short, short), "short_name": short,
+                            "mode": mode, "factor": factor,
+                            "effective_interval_min": round(pipe["effective_interval_min"], 2),
+                            "t_onset": onset, "t_fail": t_fail,
+                            "max_lead_hours": round(info["max_lead_hours"], 2)
+                                              if np.isfinite(info["max_lead_hours"]) else np.nan,
+                            "lead_time_hours": np.nan,
+                            "detection_delay_hours": np.nan,
+                            "far_preonset_pct": np.nan,
+                            "lead_norm": np.nan,
+                            "vlt_legacy_hours": np.nan,
+                            "far_legacy_pct": np.nan,
+                            "valid_alarm": False,
                             "n_test_windows": len(pipe["ts_test"]),
                             "window_rows": window_rows,
                             "persistence_windows": persistence_windows,

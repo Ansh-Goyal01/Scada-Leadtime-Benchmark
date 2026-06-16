@@ -147,7 +147,8 @@ def load_pipeline(run_name: str = "2nd_test",
                   downsample_factor: int = 1,
                   downsample_mode: str = "none",
                   use_spectral: bool = None,
-                  dataset: str = "IMS") -> dict:
+                  dataset: str = "IMS",
+                  signal_transform=None) -> dict:
     """
     One-call loader: preprocess → (SCADA-rate downsample) → feature extract → split → scale.
 
@@ -192,6 +193,15 @@ def load_pipeline(run_name: str = "2nd_test",
         else:  # decimate — keep every k-th row of the uniform grid
             df = df.iloc[::downsample_factor].copy()
     effective_interval_min = _median_spacing_minutes(df.index)
+
+    # Optional mechanism-test hook (src/robustness.py): an arbitrary transform of
+    # the snapshot signal grid AFTER any downsampling but BEFORE feature extraction.
+    # Used to inject noise and to compare alternative denoisers (median / moving-
+    # average / Kalman / wavelet) against historian bin-averaging. signal_transform
+    # is a callable df -> df operating on the rms_ch*/kurt_ch* columns; None is a
+    # no-op so all existing call sites are unchanged.
+    if signal_transform is not None:
+        df = signal_transform(df)
 
     # Feature extraction — channel-count-invariant schema (W4 fix) or legacy.
     if FEATURES.get("mode", "invariant") == "invariant":

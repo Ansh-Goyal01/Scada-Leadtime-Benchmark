@@ -176,7 +176,75 @@ class EWMADetector(BaseDetector):
 
 
 
-# 3. Hotelling's T² (multivariate Gaussian)
+# 3. CUSUM (cumulative-sum control chart)
+
+
+class CUSUMDetector(BaseDetector):
+    """
+    Two-sided tabular CUSUM control chart on the monitored magnitude.
+
+    The monitored statistic is the mean absolute feature value per sample (the
+    same scalar magnitude EWMA watches). Standardizing against the training
+    mean/std, the tabular CUSUM accumulates standardized exceedances beyond a
+    slack (reference value) ``k``:
+
+        S⁺_t = max(0, S⁺_{t−1} + (z_t − k)),   S⁻_t = max(0, S⁻_{t−1} − (z_t + k))
+
+    where z_t is the standardized magnitude. The anomaly score is max(S⁺, S⁻);
+    the textbook decision interval ``h`` (here exposed as ``cusum_h``) is the
+    natural alarm level, though the benchmark applies its own percentile
+    threshold on the score stream for cross-detector comparability.
+
+    CUSUM is the classic change-point chart and a standard SPC reference the
+    reviewer asked for: it is the most sensitive chart for detecting a small,
+    sustained mean shift (such as the slow onset of bearing degradation), and it
+    is fully deterministic. ``k`` is conventionally half the shift to detect (in
+    sigma units) and ``h`` is chosen for a target in-control run length; we use
+    the common k=0.5, h=5.0 defaults.
+    """
+
+    def __init__(self, k: float = 0.5, h: float = 5.0):
+        self.k = k          # reference value / slack, in sigma units
+        self.h = h          # decision interval (natural alarm level)
+        self._mu = None     # training mean of the monitored magnitude
+        self._sigma = None  # training std of the monitored magnitude
+
+    @property
+    def name(self):
+        return f"CUSUM (k={self.k}, h={self.h})"
+
+    @property
+    def short_name(self):
+        return "cusum"
+
+    @staticmethod
+    def _magnitude(X: np.ndarray) -> np.ndarray:
+        """Monitored statistic: mean absolute feature value per sample."""
+        return np.mean(np.abs(X), axis=1)
+
+    def fit(self, X: np.ndarray) -> "CUSUMDetector":
+        m = self._magnitude(X)
+        self._mu = float(np.mean(m))
+        self._sigma = float(np.std(m)) + 1e-12
+        return self
+
+    def score(self, X: np.ndarray) -> np.ndarray:
+        if self._mu is None:
+            raise RuntimeError("Call fit() before score().")
+        z = (self._magnitude(X) - self._mu) / self._sigma
+        n = len(z)
+        s_pos = 0.0
+        s_neg = 0.0
+        out = np.zeros(n)
+        for t in range(n):
+            s_pos = max(0.0, s_pos + (z[t] - self.k))
+            s_neg = max(0.0, s_neg - (z[t] + self.k))
+            out[t] = max(s_pos, s_neg)
+        return out
+
+
+
+# 4. Hotelling's T² (multivariate Gaussian)
 
 
 class HotellingT2Detector(BaseDetector):
@@ -365,6 +433,7 @@ class LSTMAEDetector(BaseDetector):
                  batch_size: int = 32,
                  learning_rate: float = 1e-3,
                  dropout: float = 0.1,
+                 random_state: int = 42,
                  device: str = "auto"):
         self.seq_len = seq_len
         self.hidden_dim = hidden_dim
@@ -373,6 +442,7 @@ class LSTMAEDetector(BaseDetector):
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.dropout = dropout
+        self.random_state = random_state
         self._model = None
         self._n_features = None
         self._scaler = MinMaxScaler()
@@ -402,6 +472,14 @@ class LSTMAEDetector(BaseDetector):
         except ImportError:
             raise ImportError("PyTorch is required for LSTMAEDetector. "
                               "Install with: pip install torch")
+
+        if len(X) < self.seq_len:
+            from src.deep_baselines import ShortRunError
+            raise ShortRunError(
+                f"LSTM-AE needs >= {self.seq_len} windows; run has {len(X)}.")
+
+        torch.manual_seed(self.random_state)
+        np.random.seed(self.random_state)
 
         X_scaled = self._scaler.fit_transform(X)
         self._n_features = X.shape[1]
@@ -536,6 +614,8 @@ def get_all_models(config: dict) -> list:
             detectors.append(ThreeSigmaDetector(**p))
         elif method == "ewma":
             detectors.append(EWMADetector(**p))
+        elif method == "cusum":
+            detectors.append(CUSUMDetector(**p))
         elif method == "hotelling_t2":
             detectors.append(HotellingT2Detector(**p))
         elif method == "isolation_forest":
@@ -553,6 +633,12 @@ def get_all_models(config: dict) -> list:
         elif method == "deep_svdd":
             from src.baselines_extra import DeepSVDDDetector
             detectors.append(DeepSVDDDetector(**p))
+        elif method == "tcn":
+            from src.deep_baselines import TCNDetector
+            detectors.append(TCNDetector(**p))
+        elif method == "transformer_ad":
+            from src.deep_baselines import TransformerADDetector
+            detectors.append(TransformerADDetector(**p))
         elif method == "conformal_if":
             # Distribution-free wrapper around Isolation Forest. Calibrated on X_cal,
             # exposes .calibrate/.alarm so evaluate_method bypasses the percentile

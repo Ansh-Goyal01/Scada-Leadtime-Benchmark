@@ -172,6 +172,10 @@ MODELS = {
         "lambda_": 0.2,
         "k": 3.0,
     },
+    "cusum": {                   # two-sided tabular CUSUM control chart (deterministic)
+        "k": 0.5,                # reference value / slack (sigma units; half the shift to detect)
+        "h": 5.0,                # decision interval (natural alarm level)
+    },
     "hotelling_t2": {
         "alpha": 0.01,           # significance level for chi2 threshold
         "n_components": 10,      # PCA rank for the T² subspace (k << n; avoids singular cov when p >> n)
@@ -203,6 +207,31 @@ MODELS = {
         "random_state": 42,
         "device": "auto",
     },
+    "tcn": {                       # dilated causal conv autoencoder (requires torch)
+        "seq_len": 30,
+        "channels": 32,
+        "kernel_size": 3,
+        "levels": 4,               # dilations 1,2,4,8
+        "epochs": 40,              # CPU-friendly; not tuned per-dataset (fixed-protocol fairness)
+        "batch_size": 32,
+        "learning_rate": 1e-3,
+        "dropout": 0.1,
+        "random_state": 42,
+        "device": "auto",
+    },
+    "transformer_ad": {            # lightweight reconstruction Transformer (requires torch)
+        "seq_len": 30,
+        "d_model": 32,             # small — sized for ~100-window training sets
+        "nhead": 2,
+        "num_layers": 2,
+        "dim_feedforward": 64,
+        "epochs": 40,
+        "batch_size": 32,
+        "learning_rate": 1e-3,
+        "dropout": 0.1,
+        "random_state": 42,
+        "device": "auto",
+    },
     "conformal_if": {              # distribution-free Isolation Forest (FAR ≤ alpha)
         "n_estimators": 200,
         "contamination": "auto",
@@ -227,10 +256,13 @@ EXPERIMENT = {
         "rms_trend",       # naive RMS>kσ floor baseline (reviewer-requested)
         "three_sigma",
         "ewma",
+        "cusum",           # CUSUM control chart (reviewer-requested SPC baseline)
         "hotelling_t2",
         "isolation_forest",
-        # "deep_svdd",     # one-class deep model (torch); enable for full runs
-        # "lstm_ae",       # deep AE (torch); enable for full runs
+        "deep_svdd",       # one-class deep model (torch)
+        "lstm_ae",         # deep recon AE (torch); short-run N/A guard
+        "tcn",             # dilated conv AE (torch); short-run N/A guard
+        "transformer_ad",  # recon Transformer (torch); short-run N/A guard
     ],
     "run_threshold_sweep": True,
     "run_feature_ablation": True,
