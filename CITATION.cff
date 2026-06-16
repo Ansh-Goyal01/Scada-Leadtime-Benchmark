@@ -1,9 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
 title: >-
-  Lead-Time-Centric Evaluation of Bearing Anomaly Detectors and the Effect of
-  SCADA-Rate Logging on Warning Time: An Ungameable Metric and a Multi-Dataset
-  Study
+  Lead-Time-Centric Evaluation of Bearing Anomaly Detectors:
+  A Multi-Dataset SCADA Study
 type: software
 authors:
   - given-names: Ansh
