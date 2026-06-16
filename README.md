@@ -1,8 +1,26 @@
+<div align="center">
+
 # SCADA Lead-Time Benchmark
 
-**Lead-time-centric evaluation of anomaly detectors for bearing prognostics, and a
-controlled study of how SCADA-rate logging (aggregation vs decimation) affects warning
-time.**
+### Lead-Time-Centric Evaluation of Bearing Anomaly Detectors: A Multi-Dataset SCADA Study
+
+*How many hours of actionable warning does a detector give — and does coarse SCADA-rate logging destroy it?*
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.13](https://img.shields.io/badge/Python-3.13-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20719076-1682D4.svg)](https://doi.org/10.5281/zenodo.20719076)
+[![Tests](https://img.shields.io/badge/tests-79%20passing-brightgreen.svg)](tests/)
+[![Datasets](https://img.shields.io/badge/datasets-4%20run--to--failure-orange.svg)](#datasets)
+[![Reproducible](https://img.shields.io/badge/results-reproducible-success.svg)](#quickstart)
+
+![PyTorch](https://img.shields.io/badge/PyTorch-CPU%20optional-EE4C2C.svg?logo=pytorch&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-Isolation%20Forest-F7931E.svg?logo=scikitlearn&logoColor=white)
+![SciPy](https://img.shields.io/badge/SciPy-sign%20test%20%2B%20Holm-8CAAE6.svg?logo=scipy&logoColor=white)
+![status](https://img.shields.io/badge/status-under%20review-blueviolet.svg)
+
+</div>
+
+---
 
 This repository asks a different question than most anomaly-detection benchmarks. Not
 *"did the detector flag the failure?"* but *"how many hours of actionable warning did it
@@ -67,7 +85,7 @@ result.
 
 ```bash
 pip install -r requirements.txt          # pinned; CPU-only (torch optional)
-python -m pytest                          # 76 tests — metric/onset/conformal/stats/baselines/robustness/FEMTO
+python -m pytest                          # 79 tests — metric/onset/conformal/stats/baselines/robustness/FEMTO
 
 # Statistical benchmark (corrected labels, onset-relative metrics, bootstrap CIs)
 python -m src.benchmark   --dataset IMS --control   # controlled feature-level sweep (headline), 10 detectors
@@ -158,3 +176,32 @@ paper/                methods + results write-up with all tables/figures
   well-calibrated). Reported, not hidden.
 - **Spectral features did not help on IMS.** They produce longer raw lead times but lower
   validity (more pre-onset false alarms); time-domain `rms`/`kurtosis` carry the signal.
+
+---
+
+## Citation
+
+If you use this benchmark or its results, please cite the archived release
+(concept DOI [10.5281/zenodo.20719076](https://doi.org/10.5281/zenodo.20719076), resolves
+to the latest version):
+
+```bibtex
+@software{goyal_scada_leadtime,
+  author    = {Goyal, Ansh},
+  title     = {Lead-Time-Centric Evaluation of Bearing Anomaly Detectors:
+               A Multi-Dataset SCADA Study},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.20719076},
+  url       = {https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark}
+}
+```
+
+A machine-readable [`CITATION.cff`](CITATION.cff) is provided, so GitHub shows a
+**"Cite this repository"** button in the sidebar.
+
+## License
+
+Released under the [MIT License](LICENSE) — free to use, modify, and distribute with
+attribution. Dataset terms (IMS, XJTU-SY, FEMTO/PRONOSTIA) remain with their original
+providers; the ONGC turbine record is proprietary and not redistributed.
