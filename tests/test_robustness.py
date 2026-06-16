@@ -13,6 +13,7 @@ import pytest
 from src.robustness import (
     make_noise_transform,
     make_denoise_transform,
+    noise_runlevel,
     _kalman_cv_smooth,
     _signal_columns,
 )
@@ -108,3 +109,51 @@ def test_kalman_smooth_basic():
 def test_unknown_denoiser_raises():
     with pytest.raises(ValueError):
         make_denoise_transform("nope")
+
+
+# ───────────────────── run-level collapse (W2 pseudoreplication fix) ────────────
+
+def _noise_long_toy(spec=None):
+    """Two magnitude charts x three runs x two modes at one SNR, from a per-run
+    spec of (aggregate, decimate) lead-time pairs. Default per-run mean
+    (aggregate-decimate) diffs are run A = +2, run B = +1, run C = -1."""
+    spec = spec or {
+        "runA": {"aggregate": (10.0, 12.0), "decimate": (8.0, 10.0)},   # mean diff +2
+        "runB": {"aggregate": (5.0, 7.0),   "decimate": (4.0, 6.0)},    # mean diff +1
+        "runC": {"aggregate": (3.0, 3.0),   "decimate": (4.0, 4.0)},    # mean diff -1
+    }
+    rows = []
+    for run, modes in spec.items():
+        for mode, (m_3s, m_ewma) in modes.items():
+            for short, val in (("three_sigma", m_3s), ("ewma", m_ewma)):
+                rows.append({"run": run, "snr_db": 10.0, "mode": mode,
+                             "short_name": short, "lead_time_hours": val})
+    return pd.DataFrame(rows)
+
+
+def test_noise_runlevel_collapses_to_runs_not_detectors():
+    rl = noise_runlevel(_noise_long_toy(), methods=("three_sigma", "ewma"))
+    assert len(rl) == 1
+    row = rl.iloc[0]
+    # unit of inference is the run: n=3, NOT 6 (3 runs x 2 charts)
+    assert row["n_runs"] == 3
+    assert row["run_diffs"] == "+2.00, +1.00, -1.00"   # ordered runA, runB, runC
+    assert abs(row["mean_diff"] - (2.0 / 3.0)) < 1e-9
+    assert row["n_pos"] == 2 and row["n_neg"] == 1
+    assert not row["all_same_sign"]
+
+
+def test_noise_runlevel_detects_unanimous_sign():
+    # all three runs positive -> all_same_sign True
+    spec = {
+        "runA": {"aggregate": (10.0, 12.0), "decimate": (8.0, 10.0)},   # +2
+        "runB": {"aggregate": (5.0, 7.0),   "decimate": (4.0, 6.0)},    # +1
+        "runC": {"aggregate": (8.0, 8.0),   "decimate": (4.0, 4.0)},    # +4
+    }
+    rl = noise_runlevel(_noise_long_toy(spec), methods=("three_sigma", "ewma"))
+    row = rl.iloc[0]
+    assert row["n_pos"] == 3 and row["all_same_sign"]
+
+
+def test_noise_runlevel_empty_is_safe():
+    assert noise_runlevel(pd.DataFrame()).empty

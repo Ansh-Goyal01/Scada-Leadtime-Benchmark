@@ -330,6 +330,12 @@ def main(argv=None) -> int:
         out = os.path.join(PATHS["results_tables"], f"noise_snr_{args.dataset}.csv")
         noise.to_csv(out, index=False)
         logger.info("wrote %s (%d rows)", out, len(noise))
+        rl = noise_runlevel(noise)
+        if not rl.empty:
+            rlout = os.path.join(PATHS["results_tables"],
+                                 f"noise_snr_{args.dataset}_runlevel.csv")
+            rl.to_csv(rlout, index=False)
+            logger.info("wrote %s (%d rows)", rlout, len(rl))
         _summarize_noise(noise)
 
     if not args.skip_denoise:
@@ -343,6 +349,54 @@ def main(argv=None) -> int:
     return 0
 
 
+# Magnitude-monitoring charts the low-pass mechanism should act on. The run-level
+# collapse (below) is computed over these, matching the main analysis's choice of
+# unit of inference (the run, not the within-run detector).
+_NOISE_MAGNITUDE_METHODS = ("three_sigma", "ewma", "cusum", "hotelling_t2")
+
+
+def noise_runlevel(df: pd.DataFrame,
+                   methods=_NOISE_MAGNITUDE_METHODS) -> pd.DataFrame:
+    """Collapse the noise sweep to the honest unit of inference: the RUN.
+
+    Reviewer W2/Q1: reporting ``n=12`` (four magnitude charts x three runs) per SNR
+    treats the four charts on the same three runs as independent observations --- the
+    same pseudoreplication the main aggregate-vs-decimate analysis was corrected for.
+    Here we collapse the four magnitude charts to one mean (aggregate - decimate)
+    difference per run, leaving ``n = n_runs`` (3 on IMS) per SNR level. The trend is
+    then reported as DIRECTIONAL; at n=3 it cannot be significance-tested (the exact
+    sign test floors at p=0.25), exactly as in the main sweep.
+
+    Returns one row per (snr_db) with the per-run diffs, their mean, and n_pos/n_runs.
+    """
+    if df.empty:
+        return pd.DataFrame()
+    d = df[df["short_name"].isin(methods)] if "short_name" in df.columns else df
+    # per (run, snr) mean lead under each mode, over the magnitude charts
+    piv = d.pivot_table(index=["run", "snr_db"], columns="mode",
+                        values="lead_time_hours", aggfunc="mean").reset_index()
+    if not {"aggregate", "decimate"}.issubset(piv.columns):
+        return pd.DataFrame()
+    piv["diff"] = piv["aggregate"] - piv["decimate"]
+    rows = []
+    for snr, g in piv.groupby("snr_db"):
+        diffs = g.sort_values("run")["diff"].tolist()
+        n = len(diffs)
+        n_pos = int(sum(v > 0 for v in diffs))
+        rows.append({
+            "snr_db": snr, "n_runs": n,
+            "run_diffs": ", ".join(f"{v:+.2f}" for v in diffs),
+            "mean_diff": float(np.mean(diffs)) if diffs else float("nan"),
+            "n_pos": n_pos, "n_neg": n - n_pos,
+            "all_same_sign": (n_pos == n or n_pos == 0) and n > 0,
+        })
+    out = pd.DataFrame(rows)
+    # order finest-noise last: inf, 30, 20, 10
+    order = {np.inf: 0, 30.0: 1, 20.0: 2, 10.0: 3}
+    out = out.sort_values("snr_db", key=lambda s: s.map(lambda v: order.get(v, 99)))
+    return out.reset_index(drop=True)
+
+
 def _summarize_noise(df: pd.DataFrame) -> None:
     if df.empty:
         return
@@ -351,8 +405,12 @@ def _summarize_noise(df: pd.DataFrame) -> None:
                          values="lead_time_hours", aggfunc="mean")
     if {"aggregate", "decimate"}.issubset(piv.columns):
         piv["agg_minus_dec"] = piv["aggregate"] - piv["decimate"]
-        print("\n=== Noise sweep: mean lead time (h) by SNR ===")
+        print("\n=== Noise sweep: mean lead time (h) by SNR (pooled, for reference) ===")
         print(piv.to_string())
+    rl = noise_runlevel(df)
+    if not rl.empty:
+        print("\n=== Noise sweep: RUN-LEVEL collapse (unit of inference = run) ===")
+        print(rl.to_string(index=False))
 
 
 def _summarize_denoise(df: pd.DataFrame) -> None:

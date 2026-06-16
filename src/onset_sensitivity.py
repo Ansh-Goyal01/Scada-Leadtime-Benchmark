@@ -44,10 +44,18 @@ DEFAULT_SIGMA_KS = [3.0, 4.0, 5.0]
 def onset_sensitivity(run_names=None,
                       kinds=None,
                       methods=None,
-                      sigma_ks=None) -> pd.DataFrame:
+                      sigma_ks=None,
+                      dataset="IMS") -> pd.DataFrame:
     """
-    Sweep (health-indicator kind × detect_onset method × sigma_k) for each IMS run
-    and record where the onset lands.
+    Sweep (health-indicator kind × detect_onset method × sigma_k) for each run of
+    ``dataset`` and record where the onset lands.
+
+    ``dataset`` is threaded into ``load_pipeline`` and selects the default run list
+    (via ``datasets.default_runs``) when ``run_names`` is None, so the same stability
+    analysis can be run on FEMTO and XJTU-SY whose bearings are far shorter than IMS
+    (reviewer W8/Q12: the fixed-sample persistence/gap parameters are a larger
+    fraction of a sub-2-hour run, so onset behaviour at short run length must be
+    checked, not assumed).
 
     Returns a long DataFrame with one row per (run, kind, method, sigma_k):
         run, kind, method, sigma_k,
@@ -56,14 +64,15 @@ def onset_sensitivity(run_names=None,
         max_lead_hours   : (t_fail - onset) / 3600,
         run_span_hours   : total run span in hours (for context).
     """
-    run_names = run_names or DATASET["runs"]
+    from src.datasets import default_runs
+    run_names = run_names or default_runs(dataset)
     kinds     = kinds     or DEFAULT_KINDS
     methods   = methods   or DEFAULT_METHODS
     sigma_ks  = sigma_ks  or DEFAULT_SIGMA_KS
 
     rows = []
     for run in run_names:
-        pipe = load_pipeline(run)
+        pipe = load_pipeline(run, dataset=dataset)
         df = pipe["df_full"]
         n = len(df)
         train_end = df.index[min(int(n * SPLIT["train_fraction"]), n - 1)]
@@ -162,11 +171,19 @@ def _setup_logging():
 
 
 def main():
+    import argparse
     _setup_logging()
-    df = onset_sensitivity(run_names=DATASET["runs"])
+    ap = argparse.ArgumentParser(description="Onset-sensitivity sweep.")
+    ap.add_argument("--dataset", default="IMS",
+                    help="IMS (default), XJTU-SY, or FEMTO")
+    args = ap.parse_args()
+
+    run_names = None if args.dataset != "IMS" else DATASET["runs"]
+    df = onset_sensitivity(run_names=run_names, dataset=args.dataset)
 
     os.makedirs(PATHS["results_tables"], exist_ok=True)
-    out = os.path.join(PATHS["results_tables"], "onset_sensitivity.csv")
+    suffix = "" if args.dataset == "IMS" else f"_{args.dataset}"
+    out = os.path.join(PATHS["results_tables"], f"onset_sensitivity{suffix}.csv")
     df.to_csv(out, index=False)
     logger.info("Saved onset-sensitivity grid → %s (%d rows)", out, len(df))
 
