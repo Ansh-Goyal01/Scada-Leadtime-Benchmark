@@ -37,7 +37,6 @@ Thumbs.db
 .claude/
 # LaTeX engine binary (downloaded locally)
 tools/
-paper/_preview_*.png
-paper/*.aux
-paper/*.log
-paper/*.out
+
+# ── Paper — kept local for now, not published ────────────────────────────────
+paper/
