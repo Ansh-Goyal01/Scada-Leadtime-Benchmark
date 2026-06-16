@@ -28,6 +28,11 @@ pyarrow==24.0.0
 # ─── Changepoint detection (onset PELT option) ────────────────────────────────
 ruptures==1.1.10
 
+# ─── Wavelet denoiser (Phase 2.5 mechanism test, src/robustness.py) ───────────
+# Optional: the wavelet denoiser is skipped with a logged note if absent; the
+# noise sweep and median/MA/Kalman denoisers run without it.
+PyWavelets==1.8.0
+
 # ─── Utilities ────────────────────────────────────────────────────────────────
 tqdm==4.67.3
 
@@ -39,8 +44,8 @@ jupyter>=1.0
 ipykernel>=6.0
 
 # ─── Deep learning (OPTIONAL) ─────────────────────────────────────────────────
-# Required only for the deep_svdd / lstm_ae detectors (disabled by default). Install
-# the CPU build separately so the index URL stays out of the resolver:
+# Required only for the deep detectors (deep_svdd / lstm_ae / tcn / transformer_ad).
+# Install the CPU build separately so the index URL stays out of the resolver:
 #   pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cpu
 # torch==2.12.0
 

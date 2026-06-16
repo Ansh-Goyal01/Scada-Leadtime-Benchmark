@@ -65,6 +65,8 @@ def default_runs(dataset: str) -> list:
         return ["LPC"]
     if dataset == "XJTU-SY":
         return list(XJTU_NPY_RUNS.keys())   # 10 run-to-failure bearings, conditions 1 & 2
+    if dataset == "FEMTO":
+        return list(FEMTO_RUNS)             # 6 Learning_set run-to-failure bearings
     from src.config import EXPERIMENT
     return EXPERIMENT["runs_to_evaluate"]   # IMS
 
@@ -151,11 +153,15 @@ def _snapshot_stats(x2d: np.ndarray, ts: pd.Timestamp) -> dict:
 
 
 def _ingest_run_csvs(run_dir: str, reader, start: pd.Timestamp, step: pd.Timedelta,
-                     cache_name: str) -> pd.DataFrame:
+                     cache_name: str, file_prefix: str = None) -> pd.DataFrame:
     """
     Generic run-to-failure ingest: apply ``reader(path)->(n,ch) array`` to each snapshot
     file (sorted), compute per-snapshot stats, index by a synthetic uniform clock
     (start + k·step). Caches the resulting snapshot-stats DataFrame to processed/.
+
+    ``file_prefix`` restricts ingest to files whose name starts with it (e.g. "acc_"
+    for FEMTO, whose run folders also contain temp_*.csv temperature files that must
+    NOT be fed to the acceleration reader).
     """
     import os
     from src.config import PATHS
@@ -163,10 +169,14 @@ def _ingest_run_csvs(run_dir: str, reader, start: pd.Timestamp, step: pd.Timedel
     cache = os.path.join(PATHS["processed"], cache_name)
     if os.path.exists(cache):
         return load_processed(cache)
-    files = sorted([f for f in os.scandir(run_dir) if f.is_file()],
-                   key=lambda f: _numkey(f.name))
+    files = [f for f in os.scandir(run_dir) if f.is_file()]
+    if file_prefix is not None:
+        files = [f for f in files if f.name.startswith(file_prefix)]
+    files = sorted(files, key=lambda f: _numkey(f.name))
     if not files:
-        raise FileNotFoundError(f"No snapshot files in {run_dir}")
+        raise FileNotFoundError(
+            f"No snapshot files in {run_dir}"
+            + (f" matching prefix {file_prefix!r}" if file_prefix else ""))
     recs = []
     for k, f in enumerate(files):
         try:
@@ -283,21 +293,29 @@ def _load_femto(run_name: str, **kw) -> RunBundle:
     """
     FEMTO/PRONOSTIA run-to-failure bearing. Each acc_*.csv row is
     [hour, minute, second, microsec, horiz_accel, vert_accel]; 2560 samples/file
-    (0.1 s @ 25.6 kHz), recorded every 10 s. run_name e.g. 'Bearing1_1'. See
-    scripts/download_data.py.
+    (0.1 s @ 25.6 kHz), recorded every 10 s. run_name e.g. 'Bearing1_1'.
+
+    Only the six Learning_set bearings (FEMTO_RUNS) are exposed: they are the
+    complete run-to-failure trajectories (run until the 20 g vibration stop), so a
+    failure -- and hence a lead time -- is actually observed. The Test_set /
+    Validation_Set copies are deliberately truncated mid-life for the RUL-prediction
+    challenge (no observed failure) and would make lead time undefined, so we ignore
+    them even though same-named folders exist on disk. See scripts/download_data.py.
     """
     import os
     from src.config import PATHS
     root = PATHS.get("raw_femto", os.path.join(os.path.dirname(PATHS["processed"]), "raw", "FEMTO"))
-    run_dir = _find_run_dir(root, run_name)
+    run_dir = _find_femto_learning_dir(root, run_name)
 
     def reader(path):
-        d = pd.read_csv(path, header=None)
+        # Acc CSVs are usually comma-separated; some mirrors use ';'. Sniff once.
+        d = pd.read_csv(path, header=None, sep=None, engine="python")
         return d.iloc[:, 4:6].values    # last two columns = horiz/vert acceleration
 
     start = pd.Timestamp("2011-01-01")
     df = _ingest_run_csvs(run_dir, reader, start, pd.Timedelta(seconds=10),
-                          f"FEMTO_{run_name}_features.parquet")
+                          f"FEMTO_{run_name}_features.parquet",
+                          file_prefix="acc_")
     return RunBundle(
         snapshot_df=df, failure_time=str(df.index[-1]),
         dataset="FEMTO", run_name=run_name,
@@ -305,6 +323,42 @@ def _load_femto(run_name: str, **kw) -> RunBundle:
         channels=[c for c in df.columns if c.startswith("rms_ch")],
         meta={"fs": 25600, "snapshot_s": 0.1, "interval": "10s"},
     )
+
+
+# FEMTO Learning_set: the six complete run-to-failure bearings (PRONOSTIA, IEEE PHM
+# 2012). Conditions 1 (1800 rpm/4000 N) and 2 (1650 rpm/4200 N) and 3 (1500/5000).
+FEMTO_RUNS = ("Bearing1_1", "Bearing1_2", "Bearing2_1",
+              "Bearing2_2", "Bearing3_1", "Bearing3_2")
+
+
+def _find_femto_learning_dir(root: str, run_name: str) -> str:
+    """Locate a FEMTO run folder, preferring the Learning_set (run-to-failure) copy.
+
+    The on-disk tree nests bearings under Training_set/Learning_set,
+    Test_set/Test_set and Validation_Set/Full_Test_Set. We must pick the
+    Learning_set one, since only it runs to failure. Falls back to a generic
+    recursive search if no Learning_set copy exists.
+    """
+    import os
+    if not os.path.isdir(root):
+        raise FileNotFoundError(
+            f"{root} not found. Place the FEMTO download there (see scripts/download_data.py)."
+        )
+    learning_hits, other_hits = [], []
+    for dirpath, _dirnames, _files in os.walk(root):
+        if os.path.basename(dirpath) == run_name:
+            parts = {p.lower() for p in dirpath.replace("\\", "/").split("/")}
+            if any("learning" in p for p in parts):
+                learning_hits.append(dirpath)
+            else:
+                other_hits.append(dirpath)
+    if learning_hits:
+        return learning_hits[0]
+    if other_hits:
+        logger.warning("FEMTO %s: no Learning_set copy found; using %s (may be truncated)",
+                       run_name, other_hits[0])
+        return other_hits[0]
+    raise FileNotFoundError(f"FEMTO run {run_name!r} not found under {root}")
 
 
 def _find_run_dir(root: str, run_name: str) -> str:
