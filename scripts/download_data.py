@@ -55,6 +55,29 @@ SOURCES = {
         "archives": ["FEMTOBearingDataSet.zip"],
         "sha256": {},
     },
+    # ── Multivariate machines for the diagnostic console (src/diagnostic_console.py) ──
+    "MetroPT-3": {
+        "papers": "Davari et al., MetroPT-3 (Metro do Porto APU air compressor), 2021",
+        "urls": [
+            "https://archive.ics.uci.edu/dataset/791/metropt+3+dataset   (UCI landing page -> Zenodo)",
+            "Kaggle mirror: search 'MetroPT-3 Dataset'",
+        ],
+        "layout": "data/raw/MetroPT3/MetroPT3.csv   (single CSV, 1 Hz: TP2/TP3/H1/DV_pressure/"
+                  "Reservoirs/Oil_temperature/Motor_current + digital flags; ~1.6 GB)",
+        "archives": ["MetroPT3.csv", "MetroPT3.zip"],
+        "sha256": {},
+    },
+    "C-MAPSS": {
+        "papers": "Saxena & Goebel, NASA Turbofan Engine Degradation Simulation (PHM08/C-MAPSS)",
+        "urls": [
+            "Kaggle: search 'NASA CMAPS' / 'Turbofan Engine Degradation'",
+            "https://www.nasa.gov/intelligent-systems-division  (PCoE prognostics repository -> CMAPSSData.zip)",
+        ],
+        "layout": "data/raw/CMAPSS/{train,test,RUL}_FD00{1..4}.txt   (whitespace-separated, no header: "
+                  "unit, cycle, op1..3, sensor_1..21)",
+        "archives": ["CMAPSSData.zip"],
+        "sha256": {},
+    },
 }
 
 

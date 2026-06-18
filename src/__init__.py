@@ -33,16 +33,27 @@ from src.features import (
     FEATURE_GROUPS,
 )
 
-from src.models import (
-    BaseDetector,
-    ThreeSigmaDetector,
-    EWMADetector,
-    HotellingT2Detector,
-    IsolationForestDetector,
-    OneClassSVMDetector,
-    LSTMAEDetector,
-    get_all_models,
-)
+# The ML detectors (sklearn / torch) are an OPTIONAL backend. Lightweight consumers
+# — the diagnostic console, threshold utilities, plain data loaders — must remain
+# importable even when those compiled deps are unavailable (missing install, blocked
+# DLL on a locked-down host, etc.). Guard the heavy import groups so a backend that
+# can't load degrades to "feature unavailable" instead of breaking the whole package.
+import warnings as _warnings
+
+try:
+    from src.models import (
+        BaseDetector,
+        ThreeSigmaDetector,
+        EWMADetector,
+        HotellingT2Detector,
+        IsolationForestDetector,
+        OneClassSVMDetector,
+        LSTMAEDetector,
+        get_all_models,
+    )
+except ImportError as _e:   # pragma: no cover - environment-dependent
+    _warnings.warn(f"src.models unavailable ({_e}); detector API disabled, "
+                   "lightweight modules (console, thresholds) still work.")
 
 from src.thresholds import (
     compute_threshold,
@@ -52,27 +63,33 @@ from src.thresholds import (
     dynamic_ewma_threshold,
 )
 
-from src.lead_time import (
-    compute_FAT,
-    compute_VLT,
-    compute_FAR,
-    compute_miss_rate,
-    evaluate_method,
-    evaluate_all_methods,
-    plot_alarm_timeline,
-    plot_lead_time_comparison,
-    plot_vlt_vs_far,
-    plot_lead_time_vs_sampling,
-)
+try:
+    from src.lead_time import (
+        compute_FAT,
+        compute_VLT,
+        compute_FAR,
+        compute_miss_rate,
+        evaluate_method,
+        evaluate_all_methods,
+        plot_alarm_timeline,
+        plot_lead_time_comparison,
+        plot_vlt_vs_far,
+        plot_lead_time_vs_sampling,
+    )
+except ImportError as _e:   # pragma: no cover - environment-dependent
+    _warnings.warn(f"src.lead_time unavailable ({_e}); lead-time metrics disabled.")
 
-from src.uncertainty import (
-    BootstrapEnsemble,
-    ConformalDetector,
-    compute_shap_values,
-    plot_shap_summary,
-    plot_calibration_curve,
-    plot_score_with_uncertainty,
-)
+try:
+    from src.uncertainty import (
+        BootstrapEnsemble,
+        ConformalDetector,
+        compute_shap_values,
+        plot_shap_summary,
+        plot_calibration_curve,
+        plot_score_with_uncertainty,
+    )
+except ImportError as _e:   # pragma: no cover - environment-dependent
+    _warnings.warn(f"src.uncertainty unavailable ({_e}); uncertainty API disabled.")
 
 
 

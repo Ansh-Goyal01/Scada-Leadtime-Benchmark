@@ -107,14 +107,23 @@ def _load_ongc(run_name: str = "LPC", **kw) -> RunBundle:
     from src.ongc_preprocessing import (
         load_ongc_run, VIB_COLS, FAILURE_TIME, TRAIN_FRACTION,
     )
-    before = os.path.join(PATHS_raw_ongc(PATHS), "Before_Shutdown.xlsx")
-    after = os.path.join(PATHS_raw_ongc(PATHS), "After_Shutdown.xlsx")
-    d = load_ongc_run(before, after)
-    df = pd.concat([d["df_train"], d["df_test"]]).sort_index()
-    # map the 4 vibration channels onto rms_ch0..rms_ch3 so the rms-based feature/onset
-    # machinery applies unchanged
+    from src.preprocessing import save_processed, load_processed
     rename = {c: f"rms_ch{i}" for i, c in enumerate(VIB_COLS)}
-    df = df.rename(columns=rename)[list(rename.values())]
+
+    # Parsing the source .xlsx takes ~20s; cache the renamed snapshot frame to parquet
+    # so subsequent loads (esp. the live console) are sub-second like the other datasets.
+    cache = os.path.join(PATHS["processed"], f"ONGC_{run_name}_features.parquet")
+    if os.path.exists(cache):
+        df = load_processed(cache)
+    else:
+        before = os.path.join(PATHS_raw_ongc(PATHS), "Before_Shutdown.xlsx")
+        after = os.path.join(PATHS_raw_ongc(PATHS), "After_Shutdown.xlsx")
+        d = load_ongc_run(before, after)
+        df = pd.concat([d["df_train"], d["df_test"]]).sort_index()
+        # map the 4 vibration channels onto rms_ch0..rms_ch3 so the rms-based feature/onset
+        # machinery applies unchanged
+        df = df.rename(columns=rename)[list(rename.values())]
+        save_processed(df, cache)
     return RunBundle(
         snapshot_df=df,
         failure_time=FAILURE_TIME,

@@ -111,6 +111,43 @@ Outputs land in `results/tables/` (long-format CSVs + aggregates) and `results/f
 
 ---
 
+## Diagnostic Console (alarm → root cause → fix)
+
+The benchmark answers *when* an alarm should fire. The **diagnostic console**
+answers the question the site engineers actually asked next: *when an alarm fires,
+why, and what do we do about it* — without sending someone to the machine.
+
+```bash
+pip install dash plotly                    # console deps (in addition to requirements.txt)
+python scripts/make_demo_fixtures.py       # synthetic stand-ins so it runs with no downloads
+python -m src.diagnostic_console           # open http://127.0.0.1:8050
+```
+
+Workflow: pick a detected **alarm** → the multi-parameter timeline pins that moment →
+**toggle/overlay** parameters and read their **relationships** (correlation around the
+alarm + a scatter of the two strongest signals) → the **root-cause panel** ranks each
+parameter's standardized deviation and maps the pattern to a **probable cause and
+recommended fix** via an explicit failure-signature library.
+
+Two multivariate machines are supported (the bearing datasets stay vibration-only):
+
+| Machine | Real? | Native parameters | Role |
+|---|---|---|---|
+| **MetroPT-3** (Metro do Porto APU compressor) | real | pressures, oil temperature, motor current + real failures | headline — closest analog to the ONGC compressor |
+| **C-MAPSS** (NASA turbofan) | model-generated | temperatures, pressures, shaft speeds, flows (21 sensors) | the full 8-parameter spread |
+
+Place real data per `python scripts/download_data.py --dataset MetroPT-3` (or `C-MAPSS`);
+until then the console clearly labels the view **SIMULATED**. This is also the paper's
+finding made concrete: ONGC's SCADA logs only vibration+RPM, which is *why* diagnosis
+needs a site visit — the console demonstrates the multi-parameter diagnosis the site
+lacks, and motivates instrumenting those channels.
+
+Code: `src/diagnostic_console.py` (Dash UI) · `src/diagnosis.py` (alarms + root cause) ·
+`src/metropt_preprocessing.py`, `src/cmapss_preprocessing.py` (loaders) ·
+`src/console_data.py` (shared contract). Tests: `tests/test_diagnostic_console.py`.
+
+---
+
 ## Method (one paragraph)
 
 Each run is split temporally into train / calibration / test. A single **degradation
