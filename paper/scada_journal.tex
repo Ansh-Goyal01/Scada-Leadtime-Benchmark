@@ -650,7 +650,9 @@ paper are generated directly from the released result tables; no number in this
 manuscript is hand-edited.
 
 \section{Results}
-We summarize the outcomes first, then support each in turn.
+We summarize the outcomes first, then support each in turn. We present IMS first
+for its raw-waveform mechanism access; XJTU-SY ($n{=}10$) is the primary
+inferential test.
 
 \textbf{(i) The metric behaves.} Under the gated, onset-relative metric the
 detectors rank by genuine early warning, with the naive RMS-trend baseline
@@ -664,7 +666,7 @@ runs for every magnitude detector (3$\sigma$ \textbf{$+18.4$\,h} median, IF
 $+12.2$\,h, EWMA $+5.8$\,h)---but at the honest unit of inference ($n{=}3$ runs)
 this is \textbf{not statistically significant} (Table~\ref{tab:ims_paired}).
 On the real ONGC turbine the difference is \textbf{about a minute} ($n{=}1$ case
-study, Table~\ref{tab:ongc_paired}); on XJTU-SY ($n{=}10$,
+study, Appendix~E, Table~\ref{tab:ongc_paired}); on XJTU-SY ($n{=}10$,
 Table~\ref{tab:xjtu_paired}), FEMTO/PRONOSTIA ($n{=}6$,
 Table~\ref{tab:femto_paired}), and University of Ferrara ($n{=}6$,
 Table~\ref{tab:ferrara_paired}) the effect is \textbf{null}, with Isolation Forest
@@ -984,12 +986,12 @@ RMS-trend        & $\phantom{-}0.00$ & $2/2$ & no & 1.000 \\
 \includegraphics[width=\columnwidth]{figs/fig_crossdataset.png}
 \caption{Median run-level lead-time difference (aggregate $-$ decimate) per
 dataset and detector, annotated with the unit of inference ($n{=}3$ IMS,
-$n{=}1$ ONGC case study, $n{=}10$ XJTU, $n{=}6$ FEMTO, $n{=}6$ Ferrara). IMS shows a
-consistent positive trend; ONGC, XJTU, FEMTO, and Ferrara differences are $\approx$0
-on this scale. The honest cross-dataset headline is \emph{non-destruction}. ONGC bars
-are shown with hatching to distinguish the $n{=}1$ descriptive case study from the
-inferential datasets (IMS $n{=}3$, XJTU $n{=}10$, FEMTO $n{=}6$, Ferrara $n{=}6$); all
-seven non-sequence detectors are shown.}
+$n{=}10$ XJTU, $n{=}6$ FEMTO, $n{=}6$ Ferrara), plus the $n{=}1$ ONGC case study
+(Appendix~E). IMS shows a consistent positive trend; the inferential XJTU, FEMTO,
+and Ferrara differences are $\approx$0 on this scale. The honest cross-dataset
+headline is \emph{non-destruction}. ONGC bars are hatched to mark the $n{=}1$
+descriptive case study (Appendix~E) as separate from the four inferential
+datasets; all seven non-sequence detectors are shown.}
 \label{fig:cross}
 \end{figure}
 
@@ -1009,15 +1011,15 @@ that \emph{is} sign-consistent on FEMTO, Isolation Forest, trends \emph{negative
 This sign reversal across datasets is itself the cleanest statement of the
 finding: the direction of any residual aggregate-vs-decimate effect is
 dataset-specific noise, while the robust, replicated conclusion is
-\emph{non-destruction}. Across all ten detectors (every one runs on the full
+\emph{non-destruction}. Across all ten evaluated detectors (every one runs on the full
 $n{=}6$), $191/600$
 evaluations yield a valid alarm; as on XJTU, the short-lived bearings
 ($\sim$1.4--7.8\,h) keep absolute lead times small.
 
 \begin{table}[t]
 \caption{FEMTO/PRONOSTIA ($n{=}6$): run-level sign test of aggregate vs decimate
-lead time, collapsing within-bearing sampling factors. All ten detectors run on
-the full $n{=}6$ (bearings are long enough to form deep-model sequences). No
+lead time, collapsing within-bearing sampling factors. All ten evaluated detectors (nine
+headline plus Deep SVDD) run on the full $n{=}6$ (bearings are long enough to form deep-model sequences). No
 detector survives Holm correction (Table~\ref{tab:holm}); the only
 sign-consistent detector, Isolation Forest, trends \emph{negative}---opposite to
 its IMS sign.}
@@ -1096,7 +1098,7 @@ aggregation holds it near 59\,h). The upturn at the very largest factor reflects
 the few-windows regime, where only one or two runs survive and the mean is no
 longer comparable; we annotate rather than hide it.
 
-Table~\ref{tab:ims_paired} gives the run-level test over all ten detectors.
+Table~\ref{tab:ims_paired} gives the run-level test over all ten evaluated detectors.
 Honoring the run as the unit of inference (Section~\ref{sec:statprotocol}), the
 six magnitude-monitoring detectors all show a \emph{sign-consistent positive
 difference} where the effect is non-trivial: 3$\sigma$ (per-run
@@ -2203,7 +2205,7 @@ fraction of a second, and the three deep sequence models in $8$--$11$\,s. Infere
 is negligible for every detector---at most $\sim$54\,$\mu$s per window (LSTM-AE),
 five orders of magnitude below the fastest historian polling interval in our study
 (10\,s, ONGC/FEMTO). Streaming condition monitoring at native SCADA rates is
-therefore not compute-bound for any of the ten detectors, deep models included;
+therefore not compute-bound for any of the ten evaluated detectors, deep models included;
 the only practical cost is the one-time CPU training of the sequence models.
 
 \begin{table}[t]
@@ -2431,7 +2433,6 @@ bearing fault on the LPC---and the data-derived degradation onset
 the only dataset that requires no simulated coarsening to be SCADA-rate: it is
 the historian.
 
-\subsection{Real turbine SCADA (ONGC): a single-asset case study}
 On genuine 10\,s industrial SCADA data ending in a real operator shutdown, every
 detector achieves a long warning: 3$\sigma$, EWMA, Hotelling $T^2$, and
 Isolation Forest each alarm roughly 35\,h before the labeled failure, and even
