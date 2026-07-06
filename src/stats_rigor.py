@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 # Datasets whose run count is large enough to even attempt inference.
 # ONGC is n=1 (single asset) → case study only, never enters a test family.
-INFERENTIAL_DATASETS = ("IMS", "XJTU-SY", "FEMTO")
+INFERENTIAL_DATASETS = ("IMS", "XJTU-SY", "FEMTO", "Ferrara")
 
 
 # ───────────────────────────── core statistics ─────────────────────────────────

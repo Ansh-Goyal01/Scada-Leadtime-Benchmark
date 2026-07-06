@@ -67,6 +67,9 @@ def default_runs(dataset: str) -> list:
         return list(XJTU_NPY_RUNS.keys())   # 10 run-to-failure bearings, conditions 1 & 2
     if dataset == "FEMTO":
         return list(FEMTO_RUNS)             # 6 Learning_set run-to-failure bearings
+    if dataset == "Ferrara":
+        from src.loaders.ferrara_loader import FERRARA_RUNS
+        return list(FERRARA_RUNS)           # 6 University of Ferrara run-to-failure bearings
     from src.config import EXPERIMENT
     return EXPERIMENT["runs_to_evaluate"]   # IMS
 
@@ -383,3 +386,13 @@ def _find_run_dir(root: str, run_name: str) -> str:
         if run_name in dirnames:
             return os.path.join(dirpath, run_name)
     raise FileNotFoundError(f"Run {run_name!r} not found under {root}")
+
+
+# ─────────────────────── External loaders (self-register) ──────────────────────
+# Kept at the very bottom so register_loader / _ingest_run_csvs are already defined
+# when the Ferrara module registers (avoids a circular import).
+try:
+    from src.loaders.ferrara_loader import register as _register_ferrara
+    _register_ferrara(register_loader, _ingest_run_csvs)
+except Exception as _e:  # pragma: no cover - loader is optional
+    logger.warning("Ferrara loader not registered: %s", _e)

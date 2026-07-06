@@ -12,6 +12,9 @@ PATHS = {
     "raw_ongc":       os.path.join(BASE_DIR, "data", "raw", "ONGC"),
     "raw_xjtu":       os.path.join(BASE_DIR, "data", "raw", "XJTU-SY"),
     "raw_femto":      os.path.join(BASE_DIR, "data", "raw", "FEMTO+Bearning"),
+    "raw_ferrara":    os.path.join(BASE_DIR, "data", "raw",
+                                   "Run-to-failure vibration dataset of self-aligning "
+                                   "double-row ball bearings - PART 1"),
     "processed":      os.path.join(BASE_DIR, "data", "processed"),
     "results_figures":os.path.join(BASE_DIR, "results", "figures"),
     "results_tables": os.path.join(BASE_DIR, "results", "tables"),

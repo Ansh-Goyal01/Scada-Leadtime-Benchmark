@@ -48,3 +48,4 @@ frontend/dist/
 # ── Personal/local notes — never track, never push ───────────────────────────
 *.local.md
 RUN_NOTES.local.md
+.aider*
