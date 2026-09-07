@@ -38,8 +38,19 @@ Thumbs.db
 # LaTeX engine binary (downloaded locally)
 tools/
 
-# ── Paper — kept local for now, not published ────────────────────────────────
-paper/
+# ── Paper ────────────────────────────────────────────────────────────────────
+# The SUBMISSION SOURCE is tracked (defect N-3: it was untracked while the Data
+# Availability statement claimed every table and figure is generated from released
+# files, and an edit to it had no undo). Build products and PDFs stay ignored.
+# Note the paper/* + re-include form: a bare "paper/" stops git descending, so
+# negations inside it would never match.
+paper/*
+!paper/files/
+paper/files/*
+!paper/files/*.tex
+!paper/files/*.bib
+!paper/files/*.cls
+!paper/files/*.png
 
 # React frontend
 frontend/node_modules/
