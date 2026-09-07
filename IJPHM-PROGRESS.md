@@ -1,0 +1,1735 @@
+# IJPHM REVISION — PROGRESS TRACKER
+
+> **READ THIS FILE FIRST, BEFORE ANY OTHER FILE, AT THE START OF EVERY SESSION.**
+> It is the single source of truth for what is done, what is not, and what is blocked.
+> **UPDATE IT AFTER EVERY COMPLETED ITEM** — not at the end of a session. A session can
+> end without warning (context limit, rate limit, crash). If an item is finished and not
+> recorded here, it will be redone or lost.
+
+---
+
+## 1. Status snapshot
+
+| | |
+|---|---|
+| **Paper** | *A Latch-On-Resistant, False-Alarm-Gated Lead-Time Metric for Bearing Anomaly Detection — and What It Reveals About SCADA-Rate Logging* |
+| **Venue** | International Journal of Prognostics and Health Management (IJPHM) |
+| **Decision** | **Accepted for publication contingent on major revisions** (5 Sep 2026) |
+| **Reviewers** | D — major revisions, another cycle · F — minor · G — minor |
+| **Deadline** | **3 October 2026** |
+| **Deliverables** | (1) revised manuscript, (2) separate *"Response to Review"* document. Upload into the **existing** submission — do not start a new one. |
+| **Manuscript source** | `paper/files/scada_ijphm.tex` (1130 lines) — **not** `paper/scada_journal.tex`, which is the superseded IEEE version |
+| **Branch** | `ijphm-r1` — ✅ created and checked out |
+| **Current phase** | Phase 0 ✅ · Phase 0.5**(A)** ✅ · Phase 0.5**(B)** ✅ **corrected session 3** · D-2 cascade measured (§5C) · **Reviewer D run items D2/D3/D15/D17 ✅ session 4 (§5G)** · remaining Phase 1 audit ⬜ |
+| **Last updated** | 2026-09-06 — session 4 |
+
+### Companion files
+- `IJPHM-CLAUDE-BRIEF.md` — standing rules and phase plan. Rules are non-negotiable.
+- `IJPHM-revision-register.md` — full spec for all 41 reviewer items, with drafted text.
+- `IJPHM-response-letter-draft.md` — scaffold for the Response to Review document.
+
+---
+
+## 2. The rules, condensed (full versions in the brief)
+
+1. **Never write a number into the manuscript that was not read from a result file in this repo.** No estimating, no inferring, no carrying over from the old PDF. If a number is needed and no file has it, leave `⟦R-n⟧` and stop.
+2. Work on branch `ijphm-r1`. Never commit to `main`, never push, never mint a Zenodo version.
+3. Never edit an existing result file, cache, or logged output. New analyses write new files.
+4. Never retune hyperparameters, change seeds, or alter existing detector / onset / metric code without explicit sign-off.
+5. Never invent citations. Use `⟦CITE: …⟧` placeholders.
+6. Stop at every gate. Show a diff before every manuscript edit.
+7. **Record every completed item in this file immediately.** A "no edits" instruction **never** covers this file — "no edits" means no manuscript, code, or result-file edits. This file is exempt; a read-only phase still ends with it written.
+8. **A negative `grep` of the `.tex` proves nothing.** Macros, math mode and line wrapping defeat literal search; and truncating grep output (`cut`, `head`) hides matches inside this manuscript's very long single-line paragraphs. For any occurrence sweep, **compile the PDF, extract its text, cross-check against the source, and reconcile before acting.** Verified PDF counts: "never better" ×3 · "never costs" ×2 · "does not cost" ×2 · "honest"/"honestly" ×18 · "non-destruction" ×20 · em-dashes ×180. Fewer than these from a `.tex` grep = failed search. Full rule: brief rule 10.
+
+---
+
+## 3. Session log — append only, newest last
+
+### Session 1 — 2026-09-05
+- Phase 0 executed. Repo mapped, all five datasets confirmed on disk, pipeline reproduces committed values (XJTU Bearing1_3 smoke test matched `benchmark_XJTU-SY_long.csv` to the digit).
+- **Blocking question answered** — see §5 below.
+- 9 additional defects found — see §7 below.
+- No edits made. No branch created. `main` untouched.
+- Test suite: 92 pass, 1 fail (`test_diagnostic_console.py::test_metropt_loads_with_expected_parameters` — MetroPT air-compressor dataset, touches no paper number; benign).
+
+### Session 2 — 2026-09-05
+- **Phase 0.5(A) executed and complete.** Findings in §5A below — do not re-derive.
+- N-7 resolved: the FAR gate is *skipped by design* when `FAR_pre` is NaN. 295 rows across the corpus carry a valid alarm that was never gated. Published counts reproduce exactly but do not match Eq. 5 as written.
+- New defects **N-10**, **N-11**, **N-12** (N-12 High — `Bearing1_2` legacy-metric substitution).
+- Author decisions taken: **D-7 DECIDED** (three-outcome validity) and **D-8 DECIDED** (no-onset fallback is a correctness bug; code change signed off, scoped to that branch).
+- Register item 1.2 arithmetic corrected — TOST floor is per-detector `0.5^(n₊+n₋)`, not `0.5^(bearing count)`. Same error fixed in the brief's Phase 2 list. **N-6 superseded.**
+- No manuscript, code, or result-file edits. No branch created. `main` untouched.
+- File renamed `IJPHM-progess.md` → **`IJPHM-PROGRESS.md`**; references updated in the brief and register.
+- **New brief rule 10** (mirrored as condensed rule 8 above): a negative `.tex` grep is not evidence of absence — compile the PDF and cross-check. Prompted by a real miss this session, recorded in §5A.4.
+- **Phase 0.5(B) executed and complete.** Findings §5B. New file `results/tables/benchmark_IMS_long_invariant.csv` (300 rows). Code: `feature_mode` added to `load_pipeline_controlled` + `run_benchmark` (default `"legacy"`, published path verified reproducible); new runner `src/ims_schema_check.py`. **D-2 measured but still open** — direction survives, magnitude does not.
+- New defect **N-13** (console cp1252 encoding crashes released scripts on Windows — same root cause as the Figure 2/10 mojibake).
+- Test suite re-run after the code change: **only failure is the pre-existing N-9** (`test_metropt_loads_with_expected_parameters`, `assert 'real' == 'fixture'`). No new failures, 1 skip.
+
+### Session 3 — 2026-09-05
+- **Two corrections and one new measurement, per author instruction. No manuscript, code-path, or result-file edits; `main` untouched; no branch created.**
+- **CORRECTION 1 — §5B recomputed under the paper's own convention.** Session 2 collapsed factors by the **median** and reported a **pooled 15-pair Wilcoxon**; §4.8 (`tex:252`) and Table 10's caption (`tex:491`) specify the **mean**, and §4.8 explicitly disavows the pooled test. New `src/d2_convention_recompute.py`. **Legacy column reproduces published Table 10 exactly** (all 10 detectors, all 3 per-run diffs, all medians, all p) and the **N=40 Holm family reproduces** (smallest raw p 0.031 FEMTO/IsoForest, Holm 1.000, 0/40). Corroborated by `results/tables/ims_runlevel_test.csv`. **No separate defect — the pipeline is sound, the session-2 comparison script was not.**
+- **The corrected result reverses session 2's conclusion.** Sign-consistency does **not** survive the schema change: 3σ, EWMA and Iso. Forest each flip one run negative. `tex:480` ("in no run does aggregation shorten their lead time") and the abstract's "consistent positive trend" become false as written. 3σ median +18.4 → **+15.1 h**. Holm verdict unchanged (0/40). §5B.2/5B.3/5B.4 struck through and marked superseded.
+- **CORRECTION 2 — N-14 logged, severity High.** D-2 is not only a robustness question: if IMS ran at 445 dims, §4.2 does not describe the headline dataset — same class as §4.7, which Reviewer D has flagged three times. §5B.0.3.
+- **NEW MEASUREMENT — D-2 cascade quantified, §5C.** New `src/d2_cascade_audit.py` (read-only). Structural bound found: the legacy schema is reachable **only** via `load_pipeline_controlled` (`sampling.py:365`), called from only `benchmark.py:164` and `sampling.py:547`; every other IMS analysis uses `load_pipeline` → `FEATURES["mode"]="invariant"` and is already on the endorsed schema. **Onset verified schema-independent: `t_onset`/`t_fail`/`max_lead_hours` identical on 300/300 paired rows.** Result: **11 artifacts move, 17 do not, 2 need a rerun.**
+- **New defect N-15 (High), found while regenerating Table 5** — the published 3σ valid-alarm fraction of **1.00 at every persistence** does not reproduce; the released data give **0.67** under every denominator and both schemas. `persistence_sensitivity_IMS.csv` has **no generating script in the repo**. Schema-independent, so it is not a D-2 consequence.
+- Ledger: **R-13 corrected**, **R-14** and **R-15** added.
+
+### Session 3 (continued) — D-2 DECIDED, route (b), executed
+- **D-2 decided by the author: re-baseline IMS onto the invariant schema.** Rationale recorded in §4. Brief rule 4 sign-off granted, scoped to the IMS controlled-sweep path.
+- **Code change** (§5F.1): `feature_mode` default `"legacy"` → `"config"` on `load_pipeline_controlled` and `run_benchmark`, so `FEATURES["mode"]` governs. Legacy path kept reachable and **now tested for the first time** — new `tests/test_feature_mode.py`, 7 tests, all pass, including that legacy still yields 445 dims with p > n and that downsampling geometry is schema-independent. Suite: 99 pass, 1 skip, 1 pre-existing benign failure (N-9); **no new failures**.
+- **N-15 FIXED** (§5D). Wrote the missing generator `src/persistence_sweep_ims.py`; regenerated Table 5 at persistence {1,3,5,10} → `persistence_sensitivity_IMS_invariant.csv`. **The published "3σ valid-alarm fraction = 1.00 at every persistence" is not reproduced — it is 0.67**, and was 0.67 in the originally released data too. **§6.2's conclusion does NOT survive**: validity falls 0.67 → 0.33 across coarsening factors as persistence goes 1 → 10, and the sign-consistency claim fails for 3σ (p=3) and EWMA (p=1,3,5). Three separate sentences at `tex:357` must be rewritten.
+- **All 11 changed artifacts regenerated** (§5F.2) using the repo's own generators; two independent §4.8 implementations agree to the digit. Published files deliberately **not** overwritten (N-3: `results/` is gitignored).
+- **Claim-delta inventory produced** (§5E): 18 prose claims, Tables 2/5/10/11/25, Figures 2/3, with old value, new value and `.tex` line number. Explicit "unchanged" list for the response letter.
+- **Legacy-schema control run for N-15** (§5D.2b): the new generator reproduces the published Table 5's **three median rows to the digit** on the legacy schema but returns **0.67, not 1.00**, for the valid-alarm row. This isolates the defect to that one column and rules out schema, convention, and generator error — and validates the generator as authentic. **Correction applied to §5D.3 and §5E rows P12/P13:** the sign-consistency and Isolation-Forest sentences were **correct as published** and break only under D-2; only the 1.00 valid-fraction claim is an authoring defect. An earlier version of §5D.3 ran the two together.
+- **Table 25 timings delivered** (§5E.7): first pass was contaminated by CPU contention and was deleted; redone as a **paired legacy→invariant run on an idle machine**, 5 repeats each. Invariant is faster on every detector — SPC inference 2.5–13.8×, Hotelling T² training 13.1×, Iso. Forest only 1.1–1.2×. **Report the ratio, not the absolutes**: this machine runs the legacy pass 4–13× slower than the published column, which is hardware, not schema.
+- **Register annotated**: items **2.1** and **2.2** marked partly stale. 2.2's cited "medians of 4.6–18.4 h" → **1.2–15.1 h**, and its "could not have been observed" argument must be re-based on the upper end only, since a 1.2 h effect *is* observable on a 6.8 h bearing.
+
+### Session 4 — 2026-09-06 — Reviewer D run-dependent items (D2, D3, D15, D17)
+
+Branch `ijphm-r1` (already created, checked out). **No manuscript edit made.** Every run wrote
+a new result file; no published result file was modified. Findings in **§5G**.
+
+- **D15** ✅ equivalence evidence at δ = 1 h — `src/d15_equivalence.py` → `d15_equivalence_bootstrap.csv`, `d15_equivalence_tost.csv`. Equivalence established on XJTU-SY, FEMTO, Ferrara (30/30 cells); **not** established on IMS under either schema. §5G.1, ledger R-2.
+- **D2** ✅ deep models in the Table 16 sweep — `src/d2_deep_tradeoff.py` → `tradeoff_IMS_deepmodels{,_long}.csv`. ⚠️ **`tex:275`'s "regardless of threshold" is FALSE**: LSTM-AE attains a valid operating point at the 99.5th percentile on `3rd_test`. New defect **N-16**. §5G.2, ledger R-3.
+- **D3** ✅ one-class SVM — **answer is YES, the released code produces OC-SVM results.** Detector implemented at `models.py:378`, dispatched at `:623`, configured at `config.py:166`, listed in `benchmark.py:50`'s `_DETERMINISTIC`; absent only from `EXPERIMENT["methods_to_run"]`. So §4.5's clause is **runnable, not fabricated** — the fix is a run, not the deletion D-5 assumed. Runner `src/d3_ocsvm.py`. §5G.3, ledger R-7.
+- **D17** ✅ original 2004-04-08 test-3 label — `src/d17_original_label.py`, label patched **in memory** (context manager), `config.py` untouched. **No median flips sign; best p = 0.25 under both labels.** Test 3 is a guaranteed miss for **6 of 10** detectors, not all ten — the register's pre-written anticipation is wrong and must be rewritten. §5G.4, ledger R-4.
+
+**Session 4 continued — D-4/D-5/D-9 decided, three follow-ups done:**
+- **Seed check** ✅ `src/d2_seed_check.py` — N-16 holds at **10/10 seeds**, FAR 4.19% every time,
+  despite training loss varying 0.0027–0.0040. **Not a seed artifact**; caveat discharged. §5G.2.
+- **N=40 → N=44 inventory** ✅ **§5H** — **16 atomic edits** (not the ~8 estimated), reconciled
+  PDF 16 = tex 16. `pdftotext` fails calibration; **use PyMuPDF**. Brief rule 10 corrected.
+- **Consolidated claim-delta inventory** ✅ **§5I** — collision sentences given combined
+  requirements (`tex:275` carries four drivers).
+- **D-9 rebuild** ✅ **§5J** — Tables 14/22 at eleven detectors. **§6.9's 3σ recommendation HOLDS.**
+  LSTM-AE attains **no** valid point in Table 14 at any τ (mean FAR 62.00%) — consistent with N-16,
+  which is a per-run/per-threshold claim.
+- **Table 25 completion** ✅ **§5K** — OC-SVM and RMS-trend timed; **new defect N-17**; deep-model
+  parameter counts captured for G5 (ledger R-8).
+
+**Result-file families written this session, no published file touched** (verified by mtime):
+`d15_equivalence_*` (2), `tradeoff_IMS_deepmodels*` (2), `d3_ocsvm_*` (7), `d17_*` (2),
+`d2_seed_check_lstmae.csv`, `d9_tables_14_22_eleven.csv`, `compute_cost_IMS_extra_invariant.csv`,
+`deep_model_params.csv` — **17 files**.
+
+**Every remaining Reviewer D item is text-only; the author drafts them.**
+
+**Verification done before trusting the baselines:** published Table 16 reproduces to the digit
+from `tradeoff_IMS.csv`; the register's worked XJTU n₊/n₋ counts reproduce exactly from
+`run_level_diffs`. **N-13 confirmed live** — `pd.read_csv` + `print` of any detector name crashes
+with `UnicodeEncodeError` on the default Windows console; every new script carries the
+`sys.stdout.reconfigure` guard.
+
+---
+
+## 4. Open decisions awaiting the author
+
+| # | Decision | Status | Author's answer |
+|---|---|---|---|
+| D-1 | Accept the narrowed claim (historian-rate aggregation of **summary statistics**), rather than running a new raw-waveform experiment | ✅ **decided** | **Accept the narrowing.** Do not run raw-waveform coarsening. Reframe as a distinction between two operations, lead the claim from ONGC (where its channels *are* the historian record, so no simulation gap exists), and list raw-waveform coarsening as future work. |
+| D-2 | IMS path asymmetry — level (c) and 445-dim legacy schema, versus level (b) and 49-dim invariant elsewhere | ✅ **DECIDED — route (b): re-baseline IMS onto the invariant schema** (session 3) | **Author's rationale:** under the paper's own §4.8 convention, sign-consistency does **not** survive the schema change on **any of the three trend-carrying detectors**, so the only directional claim in the paper exists **solely under the 445-dim schema that §4.2 argues is ill-posed**. Reporting it from that schema is **indefensible in a second review round** (defect **N-14**). The Holm verdict is unchanged at **0/40 under both schemas**, so the **non-destruction headline — the paper's actual conclusion — is unaffected**. The cascade is bounded at **11 artifacts**, mostly regenerable from the existing invariant CSV. **Sign-off (brief rule 4):** may change existing code and regenerate published result files, **scoped to the IMS controlled-sweep path only**; `FEATURES["mode"]` governs `load_pipeline_controlled` instead of defaulting to legacy; **the legacy path stays reachable and tested** so the published numbers remain reproducible for the response letter. Prior "awaiting decision" record: | **Session-2 measurement was computed under the wrong convention and its conclusion is reversed — see §5B.0.** Under the paper's own protocol (mean collapse, run-level sign test, Holm): **sign-consistency does NOT survive** — 3σ, EWMA and Iso. Forest each flip one run negative, so `tex:480`'s "in no run does aggregation shorten their lead time" and the abstract's "consistent positive trend" become false as written. 3σ median +18.4 → **+15.1 h**. Holm verdict unchanged (0/40 either way). **Cascade measured, §5C: 11 artifacts move, 17 do not, 2 need a rerun.** Also now carries **N-14 (High)** — this is not only a robustness question: if IMS ran at 445 dims, §4.2 does not describe the headline dataset. Nothing swapped in. **The call is still open.** |
+| D-3 | What the Zenodo archive actually contains | ⬜ **open** | Author to check the live Zenodo record. Blocks the ⟦R-n⟧ verification premise and the Data Availability statement. |
+| D-4 | Equivalence margin δ (proposed: 1 h, on maintenance-planning grounds) | ✅ **DECIDED — δ = 1 h CONFIRMED** (session 4) | **Author confirmed δ = 1 h.** Margin was pre-specified on operational grounds (a maintenance planner cannot act on sub-hour differences in warning time — mobilising a crew, ordering parts) and fixed **before** any result was read; state that ordering explicitly in the manuscript. Results computed at this margin in §5G.1 / ledger R-2. Equivalence established on XJTU-SY, FEMTO and Ferrara (30/30 cells); established on **no** IMS cell under either schema; ONGC untestable at n=1. |
+| D-5 | One-class SVM: report or delete | ✅ **DECIDED — REPORT** (session 4) | **The "delete the §4.5 clause" option was predicated on the detector not existing. It does** — `models.py:378` + `:623` + `config.py:166`; absent only from `methods_to_run`. **Author's decision: REPORT OC-SVM, in the "additionally evaluated" tier alongside Deep SVDD** (`tex:235`), which **makes §4.5's existing claim true rather than requiring deletion**. **Author's rationale, CORRECTED session 4 after D-9:** the rationale as first recorded said OC-SVM ranks **first on PH**. That held only against Table 22's *then-current* seven-row set (180.2 > Hotelling's 176.9). Under **D-9** the deep rows join Tables 14 and 22, so the accurate statement is: **OC-SVM ranks first among the non-deep detectors on PH, fourth overall of eleven** (behind LSTM-AE 199.6, TCN-AE 185.4, Transformer-AD 184.0), **and last-equal on gated L (0.0)**. **The inversion argument is strengthened, not weakened** — and it is **SEVEN-way, not four-way**: measured in §5J, **the top seven detectors by PH all score L = 0**, and the deployable chart **3σ ranks EIGHTH of eleven on PH while ranking FIRST on L**. (The published seven-row Table 22 is only a three-way inversion with 3σ 4th.) Statistically free: Holm recomputed at **N=44 → 0/44 rejections**, verdict and non-destruction headline unchanged. Numbers in §5G.3 / ledger R-7. **Consequence:** the family size changes 40 → 44 in **every** location — full inventory §5H. |
+| D-6 | Template check — the editor's letter says "PHM Conference Paper template" but this is the journal; the source uses `\documentclass[IJPHM,2026,0]{PHMSociety}` | ⬜ open | Verify against the IJPHM author guidelines; query the editor if ambiguous. |
+| D-7 | How validity is defined when `FAR_pre` is undefined (N-7) — strict Eq. 5, documented carve-out, or exclusion | ✅ **decided** | **Three-outcome validity: valid / invalid / unscoreable.** *Unscoreable* = pre-onset region empty, `FAR_pre` undefined. Unscoreable rows are **excluded from validity denominators** and reported explicitly. **Amend Eq. 5** in the manuscript to define this. **AND** report the strict-convention figures alongside (unscoreable counted as invalid), because a reviewer running Eq. 5 literally against the released CSVs lands on 73/450 — that number must appear in the paper. |
+| D-8 | `Bearing1_2` no-onset fallback — documentation gap or correctness bug | ✅ **decided** | **Correctness bug.** The fallback must stop writing legacy FAR into `far_preonset_pct` and legacy VLT into `valid_alarm` under onset-relative column names. **Emit NaN plus an explicit `no_onset` flag instead.** `Bearing1_2` is **unscoreable for all onset-relative quantities** and comes out of Table 12's validity columns with a stated flag. Its **raw lead-time contribution to Tables 7 and 11 is unaffected and stays.** Requires changing existing metric code — **brief rule 4 sign-off granted, scoped to this fallback branch only** (`src/lead_time.py:234-240` and the `benchmark.py:130` warning). |
+| D-9 | Do Tables 14 (`tab:farbudget`) and 22 (`tab:phrank`) gain the three deep reconstruction rows and one-class SVM, alongside Table 16? *(The author labelled this "D-6"; **D-6 is already in use** for the template check, which remains open — recorded as D-9 to keep the register unambiguous.)* | ✅ **DECIDED — YES, both tables gain all four rows** (session 4) | **Author's rationale:** the **four-way inversion is a stronger demonstration of §6.12's thesis** than the single-detector version — **the top SEVEN detectors by prognostic horizon all score L = 0**, and the deployable choice **3σ ranks EIGHTH of eleven on PH while ranking FIRST on L** — a seven-way inversion. *(The rationale as first stated said "top four … ranks fifth"; the rebuild in §5J measured **seven / eighth**. The decision is unaffected and the demonstration is stronger. **Use seven-way / eighth everywhere, including the Response to Review.**)* **Consistency also requires it**: D2 puts the deep models in Table 16, and Tables 14, 16 and 22 all draw on the **same trade-off data**, so a detector present in one must be present in all three. Rebuilt tables in §5J. |
+
+---
+
+## 5. Phase 0 findings — RESOLVED, do not re-derive
+
+**The blocking question is answered. No dataset coarsens the raw waveform.**
+
+Every loader funnels through `_snapshot_stats` (`src/datasets.py:147-164`), which collapses each waveform block to six scalars per channel at **ingest**, cached to parquet. `RunBundle.snapshot_df` — the only thing the sweep ever sees — is already a feature series on all five datasets. The sweep never opens a waveform file.
+
+| Dataset | `aggregate` / `decimate` applied to | Level | Code path |
+|---|---|---|---|
+| **IMS** | windowed feature vectors (block mean / every k-th) | **(c)** | `load_pipeline_controlled`, `src/sampling.py:414-424`, `downsample_features` at `:326-362` |
+| XJTU-SY | per-snapshot feature series | (b) | `load_pipeline`, `src/__init__.py:197-212` |
+| FEMTO | per-snapshot feature series | (b) | same |
+| Ferrara | per-snapshot feature series | (b) | same |
+| ONGC | the historian series itself | (b) | same |
+
+`aggregate` = `df.resample(freq).mean()` (`src/preprocessing.py:182-188`); `decimate` = `df.iloc[::k]`.
+IMS is routed separately and **only** IMS: `src/benchmark.py:115-117`.
+
+**Confirmed empirically.** Row counts by stage: on path (b) the snapshot series thins with the factor (984 → 493 → 198 → 99 → 50); on path (c) it stays at 984 at every factor and only the feature stream thins (195 → 98 → 39 → 20 → 10).
+
+**Corroborated by the result files.** `control=True` only in `benchmark_IMS_long.csv`; `False` in all four others. `window_floored`: IMS 0/300, XJTU 500/900, FEMTO 360/600, Ferrara 360/600, ONGC 60/100.
+
+**Why the asymmetry exists:** the controlled path was built as a reviewer fix (`src/sampling.py:307-323`, "reviewer W7 fix") to remove the window-flooring confound, and was only ever wired up for IMS. Historical, not physical.
+
+### What this does and does not change
+
+**Does not change the abstract's core question.** The abstract asks whether *"the bin-averaged logging of a SCADA historian"* destroys lead time, and §1 correctly states that historians *"store decimated or time-averaged summaries."* Historians store summaries; the sweep coarsens summaries. Consistent.
+
+**Two sentences overreach and must be fixed:**
+- §1's folklore sentence — "averaging destroys the kurtosis and crest-factor transients" — describes *waveform* averaging, which was not tested.
+- `scada_ijphm.tex:128` — "Because the waveforms are raw, the aggregate/decimate sweep can be applied faithfully at the signal level," asserted of IMS, which is the **only** dataset at level (c). This is false as implemented and is a third internal contradiction of the same species Reviewer D already found twice.
+
+**The §4.7 pair Reviewer D flagged (`:241` "before feature extraction" / `:246` "at the feature level") is confirmed verbatim.** Both readings are individually true — of different datasets. That is the honest resolution and is exactly the per-dataset statement Reviewers D and F asked for.
+
+**Register item 3.2's drafted signal-theory argument does not survive as written** and must be rewritten per path:
+- The claimed exactness ("mean square over a union of bins = mean of per-bin mean squares") holds for `var_ch{i}`, which is present, but **not** for `rms_ch{i}` — the mean of square roots is not the square root of the mean.
+- The rescue is stronger than the original claim: by Jensen, the mean of RMS values is an **underestimate** of the union RMS, so aggregation can only understate amplitude, never inflate it. The observed aggregation advantage therefore cannot be an artifact of the averaging operation.
+- On path (c) the averaged quantities are window summaries (`wmean`, `wstd`, `wmax`, `wslope`); bin-averaging a max or a slope is exact for nothing. Say so.
+- **The aliasing half of the argument survives intact on both paths.**
+
+---
+
+## 5A. Phase 0.5(A) findings — RESOLVED, do not re-derive
+
+**Resolves N-7.** Audit was read-only against the committed `results/tables/benchmark_*_long.csv`. No repo file was modified.
+
+### 5A.1 What the code does when `FAR_pre` is NaN
+
+**The gate is skipped by explicit, commented design.** `valid_alarm` is not defaulted true — the *gate term* short-circuits to pass, leaving validity resting on `lead_time > 0` alone.
+
+`src/lead_time.py:228-233`:
+
+```python
+# NaN FAR (no pre-onset window to score) does not by itself invalidate the alarm.
+far_ok        = (far_preonset != far_preonset) or (far_preonset <= far_budget)
+valid_alarm   = (lead_time > 0) and far_ok
+```
+
+`far_preonset != far_preonset` is the NaN self-inequality idiom — true **only** for NaN.
+
+The NaN has exactly one origin, `src/lead_time.py:141-146`: `compute_FAR_preonset` returns NaN iff `n == |{t < t_onset}| == 0`, i.e. **no test timestamp falls strictly before the onset**. The onset estimator placed onset at or before the first scored window, so there is no apparently-normal region to score.
+
+**This diverges from the manuscript.** Eq. 5 (`scada_ijphm.tex:214-219`) defines validity as `L > 0 ∧ FAR_pre ≤ τ` with **no NaN carve-out**, anywhere. A reader implementing Eq. 5 literally gets different numbers than the repo produces. The carve-out is defensible in principle — you cannot score a FAR over an empty region — but its effect is that on those rows the metric provides **zero latch-on resistance**, which is the paper's title claim.
+
+### 5A.2 Three distinct routes to a NaN — they mean different things
+
+| Route | Condition | Effect on `valid_alarm` |
+|---|---|---|
+| **R1** "honest N/A" filler | `benchmark.py:223-244` — detector produced no result | forced `False` — harmless |
+| **R2** no pre-onset window | onset exists; no test sample precedes it | **gate skipped** — `lead > 0` alone decides |
+| **R3** run has no onset at all | `t_onset is None` → `lead_time.py:234-240` | legacy criterion; column is **not** NaN — see N-12 |
+
+### 5A.3 Counts, per dataset (source: `results/tables/benchmark_*_long.csv`)
+
+| Dataset | rows | NaN FAR | R1 filler | R2 real | **NaN & valid** | total valid | ungated share of valid |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| IMS | 300 | 50 (16.7%) | 36 | 14 | **10** | 99 | 10.1% |
+| XJTU-SY | 900 | 472 (52.4%) | 228 | 244 | **189** | 304 | **62.2%** |
+| FEMTO | 600 | 45 (7.5%) | 45 | 0 | **0** | 191 | 0% |
+| Ferrara | 600 | 142 (23.7%) | 42 | 100 | **96** | 350 | 27.4% |
+| ONGC | 100 | 0 | 0 | 0 | **0** | 12 | 0% |
+| **Total** | | | | | **295** | 956 | |
+
+**All 295 are route R2** — none is a filler row, none is a no-onset row. On every one, `t_onset` is present and `lead_time > 0`.
+
+**Concentration matters more than the totals.** Two XJTU bearings have NaN `FAR_pre` on **100% of their 100 rows** — `Bearing2_2` (50 valid) and `Bearing2_5` (67 valid). For those two bearings the gate never operated at all. Ferrara's 96 are all in one run, `E3`.
+
+### 5A.4 Do the published counts stand? Verified, then recounted under strict Eq. 5
+
+Both figures reproduce **to the digit**. The `450` denominator is all rows for the five detectors *including* the duplicated `factor=1` cells; that convention reproduces 209 exactly, so the published pair is internally consistent. The "five" are named at `tex:396`: 3σ, EWMA, Hotelling T², Isolation Forest, RMS-trend (CUSUM and Deep SVDD excluded).
+
+| Published | Location | Reproduced | Strict Eq. 5 (NaN fails) |
+|---|---|---|---|
+| **20/50** | Table 12 total, `tex:589` | ✅ 20/50 | **7/50** |
+| **209/450** | `tex:396` | ✅ 209/450 | **73/450** |
+| **191/600** | **§6.4, `tex:426`** — "Across all ten evaluated detectors (every one runs on the full n = 6), 191/600 evaluations yield a valid alarm" | ✅ 191/600 | **191/600 — unchanged** |
+
+> **Correction (session 2).** An earlier version of this record claimed 191/600 was not a manuscript number. **It is** — `scada_ijphm.tex:426`, §6.4. The error was mine and *not* a LaTeX-escaping problem: the grep matched line 426 correctly, but the output was piped through `cut -c1-240`, the match sits far past character 240 in that very long single-line paragraph, and the visible prefix was misread as a match on "valid alarm". **The substantive conclusion is unchanged: 191/600 does not move under either convention and needs no revision.** This is the failure mode rule 8 above exists to prevent.
+
+Whole-file, all detectors:
+
+| Dataset | published | strict | Δ |
+|---|---:|---:|---:|
+| IMS | 99 | 89 | −10 |
+| XJTU-SY | 304 | 115 | **−189** |
+| FEMTO | 191 | 191 | 0 |
+| Ferrara | 350 | 254 | −96 |
+| ONGC | 12 | 12 | 0 |
+
+**Table 12 per-bearing deltas** — four of ten rows change:
+
+| Bearing | V/5 published | V/5 strict | Mean pub | Best pub |
+|---|---:|---:|---:|---:|
+| Bearing1_1 | 0 | 0 | — | 0.00 |
+| Bearing1_2 | 1 | 1 | 0.67 | 0.67 |
+| **Bearing1_3** | **4** | **0** | 1.03 | 1.03 |
+| Bearing1_4 | 2 | 2 | 0.68 | 0.68 |
+| **Bearing1_5** | **3** | **0** | 0.35 | 0.35 |
+| Bearing2_1 | 3 | 3 | 0.67 | 0.67 |
+| **Bearing2_2** | **2** | **0** | 1.00 | 1.08 |
+| Bearing2_3 | 1 | 1 | 3.45 | 3.45 |
+| Bearing2_4 | 0 | 0 | — | 0.00 |
+| **Bearing2_5** | **4** | **0** | 2.30 | 2.30 |
+
+**Verdict:** the counts are correctly computed *under the code as written*, but they are **not the counts Eq. 5 describes**. This is a definitional decision, not an arithmetic error → D-7.
+
+### 5A.5 What does NOT move
+
+`lead_time_hours` is computed independently of `valid_alarm`, so **the headline aggregate-vs-decimate contrast is untouched**. Tables 7-11 (median Δ, n₊/n₋, sign tests, Holm) are on raw ungated lead exactly as §6.2 states. **Nothing in the sign-test family changes.** What moves is every *valid-alarm fraction*.
+
+### 5A.6 Gate-dependent manuscript locations
+
+Audited and confirmed to move: `tex:589` (Table 12, 20/50) and `tex:396` (209/450).
+
+**Candidates, NOT yet audited** — they report valid-alarm fraction so they are gate-dependent by construction, but they are produced from the *ablation* result files, not `benchmark_*_long.csv`, so their sensitivity is unmeasured: `tex:370` (3σ valid-alarm fraction, persistence sweep — currently 1.00 across all four), `:738`, `:758`, `:775`, `:798` (IMS feature-group and spectral ablation validity tables). **Do not assume these move; measure them.**
+
+### 5A.7 Coupling to item 1.6 (G1)
+
+244 XJTU rows and 100 Ferrara rows have onset placed at or before the first test sample. That is an **onset-estimator** result and it bears directly on register item 1.6: the estimator's late-onset bias `≈ kσ_b/m + PΔt` predicts exactly this on short, fast-degrading bearings. Not pursued — Phase 2.
+
+---
+
+## 5B. Phase 0.5(B) findings — **CORRECTED session 3. Read 5B.0 first.**
+
+### 5B.0 ⚠️ THE SESSION-2 NUMBERS IN THIS SECTION ARE SUPERSEDED
+
+**Every number in §5B.2, §5B.3 and §5B.4 below is superseded and may not enter the manuscript.** They were computed under a convention the paper does not use:
+
+| | session 2 (wrong) | the paper (§4.8) |
+|---|---|---|
+| collapsing the five within-run factors | **median** | **mean** — `tex:252`, and Table 10's caption `tex:491`: "collapsing the five within-run sampling factors to one **mean** difference per run" |
+| the test | **pooled 15-pair Wilcoxon** per detector | **run-level exact two-sided sign test**, n=3, then **Holm** across the N=40 family |
+
+§4.8 does not merely prefer the run-level test — it **explicitly disavows** the pooled one: pooling the factors as 15 pairs "inflates the effective sample size fivefold and yields overconfident p-values (as an earlier version of this work did)". Reporting a pooled p-value would reintroduce, in the revision, the exact error the paper says it fixed.
+
+The mismatch was visible in the session-2 record and was not acted on: its "legacy (published)" 3σ per-run values were 17.500 / 5.833 / 20.500 with median 18.4, whereas published Table 10 gives **+27.1 / +18.4 / +15.6**, median +18.4. The medians coincide by accident; the per-run values never matched.
+
+**Corrected recomputation:** `src/d2_convention_recompute.py` (new, read-only, writes no result file).
+
+**Verification — the legacy column reproduces published Table 10 EXACTLY.** All ten detectors, all three per-run differences, all medians, all sign-test p-values, to the printed precision:
+
+| Detector | recomputed run diffs (h) | published Table 10 | med | p |
+|---|---|---|---:|---:|
+| 3σ | +27.1, +18.4, +15.6 | +27.1, +18.4, +15.6 | +18.4 | 0.25 |
+| Iso. Forest | +19.9, +12.2, +1.8 | +19.9, +12.2, +1.8 | +12.2 | 0.25 |
+| EWMA | +22.6, +5.0, +5.8 | +22.6, +5.0, +5.8 | +5.8 | 0.25 |
+| CUSUM | +22.6, +5.0, +5.4 | +22.6, +5.0, +5.4 | +5.4 | 0.25 |
+| Hotelling T² | +3.3, +12.3, +4.6 | +3.3, +12.3, +4.6 | +4.6 | 0.25 |
+| Deep SVDD | +15.2, 0.0, +1.8 | +15.2, 0.0, +1.8 | +1.8 | 0.50 |
+| RMS-trend | −19.4, 0.0, +2.8 | −19.4, 0.0, +2.8 | 0.0 | 1.00 |
+| LSTM-AE | −1.4, −0.4, −1.7 | −1.4, −0.4, −1.7 | −1.4 | 0.25 |
+| TCN-AE | −1.4, −0.4, −0.2 | −1.4, −0.4, −0.2 | −0.4 | 0.25 |
+| Transformer-AD | −1.4, −0.4, −2.5 | −1.4, −0.4, −2.5 | −1.4 | 0.25 |
+
+Independently corroborated: `results/tables/ims_runlevel_test.csv` stores `run_diffs = "+27.1, +18.4, +15.6"`, `median_diff = 18.433`, `sign_test_p = 0.25` — Table 10's actual source file, confirming the mean convention.
+
+The **N=40 Holm family also reproduces**: smallest raw p = 0.031 (Isolation Forest on FEMTO), Holm-adjusted 1.000, **0 of 40 rejected** — identical to the published §5.10 text and Table 11.
+
+**No separate defect. The published pipeline is sound; the session-2 comparison script was not.**
+
+### 5B.0.1 The corrected legacy-vs-invariant comparison
+
+Source: `results/tables/benchmark_IMS_long.csv` and `benchmark_IMS_long_invariant.csv`, via `src/d2_convention_recompute.py`.
+
+| Detector | legacy run diffs (h) | med | p | invariant run diffs (h) | med | p | Δmed |
+|---|---|---:|---:|---|---:|---:|---:|
+| 3σ | +27.1, +18.4, +15.6 | +18.4 | 0.25 | +25.8, +15.1, **−1.0** | +15.1 | **1.00** | −3.3 |
+| Iso. Forest | +19.9, +12.2, +1.8 | +12.2 | 0.25 | **−0.7**, +16.9, +3.4 | +3.4 | **1.00** | −8.8 |
+| EWMA | +22.6, +5.0, +5.8 | +5.8 | 0.25 | **−3.9**, +4.3, +2.1 | +2.1 | **1.00** | −3.7 |
+| CUSUM | +22.6, +5.0, +5.4 | +5.4 | 0.25 | +4.2, +4.7, +4.3 | +4.3 | 0.25 | −1.2 |
+| Hotelling T² | +3.3, +12.3, +4.6 | +4.6 | 0.25 | +1.0, +1.2, **+81.7** | +1.2 | 0.25 | −3.4 |
+| Deep SVDD | +15.2, 0.0, +1.8 | +1.8 | 0.50 | +8.9, 0.0, 0.0 | 0.0 | 1.00 | −1.8 |
+| RMS-trend | −19.4, 0.0, +2.8 | 0.0 | 1.00 | −0.2, 0.0, +2.4 | 0.0 | 1.00 | 0.0 |
+| LSTM-AE | −1.4, −0.4, −1.7 | −1.4 | 0.25 | −1.4, −0.4, **+56.1** | −0.4 | 1.00 | +1.0 |
+| TCN-AE | −1.4, −0.4, −0.2 | −0.4 | 0.25 | −1.4, −0.4, **+9.0** | −0.4 | 1.00 | 0.0 |
+| Transformer-AD | −1.4, −0.4, −2.5 | −1.4 | 0.25 | −1.4, −0.4, **+68.8** | −0.4 | 1.00 | +1.0 |
+
+Sign tallies over the three runs (n₊/n₋/n₀):
+
+| Detector | legacy | invariant |
+|---|---|---|
+| 3σ | **3+/0−/0** | **2+/1−/0** |
+| Iso. Forest | **3+/0−/0** | **2+/1−/0** |
+| EWMA | **3+/0−/0** | **2+/1−/0** |
+| CUSUM | 3+/0−/0 | 3+/0−/0 |
+| Hotelling T² | 3+/0−/0 | 3+/0−/0 |
+| Deep SVDD | 2+/0−/1 | 1+/0−/2 |
+| RMS-trend | 1+/1−/1 | 1+/1−/1 |
+| LSTM-AE | 0+/3−/0 | 1+/2−/0 |
+| TCN-AE | 0+/3−/0 | 1+/2−/0 |
+| Transformer-AD | 0+/3−/0 | 1+/2−/0 |
+
+Holm over N=40 with the invariant IMS rows substituted in: smallest raw p still 0.031 (FEMTO / Isolation Forest), **0 of 40 rejected**. The Holm conclusion is schema-invariant. Six of the ten IMS raw p-values move (0.25 → 1.00).
+
+### 5B.0.2 Reading — this REVERSES the session-2 conclusion
+
+1. **Sign-consistency does NOT survive.** Session 2 reported "no sign reversal anywhere". That was an artifact of the median collapse, which hides a run whose *mean* difference is negative. Under the paper's own convention, **three of the six magnitude-monitoring detectors flip a run negative** — 3σ (−1.0 h on 3rd_test), Isolation Forest (−0.7 h on 1st_test), EWMA (−3.9 h on 1st_test).
+2. **The manuscript sentence that breaks is `tex:480`:** *"in no run does aggregation shorten their lead time"*, and with it the abstract's *"a consistent positive trend appears for variance-sensitive charts"*. Under the invariant schema these are **false as written** for 3σ, EWMA and Isolation Forest.
+3. **The abstract's headline IMS magnitude moves**: 3σ median **+18.4 h → +15.1 h**.
+4. **Deep sequence models are wildly unstable** under the schema change on 3rd_test: LSTM-AE −1.7 → **+56.1 h**, Transformer-AD −2.5 → **+68.8 h**, Hotelling T² +4.6 → **+81.7 h**. n=3. Nothing should be leaned on here.
+5. **The Holm conclusion is untouched** — 0 of 40 either way. The paper's central *statistical* claim (no significant effect after correction) is schema-robust. What is not robust is the *directional trend* reported alongside it.
+6. **Validity is unchanged** (99/300 both), so the N-7 story stays independent of D-2.
+
+### 5B.0.3 D-2 is not only a robustness question — defect N-14
+
+Recorded per author instruction, session 3. §4.2 of the manuscript (`Channel-Invariant Feature Schema`, `tex:163`) argues at length that the 445-dim scheme is ill-posed at p ≫ n and presents the **49-dim invariant space as the paper's methodology**. The IMS controlled sweep ran at **445 dims** (78 test windows at f=1 on `2nd_test`; p ≫ n by a factor of ~5.7).
+
+Therefore **§4.2 does not describe what was done on the headline dataset.** This is the same class of defect as §4.7 — a methods section describing a procedure other than the one executed — which Reviewer D has already flagged three times. It is a **correctness/reporting** issue that exists independently of whether the invariant numbers are better or worse, and it does not go away by labelling the invariant rerun an "appendix robustness check": that framing leaves §4.2 describing a schema the headline result did not use. Logged as **N-14, severity High**.
+
+---
+
+### 5B.1–5B.5 below: SESSION-2 RECORD, SUPERSEDED — retained only as a record of the error. Do not cite.
+
+**Question (D-2 / N-2):** the published IMS results ran the controlled path under the **445-dim legacy** schema; the other four datasets ran the **49-dim invariant** schema the paper argues for. Does the IMS trend survive the schema the paper endorses?
+
+**~~Answer: the direction survives on every detector; the magnitude does not.~~** — superseded by §5B.0.2.
+
+### 5B.1 What was run
+
+- `src/ims_schema_check.py` (new) → **`results/tables/benchmark_IMS_long_invariant.csv`** (300 rows).
+- `load_pipeline_controlled` gained `feature_mode` (default `"legacy"`); `run_benchmark` threads it. Invariant branch uses `extract_invariant_features` + config top-k (50, stratified), mirroring `load_pipeline`.
+- **Nothing swapped in.** `run_benchmark(save=False)`; the script refuses to overwrite its own output; published files untouched.
+- **Geometry identical** to published — test windows 172/86/35/18/9 · 78/40/16/8/4 · 506/253/102/51/26; `window_rows`=10; `persistence`=3; `window_floored`=False. Total valid alarms **99 under both schemas**.
+- **Reproducibility verified:** re-running `2nd_test` on the *default* (legacy) path matches the published rows to CSV round-trip — max |diff| 7.1e-15 h (≈26 ns on ~50 h values), `valid_alarm` and all window counts exact.
+
+### 5B.2 ~~Per-run aggregate − decimate (h), factors collapsed by median~~ — SUPERSEDED (wrong collapse; use §5B.0.1)
+
+| Detector | 1st_test leg → inv | 2nd_test leg → inv | 3rd_test leg → inv |
+|---|---|---|---|
+| 3σ | 17.500 → **11.633** | 5.833 → 9.167 | 20.500 → **0.833** |
+| EWMA | 0.833 → 0.833 | 5.833 → 2.500 | 2.500 → 0.000 |
+| CUSUM | 0.833 → 0.833 | 5.833 → 4.167 | 0.833 → 0.833 |
+| Hotelling T² | 0.000 → 0.833 | 9.167 → **0.833** | 0.833 → 0.833 |
+| Iso. Forest | 0.833 → 0.833 | 0.833 → 2.500 | −0.833 → 0.000 |
+| Deep SVDD | 0.000 → 0.000 | 0.000 → 0.000 | 0.000 → 0.000 |
+| RMS-trend | 0.000 → 0.000 | 0.000 → 0.000 | 0.000 → 0.000 |
+| LSTM-AE | −0.833 → −0.833 | −0.417 → −0.417 | −1.667 → **+27.583** |
+| TCN-AE | −0.833 → −0.833 | −0.417 → −0.417 | −1.667 → −3.750 |
+| Transformer-AD | −0.833 → −0.833 | −0.417 → −0.417 | −1.667 → **+11.667** |
+
+### 5B.3 ~~Pooled paired test (Wilcoxon, uncorrected)~~ — SUPERSEDED (§4.8 disavows the pooled test; use §5B.0.1)
+
+| Detector | n | legacy median / p | invariant median / p |
+|---|---:|---|---|
+| 3σ | 15 | 17.5000 / **0.0029** | 5.8333 / **0.0229** |
+| CUSUM | 15 | 0.8333 / **0.0076** | 0.8333 / **0.0076** |
+| EWMA | 15 | 2.5000 / **0.0060** | 0.8333 / 0.2719 |
+| Hotelling T² | 15 | 0.8333 / 0.0843 | 0.8333 / **0.0040** |
+| Iso. Forest | 15 | 0.0000 / 0.3668 | 0.8333 / 0.1821 |
+| Deep SVDD | 15 | 0.0000 / 0.1797 | 0.0000 / 0.3173 |
+| RMS-trend | 15 | 0.0000 / 0.2850 | 0.0000 / 0.2850 |
+| LSTM-AE | 9 | −0.8333 / 0.2812 | 0.0000 / 1.0000 |
+| TCN-AE | 9 | −0.8333 / 0.4062 | −0.8333 / 0.4375 |
+| Transformer-AD | 9 | −0.8333 / 0.1250 | 0.0000 / 0.4375 |
+
+*(p uncorrected; Holm across the N=40 family not applied here.)*
+
+### 5B.4 ~~Reading~~ — SUPERSEDED, and its conclusion (1) is now known to be WRONG. Use §5B.0.2.
+
+1. **No sign reversal anywhere.** Every SPC chart stays positive; RMS-trend and Deep SVDD stay at exactly zero on all three runs under both schemas. The qualitative IMS claim — aggregation ≥ decimation — is schema-robust.
+2. **The two largest published IMS effects shrink by roughly a factor of three.** 3σ 17.5 → 5.8 h; EWMA 2.5 → 0.8 h. If IMS were re-baselined, the headline IMS magnitudes in the paper move materially.
+3. **Significance moves in both directions**, so this is not a uniform weakening: EWMA loses it (0.0060 → 0.2719), Hotelling T² gains it (0.0843 → 0.0040), 3σ survives weaker.
+4. **The deep sequence models are unstable under the schema change** and should not be leaned on: `3rd_test` LSTM-AE swings −1.667 → +27.583 h and Transformer-AD −1.667 → +11.667 h. n = 9 pairs.
+5. **Validity is unchanged in total** (99/300 both), so the N-7 valid-alarm story is independent of this schema question.
+
+### 5B.5 What this does NOT settle
+
+D-2 is a **judgement call and remains open.** ~~The measurement says the direction is safe and the magnitude is not.~~ (Direction is **not** safe — §5B.0.2.) Two defensible routes: (a) keep the published legacy baseline and add the invariant rerun as an appendix robustness check; (b) re-baseline IMS onto the invariant schema. **Do not choose without the author.** Cascade quantified in §5C.
+
+---
+
+## 5C. The D-2 cascade — measured, session 3
+
+**Question:** if IMS is re-baselined onto the invariant schema, what actually moves?
+
+**Source:** `src/d2_cascade_audit.py` (new, read-only, writes nothing) + `src/d2_convention_recompute.py`. Derived from the existing `benchmark_IMS_long_invariant.csv`; no pipeline was rerun.
+
+### 5C.1 The structural finding that bounds the cascade
+
+**The 445-dim legacy schema is reachable through exactly one function.** `load_pipeline_controlled` (`src/sampling.py:365`) is the only legacy-schema entry point, and it is called from only two places: `src/benchmark.py:164` (the IMS controlled sweep) and `src/sampling.py:547`.
+
+Every other IMS analysis in the repo goes through `src.load_pipeline`, which reads `FEATURES["mode"]` from `src/config.py` — set to `"invariant"`. Verified call sites: `ablation.py:98-100`, `calibration.py:46`, `tradeoff.py:48`, `onset_sensitivity.py:75`, `robustness.py:204`, `feature_coarsening_ablation.py:77-80`, `training_sweep.py:76`.
+
+**Consequence: most of the IMS material in the paper is already on the invariant schema and cannot move under D-2.** The cascade is confined to the controlled sweep and its derivatives.
+
+### 5C.2 Onset is schema-independent — verified
+
+`t_onset`, `t_fail` and `max_lead_hours` are **identical on 300/300 paired rows** between the legacy and invariant files. Onset is computed from the RMS/kurtosis health indicator on the snapshot series, upstream of feature extraction. Tables 3 and 4 and Figure 1 are therefore fixed by construction, not by luck.
+
+### 5C.3 The cascade table
+
+| Artifact | Changes? | Magnitude | Rerun needed? |
+|---|---|---|---|
+| **Abstract** — "3σ median +18.4 h" | **YES** | → **+15.1 h** | no |
+| **Abstract** — "a consistent positive trend appears for variance-sensitive charts" | **YES** | becomes **false as written**: 3σ, EWMA, Iso. Forest each flip one run negative | no |
+| **Abstract** — "does not survive Holm … smallest adjusted p = 1.00" | no | 0/40 rejected under both schemas | no |
+| **§6, `tex:480`** — "in no run does aggregation shorten their lead time" | **YES** | **false as written** — 3 of 6 chart detectors have a negative run | no |
+| **§6, `tex:480`** — the six per-detector run-diff triples quoted in prose | **YES** | all six change; see §5B.0.1 | no |
+| **§5.1, `tex:478`** — "3σ falls from 58.0 h at full rate to 7.1 h at 10× decimation … aggregation holds it near 59 h" | **YES** | invariant: **64.6 h → 24.8 h**, aggregation holds near **64.6 h**. The decimation collapse is ~3.5× weaker | no |
+| **Table 2** (`tab:imslead`) IMS mean raw lead + 95% CI | **YES, large** | Hotelling T² **67.5 → 174.8** (+107.3); RMS-trend **34.5 → 3.2** (−31.3); Iso. Forest 69.8 → 87.2; LSTM-AE 214.9 → 197.6; TCN 201.5 → 183.7; Transformer 199.6 → 183.4; CUSUM 77.2 → 64.8; 3σ 58.0 → 64.6; Deep SVDD 18.4 → 14.8; EWMA 78.3 → 78.6. **Rank order changes** | no — regenerated with the existing `bootstrap_ci_across_runs` (verified: it reproduces the published legacy column exactly) |
+| **Table 3** (`tab:onsetsens`) onset sensitivity | **NO** | onset identical 300/300 | no |
+| **Table 4** (`tab:decoupled`) decoupled onset | **NO** | same reason | no |
+| **Table 5** (`tab:persistence`) persistence = 3 column | **YES** | 3σ +18.4 → **+15.1**; EWMA +5.8 → **+2.1**; Iso. Forest +12.2 → **+3.4** | no for p=3 |
+| **Table 5** persistence ∈ {1, 5, 10} columns | **unmeasured** | — | **YES** — and see N-15: `persistence_sensitivity_IMS.csv` has **no generating script anywhere in the repo** |
+| **Table 6** (`tab:missing`) historian-gap robustness | **NO** | `robustness.py:204` → `load_pipeline` → already invariant | no |
+| **Table 10** (`tab:imssweep`) | **YES, every row** | full table in §5B.0.1 | no |
+| **Table 11** (`tab:holm`) IMS rows | **YES** | 6 of 10 raw p move 0.25 → 1.00; **Holm verdict unchanged, 0/40** | no |
+| **Table 13** (`tab:conformal`) conformal FAR | **NO** | `calibration.py:46` → `load_pipeline` → already invariant | no |
+| **Table 14** (`tab:farbudget`) FAR-budget sensitivity | **NO** | `tradeoff.py:48` → `load_pipeline` → already invariant | no |
+| **Table 16** (`tab:tradeoff`) lead-vs-FAR trade-off | **NO** | same source | no |
+| **Table 17** (`tab:ablation`) feature-group ablation | **NO** | `ablation.py:98` → `load_pipeline` | no |
+| **Table 18** (`tab:coarsen_ablation`) | **NO** | `feature_coarsening_ablation.py:77` → `load_pipeline` | no |
+| **Table 19** (`tab:ablation_general`) | **NO** | `ablation.py` | no |
+| **Table 20** (`tab:spectral`) spectral ablation | **NO** | `ablation.py` (spectral variant) | no |
+| **Table 22** (`tab:phrank`) PH vs gated ranking | **NO** | built from `tradeoff_IMS.csv` → invariant | no |
+| **Table 25** (`tab:compute`) per-detector compute cost | **YES** | timings were measured at **445 dims**; the invariant run is 49 dims. Direction: faster. Magnitude unmeasured | **YES** — one timing pass on `3rd_test` |
+| **Table 27** (`tab:noise`) noise injection | **NO** | `robustness.py` → `load_pipeline` | no |
+| **Table 28** (`tab:denoise`) denoiser comparison | **NO** | `robustness.py` → `load_pipeline` | no |
+| **Figure 1** (`fig:health`) health trajectory + onset | **NO** | onset identical; the plotted indicator is pre-feature | no |
+| **Figure 2** (`fig:crossdataset`) cross-dataset median diffs | **YES** — IMS column only | same values as Table 10's Med. column | no |
+| **Figure 3** (`fig:sweep`) lead vs logging interval | **YES** | full curve regenerated in the audit output; the aggregate/decimate gap narrows markedly at f=10 | no |
+| **Figure 4** (`fig:conf_ims`) conformal calibration | **NO** | plots Table 13 | no |
+| **Figure 7** (`fig:tradeoff_ims`) trade-off curve | **NO** | plots Table 16's source | no |
+| **Figure 9** (`fig:farbudget_fig`) FAR-budget curve | **NO** | plots Table 14 | no |
+| Result files: `benchmark_IMS_aggregate.csv`, `benchmark_IMS_leadtime_ci.csv`, `benchmark_IMS_paired_test.csv`, `ims_runlevel_test.csv`, `sampling_sweep_*.csv`, IMS rows of `paired_tests_holm.csv` | **YES** | all derived from the controlled sweep | no — regenerable from the existing invariant CSV |
+
+**Totals: 11 artifacts move, 17 do not, 2 need a rerun** (Table 5's other three persistence columns; Table 25's timings).
+
+### 5C.4 Rerun cost
+
+Only two reruns would be required for a full re-baseline, and neither is on the critical path for the D-2 decision:
+
+- **Table 5, persistence ∈ {1, 5, 10}** — three additional controlled sweeps restricted to the six non-sequence detectors. The one full invariant controlled sweep already run (session 2, all ten detectors including three deep AEs, 300 rows) completed inside a single working session; these three are cheaper per sweep because the deep models are excluded, but they are blocked on N-15 first — there is no script to rerun.
+- **Table 25 compute timings** — a single-pass timing run on `3rd_test` (631 train / 506 test windows). Cheap; one pass, no sweep.
+
+Everything else in the "changes = YES" column was regenerated from the existing `benchmark_IMS_long_invariant.csv` without touching the pipeline.
+
+### 5C.5 What the cascade means for the decision
+
+The cascade is **narrower than §5B.5 assumed** — it does not touch the ablations, the conformal analysis, the trade-off family, or the onset tables, and it does not touch Tables 7-9 (XJTU / FEMTO / Ferrara), which were never on the legacy path. But it is **sharper where it lands**: Table 2's ordering, Table 10 in full, the §6 sign-consistency sentence, and two abstract claims. Option (a) — appendix robustness check — leaves N-14 unresolved: §4.2 would still describe a schema the headline dataset did not use.
+
+---
+
+## 5D. N-15 RESOLVED — Table 5 regenerated, and §6.2's conclusion does NOT survive
+
+**The defect was the absence itself.** `results/tables/persistence_sensitivity_IMS.csv` had no generating script anywhere in the repo, so its numbers could be neither traced nor rerun. **Generator now written: `src/persistence_sweep_ims.py`.** It sweeps `THRESHOLD["alarm_persistence"]` over {1, 3, 5, 10} inside a `try/finally`, the same pattern `src/training_sweep.py` uses for `SPLIT`, and runs the six non-sequence detectors that the published file contains.
+
+Output: **`results/tables/persistence_sensitivity_IMS_invariant.csv`** (24 rows). The published file is untouched.
+
+### 5D.1 Median aggregate − decimate (h), invariant schema, §4.8 mean collapse
+
+| Detector | p=1 | p=3 | p=5 | p=10 | published (p=1/3/5/10) |
+|---|---:|---:|---:|---:|---|
+| 3σ | +5.83 | **+15.10** | +7.77 | +3.83 | +4.2 / +18.4 / +17.4 / +11.4 |
+| EWMA | +2.91 | +2.10 | +2.91 | +2.33 | +5.2 / +5.8 / +4.8 / +3.0 |
+| Iso. Forest | +0.33 | +3.43 | **−0.83** | +4.17 | +10.4 / +12.2 / −0.8 / −0.2 |
+| CUSUM | +4.15 | +4.27 | +4.15 | +2.67 | *(not in Table 5)* |
+| Hotelling T² | **−7.11** | +1.17 | +1.00 | +9.13 | *(not in Table 5)* |
+| RMS-trend | **−11.17** | 0.00 | 0.00 | 0.00 | *(not in Table 5)* |
+
+Cross-check: the p=3 column reproduces §5B.0.1's invariant medians exactly (3σ 15.10, EWMA 2.10, IsoF 3.43, CUSUM 4.27, Hotelling 1.17) — two independently written scripts agree.
+
+### 5D.2 The 3σ valid-alarm fraction — the N-15 question, answered
+
+| Persistence | f=1 aggregate | all factors, aggregate | **published** |
+|---|---:|---:|---:|
+| 1 | **0.67** | 0.67 | 1.00 |
+| 3 | **0.67** | 0.67 | 1.00 |
+| 5 | **0.67** | **0.53** | 1.00 |
+| 10 | **0.67** | **0.33** | 1.00 |
+
+**The published 1.00 is not reproduced at any persistence.** `1st_test` carries pre-onset FAR 41.8% (invariant) / 29.1% (legacy), far above τ=10%, so its alarm is invalid under Eq. 5 — 2 of 3 runs, i.e. 0.67, under every denominator tried and under **both schemas**. This is **not** a D-2 consequence.
+
+### 5D.2b Legacy-schema control run — this isolates the defect precisely
+
+`persistence_sensitivity_IMS_legacy.csv` (24 rows) reruns the same sweep on the **445-dim legacy schema the published table was produced on**:
+
+| Row | published Table 5 (p=1/3/5/10) | legacy rerun | match |
+|---|---|---|---|
+| 3σ median Δ | +4.2 / +18.4 / +17.4 / +11.4 | **4.17 / 18.43 / 17.43 / 11.43** | ✅ **exact** |
+| EWMA median Δ | +5.2 / +5.8 / +4.8 / +3.0 | **5.17 / 5.77 / 4.83 / 3.00** | ✅ **exact** |
+| Iso. Forest median Δ | +10.4 / +12.2 / −0.8 / −0.2 | **10.43 / 12.20 / −0.83 / −0.17** | ✅ **exact** |
+| **3σ valid-alarm frac.** | **1.00 / 1.00 / 1.00 / 1.00** | **0.67 / 0.67 / 0.67 / 0.67** | ❌ **does not reproduce** |
+
+**Three of four rows reproduce to the digit; the fourth does not.** Same script, same schema, same collapse convention. That eliminates every alternative explanation — not the schema, not the §4.8 convention, not an error in the new generator, which demonstrably reconstructs the rest of the table. **The published `valid_frac_f1_agg` column is wrong, and was wrong in the originally released file.**
+
+It also **validates `src/persistence_sweep_ims.py` as the authentic missing generator**: it reproduces the published table exactly except in the one cell already inconsistent with the released benchmark CSV.
+
+Legacy 3σ validity across all factors: **0.67 / 0.67 / 0.47 / 0.33** for p = 1/3/5/10 — the same degradation seen on the invariant schema (0.67 / 0.67 / 0.53 / 0.33).
+
+### 5D.3 Does §6.2's conclusion still hold? **No — but the causes must be separated.**
+
+⚠️ **Correction to the first version of this section, which ran two different things together.** The legacy control run (§5D.2b) shows that only the first failure below is a *published defect*; the others are *consequences of D-2* and were correct as published.
+
+§6.2 (`tex:357`) makes three claims from this table. Measured against the regenerated data:
+
+1. *"the 3σ valid-alarm fraction is 1.00 at every persistence"* — **false**. It is 0.67, and was 0.67 in the originally released data too.
+2. *"so the deployable-detector recommendation does not depend on this parameter"* — **false as stated once the sweep is not restricted to full resolution.** At f=1 the fraction is flat at 0.67, so the recommendation is stable *there*; but across the coarsening factors it **halves**, 0.67 → 0.67 → 0.53 → **0.33** as persistence goes 1 → 10. A longer persistence filter costs 3σ half its valid alarms at SCADA rates. The parameter matters; the published table hid this by reporting only the f=1 column.
+3. *"the 3σ and EWMA charts show a sign-consistent positive run-level median at all four settings (n₊/n₋ = 3/0)"* — **CORRECT AS PUBLISHED; broken by D-2.** The legacy rerun confirms 3+/0− for both detectors at all four persistences, exactly as claimed. Under the **invariant** schema 3σ is 3+/0− at p=1, 5, 10 but **2+/1− at p=3**, and EWMA is **2+/1−** at p=1, 3, 5, reaching 3+/0− only at p=10. This is a **consequence of the re-baseline, not an authoring error** — the response letter should say so plainly.
+4. *"only the spike-robust Isolation Forest drifts to a near-zero negative median at the longest persistence"* — **also correct as published** (legacy: Iso. Forest is the only negative among the three tabulated detectors, −0.83 at p=5 and −0.17 at p=10), **broken by D-2**: under the invariant schema Iso. Forest is negative at p=5 (−0.83) but **positive at p=10 (+4.17)**, while Hotelling T² (−7.11) and RMS-trend (−11.17) turn strongly negative at p=1. Those two are not among Table 5's rows, so if the table keeps its present three-row shape this sentence can be repaired rather than deleted.
+
+**Recommended replacement claim, supportable from the regenerated file:** the aggregate-vs-decimate direction is positive at every persistence for 3σ, EWMA and CUSUM in *median*, but is not sign-consistent across runs at any setting except CUSUM; and the 3σ valid-alarm fraction is 0.67 at full resolution, falling to 0.33 across the coarsening sweep at persistence 10. **Do not restate the "does not depend on this parameter" conclusion.**
+
+---
+
+## 5F. D-2 execution record — code change and regenerated artifacts
+
+### 5F.1 The code change (brief rule 4 sign-off, scoped to the IMS controlled-sweep path)
+
+| File | Change |
+|---|---|
+| `src/sampling.py:371` | `load_pipeline_controlled(..., feature_mode=)` default **`"legacy"` → `"config"`** — `FEATURES["mode"]` now governs. Docstring rewritten to state that legacy is still reachable and why. |
+| `src/benchmark.py:103` | `run_benchmark(..., feature_mode=)` default **`"legacy"` → `"config"`**; comment at `:161` updated. |
+| `src/ims_schema_check.py` | median-collapse `run_level_diffs` and the pooled Wilcoxon block marked **DO NOT USE FOR REPORTED NUMBERS** (session-3 correction 1). Behaviour unchanged. |
+
+**Nothing else changed.** No detector, onset, or metric implementation was touched. `control=False` never reads `feature_mode`, and `control` is forced `False` for non-IMS datasets (`benchmark.py:117`), so **no other dataset is affected**.
+
+**Legacy path kept reachable and tested** — new `tests/test_feature_mode.py`, 7 tests, all passing:
+- defaults are `"config"` on both entry points;
+- `feature_mode="legacy"` still yields **445 dims** with p > n (the N-14 condition, pinned as a fact);
+- `"config"` resolves to invariant with p ≤ 50 and p < n;
+- explicit `"invariant"` ≡ the default;
+- **downsampling geometry is schema-independent** (test-window counts, window size, effective interval identical) — this is what makes the old and new columns comparable;
+- unknown mode raises.
+
+Full suite after the change: **99 passed, 1 skipped, 1 failed** — the failure is the pre-existing benign **N-9** (`test_metropt_loads_with_expected_parameters`, `assert 'real' == 'fixture'`, MetroPT, touches no paper number). **No new failures.**
+
+### 5F.2 Regenerated artifacts
+
+All produced by the repo's **own** generator functions fed the invariant frame — `aggregate_long`, `bootstrap_ci_across_runs`, `paired_test_aggregate_vs_decimate` (`src/benchmark.py`), `ims_runlevel_table`, `family_holm` (`src/stats_rigor.py`). No statistic was reimplemented. Runner: `src/d2_regenerate_artifacts.py`.
+
+| New file | Backs | Rows |
+|---|---|---|
+| `benchmark_IMS_long_invariant.csv` | the sweep itself | 300 |
+| `benchmark_IMS_leadtime_ci_invariant.csv` | **Table 2** | 108 |
+| `ims_runlevel_test_invariant.csv` | **Table 10** | 10 |
+| `paired_tests_holm_invariant.csv` | **Table 11** | 40 |
+| `benchmark_IMS_aggregate_invariant.csv` | **Figure 3**, sweep curve | 120 |
+| `persistence_sensitivity_IMS_invariant.csv` | **Table 5** (N-15 fix) | 24 |
+| `compute_cost_IMS_invariant.csv` + `compute_cost_IMS_legacy.csv` | **Table 25** — clean paired run, idle machine, 5 repeats. **Report the ratio, not the absolutes** (§5E.7) | 9 each |
+| `benchmark_IMS_paired_test_invariant.csv` | *diagnostic only* — the pooled test §4.8 disavows. **Never report from it.** | 10 |
+
+**Cross-validation:** `stats_rigor.ims_runlevel_table` on the invariant frame reproduces, to the digit, the medians and p-values that `src/d2_convention_recompute.py` derived independently — two separately written implementations of §4.8 agreeing.
+
+> **Published files were NOT overwritten.** New artifacts carry an `_invariant` suffix and the originals remain. Reasons: the response letter needs both columns side by side (§5E is built from exactly that pairing), and `results/` is gitignored (**N-3**), so an overwrite would be unrecoverable. Promoting the new files to the published names is a rename the author can authorise once §5E has been checked.
+
+---
+
+## 5E. CLAIM-DELTA INVENTORY — the spine of the Response to Review
+
+Every manuscript value that moves under D-2. **Old** = as published; **new** = invariant re-baseline. Line numbers are `paper/files/scada_ijphm.tex`. Sources: `benchmark_IMS_leadtime_ci_invariant.csv`, `ims_runlevel_test_invariant.csv`, `paired_tests_holm_invariant.csv`, `persistence_sensitivity_IMS_invariant.csv`, `benchmark_IMS_long_invariant.csv`, `compute_cost_IMS_invariant.csv`.
+
+### 5E.1 Prose claims
+
+| # | Loc | Claim | Old | New |
+|---|---|---|---|---|
+| P1 | `:63` abstract | 3σ IMS median | **+18.4 h** | **+15.1 h** |
+| P2 | `:63` abstract | "a consistent positive trend appears for variance-sensitive charts" | asserted | **must be withdrawn** — 3σ 2+/1−, EWMA 2+/1−, IsoF 2+/1− |
+| P3 | `:63` abstract | "does not survive Holm … smallest adjusted p=1.00" | p=1.00 | **unchanged** |
+| P4 | `:267` §5 roadmap (ii) | "the same sign in all three runs for every magnitude detector" | asserted | **false** — three detectors flip a run |
+| P5 | `:267` §5 roadmap (ii) | 3σ / IF / EWMA medians | **+18.4 / +12.2 / +5.8 h** | **+15.1 / +3.4 / +2.1 h** |
+| P6 | `:268` §5 roadmap (iii) | smallest adjusted p | 1.00 | **unchanged** |
+| P19 | `:275` §5.1 | "the three deep reconstruction models top the table and **EWMA and Isolation Forest lead the classical detectors**" | asserted | **false** — under the re-baseline **Hotelling T² (174.8 h) leads the classical detectors**, ahead of Iso. Forest (87.2) and EWMA (78.6). The deep models still top the table, and the clause's *purpose* survives: this is still the ordering the FAR budget overturns |
+| P7 | `:275` §5.1 | deep models' raw leads | **199–215 h** | **183–198 h** |
+| P8 | `:275` §5.1 | deep models' pre-onset FAR | "48% on test 3 to 100% on test 1" | **"61% on test 3 to 100% on tests 1–2"** |
+| P9 | `:275` §5.1 | deep models' valid-alarm fraction | 0/3 | **unchanged (0/3)** |
+| P10 | `:357` §6.2 | "3σ valid-alarm fraction is 1.00 at every persistence" | 1.00 | **0.67** — and was 0.67 in the released data too (**N-15**) |
+| P11 | `:357` §6.2 | "the deployable-detector recommendation does not depend on this parameter" | asserted | **withdraw** — validity falls 0.67→0.33 across factors as persistence 1→10 |
+| P12 | `:357` §6.2 | "3σ and EWMA … sign-consistent positive … at all four settings (n₊/n₋=3/0)" | **verified correct as published** (legacy rerun: 3+/0− ×4 for both) | **breaks under D-2** — 3σ 2+/1− at p=3; EWMA 2+/1− at p=1,3,5. A re-baseline consequence, **not** an authoring error |
+| P13 | `:357` §6.2 | "only … Isolation Forest drifts to a near-zero negative median at the longest persistence" | **verified correct as published** (legacy: IsoF the only negative, −0.83 / −0.17) | **breaks under D-2** — IsoF negative at p=5 but **+4.17 at p=10**; Hotelling (−7.11) and RMS-trend (−11.17) negative at p=1, though neither is a Table 5 row |
+| P14 | `:478` §5.x | 3σ full-rate → 10× decimation | **58.0 → 7.1 h** | **64.6 → 24.8 h** |
+| P15 | `:478` §5.x | "aggregation holds it near 59 h" | 59 h | **near 64.6 h** |
+| P16 | `:480` §5.x | "in no run does aggregation shorten their lead time" | asserted | **false** — must be withdrawn |
+| P17 | `:480` §5.x | six per-detector run-diff triples | see Table 10 old | see Table 10 new |
+| P18 | `:513` §5.10 | "smallest raw p is 0.031 (IsoForest on FEMTO) … 0 of 40" | 0.031 / 0 of 40 | **unchanged** |
+
+### 5E.2 Table 2 (`tab:imslead`, `:286–297`) — mean raw lead, 95% bootstrap CI
+
+| Detector | Line | Old | Old CI | New | New CI | Δ |
+|---|---|---:|---|---:|---|---:|
+| LSTM-AE | `:286` | 214.9 | [65.5, 383.5] | **197.6** | [65.5, 331.7] | −17.3 |
+| TCN-AE | `:287` | 201.5 | [65.5, 343.5] | **183.7** | [65.5, 330.9] | −17.9 |
+| Transformer-AD | `:288` | 199.6 | [65.5, 337.7] | **183.4** | [65.5, 330.9] | −16.2 |
+| EWMA | `:289` | 78.3 | [27.2, 152.2] | **78.6** | [28.0, 152.2] | +0.3 |
+| CUSUM | `:290` | 77.2 | [26.3, 151.4] | **64.8** | [26.3, 114.9] | −12.4 |
+| Isolation Forest | `:291` | 69.8 | [28.0, 123.3] | **87.2** | [49.7, 152.2] | +17.4 |
+| Hotelling T² | `:292` | 67.5 | [27.2, 113.3] | **174.8** | [56.3, 315.9] | **+107.3** |
+| 3σ | `:295` | 58.0 | [22.2, 93.7] | **64.6** | [28.8, 108.7] | +6.7 |
+| RMS-trend | `:296` | 34.5 | [0.0, 93.7] | **3.2** | [0.0, 9.7] | **−31.2** |
+| Deep SVDD | `:297` | 18.4 | [0.0, 45.5] | **14.8** | [0.0, 34.0] | −3.5 |
+
+**Row order changes.** Old: LSTM, TCN, Transformer, EWMA, CUSUM, IsoF, Hotelling, 3σ, RMS-trend, SVDD. New: LSTM, TCN, Transformer, **Hotelling**, **IsoF**, EWMA, **CUSUM**, 3σ, SVDD, **RMS-trend**. Hotelling T² rises from 7th to 4th; RMS-trend falls to last. The two-block split (`:284` / `:294`) is driven by Table 16, which is on the invariant path already and **does not move** — so 3σ, RMS-trend and Deep SVDD remain the deployable block. §5 roadmap item (i)'s "RMS-trend correctly weakest" (`:266`) **still holds** and strengthens.
+
+### 5E.3 Table 5 (`tab:persistence`, `:367–370`)
+
+| Row | Line | Old (p=1/3/5/10) | New (p=1/3/5/10) |
+|---|---|---|---|
+| 3σ median Δ | `:367` | +4.2 / +18.4 / +17.4 / +11.4 | **+5.8 / +15.1 / +7.8 / +3.8** |
+| EWMA median Δ | `:368` | +5.2 / +5.8 / +4.8 / +3.0 | **+2.9 / +2.1 / +2.9 / +2.3** |
+| Iso. Forest median Δ | `:369` | +10.4 / +12.2 / −0.8 / −0.2 | **+0.3 / +3.4 / −0.8 / +4.2** |
+| 3σ valid-alarm frac. | `:370` | 1.00 / 1.00 / 1.00 / 1.00 | **0.67 / 0.67 / 0.67 / 0.67** (f=1); **0.67 / 0.67 / 0.53 / 0.33** across all factors |
+
+### 5E.4 Table 10 (`tab:imssweep`, `:497–506`)
+
+| Detector | Line | Old run diffs | Old med / p | New run diffs | New med / p |
+|---|---|---|---|---|---|
+| 3σ | `:497` | +27.1, +18.4, +15.6 | +18.4 / 0.25 | **+25.8, +15.1, −1.0** | **+15.1 / 1.00** |
+| Iso. Forest | `:498` | +19.9, +12.2, +1.8 | +12.2 / 0.25 | **−0.7, +16.9, +3.4** | **+3.4 / 1.00** |
+| EWMA | `:499` | +22.6, +5.0, +5.8 | +5.8 / 0.25 | **−3.9, +4.3, +2.1** | **+2.1 / 1.00** |
+| CUSUM | `:500` | +22.6, +5.0, +5.4 | +5.4 / 0.25 | **+4.2, +4.7, +4.3** | **+4.3 / 0.25** |
+| Hotelling T² | `:501` | +3.3, +12.3, +4.6 | +4.6 / 0.25 | **+1.0, +1.2, +81.7** | **+1.2 / 0.25** |
+| Deep SVDD | `:502` | +15.2, 0.0, +1.8 | +1.8 / 0.50 | **+8.9, 0.0, 0.0** | **0.0 / 1.00** |
+| RMS-trend | `:503` | −19.4, 0.0, +2.8 | 0.0 / 1.00 | **−0.2, 0.0, +2.4** | **0.0 / 1.00** |
+| LSTM-AE | `:504` | −1.4, −0.4, −1.7 | −1.4 / 0.25 | **−1.4, −0.4, +56.1** | **−0.4 / 1.00** |
+| TCN-AE | `:505` | −1.4, −0.4, −0.2 | −0.4 / 0.25 | **−1.4, −0.4, +9.0** | **−0.4 / 1.00** |
+| Transformer-AD | `:506` | −1.4, −0.4, −2.5 | −1.4 / 0.25 | **−1.4, −0.4, +68.8** | **−0.4 / 1.00** |
+
+**The S-c. (sign-consistent) column changes on SEVEN of ten rows.** Verified against `all_same_sign` in `ims_runlevel_test_invariant.csv`:
+
+- **was plain "yes", becomes "no":** 3σ, Iso. Forest, EWMA (each now 2+/1−);
+- **was "yes (−)", becomes "no":** LSTM-AE, TCN-AE, Transformer-AD (each now 1+/2−, because `3rd_test` flips hard positive);
+- **was "2+,tie", becomes "1+, 2 ties":** Deep SVDD;
+- **unchanged:** CUSUM and Hotelling T² (both stay 3+/0− "yes"), and RMS-trend (stays "no").
+
+The caption's "the exact two-sided sign test floors at p=0.25 at n=3" stays correct.
+
+### 5E.5 Table 11 (`tab:holm`, `:523–532`) — IMS rows only
+
+| Detector | Line | Old raw p | New raw p | Holm p | Reject |
+|---|---|---:|---:|---:|---|
+| 3σ | `:523` | 0.250 | **1.000** | 1.000 | no |
+| EWMA | `:524` | 0.250 | **1.000** | 1.000 | no |
+| CUSUM | `:525` | 0.250 | 0.250 | 1.000 | no |
+| Hotelling T² | `:526` | 0.250 | 0.250 | 1.000 | no |
+| Iso. Forest | `:527` | 0.250 | **1.000** | 1.000 | no |
+| Deep SVDD | `:528` | 0.500 | **1.000** | 1.000 | no |
+| LSTM-AE | `:529` | 0.250 | **1.000** | 1.000 | no |
+| TCN-AE | `:530` | 0.250 | **1.000** | 1.000 | no |
+| Transformer-AD | `:531` | 0.250 | **1.000** | 1.000 | no |
+| RMS-trend | `:532` | 1.000 | 1.000 | 1.000 | no |
+
+**Seven of ten raw p-values move; every Holm-adjusted p and every reject decision is unchanged. 0 of 40 survive under both schemas.**
+
+### 5E.6 Figures
+
+| Figure | Loc | Change |
+|---|---|---|
+| **F2** `fig:crossdataset` | `:418–421` | IMS column only; new medians = Table 10's new Med. column (§5E.4). Other three datasets unchanged. |
+| **F3** `fig:sweep` | `:482–486` | Full IMS curve. 3σ aggregate 58.0/60.7/57.7/59.1/56.3 → **64.6/67.8/66.8/64.6/61.9**; 3σ decimate 58.0/54.9/42.0/7.1/27.9 → **64.6/60.5/58.2/24.8/51.1**. IsoF aggregate 69.8/66.7/56.3/49.5/22.6 → **87.2/75.2/56.4/63.4/40.6**; IsoF decimate 69.8/67.0/13.7/9.3/48.5 → **87.2/76.6/48.5/44.3/33.5**. **The aggregate–decimate gap narrows sharply**; the caption's "where the variance-sensitive detectors collapse at coarse rates" overstates the new curve. |
+| **F1** `fig:health` | `:303–306` | **no change** — onset identical 300/300 |
+| **F4/F7/F9** | `:617,:651,:665` | **no change** — invariant-path sources |
+
+### 5E.7 Table 25 (`tab:compute`, `:1013–1021`) — ✅ CLEAN PAIRED MEASUREMENT
+
+Generator written (`src/compute_cost_ims.py` — Table 25 had no generator either, the same gap as N-15). **Paired run on an idle machine, legacy then invariant back to back, 5 repeats each per the caption.** Geometry identical on both passes and matching the caption exactly — **631 train / 506 test windows**; only the feature width differs, **445 → 49**.
+
+| Detector | train legacy → invariant (s) | ×faster | inference legacy → invariant (µs/win) | ×faster |
+|---|---|---:|---|---:|
+| 3σ | 0.0021 → 0.00022 | **9.4** | 3.03 → **0.22** | **13.8** |
+| EWMA | 0.0021 → 0.00022 | 9.6 | 3.72 → **0.98** | 3.8 |
+| CUSUM | 0.0023 → 0.00022 | 10.4 | 5.25 → **2.11** | 2.5 |
+| Hotelling T² | 0.261 → 0.020 | **13.1** | 4.35 → **1.49** | 2.9 |
+| Iso. Forest | 0.801 → 0.731 | 1.10 | 142.4 → **119.7** | 1.19 |
+| Deep SVDD | 2.80 → 2.27 | 1.24 | 5.05 → **2.33** | 2.17 |
+| LSTM-AE | 102.0 → 49.5 | 2.06 | 1313 → **513** | 2.56 |
+| TCN-AE | 72.5 → 46.2 | 1.57 | 911 → **379** | 2.40 |
+| Transformer-AD | 51.2 → 41.6 | 1.23 | 685 → **300** | 2.28 |
+
+**The invariant schema is faster on every detector, on both axes.** The gain is largest where cost scales directly with dimensionality — the SPC charts (2.5–13.8× on inference) and Hotelling T² (13.1× on training, since it inverts a p×p covariance). It is smallest for Isolation Forest (1.1–1.2×), whose cost is dominated by sample count rather than feature count.
+
+> ⚠️ **Use the RATIO, not these absolute values, when revising Table 25.** The legacy pass on this machine runs **4–13× slower than the published column** (Iso. Forest train 0.80 s here vs 0.20 s published; LSTM-AE 102 s vs 7.8 s). That gap is hardware and threading, not schema — it appears on the *same* legacy configuration the published numbers came from. Three defensible options: (a) re-time the whole table on the original hardware under the invariant schema; (b) keep the published table and state the schema it was measured under; (c) publish this machine's invariant column and rewrite the caption's hardware description. **Never mix a published legacy row with a new invariant row.**
+
+**Table 25's actual claim strengthens.** The caption argues "even the slowest model's inference is ≪ the 10 s SCADA polling interval". The slowest invariant inference here is LSTM-AE at **513 µs/window ≈ 0.5 ms** — about 20,000× inside the budget, with 2.6× more margin than the legacy schema gave.
+
+<details><summary>Superseded first attempt — contaminated, deleted</summary>
+
+An initial invariant-only pass ran while the legacy persistence sweep held the same core, giving values 10–20× inflated by contention. That file was **deleted**, never published, and the measurement redone paired on an idle machine. Noted so the discarded numbers are not mistaken for a result.
+
+</details>
+
+### 5E.8 Unchanged — state explicitly in the response letter
+
+Tables 3, 4, 6, 13, 14, 16, 17, 18, 19, 20, 22, 27, 28; Figures 1, 4, 5, 6, 7, 8, 9, 10, 11; Tables 7, 8, 9 (XJTU / FEMTO / Ferrara — never on the legacy path); the Holm verdict; the non-destruction headline.
+
+---
+
+## 5G. Reviewer D run-dependent items — session 4
+
+Four items run this session: **D2** (deep models in the Table 16 sweep), **D3** (one-class SVM),
+**D15** (equivalence evidence), **D17** (original test-3 label). No manuscript edit was made.
+Every run wrote a **new** result file; no published file was read-modified-written.
+
+### 5G.1 D15 — equivalence evidence ✅ COMPLETE
+
+**Margin δ = 1 h**, pre-specified on operational grounds (a planner cannot act on sub-hour
+differences in warning time), fixed before any result was read. Generator:
+`src/d15_equivalence.py`. Metric: `lead_time_hours`, run-level differences via
+`stats_rigor.run_level_diffs` (**mean** collapse over factors and seeds, §4.8).
+
+**Primary — two-sided 95% bootstrap CI**, runs resampled, B = 2000, seed 42, percentile
+interval, reusing the construction in `benchmark.bootstrap_ci_across_runs`.
+Source: `results/tables/d15_equivalence_bootstrap.csv`.
+
+| Dataset arm | Equivalent | Inconclusive | Aggregate superior beyond δ | Untestable |
+|---|---:|---:|---:|---:|
+| IMS (published, legacy 445-dim) | 0 | 5 | 5 | 0 |
+| IMS (invariant re-baseline, D-2) | 0 | 8 | 2 | 0 |
+| XJTU-SY | 10 | 0 | 0 | 0 |
+| FEMTO | 10 | 0 | 0 | 0 |
+| Ferrara | 10 | 0 | 0 | 0 |
+| ONGC (n=1) | 0 | 0 | 0 | 10 |
+| **Total** | **30** | **13** | **7** | **10** |
+
+> **No cell anywhere is "aggregate inferior beyond margin."** The seven non-equivalent cells
+> are all cells where aggregation **beats** decimation by more than 1 h. That refutes *symmetric*
+> equivalence while supporting the paper's direction — the distinction must be stated, not blurred.
+
+**Secondary — TOST by two one-sided exact sign tests.** Floor `0.5^(n₊+n₋)` per detector;
+feasible only where n₊+n₋ ≥ 5. Source: `results/tables/d15_equivalence_tost.csv`.
+
+| Dataset arm | TOST feasible | Of which equivalent | Infeasible (floor > α) |
+|---|---:|---:|---:|
+| IMS (legacy) | 0 | — | 10 (n_eff 2–3, floor 0.125–0.25) |
+| IMS (invariant) | 0 | — | 10 (n_eff 1–3, floor 0.125–0.50) |
+| XJTU-SY | 2 | 2 | 8 (n_eff 0–4) |
+| FEMTO | 10 | 10 | 0 |
+| Ferrara | 10 | 5 | 0 |
+| ONGC | 0 | — | 10 (n_eff 1, floor 0.50) |
+| **Total** | **22** | **17** | **38** |
+
+**Cross-validation.** The XJTU n₊/n₋ counts computed here reproduce the register's worked
+example exactly (3σ 3/1, EWMA 2/2, CUSUM 1/2, Hotelling 2/0, Iso. Forest 2/7, Deep SVDD 3/2,
+RMS-trend 2/2) — an independent confirmation of the §4.8 collapse convention.
+
+**Reading.** Equivalence at ±1 h is **established on all three multi-bearing campaigns**
+(XJTU-SY, FEMTO, Ferrara: 30/30 cells) and **not established on IMS under either schema** —
+there the intervals are wide and, where they exclude the margin, they do so on the
+*aggregation-is-better* side. Register item 2.1's drafted abstract clause survives for the
+three multi-bearing campaigns; it must **not** be extended to IMS.
+
+### 5G.2 D2 — deep models in the Table 16 sweep ✅ COMPLETE — ⚠️ **§6.1 IS WRONG**
+
+Generator: `src/d2_deep_tradeoff.py`, which calls `src.tradeoff.tradeoff_for_run`
+**unmodified**. No code change was needed: `EXPERIMENT["methods_to_run"]` already contains
+`lstm_ae`, `tcn`, `transformer_ad`, so Table 16's omission was a run-time choice, not a code
+limitation. `tradeoff.py` uses `load_pipeline` (not `load_pipeline_controlled`), so these rows
+were never on the 445-dim legacy path and are directly comparable to published Table 16.
+
+**Published Table 16 was verified to reproduce to the digit first** (3σ 77.0/18.1, 60.7/11.7,
+56.3/8.9 — matches `tex:717`), so the new rows sit on a confirmed baseline.
+
+Source: `results/tables/tradeoff_IMS_deepmodels.csv`. † = mean FAR_pre > τ = 10%.
+
+| Detector | 95th Ld | 95th FAR | 99th Ld | 99th FAR | 99.5th Ld | 99.5th FAR |
+|---|---:|---:|---:|---:|---:|---:|
+| LSTM-AE | 199.61 | 87.81† | 193.99 | 82.16† | 93.58 | 62.00† |
+| TCN-AE | 185.36 | 82.63† | 183.14 | 79.93† | 180.36 | 74.43† |
+| Transformer-AD | 183.97 | 81.05† | 181.75 | 79.18† | 178.69 | 71.99† |
+
+**All nine mean cells are daggered — but that is NOT what the claim says.** The sentence is at
+**`paper/files/scada_ijphm.tex:275`**, inside `\subsection{Lead Time and Confidence Intervals on
+IMS}` (header at `:274`). **The reviewer's "§6.1" is correct** — `\section{Results}` at `:261` is
+§6, so that subsection is §6.1. *(An earlier note here claimed the numbering did not resolve;
+that was wrong and is retracted — section numbering was counted properly afterwards:
+§6.7 = `:512` Multiple-Comparison Correction, §6.9 = `:638` Trade-off, §6.12 = `:829` Saxena PH.)*
+It reads: their pre-onset FAR "ranges from 48% on test 3 to 100% on test 1, far above the
+$\tau=10\%$ budget **regardless of threshold**." The per-run data
+(`tradeoff_IMS_deepmodels_long.csv`) refute the final clause:
+
+| Run | Detector | Percentile | Lead (h) | FAR_pre | `valid_alarm` |
+|---|---|---:|---:|---:|---|
+| `3rd_test` | **LSTM-AE** | **99.5** | **59.67** | **4.19%** | **True** |
+| `3rd_test` | LSTM-AE | 99.0 | 320.85 | 46.48% | False |
+| `3rd_test` | TCN-AE | 99.5 | 320.85 | 42.07% | False |
+| `3rd_test` | Transformer-AD | 99.5 | 318.35 | 36.56% | False |
+
+**LSTM-AE has a valid operating point at the 99.5th percentile on IMS test 3.** Tightening the
+threshold from the 99th to the 99.5th collapses its FAR from 46.5% to 4.19% and its lead from
+320.85 h to 59.67 h — the detector does not "flood regardless of threshold"; it trades lead for
+FAR like every other detector, and at a strict enough threshold it lands inside the budget.
+
+**Consequences.**
+- "regardless of threshold" must be **corrected, not merely supported** — this is a fifth
+  internal contradiction of the species Reviewer D is hunting. Logged as **N-16**.
+- **Orthogonal to, and additional to, §5E.1's P8.** P8 already moves the *same sentence*'s
+  "48% on test 3" to 61% under the D-2 re-baseline. N-16 is a different defect in that
+  sentence: the universal quantifier over thresholds. **Both** must be fixed, and the sweep
+  that shows N-16 runs on the standard `load_pipeline` path, so it is unaffected by D-2 —
+  the two corrections are independent.
+- The abstract's and §5's deep-model framing ("no valid operating point", valid fraction 0/3)
+  is true **at the paper's operating threshold (97.5th)** but false as a universal over thresholds.
+- The honest replacement is bounded: *at the 95th and 99th percentiles no deep model attains a
+  valid operating point on any IMS run; at the 99.5th, LSTM-AE attains one on test 3 only
+  (1 of 3 runs, 59.7 h at 4.2% FAR), while TCN-AE and Transformer-AD attain none at any
+  percentile tested.*
+**Seed-robustness check — the earlier caveat is now DISCHARGED.** Generator
+`src/d2_seed_check.py` → `results/tables/d2_seed_check_lstmae.csv`. The one cell carrying N-16
+was re-run at **10 seeds** (42, 1–9). **This is a check only; the paper's fixed-seed protocol is
+unchanged and seed 42 remains the reported configuration.**
+
+| Quantity | Result across 10 seeds |
+|---|---|
+| Valid operating point | **10 / 10 seeds (100%)** |
+| Pre-onset FAR | **4.19% at every seed** (min = median = max), vs τ = 10% |
+| Lead | **59.67 h at every seed** |
+
+**The identical values are not an artifact of an ignored seed — verified.** `LSTMAEDetector.fit`
+calls `torch.manual_seed(self.random_state)` and `np.random.seed(...)` (`src/models.py`), and
+`make_detectors` injects the seed. Training demonstrably differed: **final loss ranged
+0.002736–0.003964** and the **alarm threshold ranged 0.006223–0.008351** (a ~35% spread). Ten
+materially different models all land on the same operating point, because at the 99.5th percentile
+the threshold falls in a flat region of the score series and the first-crossing window does not move.
+
+So N-16 is **robust, not a seed artifact**, and the FAR sits ~5.8 points inside the budget rather
+than marginally under it. The correction to `tex:275` can be stated without a seed caveat.
+
+### 5G.3 D3 — one-class SVM ✅ COMPLETE — **it exists, it runs, D-5's premise is wrong**
+
+**Answer to the reviewer's question: YES.** The released code produces OC-SVM results.
+
+| Evidence | Location |
+|---|---|
+| Detector implemented | `src/models.py:378` `OneClassSVMDetector` (RBF, `nu`, `gamma`) |
+| Dispatched by the factory | `src/models.py:623-624` |
+| Hyperparameters configured | `src/config.py:166-170` (`kernel="rbf"`, `nu=0.05`, `gamma="scale"`) |
+| Registered as deterministic | `src/benchmark.py:50` `_DETERMINISTIC` |
+| Exported | `src/__init__.py:50` |
+| **Why no results existed** | absent from `EXPERIMENT["methods_to_run"]` (`config.py:258-269`) — a run-list omission, nothing more |
+
+So §4.5's clause is **runnable, not fabricated**. **Decision D-5 must be revisited**: the register's
+"simplest safe path: delete" and the brief's escalation "OC-SVM turns out not to exist" both assumed
+the opposite. The numbers now exist, so reporting is available.
+
+Generator `src/d3_ocsvm.py`, seed 42, IMS on the controlled path, the other four on the standard
+path — matching how each published sweep was produced.
+
+**Tables 2 / 7 / 8 / 9 — mean raw lead, 95% bootstrap CI, f=1 aggregate**
+(`d3_ocsvm_leadtime_ci.csv`, via `benchmark.bootstrap_ci_across_runs`, runs resampled, B=2000, seed 42)
+
+| Dataset | n | Mean lead (h) | 95% CI |
+|---|---:|---:|---|
+| IMS (Table 2) | 3 | 180.25 | [65.50, 316.68] |
+| XJTU-SY (Table 7) | 10 | 1.44 | [0.82, 2.10] |
+| FEMTO (Table 8) | 6 | 0.95 | [0.69, 1.30] |
+| Ferrara (Table 9) | 6 | 0.98 | [0.52, 1.50] |
+| ONGC (n=1, not inferential) | 1 | 35.34 | — |
+
+**Validity — reported under decision D-7's three-outcome convention, which matters here.**
+The raw `valid_alarm` column says IMS 1/3, XJTU 4/10, FEMTO 0/6, Ferrara 2/6, ONGC 0/1 — **but every
+one of XJTU's four, and one of Ferrara's two, has `far_preonset_pct = NaN`**, i.e. they are
+**unscoreable** (defect **N-7**: the FAR gate is skipped when `FAR_pre` is undefined, leaving
+`valid_alarm = lead > 0`). Counting them as valid would repeat exactly the defect D-7 was decided to fix.
+
+| Dataset | Valid (gated, genuine) | Invalid | Unscoreable (`FAR_pre` NaN) |
+|---|---:|---:|---:|
+| IMS | **1** (`3rd_test`, FAR 6.61%) | 2 | 0 |
+| XJTU-SY | **0** | 6 | 4 (`Bearing1_3`, `1_5`, `2_2`, `2_5`) |
+| FEMTO | **0** | 6 | 0 |
+| Ferrara | **1** (`E1`, FAR 9.69%) | 4 | 1 (`E3`) |
+| ONGC | **0** | 1 | 0 |
+| **Total** | **2 of 26 runs** | 19 | 5 |
+
+**Table 11 — Holm family recomputed at N = 44** (`d3_ocsvm_holm_N44_invariant.csv`, `_legacy.csv`)
+
+*Verification first:* rebuilding the existing 40 cells from the published long files through
+`ims_runlevel_table` + `family_holm` reproduces `paired_tests_holm.csv` to floating point
+(max |Δ| on `median_diff` 8.3e-17; `n_pos`, `n_neg`, `sign_test_p`, `holm_p` exact; `holm_reject`
+identical; 0/40 both). The N=44 family therefore rests on a confirmed rebuild.
+
+| Dataset | Run diffs (h) | Median | n₊/n₋ | Sign-test p | Holm p | Reject |
+|---|---|---:|---|---:|---:|---|
+| IMS | −2.4, −5.5, +1.5 | −2.43 | 1/2 | 1.0000 | 1.0000 | No |
+| XJTU-SY | +0.0 ×5, +0.1, +0.0 ×4 | +0.00 | 1/0 | 1.0000 | 1.0000 | No |
+| FEMTO | +0.1, +0.0, +0.1, −0.0, +0.1, −0.4 | +0.04 | 4/2 | 0.6875 | 1.0000 | No |
+| Ferrara | −0.2, +0.0, +0.0, +0.0, +0.1, +0.0 | +0.02 | 5/1 | 0.2188 | 1.0000 | No |
+
+**Family verdict: 0 of 44 rejections** — identical under both IMS schemas, and unchanged from 0/40.
+**Adding OC-SVM does not disturb the non-destruction headline**; it only widens the family. State that
+explicitly in the response letter: the reviewer's requested addition strengthens the null result rather
+than threatening it.
+
+**Table 16 — IMS trade-off** (`d3_ocsvm_tradeoff.csv`). † = mean FAR_pre > τ = 10%.
+
+| Percentile | Ld (h) | FAR_pre | per-run FAR range | valid_frac |
+|---:|---:|---:|---|---:|
+| 95th | 180.25 | 63.21† | 6.6 – 100.0 | 0.33 |
+| 99th | 92.47 | 56.68† | 4.0 – 100.0 | 0.33 |
+| 99.5th | 92.47 | 55.45† | 0.9 – 100.0 | 0.33 |
+
+**Tables 14 and 22** (`d3_ocsvm_farbudget_phrank.csv`): PH = **180.2 h**;
+L(τ=0.05) = L(τ=0.10) = L(τ=0.20) = **0.0** — no valid operating point at any budget on the
+mean-across-runs convention the published tables use. In Table 22's ranking OC-SVM would sit
+**first on PH** (180.2 h, ahead of Hotelling's 176.9) and **last on L** — the sharpest instance
+of the very inversion Table 22 exists to demonstrate. That is a genuine argument *for* reporting it.
+
+> ⚠️ Same per-run nuance as D2: OC-SVM's `valid_frac` is 0.33 at all three percentiles because
+> `3rd_test` sits inside budget, while the *mean* FAR is daggered. Tables 14/22 use the mean, so
+> the 0.0 entries are correct under the published convention — but the per-run fact must not be
+> hidden if the deep-model sentence is being corrected for exactly this reason (N-16).
+
+### 5G.4 D17 — IMS under the ORIGINAL 2004-04-08 test-3 label ✅ COMPLETE
+
+Generator `src/d17_original_label.py`. `config.py` was **not** edited: the label is patched in
+memory by a context manager that restores it. Exact here because `load_pipeline_controlled`
+loads the cached `*_features.parquet` when present, so `failure_times` never reaches feature
+extraction — it changes only the returned `failure_time` and the onset. Features, splits and
+windowing are identical between arms, so the contrast isolates the label.
+Verified in the log: `failure label for 3rd_test: 2004-04-18 02:42:00 -> 2004-04-08 09:16:00`,
+with tests 1 and 2 keeping their own labels.
+Corrected arm read from `benchmark_IMS_long_invariant.csv` (D-2), so both arms sit on the 49-dim schema.
+Collapse: **mean** over factors and seeds, §4.8. Source: `results/tables/d17_label_comparison.csv`.
+
+**Side by side** — run diffs are (`1st_test`, `2nd_test`, `3rd_test`); floor = attainable two-sided
+exact sign-test p at that n_eff.
+
+| Detector | Corrected: diffs | Med | n₊/n₋/0 | p | Original: diffs | Med | n₊/n₋/0 | n_eff | p | floor |
+|---|---|---:|---|---:|---|---:|---|---:|---:|---:|
+| 3σ | +25.81, +15.10, −1.00 | +15.10 | 2/1/0 | 1.00 | +25.81, +15.10, **0.00** | +15.10 | 2/0/1 | **2** | 0.50 | 0.50 |
+| CUSUM | +4.15, +4.67, +4.27 | +4.27 | 3/0/0 | 0.25 | +4.15, +4.67, **0.00** | +4.15 | 2/0/1 | **2** | 0.50 | 0.50 |
+| EWMA | −3.89, +4.33, +2.10 | +2.10 | 2/1/0 | 1.00 | −3.89, +4.33, **0.00** | +0.00 | 1/1/1 | **2** | 1.00 | 0.50 |
+| Hotelling T² | +1.00, +1.17, +81.74 | +1.17 | 3/0/0 | 0.25 | +1.00, +1.17, +35.30 | +1.17 | 3/0/0 | **3** | 0.25 | 0.25 |
+| Iso. Forest | −0.67, +16.87, +3.43 | +3.43 | 2/1/0 | 1.00 | −0.67, +16.87, **0.00** | +0.00 | 1/1/1 | **2** | 1.00 | 0.50 |
+| Deep SVDD | +8.93, 0.00, 0.00 | 0.00 | 1/0/2 | 1.00 | +8.93, 0.00, **0.00** | 0.00 | 1/0/2 | **1** | 1.00 | 1.00 |
+| RMS-trend | −0.17, 0.00, +2.37 | 0.00 | 1/1/1 | 1.00 | −0.17, 0.00, **0.00** | 0.00 | 0/1/2 | **1** | 1.00 | 1.00 |
+| LSTM-AE | −1.39, −0.42, +56.12 | −0.42 | 1/2/0 | 1.00 | −1.39, −0.42, +41.33 | −0.42 | 1/2/0 | **3** | 1.00 | 0.25 |
+| TCN-AE | −1.39, −0.42, +9.00 | −0.42 | 1/2/0 | 1.00 | −1.39, −0.42, +9.00 | −0.42 | 1/2/0 | **3** | 1.00 | 0.25 |
+| Transformer-AD | −1.39, −0.42, +68.79 | −0.42 | 1/2/0 | 1.00 | −1.39, −0.42, +48.15 | −0.42 | 1/2/0 | **3** | 1.00 | 0.25 |
+
+**⚠️ The register's anticipated result is WRONG and must be rewritten.** Register 1.4 pre-wrote:
+*"Under the old label, test 3 is a guaranteed miss for every detector (L = 0) … and IMS effectively
+falls to n = 2."* Measured, test 3 is a guaranteed miss for **6 of 10 detectors, not all ten**:
+
+| Detector | test-3 agg (h) | test-3 dec (h) | diff | guaranteed miss? |
+|---|---:|---:|---:|---|
+| 3σ, CUSUM, EWMA, Iso. Forest, Deep SVDD, RMS-trend | 0.00 | 0.00 | 0.00 | **yes** — drops out |
+| Hotelling T² | 51.78 | 16.48 | +35.30 | no |
+| LSTM-AE | 107.94 | 66.60 | +41.33 | no |
+| TCN-AE | 123.96 | 114.96 | +9.00 | no |
+| Transformer-AD | 92.48 | 44.33 | +48.15 | no |
+
+Those four alarm early enough to still precede the *earlier* failure time, so they keep a
+positive lead in both modes and their runs survive the zero-difference exclusion.
+
+**Effective n and the floor — the item's actual question, answered per detector.**
+
+| n_eff under original label | Detectors | Two-sided floor |
+|---:|---|---:|
+| 3 | Hotelling T², LSTM-AE, TCN-AE, Transformer-AD | 0.25 |
+| 2 | 3σ, CUSUM, EWMA, Iso. Forest | **0.50** |
+| 1 | Deep SVDD, RMS-trend | **1.00** |
+
+So the honest statement is **not** "IMS falls to n = 2" but: *under the original label test 3 becomes
+a guaranteed miss for six of ten detectors and drops out of the sign-test count under §4.8's
+zero-difference exclusion. For those six the effective n falls from 3 to 2 (four detectors) or to 1
+(two detectors), where the exact two-sided sign test floors at p = 0.50 and p = 1.00 respectively and
+can never reach α at any margin. The four remaining detectors keep n = 3 and a floor of 0.25 — which
+is itself already above α, so **no IMS detector can reach significance under either label**.*
+
+**What does NOT change.** The direction is stable: **no median flips sign** between labels; 3σ holds
+at **+15.10 h** and Hotelling at **+1.17 h**. The best attainable p is **0.25 under both labels**
+(Hotelling), so the Holm verdict and the non-destruction headline are untouched by the relabel.
+The contrast is computed *within* each run, so the label cannot inflate it.
+
+**An honest point that cuts the author's way — state it, do not hide it.** Under the *original*
+label 3σ's test-3 difference becomes exactly 0.00 and drops out, leaving **2 positive, 0 negative**.
+So `tex:480`'s withdrawn claim *"in no run does aggregation shorten their lead time"* would be
+**true under the original label** and is false only under the corrected one (where test 3 gives
+−1.00 h). The author chose the label that makes the paper's own claim harder to support. That is
+worth saying plainly in Appendix C — it pre-empts the suspicion that the relabel was
+result-motivated, which is precisely what Reviewer D is probing.
+
+## 5H. N = 40 → N = 44 change inventory (decision D-5: REPORT OC-SVM)
+
+**Method, per brief rule 10.** The PDF (`paper/files/scada_ijphm.pdf`, built 2026-07-08 00:50,
+one minute after the `.tex` was last saved — they correspond) was text-extracted and cross-checked
+against the source. **Do not repeat this with a bare `.tex` grep.**
+
+*Extractor calibration against the brief's reference counts* — `pdftotext` **failed** (`does not
+cost` 1 vs 2: its reading order interleaves a citation through the sentence). **PyMuPDF (`fitz`)
+passed** and is the tool to use. Hyphenation must be handled as `-\n → -`, **not** `-\n → ""`,
+or genuine compounds are destroyed (`non-\ndestruction` → `nondestruction`).
+
+| Target | Brief | Measured (fitz) | Note |
+|---|---:|---:|---|
+| never better | 3 | 3 | ✅ |
+| never costs | 2 | 2 | ✅ |
+| does not cost | 2 | 2 | ✅ |
+| honest/honestly | 18 | 17 + 1 `hon-\nest` = **18** | ✅ after hyphen fix |
+| non-destruction | 20 | **21** distinct contexts, no duplicates | ⚠️ **one MORE than the brief** — the brief's 20 appears to undercount by one; re-verify before any occurrence sweep that relies on it |
+| em-dashes | 180 | 180 | ✅ |
+
+*Reconciliation of the family-size sweep.* A context-window sweep of the PDF first returned **12**
+occurrences against the source's 16 — adjacent hits were being swallowed by window overlap and
+de-duplication. Exact-string counting reconciles them **exactly at 16 = 16**:
+
+| Form | PDF | tex |
+|---|---:|---:|
+| `N = 40` / `$N=40$` | 9 | 9 |
+| `10 × 4 = 40` | 1 | 1 |
+| `0 of 40` | 2 | 2 |
+| `forty` | 3 | 3 |
+| `(1−0.05)^40` | 1 | 1 |
+| **Total** | **16** | **16** |
+
+**Derived values at N = 44** (from `results/tables/d3_ocsvm_holm_N44_invariant.csv`):
+uncorrected FWER `1−(1−0.05)^44` = **0.8953** (was 0.8715 at N=40); **0 of 44 rejected**;
+smallest raw p still **0.0312** (Isolation Forest on FEMTO), Holm-adjusted still **1.00**.
+
+### The 16 atomic edits
+
+| # | tex line | Location | Current | Required |
+|---:|---:|---|---|---|
+| 1 | 63 | **Abstract** | `$N=40$ family` | `$N=44$ family` |
+| 2 | 95 | Introduction, Contribution 4 | `$N=40$ family` | `$N=44$ family` |
+| 3 | 268 | Results, item (iii) | `$N=40$ detector $\times$ dataset family` | `$N=44$ …` |
+| 4 | 513 | §Multiple-Comparison Correction | `$10 \times 4 = 40$ detector $\times$ dataset tests` | `$11 \times 4 = 44$ …` |
+| 5 | 513 | ″ | `$1 - (1-0.05)^{40} \approx 0.87$` | `$1 - (1-0.05)^{44} \approx 0.90$` |
+| 6 | 513 | ″ | `the forty run-level sign-test $p$-values` | `the forty-four …` |
+| 7 | 513 | ″ | `No hypothesis survives (0 of 40)` | `(0 of 44)` |
+| 8 | 513 | ″ | `across the $N=40$ family its adjusted $p$ is 1.00` | `$N=44$` — **adjusted p stays 1.00**, verified |
+| 9a | 513 | ″ | `so the $N=40$ count` | `$N=44$ count` |
+| 9b | 513 | ″ | `is not read as forty equally-powered tests` | `forty-four equally-powered tests` |
+| 10 | 517 | **Table 11 caption** | `across the $N=40$ detector $\times$ dataset family` | `$N=44$ …` |
+| 11 | 517 | ″ | `(0 of 40 survive)` | `(0 of 44 survive)` |
+| 12 | 517 | ″ | `The $N=40$ family is the full evaluated set of ten detectors (nine headline plus the additionally-evaluated Deep SVDD)` | `The $N=44$ family … **eleven detectors** (nine headline plus the additionally-evaluated Deep SVDD **and one-class SVM**)` |
+| 13 | 930 | §Summary of Key Outcomes, item (4) | `$N=40$ detector $\times$ dataset family` | `$N=44$ …` |
+| 14 | 945 | §Limitations and Threats to Validity | `the forty-test family` | `the forty-four-test family` |
+| 15 | 949 | **Conclusion** | `$N=40$ family` | `$N=44$ family` |
+
+> tex:945 sits in `\section{Limitations and Threats to Validity}`, **not** in §7.4 — so Phase 6's
+> deletion of §7.4 does **not** remove it. Confirmed by resolving the enclosing header.
+
+### Phrases that must change with them (not "40", but wrong once OC-SVM is in)
+
+| tex line | Location | Current | Required |
+|---:|---|---|---|
+| 235 | §Detectors | `We also evaluate Deep SVDD … and one-class SVM` | **now TRUE as written** — this is the sentence D-5 makes honest. Add the pointer to the new rows. |
+| 279 | Table 2 caption | `all ten evaluated detectors (the nine headline detectors plus Deep SVDD)` | `all **eleven** … (nine headline plus Deep SVDD **and one-class SVM**)` |
+| 426 | §FEMTO | `Across all ten evaluated detectors …, **191/600** evaluations yield a valid alarm` | `all **eleven** …, **193/660**` — published 191/600 verified to reproduce; OC-SVM adds 2 valid of 60 |
+| 430 | Table 8 caption | `All ten evaluated detectors (nine headline plus Deep SVDD) run on the full $n=6$` | `All **eleven** … (… plus Deep SVDD and one-class SVM)` |
+| 480 | §Aggregate vs Decimate on IMS | `the run-level test over all ten evaluated detectors` | `all **eleven** …` |
+| 970 | Conclusion | `not compute-bound for any of the ten evaluated detectors` | `… **eleven** …` — ⚠️ **needs a Table 25 timing row for OC-SVM before this can be claimed**; not yet measured |
+| 224 / 85 / 63 | §Detectors, Intro, Abstract | `nine detectors` (headline set) | **unchanged** — OC-SVM joins the *additionally evaluated* tier, not the headline nine (D-5) |
+
+**Open sub-item flagged, not silently assumed:** tex:970's compute claim would extend to OC-SVM,
+but no OC-SVM timing exists in `compute_cost_IMS_*.csv`. Either measure it or scope the sentence
+to the ten timed detectors. Recorded so it is not missed.
+
+## 5I. CONSOLIDATED CLAIM-DELTA INVENTORY — D-2 + D2 + D3 + D15 + D17
+
+**The spine of both the revision and the Response to Review.** Supersedes nothing in §5E; it
+*merges* §5E (D-2) with the session-4 items. Driver codes: **[D-2]** invariant re-baseline ·
+**[D2]** deep models in the threshold sweep (N-16) · **[D3]** one-class SVM (N=44) ·
+**[D15]** equivalence at δ=1 h · **[D17]** original test-3 label.
+
+### 5I.1 ⚠️ COLLISION SENTENCES — where two or more items hit one sentence
+
+These must be rewritten **once, combining all drivers**. Editing them per-item will corrupt them.
+
+---
+
+**`tex:275`** — §Lead Time and Confidence Intervals on IMS. **Four drivers: [D-2]×3 + [D2].**
+
+| Driver | Element | Old | New |
+|---|---|---|---|
+| [D-2] P19 | which classical detector leads | "EWMA and Isolation Forest lead the classical detectors" | **Hotelling T² leads** (174.8 h), ahead of Iso. Forest (87.2) and EWMA (78.6) |
+| [D-2] P7 | deep raw leads | 199–215 h | **183–198 h** |
+| [D-2] P8 | deep pre-onset FAR range | "48% on test 3 to 100% on test 1" | **61% on test 3 to 100% on tests 1–2** |
+| [D-2] P9 | deep valid-alarm fraction | 0/3 | **unchanged (0/3)** |
+| **[D2] N-16** | **"regardless of threshold"** | asserted universal | **FALSE — must be bounded** |
+
+**Combined requirement.** One sentence cannot carry both the corrected FAR range *and* the
+threshold bound, because they describe different experiments (the operating threshold vs. the
+sweep). Split into two: (a) at the paper's 97.5th-percentile operating point the deep models
+score L=0 on all three runs with pre-onset FAR 61–100%; (b) **across the swept thresholds
+(Table 16) no deep model attains a valid operating point at the 95th or 99th percentile, and at
+the 99.5th LSTM-AE attains one on test 3 alone (59.7 h at 4.19% FAR; 10/10 seeds)** — TCN-AE and
+Transformer-AD attain none at any percentile. Delete "regardless of threshold" outright.
+Sources: `benchmark_IMS_long_invariant.csv`, `tradeoff_IMS_deepmodels_long.csv`, `d2_seed_check_lstmae.csv`.
+
+---
+
+**`tex:63`** — **Abstract**. **Three drivers: [D-2]×2 + [D3] + [D15].**
+
+| Driver | Element | Old | New |
+|---|---|---|---|
+| [D-2] P1 | 3σ IMS median | +18.4 h | **+15.1 h** |
+| [D-2] P2 | "a consistent positive trend … variance-sensitive charts" | asserted | **withdraw** — 3σ, EWMA, IsoF each 2+/1− |
+| [D-2] P3 | smallest adjusted p | 1.00 | unchanged |
+| **[D3]** | `$N=40$ family` | 40 | **44** |
+| **[D15]** | `does not cost bearing-fault warning time` | null-acceptance | **bounded equivalence** (below) |
+
+**Combined requirement.** The abstract currently asserts a *universal* non-destruction from a
+*non-rejection*. Replace with the measured bound: *equivalence at a pre-specified ±1 h
+operational margin is established on all three multi-bearing campaigns (XJTU-SY, FEMTO, Ferrara;
+30/30 dataset×detector cells) and is **not** established on IMS, where the intervals are wide and,
+where they exclude the margin, do so on the aggregation-is-better side.* Do **not** paste register
+item 2.1's drafted clause — it presumes equivalence holds everywhere.
+
+---
+
+**`tex:930`** — §Summary of Key Outcomes. **[D15] + [D3] + [D-2].**
+(1) "SCADA bin-averaging **never costs** lead time relative to decimation" → bounded equivalence
+statement, scoped to the three multi-bearing campaigns; (2) IMS magnitudes per §5E.1;
+(4) `$N=40$` → **`$N=44$`**.
+
+**`tex:949`** — **Conclusion**. **[D15] + [D3].**
+"decimation is **never better**" → bounded; `$N=40$` → **`$N=44$`**.
+
+**`tex:480`** — §Aggregate vs Decimate on IMS. **[D-2] P16/P17 + [D3] + [D17].**
+"in no run does aggregation shorten their lead time" is **false** under the corrected label and
+must be withdrawn ([D-2]); "all ten evaluated detectors" → **eleven** ([D3]); and **[D17]** supplies
+the honest footnote — *under the original label 3σ's test-3 difference is exactly 0.00 and drops
+out, so the withdrawn claim would have been true there; the corrected label is the harder one.*
+
+**`tex:513` / `tex:517`** — §Multiple-Comparison Correction + Table 11 caption. **[D3] only**,
+10 atomic edits, itemised in **§5H**. [D-2] P18 confirms the smallest raw p (0.031) and the
+0-rejection verdict are unchanged.
+
+### 5I.2 Tables
+
+| Table | tex | Driver | Change |
+|---|---:|---|---|
+| **2** `tab:imslead` | 280 / rows 286–297 | [D-2] + [D3] | All ten values + row order per §5E.2, **plus a new OC-SVM row 180.25 [65.50, 316.68]**, which inserts at **rank 4** (below Transformer-AD 183.4, above Hotelling T² 174.8). Caption `:279` "all ten evaluated detectors (nine headline plus Deep SVDD)" → **eleven … plus Deep SVDD and one-class SVM** |
+| **7** `tab:xjtu` | 401 | [D3] | new OC-SVM row: **1.44 h [0.82, 2.10]**, n=10 |
+| **8** `tab:femto` | 431 | [D3] | new OC-SVM row: **0.95 h [0.69, 1.30]**, n=6; caption `:430` ten → **eleven** |
+| **9** `tab:ferrara` | 457 | [D3] | new OC-SVM row: **0.98 h [0.52, 1.50]**, n=6 |
+| **10** `tab:imssweep` | 492 / rows 497–506 | [D-2] | all ten rows + **sign-consistency column changes on 7 of 10** (§5E.4) |
+| **11** `tab:holm` | 518 / rows 523–532 | [D-2] + [D3] | 7 of 10 IMS raw p move (§5E.5); **4 new OC-SVM rows** — IMS 1.0000, XJTU-SY 1.0000, FEMTO 0.6875, Ferrara 0.2188, all Holm p 1.0000, none rejected; caption per §5H |
+| **5** `tab:persistence` | 367–370 | [D-2] | §5E.3, incl. N-15's 1.00 → **0.67** |
+| **14** `tab:farbudget` | 675 | [D3] + [D2] | new OC-SVM row **0.0 / 0.0 / 0.0**; if the deep rows are added for consistency, all three are **0.0 / 0.0 / 0.0** |
+| **16** `tab:tradeoff` | 711 | [D2] + [D3] | **4 new rows** — LSTM-AE 199.61/87.81† · 193.99/82.16† · 93.58/62.00† ; TCN-AE 185.36/82.63† · 183.14/79.93† · 180.36/74.43† ; Transformer-AD 183.97/81.05† · 181.75/79.18† · 178.69/71.99† ; OC-SVM 180.25/63.21† · 92.47/56.68† · 92.47/55.45† |
+| **22** `tab:phrank` | 864 | [D3] + [D2] | new OC-SVM row **PH 180.2 / L 0.0 / not valid**; see the ⚠️ below |
+| **25** `tab:compute` | 1013–1021 | [D-2] + [D3] | §5E.7 ratio; **OC-SVM timing NOT measured** — blocks `tex:970` |
+
+> ### ⚠️ The D-5 rationale needs one correction before it goes in the response letter
+>
+> The recorded rationale is that OC-SVM "ranks **first** on PH". That is true **only against
+> Table 22's current seven-row set** (OC-SVM 180.2 > Hotelling 176.9). But **[D2] adds LSTM-AE,
+> TCN-AE and Transformer-AD to Table 16**, and if Table 22 gains the same rows for consistency the
+> PH ranking becomes: **LSTM-AE 199.6, TCN-AE 185.4, Transformer-AD 184.0, OC-SVM 180.2**,
+> Hotelling 176.9, … So OC-SVM would rank **4th, not 1st**.
+>
+> **The inversion argument survives either way and is in fact stronger** — the top four on PH all
+> score **L = 0.0**, so four detectors, not one, invert. But the response letter must say
+> *"OC-SVM ranks first among the non-deep detectors on PH and last on L"*, or add the deep rows
+> and describe a four-way inversion. **Do not write "first on PH" unqualified.**
+> Author decision needed: do Tables 14 and 22 gain the deep rows alongside Table 16?
+
+### 5I.3 Figures
+
+| Figure | tex | Driver | Change |
+|---|---:|---|---|
+| **F2** `fig:crossdataset` | 418–421 | [D-2] | IMS column → Table 10's new medians |
+| **F3** `fig:sweep` | 482–486 | [D-2] | full IMS curve, §5E.6 |
+| **F6** `fig:tradeoff_ims` | 653 | [D2] + [D3] | regenerate — **4 new curves**; currently plots 7 detectors |
+| F1, F4, F7, F9 | 303, 617, 651, 665 | — | no change |
+
+### 5I.4 New content required
+
+| Item | Driver | Content |
+|---|---|---|
+| **Appendix C** | [D17] | Side-by-side original-vs-corrected label table, all ten detectors (§5G.4). Must state: test 3 is a guaranteed miss for **6 of 10** detectors, not all ten; n_eff falls to 2 (four detectors) or 1 (two) and stays 3 for four; **no median flips sign**; best p = 0.25 under both labels; and the relabel made the paper's claim *harder*, not easier |
+| **§ equivalence paragraph** | [D15] | δ=1 h pre-specified on operational grounds *before* results; bootstrap CI as primary; TOST only where n₊+n₋ ≥ 5 with the attainable floor shown beside every cell; **22/60 feasible, 17 equivalent**; infeasible cells reported as untestable, never as null findings |
+| **§4.5 pointer** | [D3] | `tex:235`'s "and one-class SVM" becomes **true**; add the table pointers, matching the Deep SVDD sentence pattern |
+| **§ deep-model bound** | [D2] | the bounded replacement for "regardless of threshold" (§5I.1, `tex:275`) |
+
+### 5I.5 Unchanged — state explicitly in the response letter
+
+The **0-rejection Holm verdict** (0/40 → **0/44**), the **non-destruction headline direction**,
+the smallest raw p (**0.031**, Iso. Forest on FEMTO, Holm-adjusted **1.00** at both family sizes),
+IMS onset (identical 300/300), Tables 3, 4, 6, 13, 17–20, 27, 28, and Figures 1, 4, 5, 7, 8, 9, 11.
+
+## 5J. D-9 — Tables 14 and 22 rebuilt with all eleven detectors ✅ COMPLETE
+
+Generator `src/d9_tables_14_22.py` → `results/tables/d9_tables_14_22_eleven.csv`.
+Convention verified against the published tables before use: candidates are the three swept
+percentiles {95, 99, 99.5}, and the budget test is on the **mean** pre-onset FAR across runs.
+(Checks: published 3σ PH = 77.0 is the max over those three, not the 90th's 163.8; published
+Deep SVDD L(0.05) = 14.8 is the 95th, not the 90th's 34.7.)
+
+### Table 14 (`tab:farbudget`, tex:675) — best valid lead (h) per budget
+
+| Detector | τ=0.05 | τ=0.10 | τ=0.20 | min mean FAR |
+|---|---:|---:|---:|---:|
+| LSTM-AE **(new)** | 0.0 | 0.0 | 0.0 | 62.00% |
+| TCN-AE **(new)** | 0.0 | 0.0 | 0.0 | 74.43% |
+| Transformer-AD **(new)** | 0.0 | 0.0 | 0.0 | 71.99% |
+| One-Class SVM **(new)** | 0.0 | 0.0 | 0.0 | 55.45% |
+| Hotelling T² | 0.0 | 0.0 | 73.9 | 18.99% |
+| Iso. Forest | 0.0 | 0.0 | 53.4 | 19.80% |
+| EWMA | 0.0 | 0.0 | 0.0 | 21.01% |
+| 3σ | 0.0 | **56.3** | 77.0 | 8.89% |
+| CUSUM | 0.0 | 0.0 | 65.0 | 18.99% |
+| RMS-trend | 34.7 | 34.7 | 34.7 | 0.00% |
+| Deep SVDD | 14.8 | 14.8 | 14.8 | 0.00% |
+
+**All seven published rows are unchanged** — the four new rows are additions only.
+
+### Table 22 (`tab:phrank`, tex:864) — PH vs gated L
+
+| Method | PH | Rk | L | L Rk | Valid? |
+|---|---:|---:|---:|---:|---|
+| LSTM-AE **(new)** | 199.6 | 1 | 0.0 | 4 | no |
+| TCN-AE **(new)** | 185.4 | 2 | 0.0 | 4 | no |
+| Transformer-AD **(new)** | 184.0 | 3 | 0.0 | 4 | no |
+| One-Class SVM **(new)** | 180.2 | 4 | 0.0 | 4 | no |
+| Hotelling T² | 176.9 | 5 | 0.0 | 4 | no |
+| Iso. Forest | 174.7 | 6 | 0.0 | 4 | no |
+| EWMA | 89.1 | 7 | 0.0 | 4 | no |
+| **3σ** | 77.0 | **8** | **56.3** | **1** | **yes** |
+| CUSUM | 65.0 | 9 | 0.0 | 4 | no |
+| RMS-trend | 34.7 | 10 | 34.7 | 2 | yes* |
+| Deep SVDD | 14.8 | 11 | 14.8 | 3 | yes |
+
+> ### ✅ SETTLED: the inversion is SEVEN-way — use these figures everywhere
+>
+> **The top SEVEN detectors by prognostic horizon all score L = 0**, and the deployable chart
+> **3σ ranks EIGHTH of eleven on PH while ranking FIRST on L.** For contrast, the *published*
+> seven-row Table 22 is only a **three-way** inversion with 3σ 4th, so D-9 roughly doubles the
+> demonstration's reach.
+> **"Top four / ranks fifth" is superseded and must not appear** in §6.12, Table 22's caption,
+> the D-5 or D-9 rationale, or the Response to Review. Corrected at both §4 rationale sites.
+
+### The LSTM-AE question — answered: **NO**
+
+**LSTM-AE attains no valid operating point in Table 14 at any τ**, including τ=0.20.
+Its minimum *mean* pre-onset FAR over the three percentiles is **62.00%** (at the 99.5th).
+
+**This does not contradict N-16, and the distinction must be kept straight in the manuscript:**
+
+| | Quantity | Value | Consequence |
+|---|---|---|---|
+| Table 14 / 22 | **mean** FAR across the 3 runs at 99.5th | **62.00%** | L = 0.0 at every τ — the row is all zeros |
+| N-16 / §6.1 | **per-run** FAR, `3rd_test` at 99.5th | **4.19%** | a valid operating point **exists**, so "regardless of threshold" is false |
+
+Both are true. Table 14's zeros describe the mean across runs; §6.1's claim quantifies over
+*thresholds*, and one run inside budget at one threshold defeats it. **Do not cite Table 14's
+0.0 row as evidence that the deep models have no valid operating point regardless of threshold** —
+that would rebuild the same defect N-16 identifies, in a new location.
+
+### §6.9's 3σ recommendation — **HOLDS, unchanged**
+
+Detectors with a valid operating point at τ=0.10, best lead first: **3σ 56.3 h**, RMS-trend 34.7 h,
+Deep SVDD 14.8 h. **3σ remains the best valid chart at τ=0.10**, so §6.9 (`tex:638–728`) and
+Table 14's caption (`tex:674`, "the 3σ recommendation holds at τ=0.10 and 0.20 but not at a strict
+τ=0.05") need **no correction**. None of the four added detectors reaches a valid point at any τ,
+so they cannot displace it. State this explicitly in the response letter: the reviewer-requested
+additions were checked against the recommendation and left it standing.
+
+## 5K. Table 25 completion + deep-model parameter counts ✅ COMPLETE
+
+Generator `src/d3_compute_cost_extra.py`, which **imports `time_detector` from
+`src/compute_cost_ims.py`** rather than reimplementing it, so the protocol is identical by
+construction: largest IMS run (`3rd_test`), 631 train / 506 test windows, single CPU core
+(`OMP/MKL/OPENBLAS_NUM_THREADS=1`, `torch.set_num_threads(1)`), median of five repeats.
+
+### 5K.1 ⚠️ A pre-existing gap, found while doing this — defect N-17
+
+The three deep models were **already timed** (`compute_cost_IMS_invariant.csv`, 9 rows).
+What was missing was **two** detectors, not one:
+
+- **`one_class_svm`** — expected, added by D-5;
+- **`rms_trend`** — **missing before OC-SVM ever came up.** Table 25 (`tex:1013–1021`) has
+  **nine** rows, yet `tex:970` claims monitoring "is therefore not compute-bound for any of the
+  **ten** evaluated detectors". **The sentence already overreached its own table by one detector
+  in the submitted manuscript.** Logged as **N-17 (Medium)**.
+
+Both are now measured, so Table 25 can carry all **eleven** evaluated detectors and `tex:970`
+becomes true as "eleven".
+
+### 5K.2 New Table 25 rows (`results/tables/compute_cost_IMS_extra_invariant.csv`)
+
+| Detector | Train | Inference (µs/win) |
+|---|---:|---:|
+| One-Class SVM (ν=0.05) | 10.8 ms | **25.83** |
+| RMS-Trend (kσ) | <1 ms (0.33 ms) | **0.29** |
+
+Context on the same machine and schema (`compute_cost_IMS_invariant.csv`): 3σ 0.22 µs/win,
+Isolation Forest 119.7, LSTM-AE 513.4. **OC-SVM at 25.8 µs/win is cheaper than Isolation Forest
+and ~20× cheaper than the deep models**, so it does not disturb `tex:970`'s conclusion — the
+sentence holds once restated to eleven.
+
+> ⚠️ **Report ratios, not absolutes** (§5E.7). This machine is not the machine that produced the
+> published Table 25 (published LSTM-AE 7.8 s train vs 49.45 s measured here). The two new rows
+> are measured on the **same machine as the existing nine**, so same-machine ratios are valid;
+> the published absolute column must be regenerated wholesale or reported as ratios.
+
+### 5K.3 Deep-model architecture table — register item 3.3 (G5)
+
+Parameter counts measured at the **49-dim invariant schema, seq_len 30**
+(`results/tables/deep_model_params.csv`); hyperparameters transcribed verbatim from
+`src/config.py` `MODELS` as register 3.3 requires.
+
+| Model | Config (`config.py` `MODELS`) | Total params | Trainable |
+|---|---|---:|---:|
+| **LSTM-AE** | `seq_len 30, latent_dim 16, hidden_dim 64, epochs 50, batch 32, lr 1e-3, dropout 0.1` | **54,657** | 54,657 |
+| **TCN-AE** | `seq_len 30, channels 32, kernel_size 3, levels 4, epochs 40, batch 32, lr 1e-3, dropout 0.1` | **29,681** | 29,681 |
+| **Transformer-AD** | `seq_len 30, d_model 32, nhead 2, num_layers 2, dim_feedforward 64, epochs 40, batch 32, lr 1e-3, dropout 0.1` | **20,305** | 20,305 |
+
+For completeness, the two non-sequence additions: **Deep SVDD** `hidden_dim 32, latent_dim 8,
+epochs 40`; **One-Class SVM** `kernel rbf, nu 0.05, gamma scale`.
+
+**The data-starvation caveat is now quantifiable, which strengthens §4.5.** LSTM-AE fits
+**54,657 parameters** to **631 training windows** — roughly **87 parameters per training
+window**. That is the concrete form of the manuscript's existing "with on the order of 100 normal
+training windows they are data-starved" remark (`tex:235`), and it is worth stating numerically.
+
+---
+
+## 5L. FIRST MANUSCRIPT EDITS APPLIED — session 4
+
+**Branch `ijphm-r1`. Two sites written to `paper/files/scada_ijphm.tex`; nothing else touched.**
+Diff reviewed and approved by the author before writing.
+
+> ⚠️ **`paper/` is gitignored (N-3), so git cannot restore these lines.** A backup of the
+> post-edit file and an exact reverse patch are at
+> `<scratchpad>/scada_ijphm_AFTER_session4_edit.tex` and `<scratchpad>/reverse_patch_session4.json`.
+> **Scratchpad is session-scoped — copy both somewhere durable before this session ends.**
+
+### 5L.1 `tex:63` — abstract, rewritten
+
+Length **257 → 285 words (+28, +11%)**. The overrun is a direct consequence of the author's own
+revisions 1 and 3 (self-evident detector count; restore both halves of the IMS cell split);
+the three accepted cuts had already brought a longer draft down to +12.
+
+| Element | New value | Source |
+|---|---|---|
+| detector count | **"Eleven detectors"**, enumerated so 11 × 4 = 44 is self-evident | D-5/D-9; headline-nine distinction stays in §4.5 |
+| 3σ IMS median | **+15.1 h** (was +18.4) | `results/tables/ims_runlevel_test_invariant.csv` |
+| consistency | **"but the direction is not consistent across the three runs"** (was "a consistent positive trend appears") | same |
+| family size | **N = 44**, smallest adjusted p = 1.00 | `results/tables/d3_ocsvm_holm_N44_invariant.csv` |
+| equivalence | **30/30 cells** equivalent at ±1 h on the three multi-bearing campaigns | `results/tables/d15_equivalence_bootstrap.csv` |
+| IMS split | **8 of 10 undecided, other 2 favour aggregation beyond margin** | same |
+| decimation exception | **Isolation Forest on FEMTO −0.26 h, 95% CI [−0.54, −0.06]**, inside the margin | same |
+
+Also removed: "The metric correctly refuses to manufacture a positive effect" (self-descriptive,
+serves item 2.4) and "the aggregate-vs-decimate difference is null (median |diff| ≤ 8 min)"
+(the null-acceptance phrasing D18/F5 objected to, now superseded by the equivalence sentence).
+
+### 5L.2 `tex:275` — split into two sentences, plus the P19 clause
+
+**Sentence 1** now scopes to the operating point: raw leads **183–198 h**, valid-alarm fraction
+**"at that threshold is 0/3"**, pre-onset FAR **61% on test 3 to 100% on tests 1–2**.
+**Sentence 2** carries the N-16 correction: "Sweeping the alarm threshold **changes this only
+once**" — TCN-AE and Transformer-AD attain no valid point at any level; **LSTM-AE attains one at
+the 99.5th percentile on test 3 alone, 59.7 h at 4.19% FAR, unchanged across ten seeds**,
+fraction 1/3. **"regardless of threshold" is now absent from the whole file** (verified).
+**P19 clause:** "EWMA and Isolation Forest lead the classical detectors" →
+**"Hotelling $T^2$ leads the classical detectors"** (174.8 vs Iso. Forest 87.2, EWMA 78.6,
+`benchmark_IMS_leadtime_ci_invariant.csv`).
+
+### 5L.3 ⚠️ NEW DEFECT N-18 — found by the revision-7 sweep, NOT yet edited
+
+The sweep for downstream EWMA-as-leader claims found **four sites**. One is fixed (tex:275).
+The other three are at **`tex:640` (§6.9) and `tex:654` (Figure 6 caption)** and are **left
+untouched pending the author's decision**. Two of the three are wrong **independently of D-2**:
+
+| Site | Text | Status |
+|---|---|---|
+| `tex:640` | "a ranking that the raw-lead column of Table~
+ef{tab:imslead}, **where EWMA leads**, would by itself obscure" | **False under D-2.** In Table 2, EWMA is 6th (78.6 h); Hotelling T² leads the classicals (174.8), LSTM-AE leads overall (197.6) |
+| `tex:640` | "**EWMA attains the highest raw lead in Table~
+ef{tab:tradeoff}**" | ⚠️ **FALSE IN THE SUBMITTED MANUSCRIPT.** Published Table 16 gives Hotelling T² **176.9** and Iso. Forest **174.7** against EWMA **89.1**. The sentence contradicts the table it cites, on the same page — **nothing to do with D-2** |
+| `tex:640` + `tex:654` | "**EWMA and Isolation Forest dominate** the upper-left of the curve" (prose + figure caption) | ⚠️ **Misleading as published.** Over the full swept curve Hotelling T² **strictly dominates** EWMA on both axes (max lead 187.8 vs 174.8; min FAR 19.0 vs 20.8). Iso. Forest is defensible; EWMA is not |
+
+**This is a sixth internal contradiction of the species Reviewer D is hunting**, and — like N-17 —
+**it was found unprompted and predates the re-baseline.** Sources: `results/tables/tradeoff_IMS.csv`,
+`results/tables/benchmark_IMS_leadtime_ci_invariant.csv`. Disclose in the Response to Review.
+
+---
+
+## 5M. Second edit pass — item 2.1 + N-18 (partial) — session 4
+
+**Seven edits written to `paper/files/scada_ijphm.tex` on `ijphm-r1`, diffs approved beforehand.**
+The manuscript source is now **tracked** (commits `fc66f98` baseline, `e23125a` first pass), so
+these have a real undo for the first time.
+
+### 5M.1 Item 2.1 — the bounded form, five prose sites
+
+| tex | Section | Was | Now |
+|---:|---|---|---|
+| 87 | Intro summary | "non-destruction---decimation is **never better**, and averaging is at worst neutral" | bounded form + exception |
+| 95 | Contribution 4 | "while decimation is **never better**" | bounded form + exception |
+| 922 | Discussion | "coarse aggregation **never costs** warning time" | bounded form + exception |
+| 930 | Summary (1) | "SCADA bin-averaging **never costs** lead time" | bounded form + exception |
+| 949 | Conclusion | "while decimation is **never better**" | bounded form + exception |
+
+Common wording, matching the abstract: *"no dataset × detector cell shows decimation superior
+beyond a ±1 h operational margin, and the one place decimation leads, Isolation Forest on FEMTO
+(−0.26 h, 95% CI [−0.54, −0.06]), lies inside it."*
+Source: `results/tables/d15_equivalence_bootstrap.csv`.
+
+**Rule 10 verification — done properly, on a REBUILT PDF.** The shipped PDF was stale (2026-07-08),
+so it was recompiled with `tools/tectonic.exe` and swept with PyMuPDF:
+**"never better" → 0, "never costs" → 0.** A source grep alone would not have satisfied rule 10.
+
+Two count reconciliations, both benign: *"operational margin"* reads 4 in hyphen-keeping form and
+**6** in hyphen-dropping form (two instances render as `oper-ational`) — 6 is correct and matches
+the six sites. *"Isolation Forest on FEMTO"* reads **7** = the six added plus **one pre-existing**
+in §6.7's Holm sentence ("smallest raw p-value is 0.031 (Isolation Forest on FEMTO)"), not a duplicate.
+
+Two incidental effects, both recorded rather than hidden:
+- **"honest" 18 → 17.** `tex:922`'s "The **honest** synthesis" became "The synthesis" — one of item 2.4's 18 self-descriptive statements, retired early.
+- **"non-destruction" 21 → 20.** The abstract's instance was replaced by "bounded equivalence" in §5L.1.
+- ⚠️ **em-dashes 180 → 184.** The new clauses added four. **This runs against Phase 7's reduction target** (~100 live). Phase 7 must revisit these five sentences; the repeated 20-word exception clause is also five-fold duplication that a clarity reviewer may flag.
+
+### 5M.2 N-18 — two of three sites fixed, one pair HELD
+
+| tex | Fix | Status |
+|---:|---|---|
+| 640 | "EWMA attains the highest raw lead in Table 16" → **"Hotelling $T^2$ attains the highest raw lead of any control chart"** | ✅ written |
+| 640 | "the raw-lead column of Table 2, **where EWMA leads**" → **"where the deep reconstruction models lead"** | ✅ written |
+| 640 + 654 | "**EWMA and Isolation Forest dominate** the upper-left" (prose + Figure 6 caption) | ⬜ **HELD** — author asked to see the caption text first |
+
+**Two traps avoided in the first fix, both of which would have created new defects:**
+1. The follow-on clause reads "**the two memory-based control charts** share this liability."
+   Hotelling T² is **not** memory-based, so simply swapping the name would have broken it. The
+   sentence was reworked so **EWMA and CUSUM** keep the memory-based pairing while Hotelling
+   becomes the highest-raw-lead example. Their combined FAR range was recomputed: **19.0–22.1%**
+   (was "19.0–19.4%", CUSUM only).
+2. "highest raw lead **in Table 16**" would become **false again** once D-9 adds LSTM-AE (199.6 >
+   Hotelling 176.9). Scoped to **"of any control chart"**, which holds both before and after D-9.
+
+Dominance evidence for the held pair (`results/tables/tradeoff_IMS.csv`, full 7-percentile curve):
+**Hotelling T² strictly dominates EWMA on both axes** — max lead 187.8 vs 174.8, min FAR 19.0 vs
+20.8. Isolation Forest also dominates EWMA (185.3 / 16.8). Hotelling and Iso. Forest do **not**
+dominate each other (Hotelling higher lead, Iso. Forest lower FAR), so naming both is right.
+*Caveat to keep in view:* the dominance is on the **achievable frontier** (max lead, min FAR).
+On **mean** FAR across the curve EWMA is lower (21.9 vs Hotelling 26.4) — so the claim must stay
+about the curve's upper-left corner, which is what "dominate the upper-left" means.
+
+### 5M.3 ~~THE MANUSCRIPT IS CURRENTLY INTERNALLY INCONSISTENT ON FAMILY SIZE~~ — ✅ RESOLVED in §5N.3
+
+**The abstract now says $N=44$; eight other sites still say $N=40$.** This was introduced by
+§5L.1's abstract rewrite and is **not yet resolved**. Two of the sites edited in this pass
+(`tex:95`, `tex:949`) contain `$N=40$` and were deliberately **left alone**, because doing two of
+eight would have left the same inconsistency in a less obvious form. **The §5H sweep (16 atomic
+edits) must be run as one pass, and should be the next thing done.** Until then the manuscript
+must not be compiled for circulation.
+
+---
+
+## 5N. Third and fourth edit passes — session 4
+
+Commits `0a5a85b` (Figure 6 + repetition) and `18abc94` (N=44 sweep), kept separate so the
+diffs stay reviewable. **§5M.3's family-size inconsistency is now RESOLVED.**
+
+### 5N.1 Figure 6 — frontier wording (N-18 site 3, approved)
+
+`tex:640` prose and `tex:654` caption now read **"the achievable frontier---highest lead at the
+lowest FAR each detector attains"** rather than an unqualified "dominate the upper-left".
+This was the author's amendment and it closes a real trap: a reviewer computing **mean** FAR
+across the curve gets **EWMA 21.9% vs Hotelling 26.4%** and would read the claim as another
+contradiction. Naming the frontier makes the axis of comparison explicit.
+Evidence: over the full swept curve Hotelling T² dominates EWMA on both axes
+(max lead **187.8 vs 174.8 h**, min FAR **19.0 vs 20.8%**); Isolation Forest also dominates EWMA;
+Hotelling and Iso. Forest do not dominate each other. Source `results/tables/tradeoff_IMS.csv`.
+**N-18 is now fully closed.**
+
+### 5N.2 Repetition fixed now, not deferred to Phase 7
+
+The exception clause was stated verbatim at six sites. Now **in full exactly twice** — the
+**abstract** (must stand alone) and **§6.4** (`tex:426`, where the FEMTO result is first
+reported) — and by **cross-reference at the other five** (`tex:87`, `95`, `922`, `930`, `949`).
+`\label{sec:femto}` was added to `tex:425` to support the references; it is appended to the
+subsection line rather than placed on its own line, to avoid renumbering mid-pass.
+
+> The author's instruction said "the other three sites"; there were **five**. The principle
+> (full form exactly twice) was applied as stated; only the arithmetic differed.
+
+**Verified on a freshly compiled PDF:** full CI form appears **exactly twice**; the ±1 h margin
+is still named at **all seven** sites; the exception is still named at every site; five
+cross-references resolve; **zero undefined references**.
+
+**Em-dash count: 184 → 182** against the 180 baseline. The restructuring removed two of the four
+the previous pass had added. Phase 7 still has to reduce ~167 live prose dashes toward ~100.
+
+### 5N.3 N = 40 → N = 44 executed as ONE pass
+
+20 edit operations. Source and rendered PDF both verified.
+
+| Change | Count | Sites |
+|---|---:|---|
+| `$N=40$` → `$N=44$` | 8 | `tex:95, 268, 513`×2, `517`×2, `930, 949` (abstract already done) |
+| `10 × 4 = 40` → `11 × 4 = 44` | 1 | `tex:513` |
+| FWER `(1−0.05)^40 ≈ 0.87` → `(1−0.05)^44 ≈ 0.8953` | 1 | `tex:513` |
+| "forty" → "forty-four" | 3 | `tex:513`×2, `945` |
+| "0 of 40" → "0 of 44" | 2 | `tex:513, 517` |
+| "ten evaluated detectors" → "eleven" | 5 | `tex:279, 426, 430, 480, 970` |
+| "ten detectors" → "eleven detectors" + names OC-SVM | 1 | `tex:517` (Table 11 caption) |
+| `191/600` → `193/660` | 1 | `tex:426` |
+
+**PDF sweep (tectonic + PyMuPDF, BOTH hyphen-join forms) — all zero:** `N = 40`, `N=40`,
+`4 = 40`, `0 of 40`, `(1−0.05)^40`, bare `forty`, `ten evaluated detectors`, `ten detectors`,
+`191/600`. **All replacements present at expected counts. Zero undefined references.**
+
+Three apparent failures in the first sweep were **search-key artifacts, not defects** — worth
+recording because they will recur:
+1. **bare "forty" ×1** — the hyphen-**dropping** form turns `forty-
+four` into `fortyfour`,
+   which matches `forty`. The keep-form reads it correctly. Always check both forms.
+2. **`(1-0.05)44` → 0** — renders as `1 -(1 -0.05)44` with spaces after the minus signs;
+   the search key must not assume spacing. U+2212 must also be normalised to ASCII `-`.
+3. **`eleven detectors` ×2 rather than 1** — the abstract already said "Eleven detectors" from
+   the first pass. The expectation was wrong, not the text.
+
+**Holm verdict unchanged: 0 rejections; smallest raw p still 0.031 (Iso. Forest on FEMTO),
+Holm-adjusted 1.00 at both family sizes.** FEMTO `193/660` = published 191/600 (verified to
+reproduce) plus OC-SVM's 60 evaluations of which 2 are valid
+(`results/tables/d3_ocsvm_benchmark_long.csv`).
+
+> ⚠️ **FWER precision.** The author specified **0.8953**; the neighbouring text uses two
+> decimals (the old value was `≈ 0.87`). Written as instructed, but `≈ 0.8953` mixes an
+> approximation sign with four decimals. Consider `≈ 0.90` for consistency — author's call.
+
+---
+
+## 6. Item checklist — all 41 reviewer items
+
+Legend: ⬜ not started · 🔄 in progress · ✅ done · ⛔ blocked · ➖ no action needed
+
+### Part 0 — Blocking
+- ✅ **0.1** Coarsening level, per dataset (D9, F4) — answered, §5 above
+- ⬜ **0.2** Deep AE threshold sweep: run it rather than soften (D6) → see 1.3
+- ✅ **0.3** *(new)* Validity gate under missing `FAR_pre` (N-7) — answered, §5A above; produced D-7, D-8, N-10/11/12
+
+### Part 1 — Analyses requiring a pipeline run
+- ⬜ **1.1** Aggregate-vs-decimate under the **gated** metric (F2) — ✅ **unblocked** by D-7; use three-outcome validity and emit the strict-convention counts alongside
+- ⬜ **1.2** Equivalence bound replacing the null-acceptance claim (D18, F5) ⛔ blocked on D-4
+- ⬜ **1.3** Deep AE rows for Table 16 (D6)
+- ⬜ **1.4** IMS test-3 under the original failure label (D20)
+- ⬜ **1.5** Aggregate-vs-decimate under disjoint onset — `pca1`, `kurt_only` (G3) — same run as 1.1
+- ⬜ **1.6** Onset estimator bias/variance, Monte Carlo (G1)
+- ⬜ **1.7** One-class SVM — report or delete (D7) ⛔ blocked on D-5
+- ⬜ **1.8** *(new)* **D-8 code fix** — no-onset fallback emits NaN + `no_onset` flag instead of legacy substitution (`src/lead_time.py:234-240`; fix the `benchmark.py:130` warning too). Sign-off granted, **scoped to that branch only**. Re-emit affected results to **NEW** files; recount validity under both conventions. Add unit tests for the NaN-gate and no-onset paths — there are currently none (`tests/test_metrics.py` asserts only that `compute_FAR_preonset` returns NaN, never what `valid_alarm` does with it).
+
+### Part 2 — Claim corrections (text)
+- ✅ **2.1** **DONE session 4.** Bounded form applied at all five prose sites — `tex:87`, `:95`, `:922`, `:930`, `:949` — each naming the Isolation-Forest-on-FEMTO exception as lying inside the ±1 h margin, matching the abstract's wording. **Rule 10 verified on a REBUILT PDF** (`tools/tectonic.exe`): "never better" **0**, "never costs" **0**. The sixth headline location was the abstract, already rewritten (§5L.1). §5M
+- ⬜ **2.2** Scope the non-destruction conclusion by bearing lifetime (D21, F5, G8)
+- ⬜ **2.3** Scope the deep-model no-crossover claim (G4, F3). **Add the quantitative form of §4.5's "data-starved" remark** (session 4): **LSTM-AE fits 54,657 parameters to 631 training windows — roughly 87 parameters per training example**; TCN-AE 29,681 and Transformer-AD 20,305 at the same 631 windows. This turns a qualitative caveat into a measured one and **strengthens the G4 and F3 scoping**, since it explains *why* no crossover appears in the tested training-fraction range rather than merely asserting it. Source: `results/tables/deep_model_params.csv`; hyperparameters from `src/config.py` `MODELS`.
+- ⬜ **2.4** Remove all 18 self-descriptive statements (D23)
+- ⬜ **2.5** *(new)* Rewrite the §1 folklore paragraph to separate waveform averaging from summary aggregation — see §5
+- ⬜ **2.6** *(new)* Delete the false IMS "signal level" sentence at `scada_ijphm.tex:128` — see N-1
+- ⬜ **2.7** *(new, D-7)* **Amend Eq. 5** (`tex:214-219`) to a three-outcome definition — valid / invalid / **unscoreable** (pre-onset region empty, `FAR_pre` undefined). Unscoreable rows are excluded from validity denominators and reported explicitly. State the count wherever a validity fraction is quoted.
+- ⬜ **2.8** *(new, D-7)* **Report the strict-convention figures alongside** the three-outcome ones — 73/450 and 7/50 must appear in the paper, because a reviewer running Eq. 5 literally against the released CSVs lands on them. Restate every gate-dependent number under both conventions; locations in §5A.6 (two audited, five candidates to measure first).
+
+- ⬜ **2.9** *(new, session 4 — D-9 / N-16)* **Table 14's caption must carry the mean-across-runs warning IN THE MANUSCRIPT**, not only in the progress file. `tab:farbudget` (`tex:674`) reports L(τ) gated on the **mean** pre-onset FAR across runs, so a detector can hold a **valid alarm on an individual run and still show 0.0**. LSTM-AE is exactly that case: mean FAR 62.00% at the 99.5th percentile → all-zero row, while `3rd_test` alone sits at **4.19% FAR with 59.67 h of valid lead**. Without the caption warning, Table 14's zero row can be read as evidence that the deep models have no valid operating point *regardless of threshold* — **rebuilding defect N-16 in a new location**. Add one sentence to the caption stating the gate is on the across-run mean and that per-run validity is reported in Table 16 / §6.1. Sources: `results/tables/d9_tables_14_22_eleven.csv`, `results/tables/tradeoff_IMS_deepmodels_long.csv`.
+### Part 3 — New content
+- ⬜ **3.1** Related work ×3: false-alarm cost / NAB (D1), classical change detection (F1), time-aware & uncertainty-aware evaluation (G6)
+- ⬜ **3.2** Signal-theoretic grounding (G2) — **rewrite per path**, see §5
+- ⬜ **3.3** Deep-model architecture table (G5) — **numbers ready, ledger R-8 filled.** **LSTM-AE 54,657** params (`seq_len 30, latent_dim 16, hidden_dim 64, 50 epochs`) · **TCN-AE 29,681** (`seq_len 30, channels 32, kernel 3, levels 4, 40 epochs`) · **Transformer-AD 20,305** (`seq_len 30, d_model 32, nhead 2, layers 2, ff 64, 40 epochs`), all at the 49-dim invariant schema. Also Deep SVDD `hidden 32, latent 8, 40 ep` and OC-SVM `rbf, nu 0.05, gamma scale`. Sources: `results/tables/deep_model_params.csv` + `src/config.py`. §5K.3
+- ⬜ **3.4** ONGC derived artifacts in Data Availability (G7, D5) ⛔ blocked on D-3
+- ⬜ **3.5** Future work: longer / long-life bearings, other bearing types (D8)
+- ⬜ **3.6** *(new)* New §4.7.1 per-dataset coarsening-level table — content ready in §5
+
+### Part 4 — Presentation
+- ⬜ **4.1** Regenerate Figures 2 and 10 (D17, D16)
+- ⬜ **4.2** Abbreviations: SCADA, SPC, BPFO/BPFI/BSF/FTF, ROC–AUC, CUSUM, LSTM, SVDD, PCA, FFT, ONGC (D13, F7)
+- ⬜ **4.3** Cut Table 21 (D14)
+- ⬜ **4.4** Cut Table 23 and §7.4; move Tables 15 and 20 to appendix (D15, D22, F8)
+- ⬜ **4.5** Cross-reference repair after cuts (⚠️ 29 tables, 11 figures)
+- ⬜ **4.6** Sentence complexity — 180 em-dashes → under 60 (D10, F6)
+- ⬜ **4.7** Table density, esp. Table 11 (F9)
+
+### Part 5 — No action, but state in the response letter
+- ➖ **D12** Typos: none identified
+- ➖ **G9** Clarity: no corrections required
+- ➖ **D2 / G8** Onset circularity — already in §8; reinforced by 1.5 and 1.6
+- ➖ **D4** Not all models on all runs — already handled via explicit N/A cells
+- ➖ **F3 / G8** Indirect RUL comparison — §2.2 explains; add one limitation sentence
+
+### Part 6 — Final
+- ⬜ **6.1** Response to Review document completed (all 50 items)
+- ⬜ **6.2** Pre-submission verification checklist (register Part 6)
+- ⬜ **6.3** Repo + Zenodo updated **before** the paper is submitted
+- ⬜ **6.4** PHM Society formatting check
+- ⬜ **6.5** *(new, session 4)* **Unprompted-disclosure paragraph in the Response to Review.** A short, plainly worded paragraph naming the **three defects found during revision that no reviewer caught**: **N-15** (Table 5's 3σ valid-alarm fraction of 1.00 does not reproduce — released data give 0.67, and the source file had no generating script), **N-17** (`tex:970` claimed "ten evaluated detectors" against a nine-row Table 25 — RMS-trend was never timed), and **N-18** (§6.9 claimed EWMA has the highest raw lead in Table 16, which that table contradicts: Hotelling T² 176.9 vs EWMA 89.1). All three are **independent of the D-2 re-baseline and of any reviewer request**, and all three are now fixed. **Why disclose:** Reviewer D's decision was driven by finding internal contradictions unaided; volunteering the ones we found ourselves shows the same audit was run across the whole manuscript rather than only at the points challenged, and each disclosure comes with a fix rather than an excuse. Keep it to one paragraph, factual, no self-praise (item 2.4 applies to the response letter too). Sources: §5D, §5K.1, §5L.3.
+
+---
+
+## 7. Defects found during execution — not from the reviewers
+
+These are the same class of defect Reviewer D is hunting. Numbered N-1 onward.
+
+| # | Defect | Severity | Status |
+|---|---|---|---|
+| **N-1** | `scada_ijphm.tex:128` claims IMS coarsening is "at the signal level" — false; IMS is the only dataset at level (c) | **High** — third internal contradiction, on the dataset carrying the only directional trend | ⬜ → item 2.6 |
+| **N-2** | IMS ran on the **445-dim legacy** feature schema (78 test windows, p ≫ n); the other four ran on the 49-dim invariant schema. `config.py:110-113` calls the legacy schema "back-compat and appendix comparison only", and §4.2 of the paper argues at length that it is ill-posed | **High** — the headline dataset used the scheme the paper condemns | ⚠️ D-2, measure first |
+| **N-3** | `results/` and `paper/` are gitignored; zero result files tracked; the submission `.tex` is untracked. Data Availability claims "every table and figure is generated directly from the released result files" | **High** — all three reviewers praised reproducibility; if Zenodo lacks the files, that praise inverts | ⛔ D-3 |
+| **N-4** | `.zenodo.json` stale — lists four datasets (Ferrara missing) and a different title | Medium | ⬜ |
+| **N-5** | `feature_coarsening_ablation.py` docstring (lines 7-11) claims it uses `downsample_features`; lines 77-81 call the snapshot-level path. Manuscript inherits the claim at `:734` | Medium | ⬜ |
+| **N-6** | ~~XJTU `Bearing1_2` has no onset → effective n = 9; TOST floor 0.5⁹~~ **SUPERSEDED.** The premise was wrong in a deeper way: the sign test excludes *zero-difference* runs, so the floor is per-detector `0.5^(n₊+n₋)`, not `0.5^(bearing count)`. On XJTU that is n=4 (3σ), n=3 (CUSUM), n=2 (Hotelling) — TOST infeasible for most detectors, not just IMS | Medium → **resolved** | ✅ register 1.2 + brief Phase 2 corrected, session 2 |
+| **N-7** | NaN `far_preonset_pct` widespread. **Confirmed: the FAR gate is skipped by design when `FAR_pre` is NaN** (`lead_time.py:232`), leaving `valid_alarm = lead_time > 0`. **295 rows corpus-wide carry a valid alarm that was never gated** (XJTU 189, Ferrara 96, IMS 10). Eq. 5 as published has no such carve-out | **CRITICAL** — published counts reproduce exactly (20/50 ✅, 209/450 ✅) but are not the counts Eq. 5 describes; under strict Eq. 5 they become 7/50 and 73/450 | ✅ **RESOLVED** §5A → decision **D-7**; items 2.7, 2.8 |
+| **N-8** | `paper/verify_numbers.py` stale — hardcoded `C:\scada` paths, targets `scada_journal.tex` | Low | ⬜ |
+| **N-9** | `test_diagnostic_console.py::test_metropt_loads_with_expected_parameters` fails — real MetroPT CSV present, loader prefers it over the fixture. Touches no paper number | Low / benign | ⬜ |
+| **N-10** | `src/lead_time.py:179` docstring — "`valid_alarm` is gated on lead_time > 0". That describes the *no-onset fallback*, not the gate. Inaccurate for the primary path | Medium | ⬜ → item 1.8 |
+| **N-11** | `src/benchmark.py:130` warns "no onset detected — onset-relative metrics will be NaN". True for `detection_delay`, `max_lead`, `lead_norm`; **false for the two that matter** — `far_preonset_pct` silently becomes legacy FAR and `valid_alarm` silently becomes the legacy VLT test. The log line conceals the substitution rather than flagging it | Medium | ⬜ → item 1.8 |
+| **N-13** | **Console encoding breaks the released scripts on Windows.** Detector names contain `σ` (`3σ Rule (σ=3.0)`, `RMS-Trend (kσ)`, `EWMA (λ=0.2, k=3.0)`, `Hotelling T²`). Printing any results table crashes with `UnicodeEncodeError: 'charmap' codec can't encode 'σ'` under the default cp1252 console. This is the **same encoding fault** that corrupts Figures 2 and 10 (register 4.1) — one root cause, two symptoms. A reviewer running the released code on Windows hits it immediately | Medium — reproducibility; all three reviewers praised reproducibility | ⬜ mitigated in `src/ims_schema_check.py` via `sys.stdout.reconfigure(encoding="utf-8")`; **apply the same guard repo-wide and fold into register 4.1** |
+| **N-14** | **§4.2 does not describe what was done on the headline dataset.** §4.2 (`tex:163`, *Channel-Invariant Feature Schema*) argues the 445-dim scheme is ill-posed at p ≫ n and presents the 49-dim invariant space as the paper's methodology. The IMS controlled sweep ran at **445 dims** (78 test windows at f=1 on `2nd_test`; p ≫ n by ~5.7×). Same class of defect as §4.7 — a methods section describing a procedure other than the one executed — which **Reviewer D has flagged three times**. Not cured by calling the invariant rerun an "appendix robustness check": that leaves §4.2 describing a schema the headline result did not use | **High** — methods/execution mismatch on the headline dataset | ⚠️ tied to **D-2**; recorded session 3, §5B.0.3 |
+| **N-15** | **Table 5's 3σ valid-alarm fraction does not reproduce.** `tab:persistence` (`tex:365`) and the §5.2 prose (`tex:357`) both state the 3σ valid-alarm fraction is **1.00 at every persistence**. `benchmark_IMS_long.csv` gives **0.67** (2 of 3 runs) — `1st_test` has pre-onset FAR 29.1% > τ=10%, so `valid_alarm=False`. **0.67 under every denominator tried** (f=1 aggregate; aggregate all factors; all rows) and **under both schemas**, so it is not a D-2 effect. `persistence_sensitivity_IMS.csv` stores `valid_frac_f1_agg=1.0` at persistence 3 while its `median_agg_minus_dec_h=18.43` in the same row *does* reproduce from the benchmark file — so one column of that file agrees with the released data and the other does not. The file had **no generating script anywhere in the repo** (Grep over all `*.py`), so the discrepancy could not be traced or rerun. The manuscript draws a conclusion from it: "the deployable-detector recommendation does not depend on this parameter" | **High** — a fourth internal contradiction of exactly the species Reviewer D found twice | ✅ **RESOLVED session 3.** Generator written (`src/persistence_sweep_ims.py`) and run on **both** schemas. The legacy rerun reproduces the published table's **three median rows to the digit** but gives **0.67, not 1.00**, for the valid-alarm row — isolating the defect to that single column and ruling out schema, convention, and generator error. Fix: correct the row to 0.67 and **withdraw** the "does not depend on this parameter" conclusion (validity falls to 0.33 across factors at p=10). §5D |
+| **N-16** | **§6.1's "regardless of threshold" is false.** `tex:275` states the three deep reconstruction models' pre-onset FAR is "far above the τ = 10% budget regardless of threshold". The threshold sweep that produced Table 16, run for those three models (D2, §5G.2), shows **LSTM-AE attains a valid operating point at the 99.5th percentile on `3rd_test`: FAR_pre 4.19%, lead 59.67 h, `valid_alarm = True`.** Its FAR falls 46.5% → 4.19% between the 99th and 99.5th percentiles, so the model trades lead for FAR normally rather than flooding unconditionally. TCN-AE and Transformer-AD attain no valid point at any percentile tested | **High** — a fifth internal contradiction, and the reviewer asked for exactly this evidence | ✅ measured session 4, `results/tables/tradeoff_IMS_deepmodels_long.csv`; **seed-robust: 10/10 seeds, FAR 4.19% at every seed** (`d2_seed_check_lstmae.csv`) despite training loss varying 0.0027–0.0040 and threshold 0.0062–0.0084 — **not a seed artifact**; **needs a text correction, not a citation** |
+| **N-17** | **`tex:970` overreaches Table 25 by one detector, in the submitted manuscript.** Table 25 (`tex:1013-1021`) lists **nine** detectors; `tex:970` states monitoring is "not compute-bound for any of the **ten** evaluated detectors". **RMS-trend was never timed.** Found while adding the OC-SVM timing (D-5), and independent of it | Medium — a count claim exceeding its own table, the species Reviewer D is hunting | ✅ **RESOLVED session 4** — `rms_trend` and `one_class_svm` both timed (`compute_cost_IMS_extra_invariant.csv`); Table 25 can now carry all **eleven** and `tex:970` becomes true as "eleven". §5K.1. 🗣️ **DISCLOSE EXPLICITLY IN THE RESPONSE TO REVIEW** — this defect was **found and fixed unprompted**, not raised by any reviewer, and it predates OC-SVM entirely. Volunteering it demonstrates the same audit Reviewer D performed was run against the whole manuscript, and costs nothing: the conclusion is unchanged once the count is corrected to eleven. |
+| **N-18** | **§6.9 contradicts Table 16 about which detector has the highest raw lead.** `tex:640` states "EWMA attains the highest raw lead in Table~
+ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** and **Iso. Forest 174.7 h** against **EWMA 89.1 h**. The same paragraph and the Figure 6 caption (`tex:654`) say "EWMA and Isolation Forest dominate the upper-left", yet over the full swept curve **Hotelling T² strictly dominates EWMA on both axes** (lead 187.8 vs 174.8; min FAR 19.0 vs 20.8). A third clause, "the raw-lead column of Table 2, where EWMA leads", is additionally false under D-2. **The first two are wrong in the submitted manuscript, independent of the re-baseline** | **High** — a sixth internal contradiction, and it contradicts a table on the same page | ⬜ **NOT YET EDITED** — reported to the author session 4, awaiting decision. Sources: `results/tables/tradeoff_IMS.csv`, `results/tables/benchmark_IMS_leadtime_ci_invariant.csv`. §5L.3 |
+| **N-12** | **`Bearing1_2` legacy-metric substitution.** With no onset, `lead_time.py:234-240` writes **legacy FAR into `far_preonset_pct`** and **legacy VLT into `valid_alarm`**, under onset-relative column names. Verified on all 100 rows: `far_preonset_pct == far_legacy_pct` 100/100; `valid_alarm == (vlt_legacy > 0)` 100/100. Table 12's entry (V/5 = 1, 0.67 h, EWMA) is arithmetically correct but produced by a criterion the paper never states. Hotelling T² earned 1.083 h raw lead and was killed by the *legacy* 20%-marker rule, not Eq. 5. Worse than N-7's NaN case: a real-looking number occupies the `FAR_pre` column and **is not `FAR_pre`** | **High** — a silent metric substitution on a bearing that appears in a published table | ✅ diagnosed §5A → decision **D-8** (code fix signed off); fix in item 1.8 |
+
+---
+
+## 8. Numbers ledger — every ⟦R-n⟧ and where its value came from
+
+**Nothing enters the manuscript from this table until the "Source file" column is filled with a real path.**
+
+| ID | What | Status | Source file | Value |
+|---|---|---|---|---|
+| R-1 | Per-dataset coarsening level | ✅ resolved | code inspection, §5 above | IMS = (c); XJTU/FEMTO/Ferrara/ONGC = (b) |
+| R-2 | Equivalence bound / CIs (item 1.2 / D15) | ✅ resolved (session 4) | `results/tables/d15_equivalence_bootstrap.csv` · `results/tables/d15_equivalence_tost.csv` via `src/d15_equivalence.py` | **δ = 1 h**, pre-specified on operational grounds. 60 cells (6 dataset-arms × 10 detectors). **Bootstrap (primary):** 30 equivalent · 13 inconclusive · 7 **aggregate superior beyond margin** (never inferior) · 10 untestable (ONGC n=1). Equivalence is **complete on XJTU-SY (10/10), FEMTO (10/10) and Ferrara (10/10)**; **zero** IMS cells are equivalent under either schema. **TOST feasible in 22/60 cells**; feasible-and-equivalent in 17. Full table §5G.1 |
+| R-3 | Deep AE threshold-sweep rows (item 1.3 / D2) | ✅ resolved (session 4) — ⚠️ **CONTRADICTS §6.1** | `results/tables/tradeoff_IMS_deepmodels.csv` · `results/tables/tradeoff_IMS_deepmodels_long.csv` via `src/d2_deep_tradeoff.py` | Mean-across-runs Ld / FAR_pre at 95th·99th·99.5th — **LSTM-AE** 199.61/87.81† · 193.99/82.16† · 93.58/62.00† · **TCN-AE** 185.36/82.63† · 183.14/79.93† · 180.36/74.43† · **Transformer-AD** 183.97/81.05† · 181.75/79.18† · 178.69/71.99†. All nine cells daggered on the mean. **But LSTM-AE at the 99.5th percentile on `3rd_test` scores FAR_pre = 4.19% ≤ τ and lead = 59.67 h, `valid_alarm = True`** → valid_frac 0.33. §6.1's "regardless of threshold" is **false as written**. Detail §5G.2 |
+| R-4 | IMS test-3 under original label (item 1.4 / D17) | ✅ resolved (session 4) | `results/tables/d17_label_comparison.csv` · `results/tables/d17_ims_long_originallabel.csv` via `src/d17_original_label.py` | Medians (corrected → original): 3σ **+15.10 → +15.10** · CUSUM **+4.27 → +4.15** · EWMA **+2.10 → +0.00** · Hotelling **+1.17 → +1.17** · Iso. Forest **+3.43 → +0.00** · Deep SVDD **0.00 → 0.00** · RMS-trend **0.00 → 0.00** · LSTM-AE/TCN/Transformer **−0.42 → −0.42**. **No median flips sign.** Best p under either label = **0.25** (Hotelling); no detector reaches α under either. **Test 3 is a guaranteed miss for 6 of 10 detectors, NOT all 10** — n_eff falls to 2 for four detectors and 1 for two, but **stays 3 for Hotelling, LSTM-AE, TCN-AE and Transformer-AD**, which still earn lead in both modes. Detail §5G.4 |
+| R-5 | Contrast under disjoint onset | ⬜ | | |
+| R-6 | Onset bias / variance | ⬜ | | |
+| R-7 | One-class SVM (item 1.7 / D3) | ✅ resolved (session 4) — **it EXISTS and RUNS** | `results/tables/d3_ocsvm_benchmark_long.csv` · `_leadtime_ci.csv` · `_holm_N44_invariant.csv` · `_holm_N44_legacy.csv` · `_tradeoff{,_long}.csv` · `_farbudget_phrank.csv` via `src/d3_ocsvm.py` | **Mean raw lead + 95% CI at f=1:** IMS **180.25** [65.50, 316.68] (n=3) · XJTU-SY **1.44** [0.82, 2.10] (n=10) · FEMTO **0.95** [0.69, 1.30] (n=6) · Ferrara **0.98** [0.52, 1.50] (n=6) · ONGC **35.34** (n=1). **Holm N=44: 0/44 rejections** under both IMS schemas (was 0/40) — verdict unchanged. **Table 16:** 180.25/63.21† · 92.47/56.68† · 92.47/55.45†. **Tables 14/22:** PH **180.2**, L = **0.0** at τ = 0.05/0.10/0.20. Detail §5G.3 |
+| R-8 | Deep-model architecture params (item 3.3 / G5) | ✅ resolved (session 4) | `results/tables/deep_model_params.csv` via `src/d3_compute_cost_extra.py`; hyperparameters from `src/config.py` `MODELS` | **LSTM-AE 54,657** params (`seq_len 30, latent 16, hidden 64, 50 ep`) · **TCN-AE 29,681** (`seq_len 30, ch 32, k 3, levels 4, 40 ep`) · **Transformer-AD 20,305** (`seq_len 30, d_model 32, nhead 2, layers 2, ff 64, 40 ep`). All at 49-dim invariant schema. LSTM-AE = **87 params per training window** at 631 windows — quantifies §4.5's data-starvation caveat. §5K.3 |
+| R-9 | ONGC released artifact paths | ⬜ | | |
+| R-10 | Strict-Eq.5 validity figures (unscoreable counted invalid) — item 2.8 | ✅ resolved | `results/tables/benchmark_XJTU-SY_long.csv` | **73/450** (five detectors, all cells); **7/50** (Table 12 full-res aggregate) |
+| R-11 | Three-outcome validity counts (valid / invalid / **unscoreable**) per dataset × detector — items 2.7, 2.8 | ⬜ | *(to be emitted by item 1.8 into a NEW result file)* | |
+| R-12 | Valid-alarm fractions in the IMS ablation tables (`tex:370`, `:738`, `:758`, `:775`, `:798`) under the new convention | ⬜ | *(ablation result files — NOT yet audited, see §5A.6)* | |
+| R-16 | Abstract (`tex:63`) values as WRITTEN — item 2.1/2.2/D15/D3 | ✅ **written to `.tex`** (session 4) | `ims_runlevel_test_invariant.csv` · `d3_ocsvm_holm_N44_invariant.csv` · `d15_equivalence_bootstrap.csv` | 3σ median **+15.1 h** · **N=44**, adj. p **1.00** · **30/30** cells equivalent at ±1 h · IMS **8 of 10** undecided, **2** favour aggregation beyond margin · Iso. Forest on FEMTO **−0.26 h [−0.54, −0.06]** inside margin. §5L.1 |
+| R-17 | `tex:275` deep-model sentences as WRITTEN — N-16 correction + P19 | ✅ **written to `.tex`** (session 4) | `benchmark_IMS_leadtime_ci_invariant.csv` · `benchmark_IMS_long_invariant.csv` · `tradeoff_IMS_deepmodels_long.csv` · `d2_seed_check_lstmae.csv` | raw leads **183–198 h** · FAR **61%→100%** at the 97.5th · LSTM-AE **59.7 h at 4.19% FAR**, 99.5th, test 3, **10/10 seeds**, fraction **1/3** · Hotelling **174.8** leads classicals. §5L.2 |
+| R-13 | IMS aggregate−decimate contrast under the **invariant** schema (D-2) | ✅ resolved (**corrected session 3**) | `results/tables/benchmark_IMS_long_invariant.csv` via `src/d2_convention_recompute.py` | **Run-level medians (mean collapse, §4.8):** 3σ **+15.1** h (sign-test p 1.00, 2+/1−), Iso. Forest **+3.4** (1.00, 2+/1−), EWMA **+2.1** (1.00, 2+/1−), CUSUM **+4.3** (0.25, 3+/0−), Hotelling T² **+1.2** (0.25, 3+/0−) — full table §5B.0.1. ~~Pooled medians 5.83/0.83/0.83/0.83 with Wilcoxon p~~ **SUPERSEDED — wrong convention, must not enter the manuscript** |
+| R-14 | IMS Table 2 (`tab:imslead`) mean raw lead + 95% CI under the invariant schema | ✅ resolved | `benchmark_IMS_long_invariant.csv` via `bootstrap_ci_across_runs`, `src/d2_cascade_audit.py` | 3σ **64.6** [28.8, 108.7] · EWMA **78.6** [28.0, 152.2] · CUSUM **64.8** [26.3, 114.9] · Hotelling T² **174.8** [56.3, 315.9] · Iso. Forest **87.2** [49.7, 152.2] · Deep SVDD **14.8** [0.0, 34.0] · RMS-trend **3.2** [0.0, 9.7] · LSTM-AE **197.6** [65.5, 331.7] · TCN **183.7** [65.5, 330.9] · Transformer **183.4** [65.5, 330.9] |
+| R-15 | Table 5 3σ valid-alarm fraction as it actually reproduces (N-15) | ✅ resolved | `results/tables/benchmark_IMS_long.csv` and `..._invariant.csv` | **0.67** (2/3 runs) under every denominator and both schemas — **not** the published 1.00 |
+
+---
+
+## 9. Next action
+
+> **⚠️ SESSION 4 — READ FIRST. Two published claims are now known to be false, and one
+> planned fix is now known to be unnecessary.**
+>
+> 1. **N-16 (new, High).** `tex:275`'s "regardless of threshold" is **false**. LSTM-AE attains a
+>    valid operating point at the 99.5th percentile on `3rd_test` (FAR 4.19%, lead 59.67 h).
+>    §6.1 must be **corrected**, not merely evidenced. §5G.2.
+> 2. **D-5's premise is wrong.** One-class SVM **exists and runs**. Do not delete the §4.5
+>    clause on the assumption it was never evaluated. Full results measured; Holm at
+>    **N=44 → 0/44**, headline unaffected. §5G.3.
+> 3. **Register 1.4's pre-written anticipation is wrong.** Test 3 under the original label is a
+>    guaranteed miss for **6 of 10** detectors, not all ten; effective n is detector-dependent
+>    (3 / 2 / 1), not a uniform "n = 2". Rewrite that paragraph before it reaches Appendix C. §5G.4.
+> 4. **Equivalence does not hold on IMS.** δ = 1 h equivalence is established on XJTU-SY, FEMTO and
+>    Ferrara (30/30 cells) and on **no** IMS cell under either schema. Register item 2.1's drafted
+>    abstract clause must be scoped to the three multi-bearing campaigns. §5G.1.
+>
+> **Author decisions: D-4, D-5 and D-9 all DECIDED (session 4).** See §4.
+>
+> **Phase 7 em-dash target — REVISED.** The brief's "under 60" was set against the rendered 180.
+> Measured baselines: **230** naive `grep -c -- '---'` (**wrong** — includes 54 comment-only), **176**
+> live, **167** live prose (excluding 9 inside `table`/`tabular`), **180** rendered in the PDF.
+> **Target: approximately 100 LIVE dashes**, counted on **non-comment, non-table-rule occurrences
+> only** — i.e. measured against the **167** prose baseline, not against 230 and not against 60.
+
+**Phase 0.5(A) ✅ COMPLETE** (session 2) — findings in §5A, decisions D-7 and D-8, defects N-10/11/12. Do not re-derive.
+
+**Phase 0.5(B) ✅ COMPLETE, CORRECTED session 3** — findings §5B.0 (the session-2 numbers in §5B.2–5B.4 are superseded and must not enter the manuscript). **D-2 remeasured and its cascade quantified (§5C) — still NOT decided; author input required.** D-2 now also carries **N-14 (High)**: it is a methods/execution mismatch, not only a robustness question.
+
+⚠️ **New this session: N-15 (High)** — Table 5's 3σ valid-alarm fraction of 1.00 does not reproduce (released data give 0.67), and its source file has no generating script. **Independent of D-2**; needs its own fix regardless of how D-2 is decided.
+
+**Next action: Phase 1** (brief, "Repo audit against the manuscript's claims") — OC-SVM existence, deep-AE threshold sweep feasibility, and the untraceable-claim sweep.
+
+**Then, in order:**
+0. **D-2** — author decision on whether IMS is re-baselined onto the invariant schema or the rerun is reported as an appendix robustness check (§5B.5). Everything touching IMS magnitudes waits on this.
+1. **Item 1.8** — implement the D-8 fallback fix (sign-off granted, scoped to `src/lead_time.py:234-240` + the `benchmark.py:130` warning). New result files only; add the missing unit tests.
+2. **Item 1.1** — now unblocked by D-7. Emit three-outcome validity *and* the strict-convention counts.
+3. **Item 2.7 / 2.8** — amend Eq. 5; restate every gate-dependent number under both conventions.
+
+⚠️ Before 2.8, audit the five unmeasured ablation locations in §5A.6. They are gate-dependent by construction but come from the ablation result files, which were **not** part of the Phase 0.5(A) audit. Do not assume they move.
