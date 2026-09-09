@@ -216,7 +216,7 @@ measured over the entire apparently-normal region rather than a positional sampl
 L > 0 \;\wedge\; \text{FAR}_{\text{pre}} \le \tau,
 \label{eq:valid}
 \end{equation}
-with budget $\tau=0.10$ throughout.
+with budget $\tau=0.10$ throughout. Where the pre-onset region is empty---the onset estimator places $t_o$ at or before the first scored window---$\text{FAR}_{\text{pre}}$ is undefined, so the alarm cannot be gated and is excluded from the validity denominator rather than counted as valid.
 
 \emph{Why the metric defeats the latch-on exploit.} Reporting $L$ and $\text{FAR}_{\text{pre}}$ jointly, with the conjunction in Eq.~(\ref{eq:valid}), defeats the latch-on exploit. A detector that fires from the first sample earns a large $L$ (the full run length) but floods the entire pre-onset region, giving $\text{FAR}_{\text{pre}} \approx 1 > \tau$ and hence invalid. Conversely, a detector that first fires just after $t_o$ has $\text{FAR}_{\text{pre}}=0$ and a positive $L$, scoring valid. A unit test in the released code asserts exactly these two cases: a constant-on detector scores invalid, and an oracle that fires at $t_o^+$ scores valid at zero pre-onset FAR. Because $t_o$ is computed only from training-region statistics (Eq.~\ref{eq:onset}), neither $L$ nor $\text{FAR}_{\text{pre}}$ can be tuned using test-region information. We stress that this defeats the specific latch-on exploit; it is not a claim of unconditional ungameability (see Section~\ref{sec:limitations}).
 
@@ -377,7 +377,7 @@ Because the entire metric is anchored to the degradation onset $t_o$, its robust
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Missing-data robustness: mean valid lead time (h) under random historian gaps of 0\%, 5\%, 20\% on IMS and XJTU-SY. Valid-alarm fractions (not shown) are unchanged across gap levels. The SPC charts are essentially gap-insensitive; only the spike-sensitive Isolation Forest degrades at 20\% on IMS.}
+	\caption{Missing-data robustness: mean valid lead time (h) under random historian gaps of 0\%, 5\%, 20\% on IMS and XJTU-SY, averaged over the runs on which the alarm is valid. Valid-alarm fractions are unchanged across gap levels on IMS (2/3 for each of the three detectors at every level) but not exactly constant on XJTU-SY, where the $3\sigma$ fraction moves by a single bearing (5/10, 6/10, 5/10 at 0\%, 5\%, 20\%) while EWMA (7/10) and Isolation Forest (4/10) hold. One random gap draw is used per level, so a one-bearing move is draw noise rather than a gap effect. The SPC charts are essentially gap-insensitive; only the spike-sensitive Isolation Forest degrades at 20\% on IMS.}
 	\label{tab:missing}
 	\begin{tabular}{l c c c | c c c}
 		\hline \hline
@@ -510,7 +510,7 @@ Table~\ref{tab:imssweep} gives the run-level test over all eleven evaluated dete
 \end{table}
 
 \subsection{Multiple-Comparison Correction}
-The aggregate-vs-decimate question is asked once per detector on each inferential dataset, so the honest family of hypotheses is the $11 \times 4 = 44$ detector $\times$ dataset tests over IMS, XJTU-SY, FEMTO, and Ferrara (ONGC, $n=1$, is excluded). The uncorrected family-wise error rate at $\alpha=0.05$ is $1 - (1-0.05)^{44} \approx 0.8953$, which is exactly why a correction is required. We apply Holm--Bonferroni to the forty-four run-level sign-test $p$-values (Table~\ref{tab:holm}). No hypothesis survives (0 of 44): the smallest raw $p$-value is 0.031 (Isolation Forest on FEMTO), and after Holm correction across the $N=44$ family its adjusted $p$ is 1.00, still far above $\alpha$. The conclusion is unambiguous and conservative: after honoring the run structure and correcting for multiple comparisons, there is no statistically significant aggregate-vs-decimate effect on any dataset. The IMS sign-consistency remains a real, reportable trend; it is simply not, and cannot be at $n=3$, a significant one. We note that the family is heterogeneous in power: the three deep sequence models contribute $n=3$ XJTU tests rather than $n=10$ (marked $\ddagger$ in Table~\ref{tab:holm}), and those three cells rest on the longest-lived---hence most warnable---bearings. Because every uncorrected $p$ in the family already exceeds 0.03, this heterogeneity does not change any rejection decision; we flag it so the $N=44$ count is not read as forty-four equally-powered tests.
+The aggregate-vs-decimate question is asked once per detector on each inferential dataset, so the honest family of hypotheses is the $11 \times 4 = 44$ detector $\times$ dataset tests over IMS, XJTU-SY, FEMTO, and Ferrara (ONGC, $n=1$, is excluded). The uncorrected family-wise error rate at $\alpha=0.05$ is $1 - (1-0.05)^{44} \approx 0.90$, which is exactly why a correction is required. We apply Holm--Bonferroni to the forty-four run-level sign-test $p$-values (Table~\ref{tab:holm}). No hypothesis survives (0 of 44): the smallest raw $p$-value is 0.031 (Isolation Forest on FEMTO), and after Holm correction across the $N=44$ family its adjusted $p$ is 1.00, still far above $\alpha$. The conclusion is unambiguous and conservative: after honoring the run structure and correcting for multiple comparisons, there is no statistically significant aggregate-vs-decimate effect on any dataset. The IMS sign-consistency remains a real, reportable trend; it is simply not, and cannot be at $n=3$, a significant one. We note that the family is heterogeneous in power: the three deep sequence models contribute $n=3$ XJTU tests rather than $n=10$ (marked $\ddagger$ in Table~\ref{tab:holm}), and those three cells rest on the longest-lived---hence most warnable---bearings. Because every uncorrected $p$ in the family already exceeds 0.03, this heterogeneity does not change any rejection decision; we flag it so the $N=44$ count is not read as forty-four equally-powered tests.
 
 \begin{table}[t] \small
 	\begin{center}
@@ -671,7 +671,7 @@ For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$-
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{FAR-budget sensitivity on IMS: best valid lead time (h) per detector at each false-alarm budget $\tau$ (0.0 = no operating point within budget). The $3\sigma$ recommendation holds at $\tau=0.10$ and 0.20 but not at a strict $\tau=0.05$. The non-destruction conclusion is computed on raw lead and is unaffected by $\tau$.}
+	\caption{FAR-budget sensitivity on IMS: best valid lead time (h) per detector at each false-alarm budget $\tau$ (0.0 = no operating point within budget). The gate here is applied to the pre-onset FAR \emph{averaged across the three runs}, so a detector can hold a valid operating point on an individual run and still show 0.0 in this table: LSTM-AE is exactly that case, with a mean pre-onset FAR of 62.00\% at the 99.5th percentile but 4.19\% FAR and 59.67~h of valid lead on \texttt{3rd\_test} alone. A zero row here therefore does not mean a detector has no valid operating point at any threshold; per-run validity is reported in Table~\ref{tab:tradeoff} and Section~\ref{sec:results}. The $3\sigma$ recommendation holds at $\tau=0.10$ and 0.20 but not at a strict $\tau=0.05$. The non-destruction conclusion is computed on raw lead and is unaffected by $\tau$.}
 	\label{tab:farbudget}
 	\begin{tabular}{l c c c}
 		\hline \hline
@@ -1050,6 +1050,36 @@ For full reproducibility we give the exact channel-invariant feature constructio
 \FloatBarrier
 \section*{Appendix C: IMS Test-3 Relabeling Justification}
 A subtlety we correct here is the failure-label of the third test: an earlier label placed failure on 2004-04-08, leaving 21.5\% of the recorded data after the nominal ``failure''---impossible for a run-to-failure series---so under that label the third test is a guaranteed 100\% miss for every detector. We relabel it to the last recorded sample (2004-04-18 02:42), at which the mean-RMS health indicator has ramped from its flat baseline (${\sim}0.068$) to ${\sim}0.228$ before the final machine-off reading---within the flat normal-region baseline band at the old label, but well above the $4\sigma$ onset band at the corrected one. The relabeling therefore moves the third test in the direction of harder, not easier, detection: a previously guaranteed 100\% miss becomes an evaluable run, and because the aggregate-vs-decimate contrast is computed independently within each run, the relabeling cannot artificially inflate it. We present this as an author relabeling based on the health-indicator trajectory, not an independently verified ground truth: we are not aware of a published benchmark that corrects this label, so we do not claim it as a community-established correction. It is nonetheless not a tuning choice: it only affects the single hardest run, and it makes that run pass rather than improving any aggregate-vs-decimate contrast (the contrast is computed within each run). It is the labeling we use throughout.
+
+\emph{The relabeling made our own claim harder to support, not easier.} Because a reader may reasonably ask whether the label was chosen for the result it produces, we re-ran the entire IMS sweep under the original 2004-04-08 label and report both arms side by side (Table~\ref{tab:d17label}). The decisive case is the $3\sigma$ chart. Under the original label the third test is a guaranteed miss, so its aggregate and decimate lead times are both zero and the run's collapsed difference is exactly $0.00$~h; Section~\ref{sec:statproto}'s zero-difference rule then excludes that run from the sign-test tally, leaving $3\sigma$ at two positive and zero negative runs. An earlier version of this work claimed that in no run does aggregation shorten the lead time of the magnitude-monitoring detectors. That claim would have been \emph{true} under the original label. It is false only under the corrected one, where the third test contributes $-1.00$~h, and we have withdrawn it accordingly. The relabeling therefore moved the evidence against the paper's own claim rather than in its favor, which is the opposite of what a result-motivated relabeling would do.
+
+The relabeling is also narrower than one might expect. Under the original label the third test is a guaranteed miss for six of the ten detectors, not for all ten: $3\sigma$, CUSUM, EWMA, Isolation Forest, Deep SVDD, and RMS-trend all score $L=0$ in both modes. The remaining four---Hotelling $T^2$, LSTM-AE, TCN-AE, and Transformer-AD---alarm early enough to precede even the earlier failure time, so they retain a positive lead in both modes and their third run survives the zero-difference exclusion.
+
+\begin{table*}[t] \footnotesize
+	\begin{center}
+	\caption{IMS aggregate$-$decimate lead-time difference under the original (2004-04-08) and corrected (2004-04-18) third-test failure labels, all ten detectors. Run differences are (\texttt{1st\_test}, \texttt{2nd\_test}, \texttt{3rd\_test}) in hours, collapsing the five within-run sampling factors to one mean difference per run (Section~\ref{sec:statproto}). $n_+/n_-/0$ counts positive, negative and exactly-zero runs; zero-difference runs are excluded from the sign test, so $n_{\text{eff}}$ is the effective sample size under the original label. ``Floor'' is the smallest two-sided exact sign-test $p$ attainable at that $n_{\text{eff}}$. Both arms are computed on the 49-dimensional invariant feature schema so that the contrast isolates the label alone. No median changes sign between labels, and no detector reaches $\alpha=0.05$ under either label.}
+	\label{tab:d17label}
+	\begin{tabular}{l r r c r r c r r}
+		\hline \hline
+		 & \multicolumn{3}{c}{\textbf{Corrected label}} & \multicolumn{5}{c}{\textbf{Original label}} \\
+		\textbf{Detector} & \textbf{Run diffs (h)} & \textbf{Med} & \textbf{$n_+/n_-/0$} & \textbf{Run diffs (h)} & \textbf{Med} & \textbf{$n_+/n_-/0$} & \textbf{$n_{\text{eff}}$} & \textbf{$p$ (floor)} \\
+		\hline
+		$3\sigma$ & $+25.81, +15.10, -1.00$ & $+15.10$ & 2/1/0 & $+25.81, +15.10, 0.00$ & $+15.10$ & 2/0/1 & 2 & 0.50 (0.50) \\
+		CUSUM & $+4.15, +4.67, +4.27$ & $+4.27$ & 3/0/0 & $+4.15, +4.67, 0.00$ & $+4.15$ & 2/0/1 & 2 & 0.50 (0.50) \\
+		EWMA & $-3.89, +4.33, +2.10$ & $+2.10$ & 2/1/0 & $-3.89, +4.33, 0.00$ & $0.00$ & 1/1/1 & 2 & 1.00 (0.50) \\
+		Hotelling $T^2$ & $+1.00, +1.17, +81.74$ & $+1.17$ & 3/0/0 & $+1.00, +1.17, +35.30$ & $+1.17$ & 3/0/0 & 3 & 0.25 (0.25) \\
+		Iso.\ Forest & $-0.67, +16.87, +3.43$ & $+3.43$ & 2/1/0 & $-0.67, +16.87, 0.00$ & $0.00$ & 1/1/1 & 2 & 1.00 (0.50) \\
+		Deep SVDD & $+8.93, 0.00, 0.00$ & $0.00$ & 1/0/2 & $+8.93, 0.00, 0.00$ & $0.00$ & 1/0/2 & 1 & 1.00 (1.00) \\
+		RMS-trend & $-0.17, 0.00, +2.37$ & $0.00$ & 1/1/1 & $-0.17, 0.00, 0.00$ & $0.00$ & 0/1/2 & 1 & 1.00 (1.00) \\
+		LSTM-AE & $-1.39, -0.42, +56.12$ & $-0.42$ & 1/2/0 & $-1.39, -0.42, +41.33$ & $-0.42$ & 1/2/0 & 3 & 1.00 (0.25) \\
+		TCN-AE & $-1.39, -0.42, +9.00$ & $-0.42$ & 1/2/0 & $-1.39, -0.42, +9.00$ & $-0.42$ & 1/2/0 & 3 & 1.00 (0.25) \\
+		Transformer-AD & $-1.39, -0.42, +68.79$ & $-0.42$ & 1/2/0 & $-1.39, -0.42, +48.15$ & $-0.42$ & 1/2/0 & 3 & 1.00 (0.25) \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table*}
+
+\emph{The effective sample size is detector-dependent, and neither label can reach significance.} Because the zero-difference exclusion operates per detector, the original label does not simply reduce IMS to $n=2$. It leaves $n_{\text{eff}}=3$ for the four detectors that still warn on the third test, drops it to $n_{\text{eff}}=2$ for $3\sigma$, CUSUM, EWMA and Isolation Forest, and to $n_{\text{eff}}=1$ for Deep SVDD and RMS-trend. The exact two-sided sign test floors at $p=0.25$, $0.50$ and $1.00$ at those three sample sizes respectively, so under the original label six of the ten detectors could not have reached $\alpha=0.05$ at any effect size whatsoever. The four that retain $n_{\text{eff}}=3$ floor at $p=0.25$, which is itself already above $\alpha$. The same floor governs the corrected label, where every run is retained but $n=3$ still bounds the attainable $p$ at $0.25$. No IMS detector therefore reaches significance under either label, and the best attainable $p$ is $0.25$ in both arms (Hotelling $T^2$). What the label does not change is the direction: no median flips sign between the two arms, with $3\sigma$ holding at $+15.10$~h and Hotelling $T^2$ at $+1.17$~h. The Holm verdict of Section~\ref{sec:results} and the non-destruction headline are untouched by the relabeling.
 
 \FloatBarrier
 \section*{Appendix D: Mechanism Analysis and ONGC Case Study}
