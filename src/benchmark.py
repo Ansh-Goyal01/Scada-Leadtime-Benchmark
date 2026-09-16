@@ -100,6 +100,7 @@ def run_benchmark(dataset: str = "IMS",
                   factors: list = None,
                   far_budget: float = DEFAULT_FAR_BUDGET,
                   control: bool = False,
+                  feature_mode: str = "config",
                   save: bool = True) -> pd.DataFrame:
     """
     Run the full (run × mode × factor × seed × method) benchmark with onset-relative,
@@ -157,7 +158,12 @@ def run_benchmark(dataset: str = "IMS",
                         if control:
                             # CONTROLLED path: feature-level resampling — window content and
                             # alarm persistence held constant; only the logging interval changes.
-                            pipe = load_pipeline_controlled(run_name, factor=factor, mode=dmode)
+                            # feature_mode defaults to "config" → FEATURES["mode"] =
+                            # "invariant" (decision D-2: IMS re-baselined onto the schema
+                            # Section 4.2 argues for). Pass feature_mode="legacy" explicitly
+                            # to reproduce the originally published 445-dim IMS numbers.
+                            pipe = load_pipeline_controlled(run_name, factor=factor, mode=dmode,
+                                                            feature_mode=feature_mode)
                             persistence_windows = THRESHOLD["alarm_persistence"]
                             window_rows = pipe["window_size_used"]
                             window_floored = False

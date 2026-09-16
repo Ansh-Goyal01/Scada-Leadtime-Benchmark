@@ -367,7 +367,8 @@ def load_pipeline_controlled(run_name: str = "2nd_test",
                              mode: str = "none",
                              window_size: int = None,
                              overlap: float = None,
-                             resample_freq: str = "10min") -> dict:
+                             resample_freq: str = "10min",
+                             feature_mode: str = "config") -> dict:
     """
     Controlled-sweep loader: preprocess → feature-extract ONCE at full resolution →
     downsample the FEATURE rows → split → scale.
@@ -383,7 +384,26 @@ def load_pipeline_controlled(run_name: str = "2nd_test",
         feature_names, ts_train, ts_cal, ts_test,
         df_full, feat_df_full,
         failure_time, t_normal_end, scaler, run_name,
-        effective_interval_min, window_size_used
+        effective_interval_min, window_size_used, feature_mode, n_features
+
+    ``feature_mode`` selects the feature schema:
+        "config"    — honour ``FEATURES["mode"]`` (``src/config.py``), which is
+                      ``"invariant"``. **This is the default**, per decision D-2:
+                      IMS is re-baselined onto the invariant schema so the controlled
+                      sweep uses the same feature space as every other dataset and as
+                      Section 4.2 of the paper. Until D-2 this defaulted to "legacy",
+                      which is why the published IMS numbers were produced at 445 dims
+                      on a path whose own methods section argues that is ill-posed
+                      (defect N-14).
+        "invariant" — channel-count-invariant schema plus the train-fit top-k
+                      selection, mirroring ``src.load_pipeline``. Same as "config"
+                      while FEATURES["mode"] == "invariant".
+        "legacy"    — stats-of-stats + all-pairs correlations, no top-k selection
+                      (445 dims on IMS). **Still fully reachable and covered by
+                      tests**: this is the schema the originally published
+                      ``benchmark_IMS_long.csv`` was produced under, and it must stay
+                      bit-reproducible so the response letter can cite the old numbers.
+                      Pass it explicitly; nothing selects it implicitly any more.
     """
     import os
     from src.preprocessing import (
@@ -412,13 +432,28 @@ def load_pipeline_controlled(run_name: str = "2nd_test",
         df = runs[run_name]
 
     # ── Extract features ONCE at FULL resolution (no snapshot-grid coarsening) ──
-    feat_df = extract_rolling_features(
-        df,
-        window_size=ws,
-        overlap=ovl,
-        feature_list=FEATURES["feature_list"],
-        include_cross_channel=FEATURES["include_cross_channel"],
-    )
+    if feature_mode not in ("legacy", "invariant", "config"):
+        raise ValueError(f"Unknown feature_mode '{feature_mode}'")
+    schema = FEATURES.get("mode", "invariant") if feature_mode == "config" else feature_mode
+
+    if schema == "invariant":
+        from src.features import extract_invariant_features
+        feat_df = extract_invariant_features(
+            df,
+            window_size=ws,
+            overlap=ovl,
+            channel_aggs=tuple(FEATURES.get("invariant_channel_aggs", ("mean", "max"))),
+            window_summaries=tuple(FEATURES.get("invariant_window_summaries",
+                                                ("mean", "std", "max", "slope"))),
+        )
+    else:
+        feat_df = extract_rolling_features(
+            df,
+            window_size=ws,
+            overlap=ovl,
+            feature_list=FEATURES["feature_list"],
+            include_cross_channel=FEATURES["include_cross_channel"],
+        )
 
     # ── Downsample the FEATURE ROWS (the controlled coarsening) ──
     feat_df = downsample_features(feat_df, factor, mode)
@@ -442,6 +477,23 @@ def load_pipeline_controlled(run_name: str = "2nd_test",
     X_cal   = apply_scaler(df_cal,   scaler, feat_cols)[feat_cols].values
     X_test  = apply_scaler(df_test,  scaler, feat_cols)[feat_cols].values
 
+    # Train-fit top-k selection — applied ONLY under the invariant schema, exactly as
+    # src.load_pipeline does. The published legacy run had no selection (445 dims, p≫n);
+    # leaving the legacy branch untouched keeps that file bit-reproducible.
+    if schema == "invariant":
+        names = list(feat_cols)
+        top_k = FEATURES.get("select_top_k")
+        if top_k and X_train.shape[1] > top_k:
+            if FEATURES.get("select_strategy", "stratified") == "stratified":
+                from src.features import select_stratified_features
+                sel = select_stratified_features(X_train, names, k=top_k)
+            else:
+                from src.features import select_top_k_features
+                sel = select_top_k_features(X_train, names, k=top_k)
+            X_train, X_cal, X_test = X_train[:, sel], X_cal[:, sel], X_test[:, sel]
+            names = [names[i] for i in sel]
+        feature_names = names
+
     failure_time = DATASET["failure_times"].get(run_name)
     n_normal = int(len(ts_test) * SPLIT["normal_period_fraction"])
     t_normal_end = ts_test[min(n_normal, len(ts_test) - 1)]
@@ -462,6 +514,8 @@ def load_pipeline_controlled(run_name: str = "2nd_test",
         "run_name":      run_name,
         "effective_interval_min": effective_interval_min,
         "window_size_used":       ws,
+        "feature_mode":  schema,
+        "n_features":    int(X_train.shape[1]),
     }
 
 
