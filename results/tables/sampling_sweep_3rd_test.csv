@@ -1,0 +1,41 @@
+run,mode,factor,effective_interval_min,method,VLT_hours,VLT_norm,available_lead_hours,FAR_pct,FAT,valid_alarm,n_test_windows,window_rows,persistence_windows,window_floored
+3rd_test,aggregate,1,10.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-17 04:32:00,False,506,10,3,False
+3rd_test,aggregate,1,10.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-16 23:32:00,False,506,10,3,False
+3rd_test,aggregate,1,10.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-16 23:32:00,False,506,10,3,False
+3rd_test,aggregate,1,10.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-16 22:42:00,False,506,10,3,False
+3rd_test,aggregate,2,20.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-17 02:40:00,False,632,5,4,False
+3rd_test,aggregate,2,20.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-16 23:20:00,False,632,5,4,False
+3rd_test,aggregate,2,20.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-16 23:20:00,False,632,5,4,False
+3rd_test,aggregate,2,20.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-16 22:40:00,False,632,5,4,False
+3rd_test,aggregate,5,50.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-16 23:00:00,False,507,3,2,True
+3rd_test,aggregate,5,50.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-15 15:20:00,False,507,3,2,True
+3rd_test,aggregate,5,50.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-12 23:10:00,False,507,3,2,True
+3rd_test,aggregate,5,50.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-15 14:30:00,False,507,3,2,True
+3rd_test,aggregate,10,100.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-15 13:40:00,False,254,3,1,True
+3rd_test,aggregate,10,100.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-15 13:40:00,False,254,3,1,True
+3rd_test,aggregate,10,100.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-12 04:00:00,False,254,3,1,True
+3rd_test,aggregate,10,100.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-15 13:40:00,False,254,3,1,True
+3rd_test,aggregate,20,200.0,3σ Rule (σ=3.0),142.6,0.8106,175.92,0.0,2004-04-02 10:40:00,True,128,3,1,True
+3rd_test,aggregate,20,200.0,Hotelling T²,142.6,0.8106,175.92,0.0,2004-04-02 10:40:00,True,128,3,1,True
+3rd_test,aggregate,20,200.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-15 12:00:00,False,128,3,1,True
+3rd_test,aggregate,20,200.0,Isolation Forest,0.0,0.0,175.92,14.29,2004-03-31 08:40:00,False,128,3,1,True
+3rd_test,decimate,1,10.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-17 04:32:00,False,506,10,3,False
+3rd_test,decimate,1,10.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-16 23:32:00,False,506,10,3,False
+3rd_test,decimate,1,10.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-16 23:32:00,False,506,10,3,False
+3rd_test,decimate,1,10.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-16 22:42:00,False,506,10,3,False
+3rd_test,decimate,2,20.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-17 18:52:00,False,632,5,4,False
+3rd_test,decimate,2,20.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-12 06:31:00,False,632,5,4,False
+3rd_test,decimate,2,20.0,Hotelling T²,0.0,0.0,175.92,0.0,2004-04-16 23:32:00,False,632,5,4,False
+3rd_test,decimate,2,20.0,Isolation Forest,0.0,0.0,175.92,0.0,2004-04-16 22:52:00,False,632,5,4,False
+3rd_test,decimate,5,50.0,Isolation Forest,170.92,0.9716,175.92,0.0,2004-04-01 06:21:00,True,506,3,2,True
+3rd_test,decimate,5,50.0,Hotelling T²,141.75,0.8058,175.92,0.0,2004-04-02 11:31:00,True,506,3,2,True
+3rd_test,decimate,5,50.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-17 04:32:00,False,506,3,2,True
+3rd_test,decimate,5,50.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-17 04:32:00,False,506,3,2,True
+3rd_test,decimate,10,100.0,Isolation Forest,171.75,0.9763,175.92,0.0,2004-04-01 05:31:00,True,253,3,1,True
+3rd_test,decimate,10,100.0,Hotelling T²,12.42,0.0706,175.92,0.0,2004-04-07 20:51:00,True,253,3,1,True
+3rd_test,decimate,10,100.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,175.92,0.0,2004-04-17 04:32:00,False,253,3,1,True
+3rd_test,decimate,10,100.0,3σ Rule (σ=3.0),0.0,0.0,175.92,0.0,2004-04-08 15:11:00,False,253,3,1,True
+3rd_test,decimate,20,200.0,Isolation Forest,145.08,0.8247,175.92,0.0,2004-04-02 08:11:00,True,126,3,1,True
+3rd_test,decimate,20,200.0,3σ Rule (σ=3.0),128.42,0.73,175.92,0.0,2004-04-03 00:51:00,True,126,3,1,True
+3rd_test,decimate,20,200.0,"EWMA (λ=0.2, k=3.0)",128.42,0.73,175.92,0.0,2004-04-03 00:51:00,True,126,3,1,True
+3rd_test,decimate,20,200.0,Hotelling T²,128.42,0.73,175.92,0.0,2004-04-03 00:51:00,True,126,3,1,True

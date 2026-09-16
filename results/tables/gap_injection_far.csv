@@ -1,0 +1,235 @@
+dataset,run,gap,factor,mode,method,short_name,lead,far_preonset_pct,valid
+IMS,1st_test,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,0.0,1,none,3σ Rule (σ=3.0),three_sigma,108.69888888888889,41.81818181818181,False
+IMS,1st_test,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,152.23222222222222,63.63636363636363,False
+IMS,1st_test,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,114.93222222222222,57.57575757575758,False
+IMS,1st_test,0.0,1,none,Hotelling T²,hotelling_t2,152.23222222222222,65.45454545454545,False
+IMS,1st_test,0.0,1,none,Isolation Forest,isolation_forest,152.23222222222222,72.72727272727273,False
+IMS,1st_test,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,0.05,1,none,3σ Rule (σ=3.0),three_sigma,108.69888888888889,41.81818181818181,False
+IMS,1st_test,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,152.23222222222222,63.63636363636363,False
+IMS,1st_test,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,114.0988888888889,56.96969696969697,False
+IMS,1st_test,0.05,1,none,Hotelling T²,hotelling_t2,152.23222222222222,65.45454545454545,False
+IMS,1st_test,0.05,1,none,Isolation Forest,isolation_forest,155.56555555555556,74.54545454545455,False
+IMS,1st_test,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,0.2,1,none,3σ Rule (σ=3.0),three_sigma,108.69888888888889,39.39393939393939,False
+IMS,1st_test,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,152.23222222222222,63.63636363636363,False
+IMS,1st_test,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,114.93222222222222,57.57575757575758,False
+IMS,1st_test,0.2,1,none,Hotelling T²,hotelling_t2,148.89888888888888,63.63636363636363,False
+IMS,1st_test,0.2,1,none,Isolation Forest,isolation_forest,158.56555555555556,78.18181818181819,False
+IMS,2nd_test,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,0.0,1,none,3σ Rule (σ=3.0),three_sigma,56.333333333333336,0.0,True
+IMS,2nd_test,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,53.0,0.0,True
+IMS,2nd_test,0.0,1,none,Hotelling T²,hotelling_t2,56.333333333333336,0.0,True
+IMS,2nd_test,0.0,1,none,Isolation Forest,isolation_forest,49.666666666666664,0.0,True
+IMS,2nd_test,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,0.05,1,none,3σ Rule (σ=3.0),three_sigma,56.333333333333336,0.0,True
+IMS,2nd_test,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,52.166666666666664,0.0,True
+IMS,2nd_test,0.05,1,none,Hotelling T²,hotelling_t2,56.333333333333336,0.0,True
+IMS,2nd_test,0.05,1,none,Isolation Forest,isolation_forest,49.666666666666664,0.0,True
+IMS,2nd_test,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,0.2,1,none,3σ Rule (σ=3.0),three_sigma,56.333333333333336,0.0,True
+IMS,2nd_test,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,50.5,0.0,True
+IMS,2nd_test,0.2,1,none,Hotelling T²,hotelling_t2,56.333333333333336,0.0,True
+IMS,2nd_test,0.2,1,none,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,3rd_test,0.0,1,none,RMS-Trend (kσ),rms_trend,9.666666666666666,0.0,True
+IMS,3rd_test,0.0,1,none,3σ Rule (σ=3.0),three_sigma,28.833333333333332,0.0,True
+IMS,3rd_test,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,28.0,0.0,True
+IMS,3rd_test,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,26.333333333333332,0.0,True
+IMS,3rd_test,0.0,1,none,Hotelling T²,hotelling_t2,315.85,4.845814977973569,True
+IMS,3rd_test,0.0,1,none,Isolation Forest,isolation_forest,59.666666666666664,0.881057268722467,True
+IMS,3rd_test,0.05,1,none,RMS-Trend (kσ),rms_trend,9.666666666666666,0.0,True
+IMS,3rd_test,0.05,1,none,3σ Rule (σ=3.0),three_sigma,29.666666666666668,0.0,True
+IMS,3rd_test,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,28.0,0.0,True
+IMS,3rd_test,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,26.333333333333332,0.0,True
+IMS,3rd_test,0.05,1,none,Hotelling T²,hotelling_t2,59.666666666666664,3.9647577092511015,True
+IMS,3rd_test,0.05,1,none,Isolation Forest,isolation_forest,59.666666666666664,0.881057268722467,True
+IMS,3rd_test,0.2,1,none,RMS-Trend (kσ),rms_trend,9.666666666666666,0.0,True
+IMS,3rd_test,0.2,1,none,3σ Rule (σ=3.0),three_sigma,29.666666666666668,0.0,True
+IMS,3rd_test,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,27.166666666666668,0.0,True
+IMS,3rd_test,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,26.333333333333332,0.0,True
+IMS,3rd_test,0.2,1,none,Hotelling T²,hotelling_t2,59.666666666666664,4.185022026431718,True
+IMS,3rd_test,0.2,1,none,Isolation Forest,isolation_forest,59.666666666666664,0.881057268722467,True
+XJTU-SY,Bearing1_1,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_1,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.7833333333333333,0.0,True
+XJTU-SY,Bearing1_1,0.0,1,none,Hotelling T²,hotelling_t2,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.0,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_1,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_1,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.7833333333333333,0.0,True
+XJTU-SY,Bearing1_1,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.7833333333333333,0.0,True
+XJTU-SY,Bearing1_1,0.05,1,none,Hotelling T²,hotelling_t2,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.05,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,Hotelling T²,hotelling_t2,0.8666666666666667,100.0,False
+XJTU-SY,Bearing1_1,0.2,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,0.0,True
+XJTU-SY,Bearing1_2,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.5833333333333334,0.0,True
+XJTU-SY,Bearing1_2,0.0,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,100.0,False
+XJTU-SY,Bearing1_2,0.0,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,0.0,True
+XJTU-SY,Bearing1_2,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.5833333333333334,0.0,True
+XJTU-SY,Bearing1_2,0.05,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,100.0,False
+XJTU-SY,Bearing1_2,0.05,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_2,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.3333333333333333,0.0,True
+XJTU-SY,Bearing1_2,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,0.0,True
+XJTU-SY,Bearing1_2,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.5833333333333334,0.0,True
+XJTU-SY,Bearing1_2,0.2,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,100.0,False
+XJTU-SY,Bearing1_2,0.2,1,none,Isolation Forest,isolation_forest,0.0,0.0,False
+XJTU-SY,Bearing1_3,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_3,0.0,1,none,3σ Rule (σ=3.0),three_sigma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.0,1,none,Hotelling T²,hotelling_t2,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.0,1,none,Isolation Forest,isolation_forest,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_3,0.05,1,none,3σ Rule (σ=3.0),three_sigma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.05,1,none,Hotelling T²,hotelling_t2,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.05,1,none,Isolation Forest,isolation_forest,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_3,0.2,1,none,3σ Rule (σ=3.0),three_sigma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.2,1,none,Hotelling T²,hotelling_t2,1.0333333333333334,,True
+XJTU-SY,Bearing1_3,0.2,1,none,Isolation Forest,isolation_forest,1.0333333333333334,,True
+XJTU-SY,Bearing1_4,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_4,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_4,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.0,1,none,Hotelling T²,hotelling_t2,0.85,100.0,False
+XJTU-SY,Bearing1_4,0.0,1,none,Isolation Forest,isolation_forest,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_4,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_4,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_4,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.05,1,none,Hotelling T²,hotelling_t2,0.85,100.0,False
+XJTU-SY,Bearing1_4,0.05,1,none,Isolation Forest,isolation_forest,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_4,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing1_4,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_4,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.7666666666666667,50.0,False
+XJTU-SY,Bearing1_4,0.2,1,none,Hotelling T²,hotelling_t2,0.85,100.0,False
+XJTU-SY,Bearing1_4,0.2,1,none,Isolation Forest,isolation_forest,0.6833333333333333,0.0,True
+XJTU-SY,Bearing1_5,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_5,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.35,,True
+XJTU-SY,Bearing1_5,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.35,,True
+XJTU-SY,Bearing1_5,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.35,,True
+XJTU-SY,Bearing1_5,0.0,1,none,Hotelling T²,hotelling_t2,0.35,,True
+XJTU-SY,Bearing1_5,0.0,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing1_5,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_5,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.35,,True
+XJTU-SY,Bearing1_5,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.35,,True
+XJTU-SY,Bearing1_5,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.35,,True
+XJTU-SY,Bearing1_5,0.05,1,none,Hotelling T²,hotelling_t2,0.35,,True
+XJTU-SY,Bearing1_5,0.05,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing1_5,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing1_5,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.35,,True
+XJTU-SY,Bearing1_5,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.35,,True
+XJTU-SY,Bearing1_5,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.35,,True
+XJTU-SY,Bearing1_5,0.2,1,none,Hotelling T²,hotelling_t2,0.35,,True
+XJTU-SY,Bearing1_5,0.2,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing2_1,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_1,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.0,1,none,Hotelling T²,hotelling_t2,1.4166666666666667,18.75,False
+XJTU-SY,Bearing2_1,0.0,1,none,Isolation Forest,isolation_forest,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_1,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.05,1,none,Hotelling T²,hotelling_t2,1.4166666666666667,18.75,False
+XJTU-SY,Bearing2_1,0.05,1,none,Isolation Forest,isolation_forest,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_1,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_1,0.2,1,none,Hotelling T²,hotelling_t2,1.5833333333333333,25.0,False
+XJTU-SY,Bearing2_1,0.2,1,none,Isolation Forest,isolation_forest,0.6666666666666666,3.125,True
+XJTU-SY,Bearing2_2,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_2,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.0,,False
+XJTU-SY,Bearing2_2,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.9166666666666666,,True
+XJTU-SY,Bearing2_2,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.8333333333333334,,True
+XJTU-SY,Bearing2_2,0.0,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,,True
+XJTU-SY,Bearing2_2,0.0,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing2_2,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_2,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.0,,False
+XJTU-SY,Bearing2_2,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.9166666666666666,,True
+XJTU-SY,Bearing2_2,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.9166666666666666,,True
+XJTU-SY,Bearing2_2,0.05,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,,True
+XJTU-SY,Bearing2_2,0.05,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing2_2,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_2,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.0,,False
+XJTU-SY,Bearing2_2,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.9166666666666666,,True
+XJTU-SY,Bearing2_2,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.8333333333333334,,True
+XJTU-SY,Bearing2_2,0.2,1,none,Hotelling T²,hotelling_t2,1.0833333333333333,,True
+XJTU-SY,Bearing2_2,0.2,1,none,Isolation Forest,isolation_forest,0.0,,False
+XJTU-SY,Bearing2_3,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_3,0.0,1,none,3σ Rule (σ=3.0),three_sigma,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.0,1,none,Hotelling T²,hotelling_t2,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.0,1,none,Isolation Forest,isolation_forest,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_3,0.05,1,none,3σ Rule (σ=3.0),three_sigma,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.05,1,none,Hotelling T²,hotelling_t2,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.05,1,none,Isolation Forest,isolation_forest,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_3,0.2,1,none,3σ Rule (σ=3.0),three_sigma,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,3.45,0.0,True
+XJTU-SY,Bearing2_3,0.2,1,none,Hotelling T²,hotelling_t2,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_3,0.2,1,none,Isolation Forest,isolation_forest,3.533333333333333,100.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,3σ Rule (σ=3.0),three_sigma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,Hotelling T²,hotelling_t2,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.0,1,none,Isolation Forest,isolation_forest,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,3σ Rule (σ=3.0),three_sigma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,Hotelling T²,hotelling_t2,0.0,0.0,False
+XJTU-SY,Bearing2_4,0.05,1,none,Isolation Forest,isolation_forest,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,3σ Rule (σ=3.0),three_sigma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,Hotelling T²,hotelling_t2,0.0,0.0,False
+XJTU-SY,Bearing2_4,0.2,1,none,Isolation Forest,isolation_forest,0.26666666666666666,100.0,False
+XJTU-SY,Bearing2_5,0.0,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_5,0.0,1,none,3σ Rule (σ=3.0),three_sigma,2.3,,True
+XJTU-SY,Bearing2_5,0.0,1,none,"EWMA (λ=0.2, k=3.0)",ewma,2.3,,True
+XJTU-SY,Bearing2_5,0.0,1,none,"CUSUM (k=0.5, h=5.0)",cusum,2.3,,True
+XJTU-SY,Bearing2_5,0.0,1,none,Hotelling T²,hotelling_t2,2.3,,True
+XJTU-SY,Bearing2_5,0.0,1,none,Isolation Forest,isolation_forest,2.3,,True
+XJTU-SY,Bearing2_5,0.05,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_5,0.05,1,none,3σ Rule (σ=3.0),three_sigma,2.3,,True
+XJTU-SY,Bearing2_5,0.05,1,none,"EWMA (λ=0.2, k=3.0)",ewma,2.3,,True
+XJTU-SY,Bearing2_5,0.05,1,none,"CUSUM (k=0.5, h=5.0)",cusum,2.3,,True
+XJTU-SY,Bearing2_5,0.05,1,none,Hotelling T²,hotelling_t2,2.3,,True
+XJTU-SY,Bearing2_5,0.05,1,none,Isolation Forest,isolation_forest,2.3,,True
+XJTU-SY,Bearing2_5,0.2,1,none,RMS-Trend (kσ),rms_trend,0.0,,False
+XJTU-SY,Bearing2_5,0.2,1,none,3σ Rule (σ=3.0),three_sigma,2.3,,True
+XJTU-SY,Bearing2_5,0.2,1,none,"EWMA (λ=0.2, k=3.0)",ewma,2.3,,True
+XJTU-SY,Bearing2_5,0.2,1,none,"CUSUM (k=0.5, h=5.0)",cusum,2.3,,True
+XJTU-SY,Bearing2_5,0.2,1,none,Hotelling T²,hotelling_t2,2.3,,True
+XJTU-SY,Bearing2_5,0.2,1,none,Isolation Forest,isolation_forest,2.3,,True

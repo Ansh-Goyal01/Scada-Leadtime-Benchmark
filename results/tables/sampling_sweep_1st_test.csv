@@ -1,0 +1,41 @@
+run,mode,factor,effective_interval_min,method,VLT_hours,VLT_norm,available_lead_hours,FAR_pct,FAT,valid_alarm,n_test_windows,window_rows,persistence_windows,window_floored
+1st_test,aggregate,1,10.0,"EWMA (λ=0.2, k=3.0)",152.23,0.8056,188.97,0.0,2003-11-19 15:26:00,True,172,10,3,False
+1st_test,aggregate,1,10.0,Isolation Forest,123.27,0.6523,188.97,0.0,2003-11-20 20:24:00,True,172,10,3,False
+1st_test,aggregate,1,10.0,Hotelling T²,113.27,0.5994,188.97,0.0,2003-11-21 06:24:00,True,172,10,3,False
+1st_test,aggregate,1,10.0,3σ Rule (σ=3.0),93.73,0.496,188.97,0.0,2003-11-22 01:56:00,True,172,10,3,False
+1st_test,aggregate,2,20.0,Isolation Forest,153.33,0.8114,188.97,0.0,2003-11-19 14:20:00,True,209,5,4,False
+1st_test,aggregate,2,20.0,"EWMA (λ=0.2, k=3.0)",152.67,0.8079,188.97,0.0,2003-11-19 15:00:00,True,209,5,4,False
+1st_test,aggregate,2,20.0,Hotelling T²,123.33,0.6527,188.97,0.0,2003-11-20 20:20:00,True,209,5,4,False
+1st_test,aggregate,2,20.0,3σ Rule (σ=3.0),98.67,0.5222,188.97,0.0,2003-11-21 21:00:00,True,209,5,4,False
+1st_test,aggregate,5,50.0,Isolation Forest,173.0,0.9155,188.97,0.0,2003-11-18 18:40:00,True,172,3,2,True
+1st_test,aggregate,5,50.0,3σ Rule (σ=3.0),153.0,0.8097,188.97,0.0,2003-11-19 14:40:00,True,172,3,2,True
+1st_test,aggregate,5,50.0,Hotelling T²,98.83,0.523,188.97,0.0,2003-11-21 20:50:00,True,172,3,2,True
+1st_test,aggregate,5,50.0,"EWMA (λ=0.2, k=3.0)",98.0,0.5186,188.97,0.0,2003-11-21 21:40:00,True,172,3,2,True
+1st_test,aggregate,10,100.0,Isolation Forest,173.0,0.9155,188.97,0.0,2003-11-18 18:40:00,True,91,3,1,True
+1st_test,aggregate,10,100.0,Hotelling T²,173.0,0.9155,188.97,0.0,2003-11-18 18:40:00,True,91,3,1,True
+1st_test,aggregate,10,100.0,3σ Rule (σ=3.0),154.67,0.8185,188.97,0.0,2003-11-19 13:00:00,True,91,3,1,True
+1st_test,aggregate,10,100.0,"EWMA (λ=0.2, k=3.0)",98.0,0.5186,188.97,0.0,2003-11-21 21:40:00,True,91,3,1,True
+1st_test,aggregate,20,200.0,Hotelling T²,173.0,0.9155,188.97,0.0,2003-11-18 18:40:00,True,49,3,1,True
+1st_test,aggregate,20,200.0,3σ Rule (σ=3.0),99.67,0.5275,188.97,0.0,2003-11-21 20:00:00,True,49,3,1,True
+1st_test,aggregate,20,200.0,"EWMA (λ=0.2, k=3.0)",96.33,0.5098,188.97,0.0,2003-11-21 23:20:00,True,49,3,1,True
+1st_test,aggregate,20,200.0,Isolation Forest,0.0,0.0,188.97,33.33,2003-11-17 16:00:00,False,49,3,1,True
+1st_test,decimate,1,10.0,"EWMA (λ=0.2, k=3.0)",152.23,0.8056,188.97,0.0,2003-11-19 15:26:00,True,172,10,3,False
+1st_test,decimate,1,10.0,Isolation Forest,123.27,0.6523,188.97,0.0,2003-11-20 20:24:00,True,172,10,3,False
+1st_test,decimate,1,10.0,Hotelling T²,113.27,0.5994,188.97,0.0,2003-11-21 06:24:00,True,172,10,3,False
+1st_test,decimate,1,10.0,3σ Rule (σ=3.0),93.73,0.496,188.97,0.0,2003-11-22 01:56:00,True,172,10,3,False
+1st_test,decimate,2,20.0,Isolation Forest,130.43,0.6902,188.97,0.0,2003-11-20 13:14:00,True,215,5,4,False
+1st_test,decimate,2,20.0,Hotelling T²,113.77,0.6021,188.97,0.0,2003-11-21 05:54:00,True,215,5,4,False
+1st_test,decimate,2,20.0,"EWMA (λ=0.2, k=3.0)",93.9,0.4969,188.97,0.0,2003-11-22 01:46:00,True,215,5,4,False
+1st_test,decimate,2,20.0,3σ Rule (σ=3.0),93.9,0.4969,188.97,0.0,2003-11-22 01:46:00,True,215,5,4,False
+1st_test,decimate,5,50.0,"EWMA (λ=0.2, k=3.0)",111.6,0.5906,188.97,0.0,2003-11-21 08:04:00,True,172,3,2,True
+1st_test,decimate,5,50.0,Hotelling T²,111.6,0.5906,188.97,0.0,2003-11-21 08:04:00,True,172,3,2,True
+1st_test,decimate,5,50.0,3σ Rule (σ=3.0),94.57,0.5005,188.97,0.0,2003-11-22 01:06:00,True,172,3,2,True
+1st_test,decimate,5,50.0,Isolation Forest,0.0,0.0,188.97,22.22,2003-11-18 01:02:00,False,172,3,2,True
+1st_test,decimate,10,100.0,Isolation Forest,174.8,0.925,188.97,0.0,2003-11-18 16:52:00,True,86,3,1,True
+1st_test,decimate,10,100.0,Hotelling T²,112.43,0.595,188.97,0.0,2003-11-21 07:14:00,True,86,3,1,True
+1st_test,decimate,10,100.0,"EWMA (λ=0.2, k=3.0)",107.03,0.5664,188.97,0.0,2003-11-21 12:38:00,True,86,3,1,True
+1st_test,decimate,10,100.0,3σ Rule (σ=3.0),107.03,0.5664,188.97,0.0,2003-11-21 12:38:00,True,86,3,1,True
+1st_test,decimate,20,200.0,Isolation Forest,174.8,0.925,188.97,0.0,2003-11-18 16:52:00,True,43,3,1,True
+1st_test,decimate,20,200.0,"EWMA (λ=0.2, k=3.0)",97.9,0.5181,188.97,0.0,2003-11-21 21:46:00,True,43,3,1,True
+1st_test,decimate,20,200.0,Hotelling T²,97.9,0.5181,188.97,0.0,2003-11-21 21:46:00,True,43,3,1,True
+1st_test,decimate,20,200.0,3σ Rule (σ=3.0),94.57,0.5005,188.97,0.0,2003-11-22 01:06:00,True,43,3,1,True

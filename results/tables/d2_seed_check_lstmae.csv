@@ -1,0 +1,11 @@
+dataset,run,method,short_name,percentile,lead_time_hours,far_preonset_pct,valid_alarm,seed
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,42
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,1
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,2
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,3
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,4
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,5
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,6
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,7
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,8
+IMS,3rd_test,LSTM-Autoencoder,lstm_ae,99.5,59.666666666666664,4.185022026431718,True,9

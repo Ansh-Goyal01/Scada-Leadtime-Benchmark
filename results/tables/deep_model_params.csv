@@ -1,0 +1,4 @@
+detector,method,n_features,seq_len,hidden_size,num_layers,total_params,trainable_params,schema
+lstm_ae,LSTM-Autoencoder,49,30,,,54657,54657,invariant
+tcn,TCN-Autoencoder,49,30,,,29681,29681,invariant
+transformer_ad,Transformer-AD,49,30,,2.0,20305,20305,invariant

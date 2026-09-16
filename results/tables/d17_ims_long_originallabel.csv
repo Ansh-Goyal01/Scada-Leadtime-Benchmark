@@ -1,0 +1,301 @@
+dataset,run,seed,method,short_name,mode,factor,effective_interval_min,t_onset,t_fail,max_lead_hours,lead_time_hours,detection_delay_hours,far_preonset_pct,lead_norm,vlt_legacy_hours,far_legacy_pct,valid_alarm,n_test_windows,window_rows,persistence_windows,window_floored,control,onset_method
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,108.69888888888889,,41.81818181818181,8.437898913230981,108.69888888888889,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,63.63636363636363,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.93222222222222,,57.57575757575758,8.921769880972917,114.93222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,65.45454545454545,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,72.72727272727273,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,34.04888888888889,,1.8181818181818181,2.6430912540969467,34.04888888888889,0.0,True,172,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,195.63222222222223,,100.0,15.186217008797655,0.0,100.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,154.73222222222222,,81.21212121212122,12.011298947731586,154.73222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,aggregate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,80.60606060606061,11.946610315680523,153.89888888888888,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,92.89888888888889,,24.390243902439025,7.2114024495428675,92.89888888888889,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,112.43222222222222,,46.34146341463415,8.727703984819735,112.43222222222222,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,117.43222222222222,,59.756097560975604,9.115835777126101,117.43222222222222,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,57.3170731707317,8.857081248921856,114.0988888888889,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,156.39888888888888,,73.17073170731707,12.140676211833707,156.39888888888888,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,148.06555555555556,,65.85365853658537,11.493789891323098,148.06555555555556,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,44.64888888888889,,3.6585365853658534,3.4659306537864416,44.64888888888889,0.0,True,86,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,aggregate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,107.86555555555556,,54.54545454545454,8.37321028117992,107.86555555555556,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,57.57575757575758,8.857081248921856,114.0988888888889,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,57.57575757575758,8.857081248921856,114.0988888888889,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,154.73222222222222,,78.78787878787878,12.011298947731586,154.73222222222222,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,118.26555555555555,,60.60606060606061,9.18052440917716,118.26555555555555,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,aggregate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,194.79888888888888,,100.0,15.121528376746593,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,101.23222222222222,,52.94117647058824,7.858288770053476,101.23222222222222,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,58.82352941176471,8.857081248921856,114.0988888888889,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,58.82352941176471,8.857081248921856,114.0988888888889,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,154.73222222222222,,82.35294117647058,12.011298947731586,154.73222222222222,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.0988888888889,,58.82352941176471,8.857081248921856,114.0988888888889,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,aggregate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,101.23222222222222,,62.5,7.858288770053476,101.23222222222222,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,101.23222222222222,,62.5,7.858288770053476,101.23222222222222,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,101.23222222222222,,62.5,7.858288770053476,101.23222222222222,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,178.13222222222223,,100.0,13.827755735725376,0.0,100.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,101.23222222222222,,37.5,7.858288770053476,101.23222222222222,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,aggregate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,108.69888888888889,,41.81818181818181,8.437898913230981,108.69888888888889,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,63.63636363636363,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.93222222222222,,57.57575757575758,8.921769880972917,114.93222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,65.45454545454545,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,72.72727272727273,11.817233051578404,152.23222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,34.04888888888889,,1.8181818181818181,2.6430912540969467,34.04888888888889,0.0,True,172,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,195.63222222222223,,100.0,15.186217008797655,0.0,100.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,154.73222222222222,,81.21212121212122,12.011298947731586,154.73222222222222,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,decimate,1,50.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,80.60606060606061,11.946610315680523,153.89888888888888,0.0,False,172,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,93.73222222222222,,30.120481927710845,7.276091081593928,93.73222222222222,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,97.06555555555556,,40.963855421686745,7.534845609798173,97.06555555555556,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,152.23222222222222,,65.06024096385542,11.817233051578404,152.23222222222222,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,114.93222222222222,,57.831325301204814,8.921769880972917,114.93222222222222,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,68.67469879518072,11.946610315680523,153.89888888888888,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,68.67469879518072,11.946610315680523,153.89888888888888,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,195.63222222222223,,100.0,15.186217008797655,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,195.63222222222223,,100.0,15.186217008797655,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,decimate,2,100.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,195.63222222222223,,100.0,15.186217008797655,0.0,100.0,False,86,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,96.23222222222222,,41.17647058823529,7.470156977747111,96.23222222222222,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,113.26555555555555,,55.88235294117647,8.792392616870796,113.26555555555555,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,107.03222222222222,,52.94117647058824,8.30852164912886,107.03222222222222,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,67.64705882352942,11.946610315680523,153.89888888888888,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,117.43222222222222,,58.82352941176471,9.115835777126101,117.43222222222222,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,198.13222222222223,,100.0,15.380282904950837,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,198.13222222222223,,100.0,15.380282904950837,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,decimate,5,250.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,198.13222222222223,,100.0,15.380282904950837,0.0,100.0,False,35,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,50.0,7.793600138002415,100.39888888888889,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,50.0,7.793600138002415,100.39888888888889,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,153.89888888888888,,72.22222222222221,11.946610315680523,153.89888888888888,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,113.26555555555555,,33.33333333333333,8.792392616870796,113.26555555555555,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,18,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,decimate,10,500.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,18,10,3,False,True,terminal
+IMS,1st_test,42,RMS-Trend (kσ),rms_trend,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,3σ Rule (σ=3.0),three_sigma,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,55.55555555555556,7.793600138002415,100.39888888888889,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,55.55555555555556,7.793600138002415,100.39888888888889,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,55.55555555555556,7.793600138002415,100.39888888888889,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Hotelling T²,hotelling_t2,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,177.29888888888888,,88.88888888888889,13.763067103674315,177.29888888888888,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Isolation Forest,isolation_forest,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,100.39888888888889,,44.44444444444444,7.793600138002415,100.39888888888889,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Deep SVDD,deep_svdd,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,0.0,,0.0,0.0,0.0,0.0,False,9,10,3,False,True,terminal
+IMS,1st_test,42,LSTM-Autoencoder,lstm_ae,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,1st_test,42,TCN-Autoencoder,tcn,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,1st_test,42,Transformer-AD,transformer_ad,decimate,20,1160.0,2003-11-25 10:47:00,2003-11-25 23:39:56,12.88,,,,,,,False,9,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,53.0,9.5,0.0,0.848,53.0,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,49.666666666666664,12.833333333333334,0.0,0.7946666666666666,49.666666666666664,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,aggregate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,62.166666666666664,0.3333333333333333,0.0,0.9946666666666666,0.0,33.33333333333333,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,53.833333333333336,8.666666666666666,0.0,0.8613333333333334,53.833333333333336,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,48.833333333333336,13.666666666666666,0.0,0.7813333333333333,48.833333333333336,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,aggregate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,59.666666666666664,2.8333333333333335,0.0,0.9546666666666667,59.666666666666664,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,59.666666666666664,2.8333333333333335,0.0,0.9546666666666667,59.666666666666664,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,26.333333333333332,36.166666666666664,0.0,0.42133333333333334,26.333333333333332,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,aggregate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,,0.0,0.0,0.0,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,,0.888,0.0,100.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,,0.888,0.0,100.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,,0.888,0.0,100.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,,0.888,0.0,100.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,,0.888,0.0,100.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,,0.0,0.0,0.0,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,aggregate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,47.166666666666664,15.333333333333334,,0.7546666666666666,0.0,100.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,47.166666666666664,15.333333333333334,,0.7546666666666666,0.0,100.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,47.166666666666664,15.333333333333334,,0.7546666666666666,0.0,100.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,47.166666666666664,15.333333333333334,,0.7546666666666666,0.0,100.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,aggregate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,55.5,7.0,0.0,0.888,55.5,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,53.0,9.5,0.0,0.848,53.0,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,49.666666666666664,12.833333333333334,0.0,0.7946666666666666,49.666666666666664,0.0,True,78,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,decimate,1,50.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,65.5,,100.0,1.048,0.0,100.0,False,78,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,53.0,9.5,0.0,0.848,53.0,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,49.666666666666664,12.833333333333334,0.0,0.7946666666666666,49.666666666666664,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,56.333333333333336,6.166666666666667,0.0,0.9013333333333333,56.333333333333336,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,40,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,66.33333333333333,,100.0,1.0613333333333332,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,66.33333333333333,,100.0,1.0613333333333332,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,decimate,2,100.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,66.33333333333333,,100.0,1.0613333333333332,0.0,100.0,False,40,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,54.666666666666664,7.833333333333333,0.0,0.8746666666666666,54.666666666666664,0.0,True,16,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,decimate,5,250.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,16,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,54.666666666666664,7.833333333333333,0.0,0.8746666666666666,54.666666666666664,0.0,True,8,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,decimate,10,500.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,8,10,3,False,True,terminal
+IMS,2nd_test,42,RMS-Trend (kσ),rms_trend,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,Hotelling T²,hotelling_t2,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,46.333333333333336,16.166666666666668,0.0,0.7413333333333334,46.333333333333336,0.0,True,4,10,3,False,True,terminal
+IMS,2nd_test,42,Isolation Forest,isolation_forest,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,Deep SVDD,deep_svdd,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,0.0,,0.0,0.0,0.0,0.0,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,LSTM-Autoencoder,lstm_ae,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,TCN-Autoencoder,tcn,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,2nd_test,42,Transformer-AD,transformer_ad,decimate,20,1000.0,2004-02-16 15:52:00,2004-02-19 06:22:00,62.5,,,,,,,False,4,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1063.5833333333333,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1044.4166666666667,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1046.9166666666667,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,82.41666666666667,757.4,,0.09813649804520828,82.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1013.5833333333334,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1062.75,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,98.25,741.5666666666667,,0.11698981920657285,98.25,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,97.41666666666667,742.4,,0.11599753914544841,97.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,aggregate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,97.41666666666667,742.4,,0.11599753914544841,97.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1069.4166666666667,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1044.4166666666667,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1046.0833333333333,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1047.75,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,82.41666666666667,757.4,,0.09813649804520828,82.41666666666667,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1044.4166666666667,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,146.75,693.0666666666667,,0.17474051876401595,146.75,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,146.75,693.0666666666667,,0.17474051876401595,146.75,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,aggregate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,85.75,754.0666666666667,,0.10210561828970607,85.75,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1065.25,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1040.25,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1048.5833333333333,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1048.5833333333333,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1015.25,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1048.5833333333333,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,845.7333333333333,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,64.91666666666667,774.9,,0.07729861676159479,64.91666666666667,0.0,True,102,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,aggregate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,929.0666666666667,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1036.0833333333333,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1019.4166666666666,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,186.75,653.0666666666667,,0.22236996169798962,0.0,100.0,True,51,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,186.75,653.0666666666667,,0.22236996169798962,0.0,100.0,True,51,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,aggregate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,186.75,653.0666666666667,,0.22236996169798962,0.0,100.0,True,51,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1036.0833333333333,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,94.08333333333333,745.7333333333333,,0.1120284189009506,94.08333333333333,0.0,True,26,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1052.75,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,aggregate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1063.5833333333333,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1044.4166666666667,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1046.9166666666667,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,82.41666666666667,757.4,,0.09813649804520828,82.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1013.5833333333334,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1062.75,,0.0,0.0,0.0,False,506,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,98.25,741.5666666666667,,0.11698981920657285,98.25,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,97.41666666666667,742.4,,0.11599753914544841,97.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,decimate,1,50.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,97.41666666666667,742.4,,0.11599753914544841,97.41666666666667,0.0,True,506,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1046.9166666666667,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1046.9166666666667,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1013.5833333333334,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1043.5833333333333,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,253,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,91.58333333333333,748.2333333333333,,0.10905157871757723,91.58333333333333,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,91.58333333333333,748.2333333333333,,0.10905157871757723,91.58333333333333,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,decimate,2,100.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,79.91666666666667,759.9,,0.09515965786183492,79.91666666666667,0.0,True,253,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1041.0833333333333,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1049.4166666666667,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1016.0833333333334,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,76.58333333333333,763.2333333333333,,0.0911905376173371,76.58333333333333,0.0,True,102,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,76.58333333333333,763.2333333333333,,0.0911905376173371,76.58333333333333,0.0,True,102,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,decimate,5,250.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,946.5666666666667,,0.0,0.0,0.0,False,102,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1045.25,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1053.5833333333333,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1020.25,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1053.5833333333333,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,904.9,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,194.25,645.5666666666667,,0.2313004822481097,0.0,100.0,True,51,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,decimate,10,500.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,904.9,,0.0,0.0,0.0,False,51,10,3,False,True,terminal
+IMS,3rd_test,42,RMS-Trend (kσ),rms_trend,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,3σ Rule (σ=3.0),three_sigma,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,1020.25,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,"EWMA (λ=0.2, k=3.0)",ewma,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,"CUSUM (k=0.5, h=5.0)",cusum,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Hotelling T²,hotelling_t2,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,896.5666666666667,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Isolation Forest,isolation_forest,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Deep SVDD,deep_svdd,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,0.0,,,0.0,0.0,0.0,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,LSTM-Autoencoder,lstm_ae,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,TCN-Autoencoder,tcn,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal
+IMS,3rd_test,42,Transformer-AD,transformer_ad,decimate,20,1000.0,2004-03-04 09:27:00,2004-04-08 09:16:00,839.82,,,,,,,False,26,10,3,False,True,terminal

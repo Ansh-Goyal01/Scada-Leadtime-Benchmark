@@ -1,0 +1,4 @@
+dataset,method,short_name,percentile,lead_time_hours_mean,far_preonset_pct_mean,far_preonset_pct_min,far_preonset_pct_max,valid_frac,n_runs,dagger
+IMS,One-Class SVM (nu=0.05),one_class_svm,95.0,180.24962962962965,63.212744181907176,6.607929515418502,100.0,0.3333333333333333,3,True
+IMS,One-Class SVM (nu=0.05),one_class_svm,99.0,92.4662962962963,56.67512125661906,3.9647577092511015,100.0,0.3333333333333333,3,True
+IMS,One-Class SVM (nu=0.05),one_class_svm,99.5,92.4662962962963,55.445200907755975,0.881057268722467,100.0,0.3333333333333333,3,True

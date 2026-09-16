@@ -1,0 +1,11 @@
+dataset,method,metric,test,n_pairs,statistic,p_value,median_diff_agg_minus_dec,mean_diff_agg_minus_dec,rank_biserial
+Ferrara,3σ Rule (σ=3.0),lead_time_hours,wilcoxon,30,135.0,0.6681873847014475,0.001388888888888884,-0.19342592592592595,0.2
+Ferrara,"CUSUM (k=0.5, h=5.0)",lead_time_hours,wilcoxon,30,59.0,0.009300766623981323,0.02083333333333333,0.04291666666666665,0.6
+Ferrara,Deep SVDD,lead_time_hours,wilcoxon,30,54.0,0.46911315243545415,0.0,-0.002962962962962963,-0.13333333333333333
+Ferrara,"EWMA (λ=0.2, k=3.0)",lead_time_hours,wilcoxon,30,137.0,0.7102901192688726,0.011111111111111092,-0.16425925925925927,0.3333333333333333
+Ferrara,Hotelling T²,lead_time_hours,wilcoxon,30,100.0,0.15302262926038687,0.005555555555555647,-0.06513888888888886,0.4
+Ferrara,Isolation Forest,lead_time_hours,wilcoxon,30,59.5,0.029572315796273813,0.0,-0.25685185185185183,-0.06666666666666667
+Ferrara,LSTM-Autoencoder,lead_time_hours,wilcoxon,20,52.5,1.0,0.0,-0.2968055555555556,0.2
+Ferrara,RMS-Trend (kσ),lead_time_hours,wilcoxon,30,96.0,0.7367870436916688,0.0,-0.008657407407407407,0.06666666666666667
+Ferrara,TCN-Autoencoder,lead_time_hours,wilcoxon,20,50.5,0.899840090328685,0.0,-0.20798611111111107,0.2
+Ferrara,Transformer-AD,lead_time_hours,wilcoxon,20,44.0,0.5932539542246835,0.0,-0.3515277777777778,0.1

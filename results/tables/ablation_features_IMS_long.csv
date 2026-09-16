@@ -1,0 +1,127 @@
+dataset,run,group,n_features,method,short_name,lead_time_hours,far_preonset_pct,valid_alarm
+IMS,1st_test,rms_only,8,3σ Rule (σ=3.0),three_sigma,12.54888888888889,0.0,True
+IMS,1st_test,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,12.54888888888889,0.0,True
+IMS,1st_test,rms_only,8,"CUSUM (k=0.5, h=5.0)",cusum,51.315555555555555,18.181818181818183,False
+IMS,1st_test,rms_only,8,Hotelling T²,hotelling_t2,97.89888888888889,19.393939393939394,False
+IMS,1st_test,rms_only,8,Isolation Forest,isolation_forest,24.04888888888889,0.6060606060606061,True
+IMS,1st_test,rms_only,8,Deep SVDD,deep_svdd,9.215555555555556,0.0,True
+IMS,1st_test,kurt_only,1,3σ Rule (σ=3.0),three_sigma,152.23222222222222,48.484848484848484,False
+IMS,1st_test,kurt_only,1,"EWMA (λ=0.2, k=3.0)",ewma,154.73222222222222,75.15151515151514,False
+IMS,1st_test,kurt_only,1,"CUSUM (k=0.5, h=5.0)",cusum,158.56555555555556,83.03030303030303,False
+IMS,1st_test,kurt_only,1,Hotelling T²,hotelling_t2,152.23222222222222,48.484848484848484,False
+IMS,1st_test,kurt_only,1,Isolation Forest,isolation_forest,152.23222222222222,48.484848484848484,False
+IMS,1st_test,kurt_only,1,Deep SVDD,deep_svdd,34.04888888888889,1.8181818181818181,True
+IMS,1st_test,time_only,20,3σ Rule (σ=3.0),three_sigma,93.73222222222222,11.515151515151516,False
+IMS,1st_test,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,97.89888888888889,48.484848484848484,False
+IMS,1st_test,time_only,20,"CUSUM (k=0.5, h=5.0)",cusum,93.73222222222222,45.45454545454545,False
+IMS,1st_test,time_only,20,Hotelling T²,hotelling_t2,118.26555555555555,60.0,False
+IMS,1st_test,time_only,20,Isolation Forest,isolation_forest,113.26555555555555,56.36363636363636,False
+IMS,1st_test,time_only,20,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,1st_test,spectral_only,30,3σ Rule (σ=3.0),three_sigma,119.93222222222222,61.212121212121204,False
+IMS,1st_test,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,119.93222222222222,61.212121212121204,False
+IMS,1st_test,spectral_only,30,"CUSUM (k=0.5, h=5.0)",cusum,114.0988888888889,56.96969696969697,False
+IMS,1st_test,spectral_only,30,Hotelling T²,hotelling_t2,146.39888888888888,70.9090909090909,False
+IMS,1st_test,spectral_only,30,Isolation Forest,isolation_forest,130.76555555555555,70.3030303030303,False
+IMS,1st_test,spectral_only,30,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,1st_test,envelope_only,9,3σ Rule (σ=3.0),three_sigma,146.39888888888888,71.51515151515152,False
+IMS,1st_test,envelope_only,9,"EWMA (λ=0.2, k=3.0)",ewma,147.23222222222222,75.75757575757575,False
+IMS,1st_test,envelope_only,9,"CUSUM (k=0.5, h=5.0)",cusum,145.56555555555556,74.54545454545455,False
+IMS,1st_test,envelope_only,9,Hotelling T²,hotelling_t2,195.63222222222223,84.24242424242424,False
+IMS,1st_test,envelope_only,9,Isolation Forest,isolation_forest,195.63222222222223,87.87878787878788,False
+IMS,1st_test,envelope_only,9,Deep SVDD,deep_svdd,11.715555555555556,0.0,True
+IMS,1st_test,time+spectral,50,3σ Rule (σ=3.0),three_sigma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,time+spectral,50,"EWMA (λ=0.2, k=3.0)",ewma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,time+spectral,50,"CUSUM (k=0.5, h=5.0)",cusum,102.06555555555556,51.515151515151516,False
+IMS,1st_test,time+spectral,50,Hotelling T²,hotelling_t2,124.51555555555555,63.63636363636363,False
+IMS,1st_test,time+spectral,50,Isolation Forest,isolation_forest,123.26555555555555,61.81818181818181,False
+IMS,1st_test,time+spectral,50,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,1st_test,all,50,3σ Rule (σ=3.0),three_sigma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,all,50,"EWMA (λ=0.2, k=3.0)",ewma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,all,50,"CUSUM (k=0.5, h=5.0)",cusum,102.06555555555556,51.515151515151516,False
+IMS,1st_test,all,50,Hotelling T²,hotelling_t2,124.51555555555555,63.63636363636363,False
+IMS,1st_test,all,50,Isolation Forest,isolation_forest,123.26555555555555,61.81818181818181,False
+IMS,1st_test,all,50,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,rms_only,2,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,2nd_test,rms_only,2,"EWMA (λ=0.2, k=3.0)",ewma,56.333333333333336,0.0,True
+IMS,2nd_test,rms_only,2,"CUSUM (k=0.5, h=5.0)",cusum,56.333333333333336,0.0,True
+IMS,2nd_test,rms_only,2,Hotelling T²,hotelling_t2,42.166666666666664,0.0,True
+IMS,2nd_test,rms_only,2,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,2nd_test,rms_only,2,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,kurt_only,5,3σ Rule (σ=3.0),three_sigma,47.166666666666664,0.0,True
+IMS,2nd_test,kurt_only,5,"EWMA (λ=0.2, k=3.0)",ewma,46.333333333333336,0.0,True
+IMS,2nd_test,kurt_only,5,"CUSUM (k=0.5, h=5.0)",cusum,46.333333333333336,0.0,True
+IMS,2nd_test,kurt_only,5,Hotelling T²,hotelling_t2,54.666666666666664,0.0,True
+IMS,2nd_test,kurt_only,5,Isolation Forest,isolation_forest,7.166666666666667,0.0,True
+IMS,2nd_test,kurt_only,5,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,time_only,20,3σ Rule (σ=3.0),three_sigma,47.166666666666664,0.0,True
+IMS,2nd_test,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,47.166666666666664,0.0,True
+IMS,2nd_test,time_only,20,"CUSUM (k=0.5, h=5.0)",cusum,47.166666666666664,0.0,True
+IMS,2nd_test,time_only,20,Hotelling T²,hotelling_t2,47.166666666666664,0.0,True
+IMS,2nd_test,time_only,20,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,time_only,20,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,spectral_only,30,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,spectral_only,30,"CUSUM (k=0.5, h=5.0)",cusum,65.5,100.0,False
+IMS,2nd_test,spectral_only,30,Hotelling T²,hotelling_t2,65.5,100.0,False
+IMS,2nd_test,spectral_only,30,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,spectral_only,30,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,envelope_only,16,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,envelope_only,16,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,envelope_only,16,"CUSUM (k=0.5, h=5.0)",cusum,65.5,100.0,False
+IMS,2nd_test,envelope_only,16,Hotelling T²,hotelling_t2,65.5,100.0,False
+IMS,2nd_test,envelope_only,16,Isolation Forest,isolation_forest,60.5,0.0,True
+IMS,2nd_test,envelope_only,16,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,time+spectral,50,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,time+spectral,50,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,time+spectral,50,"CUSUM (k=0.5, h=5.0)",cusum,64.66666666666667,75.0,False
+IMS,2nd_test,time+spectral,50,Hotelling T²,hotelling_t2,65.5,100.0,False
+IMS,2nd_test,time+spectral,50,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,time+spectral,50,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,2nd_test,all,50,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,all,50,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,all,50,"CUSUM (k=0.5, h=5.0)",cusum,64.66666666666667,75.0,False
+IMS,2nd_test,all,50,Hotelling T²,hotelling_t2,65.5,100.0,False
+IMS,2nd_test,all,50,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,all,50,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,3rd_test,rms_only,7,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,rms_only,7,"EWMA (λ=0.2, k=3.0)",ewma,34.666666666666664,0.0,True
+IMS,3rd_test,rms_only,7,"CUSUM (k=0.5, h=5.0)",cusum,33.833333333333336,0.0,True
+IMS,3rd_test,rms_only,7,Hotelling T²,hotelling_t2,59.666666666666664,4.185022026431718,True
+IMS,3rd_test,rms_only,7,Isolation Forest,isolation_forest,29.666666666666668,0.0,True
+IMS,3rd_test,rms_only,7,Deep SVDD,deep_svdd,3.0,0.0,True
+IMS,3rd_test,kurt_only,2,3σ Rule (σ=3.0),three_sigma,21.333333333333332,0.0,True
+IMS,3rd_test,kurt_only,2,"EWMA (λ=0.2, k=3.0)",ewma,3.8333333333333335,0.0,True
+IMS,3rd_test,kurt_only,2,"CUSUM (k=0.5, h=5.0)",cusum,0.0,0.0,False
+IMS,3rd_test,kurt_only,2,Hotelling T²,hotelling_t2,6.333333333333333,0.0,True
+IMS,3rd_test,kurt_only,2,Isolation Forest,isolation_forest,21.333333333333332,0.0,True
+IMS,3rd_test,kurt_only,2,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,3rd_test,time_only,20,3σ Rule (σ=3.0),three_sigma,28.833333333333332,0.0,True
+IMS,3rd_test,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,time_only,20,"CUSUM (k=0.5, h=5.0)",cusum,26.333333333333332,0.0,True
+IMS,3rd_test,time_only,20,Hotelling T²,hotelling_t2,59.666666666666664,4.185022026431718,True
+IMS,3rd_test,time_only,20,Isolation Forest,isolation_forest,29.666666666666668,0.0,True
+IMS,3rd_test,time_only,20,Deep SVDD,deep_svdd,3.8333333333333335,0.0,True
+IMS,3rd_test,spectral_only,30,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,40.5,0.0,True
+IMS,3rd_test,spectral_only,30,"CUSUM (k=0.5, h=5.0)",cusum,32.166666666666664,0.0,True
+IMS,3rd_test,spectral_only,30,Hotelling T²,hotelling_t2,125.85,1.5418502202643172,True
+IMS,3rd_test,spectral_only,30,Isolation Forest,isolation_forest,33.833333333333336,0.0,True
+IMS,3rd_test,spectral_only,30,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,3rd_test,envelope_only,9,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,envelope_only,9,"EWMA (λ=0.2, k=3.0)",ewma,41.333333333333336,0.0,True
+IMS,3rd_test,envelope_only,9,"CUSUM (k=0.5, h=5.0)",cusum,37.166666666666664,0.0,True
+IMS,3rd_test,envelope_only,9,Hotelling T²,hotelling_t2,141.68333333333334,5.066079295154185,True
+IMS,3rd_test,envelope_only,9,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,3rd_test,envelope_only,9,Deep SVDD,deep_svdd,0.0,0.0,False
+IMS,3rd_test,time+spectral,50,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,time+spectral,50,"EWMA (λ=0.2, k=3.0)",ewma,39.666666666666664,0.0,True
+IMS,3rd_test,time+spectral,50,"CUSUM (k=0.5, h=5.0)",cusum,28.0,0.0,True
+IMS,3rd_test,time+spectral,50,Hotelling T²,hotelling_t2,59.666666666666664,4.185022026431718,True
+IMS,3rd_test,time+spectral,50,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,3rd_test,time+spectral,50,Deep SVDD,deep_svdd,3.0,0.0,True
+IMS,3rd_test,all,50,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,all,50,"EWMA (λ=0.2, k=3.0)",ewma,39.666666666666664,0.0,True
+IMS,3rd_test,all,50,"CUSUM (k=0.5, h=5.0)",cusum,28.0,0.0,True
+IMS,3rd_test,all,50,Hotelling T²,hotelling_t2,59.666666666666664,4.185022026431718,True
+IMS,3rd_test,all,50,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,3rd_test,all,50,Deep SVDD,deep_svdd,3.0,0.0,True

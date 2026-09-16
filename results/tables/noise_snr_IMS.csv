@@ -1,0 +1,145 @@
+dataset,run,snr_db,mode,factor,method,short_name,lead_time_hours,far_preonset_pct,valid_alarm
+IMS,1st_test,inf,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,inf,aggregate,5,3σ Rule (σ=3.0),three_sigma,97.99888888888889,48.484848484848484,False
+IMS,1st_test,inf,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,117.99888888888889,63.63636363636363,False
+IMS,1st_test,inf,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,117.99888888888889,63.63636363636363,False
+IMS,1st_test,inf,aggregate,5,Hotelling T²,hotelling_t2,158.8322222222222,81.81818181818183,False
+IMS,1st_test,inf,aggregate,5,Isolation Forest,isolation_forest,97.99888888888889,9.090909090909092,True
+IMS,1st_test,inf,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,inf,decimate,5,3σ Rule (σ=3.0),three_sigma,118.26555555555555,60.60606060606061,False
+IMS,1st_test,inf,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,118.26555555555555,60.60606060606061,False
+IMS,1st_test,inf,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,114.0988888888889,57.57575757575758,False
+IMS,1st_test,inf,decimate,5,Hotelling T²,hotelling_t2,173.96555555555557,81.81818181818183,False
+IMS,1st_test,inf,decimate,5,Isolation Forest,isolation_forest,124.0988888888889,63.63636363636363,False
+IMS,1st_test,10.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,10.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,124.66555555555556,66.66666666666666,False
+IMS,1st_test,10.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,149.66555555555556,75.75757575757575,False
+IMS,1st_test,10.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,149.66555555555556,75.75757575757575,False
+IMS,1st_test,10.0,aggregate,5,Hotelling T²,hotelling_t2,158.8322222222222,81.81818181818183,False
+IMS,1st_test,10.0,aggregate,5,Isolation Forest,isolation_forest,97.99888888888889,48.484848484848484,False
+IMS,1st_test,10.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,10.0,decimate,5,3σ Rule (σ=3.0),three_sigma,124.0988888888889,63.63636363636363,False
+IMS,1st_test,10.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,124.0988888888889,63.63636363636363,False
+IMS,1st_test,10.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,124.0988888888889,63.63636363636363,False
+IMS,1st_test,10.0,decimate,5,Hotelling T²,hotelling_t2,150.56555555555556,78.78787878787878,False
+IMS,1st_test,10.0,decimate,5,Isolation Forest,isolation_forest,124.0988888888889,63.63636363636363,False
+IMS,1st_test,20.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,20.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,124.66555555555556,66.66666666666666,False
+IMS,1st_test,20.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,149.66555555555556,75.75757575757575,False
+IMS,1st_test,20.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,149.66555555555556,75.75757575757575,False
+IMS,1st_test,20.0,aggregate,5,Hotelling T²,hotelling_t2,158.8322222222222,81.81818181818183,False
+IMS,1st_test,20.0,aggregate,5,Isolation Forest,isolation_forest,97.99888888888889,9.090909090909092,True
+IMS,1st_test,20.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,20.0,decimate,5,3σ Rule (σ=3.0),three_sigma,124.0988888888889,63.63636363636363,False
+IMS,1st_test,20.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,124.0988888888889,63.63636363636363,False
+IMS,1st_test,20.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,118.26555555555555,60.60606060606061,False
+IMS,1st_test,20.0,decimate,5,Hotelling T²,hotelling_t2,173.96555555555557,84.84848484848484,False
+IMS,1st_test,20.0,decimate,5,Isolation Forest,isolation_forest,124.0988888888889,63.63636363636363,False
+IMS,1st_test,30.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,30.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,124.66555555555556,66.66666666666666,False
+IMS,1st_test,30.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,124.66555555555556,66.66666666666666,False
+IMS,1st_test,30.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,124.66555555555556,66.66666666666666,False
+IMS,1st_test,30.0,aggregate,5,Hotelling T²,hotelling_t2,158.8322222222222,81.81818181818183,False
+IMS,1st_test,30.0,aggregate,5,Isolation Forest,isolation_forest,97.99888888888889,9.090909090909092,True
+IMS,1st_test,30.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,1st_test,30.0,decimate,5,3σ Rule (σ=3.0),three_sigma,124.0988888888889,63.63636363636363,False
+IMS,1st_test,30.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,118.26555555555555,60.60606060606061,False
+IMS,1st_test,30.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,118.26555555555555,60.60606060606061,False
+IMS,1st_test,30.0,decimate,5,Hotelling T²,hotelling_t2,173.96555555555557,84.84848484848484,False
+IMS,1st_test,30.0,decimate,5,Isolation Forest,isolation_forest,124.0988888888889,63.63636363636363,False
+IMS,2nd_test,inf,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,inf,aggregate,5,3σ Rule (σ=3.0),three_sigma,56.03333333333333,0.0,True
+IMS,2nd_test,inf,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,56.03333333333333,0.0,True
+IMS,2nd_test,inf,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,56.03333333333333,0.0,True
+IMS,2nd_test,inf,aggregate,5,Hotelling T²,hotelling_t2,64.36666666666666,50.0,False
+IMS,2nd_test,inf,aggregate,5,Isolation Forest,isolation_forest,18.533333333333335,0.0,True
+IMS,2nd_test,inf,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,inf,decimate,5,3σ Rule (σ=3.0),three_sigma,55.5,0.0,True
+IMS,2nd_test,inf,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,inf,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,55.5,0.0,True
+IMS,2nd_test,inf,decimate,5,Hotelling T²,hotelling_t2,55.5,0.0,True
+IMS,2nd_test,inf,decimate,5,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,10.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,10.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,47.7,0.0,True
+IMS,2nd_test,10.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,56.03333333333333,0.0,True
+IMS,2nd_test,10.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,56.03333333333333,0.0,True
+IMS,2nd_test,10.0,aggregate,5,Hotelling T²,hotelling_t2,56.03333333333333,0.0,True
+IMS,2nd_test,10.0,aggregate,5,Isolation Forest,isolation_forest,18.533333333333335,0.0,True
+IMS,2nd_test,10.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,10.0,decimate,5,3σ Rule (σ=3.0),three_sigma,55.5,0.0,True
+IMS,2nd_test,10.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,10.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,55.5,0.0,True
+IMS,2nd_test,10.0,decimate,5,Hotelling T²,hotelling_t2,47.166666666666664,0.0,True
+IMS,2nd_test,10.0,decimate,5,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,20.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,20.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,47.7,0.0,True
+IMS,2nd_test,20.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,56.03333333333333,0.0,True
+IMS,2nd_test,20.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,56.03333333333333,0.0,True
+IMS,2nd_test,20.0,aggregate,5,Hotelling T²,hotelling_t2,56.03333333333333,0.0,True
+IMS,2nd_test,20.0,aggregate,5,Isolation Forest,isolation_forest,14.366666666666667,0.0,True
+IMS,2nd_test,20.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,20.0,decimate,5,3σ Rule (σ=3.0),three_sigma,55.5,0.0,True
+IMS,2nd_test,20.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,20.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,55.5,0.0,True
+IMS,2nd_test,20.0,decimate,5,Hotelling T²,hotelling_t2,47.166666666666664,0.0,True
+IMS,2nd_test,20.0,decimate,5,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,30.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,30.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,56.03333333333333,0.0,True
+IMS,2nd_test,30.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,56.03333333333333,0.0,True
+IMS,2nd_test,30.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,56.03333333333333,0.0,True
+IMS,2nd_test,30.0,aggregate,5,Hotelling T²,hotelling_t2,56.03333333333333,0.0,True
+IMS,2nd_test,30.0,aggregate,5,Isolation Forest,isolation_forest,18.533333333333335,0.0,True
+IMS,2nd_test,30.0,decimate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,2nd_test,30.0,decimate,5,3σ Rule (σ=3.0),three_sigma,59.666666666666664,0.0,True
+IMS,2nd_test,30.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,55.5,0.0,True
+IMS,2nd_test,30.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,55.5,0.0,True
+IMS,2nd_test,30.0,decimate,5,Hotelling T²,hotelling_t2,63.833333333333336,50.0,False
+IMS,2nd_test,30.0,decimate,5,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,3rd_test,inf,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,3rd_test,inf,aggregate,5,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,inf,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,43.53333333333333,0.0,True
+IMS,3rd_test,inf,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,35.2,0.0,True
+IMS,3rd_test,inf,aggregate,5,Hotelling T²,hotelling_t2,60.2,4.395604395604396,True
+IMS,3rd_test,inf,aggregate,5,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,inf,decimate,5,RMS-Trend (kσ),rms_trend,12.166666666666666,0.0,True
+IMS,3rd_test,inf,decimate,5,3σ Rule (σ=3.0),three_sigma,45.5,1.098901098901099,True
+IMS,3rd_test,inf,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,inf,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,28.833333333333332,0.0,True
+IMS,3rd_test,inf,decimate,5,Hotelling T²,hotelling_t2,62.166666666666664,5.4945054945054945,True
+IMS,3rd_test,inf,decimate,5,Isolation Forest,isolation_forest,28.833333333333332,0.0,True
+IMS,3rd_test,10.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,3rd_test,10.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,10.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,31.033333333333335,0.0,True
+IMS,3rd_test,10.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,31.033333333333335,0.0,True
+IMS,3rd_test,10.0,aggregate,5,Hotelling T²,hotelling_t2,60.2,3.296703296703297,True
+IMS,3rd_test,10.0,aggregate,5,Isolation Forest,isolation_forest,26.866666666666667,0.0,True
+IMS,3rd_test,10.0,decimate,5,RMS-Trend (kσ),rms_trend,12.166666666666666,0.0,True
+IMS,3rd_test,10.0,decimate,5,3σ Rule (σ=3.0),three_sigma,45.5,1.098901098901099,True
+IMS,3rd_test,10.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,10.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,28.833333333333332,0.0,True
+IMS,3rd_test,10.0,decimate,5,Hotelling T²,hotelling_t2,45.5,1.098901098901099,True
+IMS,3rd_test,10.0,decimate,5,Isolation Forest,isolation_forest,28.833333333333332,0.0,True
+IMS,3rd_test,20.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,3rd_test,20.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,20.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,31.033333333333335,0.0,True
+IMS,3rd_test,20.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,31.033333333333335,0.0,True
+IMS,3rd_test,20.0,aggregate,5,Hotelling T²,hotelling_t2,60.2,4.395604395604396,True
+IMS,3rd_test,20.0,aggregate,5,Isolation Forest,isolation_forest,26.866666666666667,0.0,True
+IMS,3rd_test,20.0,decimate,5,RMS-Trend (kσ),rms_trend,12.166666666666666,0.0,True
+IMS,3rd_test,20.0,decimate,5,3σ Rule (σ=3.0),three_sigma,45.5,1.098901098901099,True
+IMS,3rd_test,20.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,20.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,28.833333333333332,0.0,True
+IMS,3rd_test,20.0,decimate,5,Hotelling T²,hotelling_t2,62.166666666666664,4.395604395604396,True
+IMS,3rd_test,20.0,decimate,5,Isolation Forest,isolation_forest,28.833333333333332,0.0,True
+IMS,3rd_test,30.0,aggregate,5,RMS-Trend (kσ),rms_trend,0.0,0.0,False
+IMS,3rd_test,30.0,aggregate,5,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,30.0,aggregate,5,"EWMA (λ=0.2, k=3.0)",ewma,39.36666666666667,0.0,True
+IMS,3rd_test,30.0,aggregate,5,"CUSUM (k=0.5, h=5.0)",cusum,31.033333333333335,0.0,True
+IMS,3rd_test,30.0,aggregate,5,Hotelling T²,hotelling_t2,75.2,6.593406593406594,True
+IMS,3rd_test,30.0,aggregate,5,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,30.0,decimate,5,RMS-Trend (kσ),rms_trend,12.166666666666666,0.0,True
+IMS,3rd_test,30.0,decimate,5,3σ Rule (σ=3.0),three_sigma,45.5,1.098901098901099,True
+IMS,3rd_test,30.0,decimate,5,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,30.0,decimate,5,"CUSUM (k=0.5, h=5.0)",cusum,28.833333333333332,0.0,True
+IMS,3rd_test,30.0,decimate,5,Hotelling T²,hotelling_t2,62.166666666666664,5.4945054945054945,True
+IMS,3rd_test,30.0,decimate,5,Isolation Forest,isolation_forest,28.833333333333332,0.0,True

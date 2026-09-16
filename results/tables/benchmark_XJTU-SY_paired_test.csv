@@ -1,0 +1,11 @@
+dataset,method,metric,test,n_pairs,statistic,p_value,median_diff_agg_minus_dec,mean_diff_agg_minus_dec,rank_biserial
+XJTU-SY,3σ Rule (σ=3.0),lead_time_hours,wilcoxon,45,6.5,0.10689685480449326,0.0,0.03333333333333334,0.08888888888888889
+XJTU-SY,"CUSUM (k=0.5, h=5.0)",lead_time_hours,wilcoxon,45,7.0,0.892250486903652,0.0,-0.0003703703703703666,0.022222222222222223
+XJTU-SY,Deep SVDD,lead_time_hours,wilcoxon,45,11.0,0.6120898800892568,0.0,0.016666666666666663,0.022222222222222223
+XJTU-SY,"EWMA (λ=0.2, k=3.0)",lead_time_hours,wilcoxon,45,10.5,1.0,0.0,-0.0025925925925925956,0.044444444444444446
+XJTU-SY,Hotelling T²,lead_time_hours,wilcoxon,45,1.0,0.07961580146011343,0.0,0.09740740740740741,0.06666666666666667
+XJTU-SY,Isolation Forest,lead_time_hours,wilcoxon,45,41.0,0.09276801933918621,0.0,-0.09740740740740741,-0.06666666666666667
+XJTU-SY,LSTM-Autoencoder,lead_time_hours,wilcoxon,7,1.0,1.0,0.0,0.07142857142857147,0.0
+XJTU-SY,RMS-Trend (kσ),lead_time_hours,wilcoxon,45,3.0,0.2228009911811345,0.0,-0.017777777777777778,-0.022222222222222223
+XJTU-SY,TCN-Autoencoder,lead_time_hours,wilcoxon,7,,1.0,0.0,0.0,0.0
+XJTU-SY,Transformer-AD,lead_time_hours,wilcoxon,7,,1.0,0.0,0.0,0.0

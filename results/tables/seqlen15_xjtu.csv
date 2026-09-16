@@ -1,0 +1,16 @@
+seq_len,run,short_name,na,valid
+30,Bearing2_1,lstm_ae,False,False
+30,Bearing2_1,tcn,False,False
+30,Bearing2_1,transformer_ad,False,False
+30,Bearing2_3,lstm_ae,False,False
+30,Bearing2_3,tcn,False,False
+30,Bearing2_3,transformer_ad,False,False
+15,Bearing2_1,lstm_ae,False,False
+15,Bearing2_1,tcn,False,False
+15,Bearing2_1,transformer_ad,False,False
+15,Bearing2_3,lstm_ae,False,False
+15,Bearing2_3,tcn,False,False
+15,Bearing2_3,transformer_ad,False,False
+15,Bearing2_5,lstm_ae,False,True
+15,Bearing2_5,tcn,False,True
+15,Bearing2_5,transformer_ad,False,True

@@ -1,0 +1,11 @@
+dataset,method,metric,test,n_pairs,statistic,p_value,median_diff_agg_minus_dec,mean_diff_agg_minus_dec,rank_biserial
+FEMTO,3σ Rule (σ=3.0),lead_time_hours,wilcoxon,30,70.5,0.04004864939495126,0.0,-0.20351851851851854,-0.16666666666666666
+FEMTO,"CUSUM (k=0.5, h=5.0)",lead_time_hours,wilcoxon,30,137.5,0.9878652537165841,0.0,0.0040740740740740616,-0.1
+FEMTO,Deep SVDD,lead_time_hours,wilcoxon,30,47.0,0.46030155637941883,0.0,-0.010277777777777778,-0.03333333333333333
+FEMTO,"EWMA (λ=0.2, k=3.0)",lead_time_hours,wilcoxon,30,127.5,0.749441806088359,0.0,0.017314814814814807,0.1
+FEMTO,Hotelling T²,lead_time_hours,wilcoxon,30,94.0,0.29136421198398177,0.0,0.03277777777777778,0.13333333333333333
+FEMTO,Isolation Forest,lead_time_hours,wilcoxon,30,72.0,0.07683082485338033,0.0,-0.2569444444444444,-0.13333333333333333
+FEMTO,LSTM-Autoencoder,lead_time_hours,wilcoxon,20,37.5,0.906293509044724,0.0,-0.06152777777777779,0.1
+FEMTO,RMS-Trend (kσ),lead_time_hours,wilcoxon,30,59.0,0.24840947132283464,0.0,-0.12712962962962965,-0.13333333333333333
+FEMTO,TCN-Autoencoder,lead_time_hours,wilcoxon,20,29.0,0.7218440643167889,0.0,-0.0019444444444444513,0.05
+FEMTO,Transformer-AD,lead_time_hours,wilcoxon,20,18.5,0.3586391704612435,0.0,0.01527777777777777,0.1

@@ -1,0 +1,10 @@
+dataset,run,method,short_name,percentile,lead_time_hours,far_preonset_pct,valid_alarm
+IMS,1st_test,One-Class SVM (nu=0.05),one_class_svm,95.0,158.56555555555556,83.03030303030303,False
+IMS,1st_test,One-Class SVM (nu=0.05),one_class_svm,99.0,152.23222222222222,66.06060606060606,False
+IMS,1st_test,One-Class SVM (nu=0.05),one_class_svm,99.5,152.23222222222222,65.45454545454545,False
+IMS,2nd_test,One-Class SVM (nu=0.05),one_class_svm,95.0,65.5,100.0,False
+IMS,2nd_test,One-Class SVM (nu=0.05),one_class_svm,99.0,65.5,100.0,False
+IMS,2nd_test,One-Class SVM (nu=0.05),one_class_svm,99.5,65.5,100.0,False
+IMS,3rd_test,One-Class SVM (nu=0.05),one_class_svm,95.0,316.68333333333334,6.607929515418502,True
+IMS,3rd_test,One-Class SVM (nu=0.05),one_class_svm,99.0,59.666666666666664,3.9647577092511015,True
+IMS,3rd_test,One-Class SVM (nu=0.05),one_class_svm,99.5,59.666666666666664,0.881057268722467,True

@@ -1,0 +1,41 @@
+run,mode,factor,effective_interval_min,method,VLT_hours,VLT_norm,available_lead_hours,FAR_pct,FAT,valid_alarm,n_test_windows,window_rows,persistence_windows,window_floored
+2nd_test,aggregate,1,10.0,Hotelling T²,62.17,0.9868,63.0,0.0,2004-02-16 16:12:00,True,78,10,3,False
+2nd_test,aggregate,1,10.0,3σ Rule (σ=3.0),58.0,0.9206,63.0,0.0,2004-02-16 20:22:00,True,78,10,3,False
+2nd_test,aggregate,1,10.0,Isolation Forest,58.0,0.9206,63.0,0.0,2004-02-16 20:22:00,True,78,10,3,False
+2nd_test,aggregate,1,10.0,"EWMA (λ=0.2, k=3.0)",55.5,0.881,63.0,0.0,2004-02-16 22:52:00,True,78,10,3,False
+2nd_test,aggregate,2,20.0,Isolation Forest,58.03,0.9211,63.0,0.0,2004-02-16 20:20:00,True,98,5,4,False
+2nd_test,aggregate,2,20.0,Hotelling T²,56.7,0.9,63.0,0.0,2004-02-16 21:40:00,True,98,5,4,False
+2nd_test,aggregate,2,20.0,"EWMA (λ=0.2, k=3.0)",50.03,0.7941,63.0,0.0,2004-02-17 04:20:00,True,98,5,4,False
+2nd_test,aggregate,2,20.0,3σ Rule (σ=3.0),50.03,0.7941,63.0,0.0,2004-02-17 04:20:00,True,98,5,4,False
+2nd_test,aggregate,5,50.0,"EWMA (λ=0.2, k=3.0)",57.7,0.9159,63.0,0.0,2004-02-16 20:40:00,True,79,3,2,True
+2nd_test,aggregate,5,50.0,Hotelling T²,57.7,0.9159,63.0,0.0,2004-02-16 20:40:00,True,79,3,2,True
+2nd_test,aggregate,5,50.0,3σ Rule (σ=3.0),0.0,0.0,63.0,25.0,2004-02-16 14:50:00,False,79,3,2,True
+2nd_test,aggregate,5,50.0,Isolation Forest,0.0,0.0,63.0,25.0,2004-02-16 14:50:00,False,79,3,2,True
+2nd_test,aggregate,10,100.0,Hotelling T²,57.7,0.9159,63.0,0.0,2004-02-16 20:40:00,True,39,3,1,True
+2nd_test,aggregate,10,100.0,3σ Rule (σ=3.0),0.0,0.0,63.0,50.0,2004-02-16 14:00:00,False,39,3,1,True
+2nd_test,aggregate,10,100.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,63.0,50.0,2004-02-16 14:00:00,False,39,3,1,True
+2nd_test,aggregate,10,100.0,Isolation Forest,0.0,0.0,63.0,50.0,2004-02-16 12:20:00,False,39,3,1,True
+2nd_test,aggregate,20,200.0,3σ Rule (σ=3.0),0.0,0.0,63.0,100.0,2004-02-16 10:40:00,False,20,3,1,True
+2nd_test,aggregate,20,200.0,"EWMA (λ=0.2, k=3.0)",0.0,0.0,63.0,100.0,2004-02-16 10:40:00,False,20,3,1,True
+2nd_test,aggregate,20,200.0,Hotelling T²,0.0,0.0,63.0,100.0,2004-02-16 10:40:00,False,20,3,1,True
+2nd_test,aggregate,20,200.0,Isolation Forest,0.0,0.0,63.0,50.0,2004-02-16 10:40:00,False,20,3,1,True
+2nd_test,decimate,1,10.0,Hotelling T²,62.17,0.9868,63.0,0.0,2004-02-16 16:12:00,True,78,10,3,False
+2nd_test,decimate,1,10.0,3σ Rule (σ=3.0),58.0,0.9206,63.0,0.0,2004-02-16 20:22:00,True,78,10,3,False
+2nd_test,decimate,1,10.0,Isolation Forest,58.0,0.9206,63.0,0.0,2004-02-16 20:22:00,True,78,10,3,False
+2nd_test,decimate,1,10.0,"EWMA (λ=0.2, k=3.0)",55.5,0.881,63.0,0.0,2004-02-16 22:52:00,True,78,10,3,False
+2nd_test,decimate,2,20.0,3σ Rule (σ=3.0),56.5,0.8968,63.0,0.0,2004-02-16 21:52:00,True,98,5,4,False
+2nd_test,decimate,2,20.0,Isolation Forest,56.5,0.8968,63.0,0.0,2004-02-16 21:52:00,True,98,5,4,False
+2nd_test,decimate,2,20.0,"EWMA (λ=0.2, k=3.0)",49.83,0.791,63.0,0.0,2004-02-17 04:32:00,True,98,5,4,False
+2nd_test,decimate,2,20.0,Hotelling T²,47.17,0.7487,63.0,0.0,2004-02-17 07:12:00,True,98,5,4,False
+2nd_test,decimate,5,50.0,Isolation Forest,58.83,0.9338,63.0,0.0,2004-02-16 19:32:00,True,78,3,2,True
+2nd_test,decimate,5,50.0,3σ Rule (σ=3.0),49.67,0.7884,63.0,0.0,2004-02-17 04:42:00,True,78,3,2,True
+2nd_test,decimate,5,50.0,"EWMA (λ=0.2, k=3.0)",48.83,0.7751,63.0,0.0,2004-02-17 05:32:00,True,78,3,2,True
+2nd_test,decimate,5,50.0,Hotelling T²,48.83,0.7751,63.0,0.0,2004-02-17 05:32:00,True,78,3,2,True
+2nd_test,decimate,10,100.0,"EWMA (λ=0.2, k=3.0)",62.17,0.9868,63.0,0.0,2004-02-16 16:12:00,True,39,3,1,True
+2nd_test,decimate,10,100.0,Hotelling T²,57.17,0.9075,63.0,0.0,2004-02-16 21:12:00,True,39,3,1,True
+2nd_test,decimate,10,100.0,3σ Rule (σ=3.0),0.0,0.0,63.0,50.0,2004-02-16 12:52:00,False,39,3,1,True
+2nd_test,decimate,10,100.0,Isolation Forest,0.0,0.0,63.0,50.0,2004-02-16 14:32:00,False,39,3,1,True
+2nd_test,decimate,20,200.0,"EWMA (λ=0.2, k=3.0)",57.17,0.9075,63.0,0.0,2004-02-16 21:12:00,True,20,3,1,True
+2nd_test,decimate,20,200.0,Hotelling T²,57.17,0.9075,63.0,0.0,2004-02-16 21:12:00,True,20,3,1,True
+2nd_test,decimate,20,200.0,Isolation Forest,53.83,0.8544,63.0,0.0,2004-02-17 00:32:00,True,20,3,1,True
+2nd_test,decimate,20,200.0,3σ Rule (σ=3.0),47.17,0.7487,63.0,0.0,2004-02-17 07:12:00,True,20,3,1,True

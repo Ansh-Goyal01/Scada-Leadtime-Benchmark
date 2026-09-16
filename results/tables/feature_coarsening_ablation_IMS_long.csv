@@ -1,0 +1,181 @@
+dataset,run,factor,group,n_features,method,short_name,lead_time_hours,far_preonset_pct,valid_alarm
+IMS,1st_test,1,rms_only,8,3σ Rule (σ=3.0),three_sigma,12.54888888888889,0.0,True
+IMS,1st_test,1,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,12.54888888888889,0.0,True
+IMS,1st_test,1,rms_only,8,Isolation Forest,isolation_forest,24.04888888888889,0.6060606060606061,True
+IMS,1st_test,1,time_only,20,3σ Rule (σ=3.0),three_sigma,93.73222222222222,11.515151515151516,False
+IMS,1st_test,1,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,97.89888888888889,48.484848484848484,False
+IMS,1st_test,1,time_only,20,Isolation Forest,isolation_forest,113.26555555555555,56.36363636363636,False
+IMS,1st_test,1,spectral_only,30,3σ Rule (σ=3.0),three_sigma,119.93222222222222,61.212121212121204,False
+IMS,1st_test,1,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,119.93222222222222,61.212121212121204,False
+IMS,1st_test,1,spectral_only,30,Isolation Forest,isolation_forest,130.76555555555555,70.3030303030303,False
+IMS,1st_test,1,all,50,3σ Rule (σ=3.0),three_sigma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,1,all,50,"EWMA (λ=0.2, k=3.0)",ewma,113.26555555555555,56.36363636363636,False
+IMS,1st_test,1,all,50,Isolation Forest,isolation_forest,123.26555555555555,61.81818181818181,False
+IMS,1st_test,2,rms_only,8,3σ Rule (σ=3.0),three_sigma,23.99888888888889,1.2345679012345678,True
+IMS,1st_test,2,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,23.99888888888889,1.2345679012345678,True
+IMS,1st_test,2,rms_only,8,Isolation Forest,isolation_forest,23.99888888888889,1.2345679012345678,True
+IMS,1st_test,2,time_only,20,3σ Rule (σ=3.0),three_sigma,108.99888888888889,54.32098765432099,False
+IMS,1st_test,2,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,107.33222222222223,55.55555555555556,False
+IMS,1st_test,2,time_only,20,Isolation Forest,isolation_forest,112.66555555555556,53.086419753086425,False
+IMS,1st_test,2,spectral_only,30,3σ Rule (σ=3.0),three_sigma,119.33222222222223,62.96296296296296,False
+IMS,1st_test,2,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,119.33222222222223,62.96296296296296,False
+IMS,1st_test,2,spectral_only,30,Isolation Forest,isolation_forest,112.66555555555556,56.79012345679012,False
+IMS,1st_test,2,all,50,3σ Rule (σ=3.0),three_sigma,114.33222222222223,59.25925925925925,False
+IMS,1st_test,2,all,50,"EWMA (λ=0.2, k=3.0)",ewma,114.33222222222223,59.25925925925925,False
+IMS,1st_test,2,all,50,Isolation Forest,isolation_forest,112.66555555555556,33.33333333333333,False
+IMS,1st_test,5,rms_only,8,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+IMS,1st_test,5,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,0.0,0.0,False
+IMS,1st_test,5,rms_only,8,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,5,time_only,20,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+IMS,1st_test,5,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,97.99888888888889,0.0,True
+IMS,1st_test,5,time_only,20,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,5,spectral_only,30,3σ Rule (σ=3.0),three_sigma,124.66555555555556,8.333333333333332,True
+IMS,1st_test,5,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,117.99888888888889,0.0,True
+IMS,1st_test,5,spectral_only,30,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,5,all,50,3σ Rule (σ=3.0),three_sigma,97.99888888888889,0.0,True
+IMS,1st_test,5,all,50,"EWMA (λ=0.2, k=3.0)",ewma,113.83222222222223,0.0,True
+IMS,1st_test,5,all,50,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,10,rms_only,8,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+IMS,1st_test,10,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,81.33222222222223,0.0,True
+IMS,1st_test,10,rms_only,8,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,10,time_only,20,3σ Rule (σ=3.0),three_sigma,97.99888888888889,0.0,True
+IMS,1st_test,10,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,106.33222222222223,0.0,True
+IMS,1st_test,10,time_only,20,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,10,spectral_only,30,3σ Rule (σ=3.0),three_sigma,126.33222222222223,0.0,True
+IMS,1st_test,10,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,126.33222222222223,0.0,True
+IMS,1st_test,10,spectral_only,30,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,10,all,50,3σ Rule (σ=3.0),three_sigma,116.33222222222223,0.0,True
+IMS,1st_test,10,all,50,"EWMA (λ=0.2, k=3.0)",ewma,116.33222222222223,0.0,True
+IMS,1st_test,10,all,50,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,20,rms_only,7,3σ Rule (σ=3.0),three_sigma,0.0,0.0,False
+IMS,1st_test,20,rms_only,7,"EWMA (λ=0.2, k=3.0)",ewma,0.0,0.0,False
+IMS,1st_test,20,rms_only,7,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,20,time_only,20,3σ Rule (σ=3.0),three_sigma,106.33222222222223,0.0,True
+IMS,1st_test,20,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,106.33222222222223,0.0,True
+IMS,1st_test,20,time_only,20,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,20,spectral_only,30,3σ Rule (σ=3.0),three_sigma,122.99888888888889,0.0,True
+IMS,1st_test,20,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,122.99888888888889,0.0,True
+IMS,1st_test,20,spectral_only,30,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,1st_test,20,all,50,3σ Rule (σ=3.0),three_sigma,122.99888888888889,0.0,True
+IMS,1st_test,20,all,50,"EWMA (λ=0.2, k=3.0)",ewma,122.99888888888889,0.0,True
+IMS,1st_test,20,all,50,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,2nd_test,1,rms_only,2,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,2nd_test,1,rms_only,2,"EWMA (λ=0.2, k=3.0)",ewma,56.333333333333336,0.0,True
+IMS,2nd_test,1,rms_only,2,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,2nd_test,1,time_only,20,3σ Rule (σ=3.0),three_sigma,47.166666666666664,0.0,True
+IMS,2nd_test,1,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,47.166666666666664,0.0,True
+IMS,2nd_test,1,time_only,20,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,1,spectral_only,30,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,1,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,1,spectral_only,30,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,1,all,50,3σ Rule (σ=3.0),three_sigma,65.5,100.0,False
+IMS,2nd_test,1,all,50,"EWMA (λ=0.2, k=3.0)",ewma,65.5,100.0,False
+IMS,2nd_test,1,all,50,Isolation Forest,isolation_forest,47.166666666666664,0.0,True
+IMS,2nd_test,2,rms_only,1,3σ Rule (σ=3.0),three_sigma,47.36666666666667,0.0,True
+IMS,2nd_test,2,rms_only,1,"EWMA (λ=0.2, k=3.0)",ewma,57.36666666666667,0.0,True
+IMS,2nd_test,2,rms_only,1,Isolation Forest,isolation_forest,47.36666666666667,0.0,True
+IMS,2nd_test,2,time_only,20,3σ Rule (σ=3.0),three_sigma,47.36666666666667,0.0,True
+IMS,2nd_test,2,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,47.36666666666667,0.0,True
+IMS,2nd_test,2,time_only,20,Isolation Forest,isolation_forest,47.36666666666667,0.0,True
+IMS,2nd_test,2,spectral_only,30,3σ Rule (σ=3.0),three_sigma,64.03333333333333,50.0,False
+IMS,2nd_test,2,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,55.7,0.0,True
+IMS,2nd_test,2,spectral_only,30,Isolation Forest,isolation_forest,47.36666666666667,0.0,True
+IMS,2nd_test,2,all,50,3σ Rule (σ=3.0),three_sigma,64.03333333333333,50.0,False
+IMS,2nd_test,2,all,50,"EWMA (λ=0.2, k=3.0)",ewma,49.03333333333333,0.0,True
+IMS,2nd_test,2,all,50,Isolation Forest,isolation_forest,49.03333333333333,0.0,True
+IMS,2nd_test,5,rms_only,4,3σ Rule (σ=3.0),three_sigma,64.36666666666666,50.0,False
+IMS,2nd_test,5,rms_only,4,"EWMA (λ=0.2, k=3.0)",ewma,60.2,0.0,True
+IMS,2nd_test,5,rms_only,4,Isolation Forest,isolation_forest,47.7,0.0,True
+IMS,2nd_test,5,time_only,20,3σ Rule (σ=3.0),three_sigma,56.03333333333333,0.0,True
+IMS,2nd_test,5,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,56.03333333333333,0.0,True
+IMS,2nd_test,5,time_only,20,Isolation Forest,isolation_forest,47.7,0.0,True
+IMS,2nd_test,5,spectral_only,30,3σ Rule (σ=3.0),three_sigma,68.53333333333333,100.0,False
+IMS,2nd_test,5,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,68.53333333333333,100.0,False
+IMS,2nd_test,5,spectral_only,30,Isolation Forest,isolation_forest,47.7,0.0,True
+IMS,2nd_test,5,all,50,3σ Rule (σ=3.0),three_sigma,68.53333333333333,100.0,False
+IMS,2nd_test,5,all,50,"EWMA (λ=0.2, k=3.0)",ewma,64.36666666666666,50.0,False
+IMS,2nd_test,5,all,50,Isolation Forest,isolation_forest,47.7,0.0,True
+IMS,2nd_test,10,rms_only,4,3σ Rule (σ=3.0),three_sigma,72.7,100.0,False
+IMS,2nd_test,10,rms_only,4,"EWMA (λ=0.2, k=3.0)",ewma,72.7,100.0,False
+IMS,2nd_test,10,rms_only,4,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,2nd_test,10,time_only,20,3σ Rule (σ=3.0),three_sigma,72.7,100.0,False
+IMS,2nd_test,10,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,72.7,100.0,False
+IMS,2nd_test,10,time_only,20,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,2nd_test,10,spectral_only,30,3σ Rule (σ=3.0),three_sigma,72.7,100.0,False
+IMS,2nd_test,10,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,72.7,100.0,False
+IMS,2nd_test,10,spectral_only,30,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,2nd_test,10,all,50,3σ Rule (σ=3.0),three_sigma,72.7,100.0,False
+IMS,2nd_test,10,all,50,"EWMA (λ=0.2, k=3.0)",ewma,72.7,100.0,False
+IMS,2nd_test,10,all,50,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,2nd_test,20,rms_only,3,3σ Rule (σ=3.0),three_sigma,64.36666666666666,,True
+IMS,2nd_test,20,rms_only,3,"EWMA (λ=0.2, k=3.0)",ewma,64.36666666666666,,True
+IMS,2nd_test,20,rms_only,3,Isolation Forest,isolation_forest,47.7,,True
+IMS,2nd_test,20,time_only,20,3σ Rule (σ=3.0),three_sigma,64.36666666666666,,True
+IMS,2nd_test,20,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,64.36666666666666,,True
+IMS,2nd_test,20,time_only,20,Isolation Forest,isolation_forest,47.7,,True
+IMS,2nd_test,20,spectral_only,30,3σ Rule (σ=3.0),three_sigma,64.36666666666666,,True
+IMS,2nd_test,20,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,64.36666666666666,,True
+IMS,2nd_test,20,spectral_only,30,Isolation Forest,isolation_forest,0.0,,False
+IMS,2nd_test,20,all,50,3σ Rule (σ=3.0),three_sigma,64.36666666666666,,True
+IMS,2nd_test,20,all,50,"EWMA (λ=0.2, k=3.0)",ewma,64.36666666666666,,True
+IMS,2nd_test,20,all,50,Isolation Forest,isolation_forest,0.0,,False
+IMS,3rd_test,1,rms_only,7,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,1,rms_only,7,"EWMA (λ=0.2, k=3.0)",ewma,34.666666666666664,0.0,True
+IMS,3rd_test,1,rms_only,7,Isolation Forest,isolation_forest,29.666666666666668,0.0,True
+IMS,3rd_test,1,time_only,20,3σ Rule (σ=3.0),three_sigma,28.833333333333332,0.0,True
+IMS,3rd_test,1,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,28.833333333333332,0.0,True
+IMS,3rd_test,1,time_only,20,Isolation Forest,isolation_forest,29.666666666666668,0.0,True
+IMS,3rd_test,1,spectral_only,30,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,1,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,40.5,0.0,True
+IMS,3rd_test,1,spectral_only,30,Isolation Forest,isolation_forest,33.833333333333336,0.0,True
+IMS,3rd_test,1,all,50,3σ Rule (σ=3.0),three_sigma,42.166666666666664,0.0,True
+IMS,3rd_test,1,all,50,"EWMA (λ=0.2, k=3.0)",ewma,39.666666666666664,0.0,True
+IMS,3rd_test,1,all,50,Isolation Forest,isolation_forest,42.166666666666664,0.0,True
+IMS,3rd_test,2,rms_only,8,3σ Rule (σ=3.0),three_sigma,29.033333333333335,0.0,True
+IMS,3rd_test,2,rms_only,8,"EWMA (λ=0.2, k=3.0)",ewma,42.36666666666667,0.0,True
+IMS,3rd_test,2,rms_only,8,Isolation Forest,isolation_forest,29.033333333333335,0.0,True
+IMS,3rd_test,2,time_only,20,3σ Rule (σ=3.0),three_sigma,42.36666666666667,0.0,True
+IMS,3rd_test,2,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,30.7,0.0,True
+IMS,3rd_test,2,time_only,20,Isolation Forest,isolation_forest,60.7,1.3215859030837005,True
+IMS,3rd_test,2,spectral_only,30,3σ Rule (σ=3.0),three_sigma,42.36666666666667,0.0,True
+IMS,3rd_test,2,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,40.7,0.0,True
+IMS,3rd_test,2,spectral_only,30,Isolation Forest,isolation_forest,35.7,0.0,True
+IMS,3rd_test,2,all,50,3σ Rule (σ=3.0),three_sigma,42.36666666666667,0.0,True
+IMS,3rd_test,2,all,50,"EWMA (λ=0.2, k=3.0)",ewma,40.7,0.0,True
+IMS,3rd_test,2,all,50,Isolation Forest,isolation_forest,60.7,1.3215859030837005,True
+IMS,3rd_test,5,rms_only,6,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,5,rms_only,6,"EWMA (λ=0.2, k=3.0)",ewma,51.86666666666667,0.0,True
+IMS,3rd_test,5,rms_only,6,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,5,time_only,20,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,5,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,39.36666666666667,0.0,True
+IMS,3rd_test,5,time_only,20,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,5,spectral_only,30,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,5,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,43.53333333333333,0.0,True
+IMS,3rd_test,5,spectral_only,30,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,5,all,50,3σ Rule (σ=3.0),three_sigma,43.53333333333333,0.0,True
+IMS,3rd_test,5,all,50,"EWMA (λ=0.2, k=3.0)",ewma,43.53333333333333,0.0,True
+IMS,3rd_test,5,all,50,Isolation Forest,isolation_forest,31.033333333333335,0.0,True
+IMS,3rd_test,10,rms_only,5,3σ Rule (σ=3.0),three_sigma,72.7,2.272727272727273,True
+IMS,3rd_test,10,rms_only,5,"EWMA (λ=0.2, k=3.0)",ewma,57.7,0.0,True
+IMS,3rd_test,10,rms_only,5,Isolation Forest,isolation_forest,72.7,2.272727272727273,True
+IMS,3rd_test,10,time_only,20,3σ Rule (σ=3.0),three_sigma,72.7,2.272727272727273,True
+IMS,3rd_test,10,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,57.7,0.0,True
+IMS,3rd_test,10,time_only,20,Isolation Forest,isolation_forest,41.03333333333333,0.0,True
+IMS,3rd_test,10,spectral_only,30,3σ Rule (σ=3.0),three_sigma,57.7,0.0,True
+IMS,3rd_test,10,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,10,spectral_only,30,Isolation Forest,isolation_forest,32.7,0.0,True
+IMS,3rd_test,10,all,50,3σ Rule (σ=3.0),three_sigma,72.7,2.272727272727273,True
+IMS,3rd_test,10,all,50,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,10,all,50,Isolation Forest,isolation_forest,32.7,0.0,True
+IMS,3rd_test,20,rms_only,4,3σ Rule (σ=3.0),three_sigma,66.03333333333333,4.3478260869565215,True
+IMS,3rd_test,20,rms_only,4,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,20,rms_only,4,Isolation Forest,isolation_forest,49.36666666666667,0.0,True
+IMS,3rd_test,20,time_only,20,3σ Rule (σ=3.0),three_sigma,66.03333333333333,4.3478260869565215,True
+IMS,3rd_test,20,time_only,20,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,20,time_only,20,Isolation Forest,isolation_forest,49.36666666666667,0.0,True
+IMS,3rd_test,20,spectral_only,30,3σ Rule (σ=3.0),three_sigma,49.36666666666667,0.0,True
+IMS,3rd_test,20,spectral_only,30,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,20,spectral_only,30,Isolation Forest,isolation_forest,0.0,0.0,False
+IMS,3rd_test,20,all,50,3σ Rule (σ=3.0),three_sigma,66.03333333333333,4.3478260869565215,True
+IMS,3rd_test,20,all,50,"EWMA (λ=0.2, k=3.0)",ewma,49.36666666666667,0.0,True
+IMS,3rd_test,20,all,50,Isolation Forest,isolation_forest,0.0,0.0,False

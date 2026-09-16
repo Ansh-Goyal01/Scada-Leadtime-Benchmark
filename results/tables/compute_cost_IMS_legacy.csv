@@ -1,0 +1,10 @@
+schema,detector,method,n_train_windows,n_test_windows,n_features,train_seconds,inference_us_per_window,repeats
+legacy,three_sigma,3σ Rule (σ=3.0),631,506,445,0.002104,3.027,5
+legacy,ewma,"EWMA (λ=0.2, k=3.0)",631,506,445,0.00205,3.72,5
+legacy,cusum,"CUSUM (k=0.5, h=5.0)",631,506,445,0.002088,5.245,5
+legacy,hotelling_t2,Hotelling T²,631,506,445,0.261231,4.346,5
+legacy,isolation_forest,Isolation Forest,631,506,445,0.801166,142.35,5
+legacy,deep_svdd,Deep SVDD,631,506,445,2.798145,5.045,5
+legacy,lstm_ae,LSTM-Autoencoder,631,506,445,102.002701,1313.306,5
+legacy,tcn,TCN-Autoencoder,631,506,445,72.54387,910.87,5
+legacy,transformer_ad,Transformer-AD,631,506,445,51.165598,684.651,5

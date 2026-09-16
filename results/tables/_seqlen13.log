@@ -1,0 +1,58 @@
+2026-07-06 00:36:19,275 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,275 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,275 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,396 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,396 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,397 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,502 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,502 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,502 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 15.
+2026-07-06 00:36:19,595 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,595 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,595 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 11.
+2026-07-06 00:36:19,658 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 4.
+2026-07-06 00:36:19,658 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 4.
+2026-07-06 00:36:19,658 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 4.
+2026-07-06 00:36:35,724 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 15.
+2026-07-06 00:36:35,724 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 15.
+2026-07-06 00:36:35,724 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 15.
+2026-07-06 00:36:38,461 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 30 windows; run has 3.
+2026-07-06 00:36:38,462 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 30 windows; run has 3.
+2026-07-06 00:36:38,462 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 30 windows; run has 3.
+2026-07-06 00:36:39,124 [ERROR] Method LSTM-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:39,604 [ERROR] Method TCN-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:39,895 [ERROR] Method Transformer-AD failed: need at least one array to stack
+2026-07-06 00:36:40,036 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 15 windows; run has 11.
+2026-07-06 00:36:40,037 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 15 windows; run has 11.
+2026-07-06 00:36:40,037 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 15 windows; run has 11.
+2026-07-06 00:36:40,498 [ERROR] Method LSTM-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:40,827 [ERROR] Method TCN-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:41,173 [ERROR] Method Transformer-AD failed: need at least one array to stack
+2026-07-06 00:36:41,719 [ERROR] Method LSTM-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:42,047 [ERROR] Method TCN-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:42,552 [ERROR] Method Transformer-AD failed: need at least one array to stack
+2026-07-06 00:36:42,794 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 15 windows; run has 11.
+2026-07-06 00:36:42,794 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 15 windows; run has 11.
+2026-07-06 00:36:42,794 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 15 windows; run has 11.
+2026-07-06 00:36:42,888 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 15 windows; run has 4.
+2026-07-06 00:36:42,888 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 15 windows; run has 4.
+2026-07-06 00:36:42,888 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 15 windows; run has 4.
+2026-07-06 00:36:47,586 [ERROR] Method LSTM-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:47,778 [ERROR] Method TCN-Autoencoder failed: need at least one array to stack
+2026-07-06 00:36:48,026 [ERROR] Method Transformer-AD failed: need at least one array to stack
+2026-07-06 00:36:50,982 [ERROR] Method LSTM-Autoencoder failed: LSTM-AE needs >= 15 windows; run has 3.
+2026-07-06 00:36:50,982 [ERROR] Method TCN-Autoencoder failed: TCN needs >= 15 windows; run has 3.
+2026-07-06 00:36:50,982 [ERROR] Method Transformer-AD failed: Transformer-AD needs >= 15 windows; run has 3.
+=== XJTU deep models: usable (non-N/A) bearings and valid-alarm count, of 10 ===
+
+seq_len=30:
+  lstm_ae          usable=2/10  valid=0/10
+  tcn              usable=2/10  valid=0/10
+  transformer_ad   usable=2/10  valid=0/10
+
+seq_len=15:
+  lstm_ae          usable=3/10  valid=1/10
+  tcn              usable=3/10  valid=1/10
+  transformer_ad   usable=3/10  valid=1/10
+
+SAVED seqlen15_xjtu.csv

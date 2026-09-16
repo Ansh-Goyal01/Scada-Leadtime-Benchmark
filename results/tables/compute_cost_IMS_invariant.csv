@@ -1,0 +1,10 @@
+schema,detector,method,n_train_windows,n_test_windows,n_features,train_seconds,inference_us_per_window,repeats
+invariant,three_sigma,3σ Rule (σ=3.0),631,506,49,0.000225,0.219,5
+invariant,ewma,"EWMA (λ=0.2, k=3.0)",631,506,49,0.000214,0.977,5
+invariant,cusum,"CUSUM (k=0.5, h=5.0)",631,506,49,0.000201,2.112,5
+invariant,hotelling_t2,Hotelling T²,631,506,49,0.019946,1.493,5
+invariant,isolation_forest,Isolation Forest,631,506,49,0.731285,119.685,5
+invariant,deep_svdd,Deep SVDD,631,506,49,2.26534,2.325,5
+invariant,lstm_ae,LSTM-Autoencoder,631,506,49,49.453724,513.358,5
+invariant,tcn,TCN-Autoencoder,631,506,49,46.199024,379.3,5
+invariant,transformer_ad,Transformer-AD,631,506,49,41.637274,300.342,5
