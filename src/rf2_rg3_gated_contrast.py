@@ -438,8 +438,10 @@ def _reproduction(rr):
             dev = (a - b).abs()
             rec[col + "_max_abs_dev"] = float(dev.max()) if dev.notna().any() else 0.0
             rec[col + "_nan_mismatch"] = int((a.isna() != b.isna()).sum())
-        rec["t_onset_mismatch"] = int((both["t_onset_rerun"].astype(str)
-                                       != both["t_onset_pub"].astype(str)).sum())
+        on_r = pd.to_datetime(both["t_onset_rerun"])
+        on_p = pd.to_datetime(both["t_onset_pub"])
+        same = (on_r == on_p) | (on_r.isna() & on_p.isna())   # no-onset runs match as NaT
+        rec["t_onset_mismatch"] = int((~same).sum())
         rows.append(rec)
     out = pd.DataFrame(rows)
     _write(out, "rg3_reproduction_check.csv")
