@@ -222,6 +222,7 @@ with `UnicodeEncodeError` on the default Windows console; every new script carri
 - **RF-2 (1.1) and RG-3 (1.5) done in one pass**, §5O. New result files only; no published file or manuscript touched.
 - **Preservation:** N-3 negation in `.gitignore`; all result files committed; D-2 code (`d873e58`) and 15 revision scripts (`960f711`) committed. §5O.5.
 - **Session 6b:** paired validity (§5O.6); **N-20 found (High, open)**; N-21 (Table 4 = 4th orphan); **D-2 re-baseline applied to the manuscript + Table 11 at 44 rows** (§5O.9, `20658e5`, `6bb3f74`).
+- **Session 6e:** **cuts batch** (§5O.12): A 26 → 25 pp (`7397708`), B 25 → 25 pp (`8d7fd10`); D-2 residue `fb34a96`.
 - **Session 6d:** **N-20 manuscript pass applied** (§5O.11, `394cd96`): 81 cells, exception removed at 6 sites (concept-swept), Figure 2 regenerated (+ ONGC ÷60 bug), D-2 residue at 398/929/956/516; D19 response rewritten; brief rule 10 extended.
 - **Session 6c:** **D-10 authorised; N-20 fixed** (`src/__init__.py`), IMS and XJTU-SY verified unchanged, FEMTO/Ferrara/ONGC re-run and propagated (§5O.10). No manuscript edit.
 - **New findings for the manuscript pass:** Tables 10/11 still carry legacy IMS values (D-2 swap not applied); Table 11 has 40 rows under an N=44 caption; Table 4 had no generator (now reproduced); the gated IMS contrast is onset-dependent.
@@ -2266,6 +2267,54 @@ unchanged, and this is a method difference only.
   30 or 33 deliberately.
 - OC-SVM rows in Tables 7–9 and D-9 rows in Tables 14/16/22 are still missing (§5O.8a).
 - The body has no equivalence table or TOST prose yet (R-2 / R-19 hold the numbers).
+
+### 5O.12 Cuts batch — groups A and B (session 6)
+
+| Step | Commit | Pages | Δ | Floats (T/F) |
+|---|---|---:|---:|---|
+| baseline (after N-20 pass) | `c60ca3c` | 26 | — | 30 / 11 |
+| D-2 residue (heading `tex:479`; §6.12 200–215 h → 183–198 h, 48–100% → 61–100%) | `fb34a96` | 26 | 0 | 30 / 11 |
+| **Group A** — delete Tables 21, 23, §7.4, §6 (i)–(v) list, Figure 9 | `7397708` | **25** | **−1** | 28 / 10 |
+| **Group B** — merge Tables 7–9, 3–4, 5–6; Figures 4–6+11, 7–8 | `8d7fd10` | **25** | **0** | 24 / 6 |
+
+**Group A checks.**
+- A1: Table 21's six numbers verified against `onset_sensitivity.csv` (run spans 827.57 / 163.83 /
+  1073.25 h; max leads 12.88 / 62.50 / 44.50 h). Table 21 had **no generator** either, but its numbers
+  trace to that file.
+- A2: Table 23 removed. §6.13 and the §4.5 table list now point to Figure 10.
+- A3 and A4: a uniqueness check on every number in the deleted prose found **none that appears only
+  there**. −0.35 / +6.6 h survive in Appendix D.1 prose and Table 28.
+- A4: Discussion gains `\label{sec:discussion}`.
+- A5: Figure 9 was never `\ref`'d.
+- Dangling refs repointed: `tex:93`, `tex:107` (latch-on), `tex:235` (min-train).
+
+**Group B checks.**
+- B1 `tab:crossds` is **generated** (XJTU-SY from `rf2_gated_contrast.csv`, FEMTO/Ferrara post-N-20)
+  and has **all eleven detectors** including OC-SVM, which **closes the D-5 gap for Tables 7–9**.
+  Re-parsed from the `.tex`: **33/33 rows match**.
+- B1 caught a layout bug: the first build overflowed into the adjacent column. TeX reported no
+  overfull box; only a page render caught it. Fixed with `\footnotesize`, `tabcolsep 3pt`,
+  "Transf.-AD" and "yes$^-$".
+- XJTU prose: "six of the seven detectors" → "ten of the eleven" (asserted from the file).
+- B2/B3: panels tiled by the new `paper/make_panels.py` (tracked with `-f`) from the existing PNGs;
+  no replotting. The ONGC conformal plot moves from Appendix D.2 into the main-text 4-panel figure
+  (panel d).
+- B4: merged onset table generated from `onset_sensitivity.csv` + `rg3_onsets.csv`; identical values
+  to the published Tables 3/4.
+- B5: two tabulars moved verbatim. The gap prose drops "the weakest carrier of the aggregation trend"
+  (D-2-stale).
+
+**Every build:** 0 undefined refs, 0 "??" in the PDF, no unreferenced labels, no hard-coded float
+numbers. Overfull hboxes 110 → 115 are reflowed prose lines, not tables. Rule-10 counts after B:
+"never better" 0 · "never costs" 0 · "does not cost" 1 · "non-destruction" 18 (21 → 18, lost with §7.4
+and the §6 list) · em-dashes 169.
+
+**Why B saved no page:** the two-column `figure*` floats and the 33-row merged table take about the
+space the separate floats did. B removed float count and captions, not height; the last page holds
+398 words vs 437 after A. **The reserve (Tables 15, 17–20, ablations) is untouched, per instruction.**
+
+**Flagged, not changed:** the missing-data prose ("every detector's valid-alarm fraction is unchanged")
+contradicts its own caption (XJTU-SY 3σ moves 5/10 → 6/10 → 5/10; N-19 fixed only the caption).
 
 ## 6. Item checklist — all 41 reviewer items
 
