@@ -84,7 +84,7 @@ This paper makes both questions precise and answers them. We state the arc expli
 
 \textbf{Method.} Under this metric we run a controlled sampling sweep that holds window content and alarm persistence constant, applied to nine detectors (four SPC charts, Isolation Forest, three deep reconstruction autoencoders, and an RMS-trend baseline; Deep SVDD additionally evaluated) across four inferential run-to-failure datasets---XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$), plus a real single-asset ONGC gas-turbine SCADA record analyzed as a case study (Appendix~D.2)---with run-level significance tests (the run, not the within-run sampling factor, is the unit of inference) and Holm correction.
 
-\textbf{Finding.} The folklore is refuted on every dataset tested: historian-style aggregation does not destroy lead time. On the large multi-bearing sets (XJTU-SY, FEMTO, Ferrara) the difference is negligible; on IMS it shows a consistent positive trend (not significant at $n=3$); the single-asset turbine record agrees (case study, Appendix~D.2). The defensible cross-dataset conclusion is bounded non-destruction: no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}).
+\textbf{Finding.} The folklore is refuted on every dataset tested: historian-style aggregation does not destroy lead time. On the large multi-bearing sets (XJTU-SY, FEMTO, Ferrara) the difference is negligible; on IMS the median shift is positive for most magnitude detectors but not consistent in direction across the three runs (not significant at $n=3$); the single-asset turbine record agrees (case study, Appendix~D.2). The defensible cross-dataset conclusion is bounded non-destruction: no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}).
 
 \textbf{Contributions.} We make five contributions.
 
@@ -92,7 +92,7 @@ This paper makes both questions precise and answers them. We state the arc expli
 \item \emph{A latch-on--resistant, false-alarm-gated, onset-relative lead-time metric.} Warning time is credited only when the false-alarm rate over a data-anchored, leakage-free pre-onset region is within a stated budget. We prove---by construction and by a unit test that is part of the released code---that a constant-on (latch-on) detector is scored invalid, while a detector that fires just after the true degradation onset scores valid at zero false-alarm rate. We do not claim the metric is unconditionally ungameable; we discuss residual gaming surfaces in Section~\ref{sec:limitations}.
 \item \emph{A formal proof that gating changes the answer.} We give, to our knowledge, the first formal comparison showing that an ungated prognostic-horizon metric (the Saxena PH) produces a different and operationally misleading detector recommendation relative to the false-alarm-budgeted metric (Section~\ref{sec:saxena}, Tables~\ref{tab:latchon} and \ref{tab:phrank}): on IMS the detectors PH ranks first by raw lead---Hotelling $T^2$, Isolation Forest, and EWMA---each have no valid operating point at a 10\% false-alarm budget, whereas our metric correctly identifies $3\sigma$ as the deployable choice.
 \item \emph{A controlled SCADA-sampling methodology} that holds window content and alarm persistence constant, so that any lead-time difference between the historian's aggregate mechanism and simple decimation reflects genuine information loss rather than a window-counting artifact of coarser time grids.
-\item \emph{A multi-dataset null result that is statistically honest by construction.} Across XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$), with bootstrap confidence intervals and run-level significance tests that treat the run---not the within-run sampling factor---as the unit of inference, SCADA-rate aggregation does not destroy lead time---and on IMS shows a consistent positive trend for the variance-sensitive control charts---while no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}); nothing survives Holm correction across the $N=44$ family.
+\item \emph{A multi-dataset null result that is statistically honest by construction.} Across XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$), with bootstrap confidence intervals and run-level significance tests that treat the run---not the within-run sampling factor---as the unit of inference, SCADA-rate aggregation does not destroy lead time---and on IMS shows a positive median shift for most control charts, though not consistently across runs---while no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}); nothing survives Holm correction across the $N=44$ family.
 \item \emph{Validation:} wiring and empirical validation of a conformal detector for distribution-free false-alarm control, a lead-time--vs--false-alarm trade-off analysis, feature-group and spectral ablations that localize the prognostic signal to time-domain statistics on IMS, and a characterization of deep reconstruction models (LSTM-AE, TCN-AE, Transformer-AD) showing they do not become competitive with SPC charts within the tested training-fraction range $[0.20, 0.60]$ on short-lived bearings; whether a crossover exists on long-runway assets remains open (Section~\ref{sec:mintrain}).
 \end{enumerate}
 
@@ -264,7 +264,7 @@ We summarize the outcomes first, then support each in turn. We present IMS first
 
 \begin{itemize}
 \item[(i)] \emph{The metric behaves.} Under the gated, onset-relative metric the detectors rank by genuine early warning, with the naive RMS-trend baseline correctly weakest (Table~\ref{tab:imslead}), and the metric's anchor---the degradation onset---is stable to its threshold (Table~\ref{tab:onsetsens}).
-\item[(ii)] \emph{Aggregation does not destroy lead time---the central result.} On IMS it shows a consistent positive trend---the same sign in all three runs for every magnitude detector ($3\sigma$ $+18.4$~h median, IF $+12.2$~h, EWMA $+5.8$~h)---but at the honest unit of inference ($n=3$ runs) this is not statistically significant (Table~\ref{tab:imssweep}). On the real ONGC turbine the difference is about a minute ($n=1$ case study, Appendix~D.2, Table~\ref{tab:ongc}); on XJTU-SY ($n=10$, Table~\ref{tab:xjtu}), FEMTO/PRONOSTIA ($n=6$, Table~\ref{tab:femto}), and University of Ferrara ($n=6$, Table~\ref{tab:ferrara}) the effect is null, with Isolation Forest even reversing sign on FEMTO.
+\item[(ii)] \emph{Aggregation does not destroy lead time---the central result.} On IMS the median shift is positive for the magnitude detectors ($3\sigma$ $+15.1$~h median, CUSUM $+4.3$~h, IF $+3.4$~h, EWMA $+2.1$~h), but only CUSUM and Hotelling $T^2$ are positive in all three runs, and at the honest unit of inference ($n=3$ runs) nothing is statistically significant (Table~\ref{tab:imssweep}). On the real ONGC turbine the difference is about a minute ($n=1$ case study, Appendix~D.2, Table~\ref{tab:ongc}); on XJTU-SY ($n=10$, Table~\ref{tab:xjtu}), FEMTO/PRONOSTIA ($n=6$, Table~\ref{tab:femto}), and University of Ferrara ($n=6$, Table~\ref{tab:ferrara}) the effect is null, with Isolation Forest even reversing sign on FEMTO.
 \item[(iii)] \emph{Nothing survives correction.} After Holm--Bonferroni across the $N=44$ detector $\times$ dataset family, no hypothesis is rejected (smallest adjusted $p = 1.00$, Table~\ref{tab:holm}): the defensible cross-dataset headline is non-destruction, not ``aggregation helps.''
 \item[(iv)] \emph{The mechanism is generic smoothing.} The IMS advantage grows as noise rises (from $-0.35$~h to $+6.6$~h at 10~dB SNR) and is reproduced by a plain moving average or Kalman filter on the decimated stream (Tables~\ref{tab:noise}--\ref{tab:denoise})---so the cause is low-pass smoothing, not historian averaging specifically.
 \item[(v)] \emph{Calibration and feature analysis.} The conformal wrapper attains its $\text{FAR} \le \alpha$ guarantee on the two runs that satisfy exchangeability and fails on the one with a late onset (Table~\ref{tab:conformal}); the trade-off and ablation analyses (Tables~\ref{tab:tradeoff}, \ref{tab:ablation}) confirm that simple time-domain amplitude/impulse features give the most valid early warning.
@@ -272,29 +272,30 @@ We summarize the outcomes first, then support each in turn. We present IMS first
 The remainder of this section develops each result.
 
 \subsection{Lead Time and Confidence Intervals on IMS}
-Table~\ref{tab:imslead} reports the mean raw (ungated) detection lead time across the three IMS runs at full resolution, with 95\% bootstrap confidence intervals obtained by resampling the $n=3$ runs. On raw lead alone the three deep reconstruction models top the table and Hotelling $T^2$ leads the classical detectors---but this ordering is exactly what the false-alarm budget overturns: the daggered detectors post their long leads only by flooding the pre-onset region, and have no valid operating point under $\tau=10\%$ (Table~\ref{tab:tradeoff}). Once the budget is enforced, $3\sigma$ and Deep SVDD are the deployable choices, a reordering we make precise as a formal comparison against the Saxena prognostic horizon in Section~\ref{sec:saxena}. The three deep reconstruction models post raw leads of 183--198~h but score $L=0$ on all three IMS runs---their valid-alarm fraction at that threshold is 0/3---because at the 97.5th-percentile operating threshold their pre-onset FAR ranges from 61\% on test~3 to 100\% on tests~1--2, far above the $\tau=10\%$ budget. Sweeping the alarm threshold changes this only once: across the percentiles of Table~\ref{tab:tradeoff}, TCN-AE and Transformer-AD attain no valid operating point at any level tested, while LSTM-AE attains one at the 99.5th percentile on test~3 alone---59.7~h of lead at 4.19\% pre-onset FAR, unchanged across ten random seeds---leaving its valid-alarm fraction at 1/3. The intervals are wide; this is the honest consequence of $n=3$ and is precisely why we add ONGC and the ten XJTU bearings next. Figure~\ref{fig:health} shows the leakage-free onset and failure markers on a representative run, with the shaded training region from which all baseline statistics are computed.
+Table~\ref{tab:imslead} reports the mean raw (ungated) detection lead time across the three IMS runs at full resolution, with 95\% bootstrap confidence intervals obtained by resampling the $n=3$ runs. On raw lead alone the three deep reconstruction models top the table, followed by the one-class SVM, and Hotelling $T^2$ leads the control charts---but this ordering is exactly what the false-alarm budget overturns: the daggered detectors post their long leads only by flooding the pre-onset region, and have no valid operating point under $\tau=10\%$ (Table~\ref{tab:tradeoff}). Once the budget is enforced, $3\sigma$ and Deep SVDD are the deployable choices, a reordering we make precise as a formal comparison against the Saxena prognostic horizon in Section~\ref{sec:saxena}. The three deep reconstruction models post raw leads of 183--198~h but score $L=0$ on all three IMS runs---their valid-alarm fraction at that threshold is 0/3---because at the 97.5th-percentile operating threshold their pre-onset FAR ranges from 61\% on test~3 to 100\% on tests~1--2, far above the $\tau=10\%$ budget. Sweeping the alarm threshold changes this only once: across the percentiles of Table~\ref{tab:tradeoff}, TCN-AE and Transformer-AD attain no valid operating point at any level tested, while LSTM-AE attains one at the 99.5th percentile on test~3 alone---59.7~h of lead at 4.19\% pre-onset FAR, unchanged across ten random seeds---leaving its valid-alarm fraction at 1/3. The intervals are wide; this is the honest consequence of $n=3$ and is precisely why we add ONGC and the ten XJTU bearings next. Figure~\ref{fig:health} shows the leakage-free onset and failure markers on a representative run, with the shaded training region from which all baseline statistics are computed.
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{\textbf{$\dagger$~Detectors with no valid operating point under the $\tau=10\%$ pre-onset-FAR budget (Table~\ref{tab:tradeoff}): their long raw leads are achieved only by flooding the pre-onset region with false alarms and are not usable warning time.} IMS mean detection lead time (hours) at full resolution, all eleven evaluated detectors (the nine headline detectors plus Deep SVDD), mean with 95\% bootstrap CI (resampling $n=3$ runs). This is the raw, ungated lead.}
+	\caption{\textbf{$\dagger$~Detectors with no valid operating point under the $\tau=10\%$ pre-onset-FAR budget (Table~\ref{tab:tradeoff}): their long raw leads are achieved only by flooding the pre-onset region with false alarms and are not usable warning time.} IMS mean detection lead time (hours) at full resolution, all eleven evaluated detectors (the nine headline detectors plus Deep SVDD and the one-class SVM), mean with 95\% bootstrap CI (resampling $n=3$ runs). This is the raw, ungated lead.}
 	\label{tab:imslead}
 	\begin{tabular}{l r r}
 		\hline \hline
 		\textbf{Method} & \textbf{Lead time (h)} & \textbf{95\% CI} \\
 		\hline
 		\multicolumn{3}{l}{\emph{No valid operating point at $\tau=10\%$ (raw lead only)}} \\
-		LSTM-AE$^\dagger$ & 214.9 & [65.5, 383.5] \\
-		TCN-AE$^\dagger$ & 201.5 & [65.5, 343.5] \\
-		Transformer-AD$^\dagger$ & 199.6 & [65.5, 337.7] \\
-		EWMA$^\dagger$ & 78.3 & [27.2, 152.2] \\
-		CUSUM$^\dagger$ & 77.2 & [26.3, 151.4] \\
-		Isolation Forest$^\dagger$ & 69.8 & [28.0, 123.3] \\
-		Hotelling $T^2{}^\dagger$ & 67.5 & [27.2, 113.3] \\
+		LSTM-AE$^\dagger$ & 197.6 & [65.5, 331.7] \\
+		TCN-AE$^\dagger$ & 183.7 & [65.5, 330.9] \\
+		Transformer-AD$^\dagger$ & 183.4 & [65.5, 330.9] \\
+		One-class SVM$^\dagger$ & 180.3 & [65.5, 316.7] \\
+		Hotelling $T^2{}^\dagger$ & 174.8 & [56.3, 315.9] \\
+		Isolation Forest$^\dagger$ & 87.2 & [49.7, 152.2] \\
+		EWMA$^\dagger$ & 78.6 & [28.0, 152.2] \\
+		CUSUM$^\dagger$ & 64.8 & [26.3, 114.9] \\
 		\hline
 		\multicolumn{3}{l}{\emph{Valid operating point exists---deployable under $\tau=10\%$}} \\
-		$3\sigma$ & 58.0 & [22.2, 93.7] \\
-		RMS-trend & 34.5 & [0.0, 93.7] \\
-		Deep SVDD & 18.4 & [0.0, 45.5] \\
+		$3\sigma$ & 64.6 & [28.8, 108.7] \\
+		Deep SVDD & 14.8 & [0.0, 34.0] \\
+		RMS-trend & 3.2 & [0.0, 9.7] \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
@@ -354,20 +355,21 @@ Because the entire metric is anchored to the degradation onset $t_o$, its robust
 	\end{center}
 \end{table}
 
-\emph{Alarm-persistence sensitivity.} The alarm-persistence filter (default 3 windows) is a fixed protocol choice, so we sweep it over $\{1,3,5,10\}$ windows on IMS (Table~\ref{tab:persistence}). The two conclusions that matter are stable. First, the aggregate-vs-decimate direction stays non-negative at every persistence: the $3\sigma$ and EWMA charts show a sign-consistent positive run-level median at all four settings ($n_+/n_-=3/0$), and only the spike-robust Isolation Forest---the weakest carrier of the trend---drifts to a near-zero negative median at the longest persistence. Second, the $3\sigma$ valid-alarm fraction is 1.00 at every persistence, so the deployable-detector recommendation does not depend on this parameter.
+\emph{Alarm-persistence sensitivity.} The alarm-persistence filter (default 3 windows) is a fixed protocol choice, so we sweep it over $\{1,3,5,10\}$ windows on IMS (Table~\ref{tab:persistence}). The median direction is stable; its run-level consistency and the $3\sigma$ valid-alarm fraction are not. The $3\sigma$ and EWMA run-level medians are positive at all four settings, but neither is sign-consistent throughout: $3\sigma$ has one negative run at the default persistence ($n_+/n_-=2/1$, and 3/0 at the other three), EWMA is 2/1 at persistence 1, 3 and 5 and 3/0 only at 10, and the spike-robust Isolation Forest turns slightly negative at persistence 5 ($-0.8$~h). At full resolution the $3\sigma$ valid-alarm fraction is 0.67 at every persistence, because the first IMS test's alarm exceeds the pre-onset FAR budget. Pooled over the sampling sweep, however, it falls from 0.67 at persistence 1 and 3 to 0.53 at 5 and 0.33 at 10, so a longer persistence filter costs the deployable chart valid alarms at SCADA rates.
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Alarm-persistence sensitivity on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction, at persistence $\in \{1,3,5,10\}$ windows. Non-destruction and the $3\sigma$ recommendation are stable throughout.}
+	\caption{Alarm-persistence sensitivity on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction (at full resolution, and pooled over the five sampling factors), at persistence $\in \{1,3,5,10\}$ windows. The median direction is stable; the pooled $3\sigma$ valid-alarm fraction halves by persistence 10.}
 	\label{tab:persistence}
 	\begin{tabular}{l c c c c}
 		\hline \hline
 		\textbf{Persistence (windows)} & \textbf{1} & \textbf{3} & \textbf{5} & \textbf{10} \\
 		\hline
-		$3\sigma$ median $\Delta$ (h) & $+4.2$ & $+18.4$ & $+17.4$ & $+11.4$ \\
-		EWMA median $\Delta$ (h) & $+5.2$ & $+5.8$ & $+4.8$ & $+3.0$ \\
-		Iso.\ Forest median $\Delta$ (h) & $+10.4$ & $+12.2$ & $-0.8$ & $-0.2$ \\
-		$3\sigma$ valid-alarm frac. & 1.00 & 1.00 & 1.00 & 1.00 \\
+		$3\sigma$ median $\Delta$ (h) & $+5.8$ & $+15.1$ & $+7.8$ & $+3.8$ \\
+		EWMA median $\Delta$ (h) & $+2.9$ & $+2.1$ & $+2.9$ & $+2.3$ \\
+		Iso.\ Forest median $\Delta$ (h) & $+0.3$ & $+3.4$ & $-0.8$ & $+4.2$ \\
+		$3\sigma$ valid-alarm frac., full res. & 0.67 & 0.67 & 0.67 & 0.67 \\
+		$3\sigma$ valid-alarm frac., all factors & 0.67 & 0.67 & 0.53 & 0.33 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
@@ -418,7 +420,7 @@ Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_crossdataset}
-\caption{Median run-level lead-time difference (aggregate $-$ decimate) per dataset and detector, annotated with the unit of inference ($n=3$ IMS, $n=10$ XJTU, $n=6$ FEMTO, $n=6$ Ferrara), plus the $n=1$ ONGC case study (Appendix~D.2). IMS shows a consistent positive trend; the inferential XJTU, FEMTO, and Ferrara differences are ${\approx}0$ on this scale. The honest cross-dataset headline is non-destruction. ONGC bars are hatched to mark the $n=1$ descriptive case study as separate from the four inferential datasets.}
+\caption{Median run-level lead-time difference (aggregate $-$ decimate) per dataset and detector, annotated with the unit of inference ($n=3$ IMS, $n=10$ XJTU, $n=6$ FEMTO, $n=6$ Ferrara), plus the $n=1$ ONGC case study (Appendix~D.2). IMS shows a positive median shift for most magnitude detectors, not consistent across its three runs; the inferential XJTU, FEMTO, and Ferrara differences are ${\approx}0$ on this scale. The honest cross-dataset headline is non-destruction. ONGC bars are hatched to mark the $n=1$ descriptive case study as separate from the four inferential datasets.}
 \label{fig:crossdataset}
 \end{figure*}
 
@@ -475,9 +477,9 @@ The University of Ferrara campaign \cite{arpa2024ferrara} adds a fifth, fully in
 \end{table}
 
 \subsection{Aggregate vs Decimate on IMS: a Consistent Positive Trend}
-Figure~\ref{fig:sweep} plots lead time against the effective logging interval for both mechanisms. Under aggregation, lead time remains high and stable as the interval coarsens; under decimation it degrades faster, with $3\sigma$ and Isolation Forest collapsing at coarse intervals (for example, $3\sigma$ falls from 58.0~h at full rate to 7.1~h at a $10\times$ decimation, while aggregation holds it near 59~h). The upturn at the very largest factor reflects the few-windows regime, where only one or two runs survive and the mean is no longer comparable; we annotate rather than hide it.
+Figure~\ref{fig:sweep} plots lead time against the effective logging interval for both mechanisms. Under aggregation, lead time remains high and stable as the interval coarsens; under decimation it degrades faster, with $3\sigma$ and Isolation Forest collapsing at coarse intervals (for example, $3\sigma$ falls from 64.6~h at full rate to 24.8~h at a $10\times$ decimation, while aggregation holds it near 64.6~h). The upturn at the very largest factor reflects the few-windows regime, where only one or two runs survive and the mean is no longer comparable; we annotate rather than hide it.
 
-Table~\ref{tab:imssweep} gives the run-level test over all eleven evaluated detectors. Honoring the run as the unit of inference (Section~\ref{sec:statproto}), the six magnitude-monitoring detectors all show a sign-consistent positive difference where the effect is non-trivial: $3\sigma$ (per-run $+27.1, +18.4, +15.6$~h; median $+18.4$), Isolation Forest ($+19.9, +12.2, +1.8$; median $+12.2$), EWMA ($+22.6, +5.0, +5.8$; median $+5.8$), CUSUM ($+22.6, +5.0, +5.4$; median $+5.4$), Hotelling $T^2$ ($+3.3, +12.3, +4.6$; median $+4.6$), and Deep SVDD ($+15.2, 0.0, +1.8$; two positive, one tie). The three deep reconstruction models behave oppositely but at negligible magnitude: LSTM-AE, TCN, and Transformer-AD each show small negative per-run differences (medians $-1.4, -0.4, -1.4$~h), consistent with the smoothing mechanism---a reconstruction model reconstructs the smoothed signal about as well either way, so it does not inherit the threshold-crossing advantage that the variance-sensitive charts get. The RMS-trend baseline is mixed. The direction is therefore a consistent positive trend for the chart/distance detectors---in no run does aggregation shorten their lead time---but with only $n=3$ independent runs the exact sign test attains its floor of $p=0.25$ (Section~\ref{sec:statproto}), so it is not statistically significant and does not survive Holm correction. We make no significance claim; the defensible reading is non-destruction with a consistently positive direction for the magnitude-monitoring detectors. The candidate mechanism is that bin-averaging acts as a low-pass filter suppressing single-window noise in the health statistic, so the alarm threshold is crossed earlier and held more persistently than under decimation. We test this smoothing hypothesis directly in Appendix~D.1.
+Table~\ref{tab:imssweep} gives the run-level test over all eleven evaluated detectors. Honoring the run as the unit of inference (Section~\ref{sec:statproto}), the magnitude-monitoring detectors show a positive median difference, but only two are sign-consistent: CUSUM (per-run $+4.2, +4.7, +4.3$~h; median $+4.3$) and Hotelling $T^2$ ($+1.0, +1.2, +81.7$; median $+1.2$). $3\sigma$ ($+25.8, +15.1, -1.0$; median $+15.1$), Isolation Forest ($-0.7, +16.9, +3.4$; median $+3.4$) and EWMA ($-3.9, +4.3, +2.1$; median $+2.1$) each have one negative run, and Deep SVDD is positive in one run and tied in two ($+8.9, 0.0, 0.0$). The three deep reconstruction models and the one-class SVM have negative medians (LSTM-AE, TCN and Transformer-AD each $-0.4$~h; one-class SVM $-2.4$~h), each with two negative runs and one positive; the deep models' positive run is test~3 ($+56.1$, $+9.0$ and $+68.8$~h). The RMS-trend baseline is mixed. The direction is therefore a positive median for the chart/distance detectors, but not a consistent one---aggregation shortens the lead time of $3\sigma$, EWMA and Isolation Forest on one run each---and with only $n=3$ independent runs the exact sign test cannot fall below $p=0.25$, a floor that only CUSUM and Hotelling $T^2$ reach (Section~\ref{sec:statproto}); nothing is statistically significant or survives Holm correction. We make no significance claim; the defensible reading is non-destruction with a positive median direction for the magnitude-monitoring detectors. The candidate mechanism is that bin-averaging acts as a low-pass filter suppressing single-window noise in the health statistic, so the alarm threshold is crossed earlier and held more persistently than under decimation. We test this smoothing hypothesis directly in Appendix~D.1.
 
 \begin{figure*}[t]
 \centering
@@ -494,16 +496,17 @@ Table~\ref{tab:imssweep} gives the run-level test over all eleven evaluated dete
 		\hline \hline
 		\textbf{Method} & \textbf{Run diffs (h)} & \textbf{Med.} & \textbf{S-c.} & \textbf{$p$} \\
 		\hline
-		$3\sigma$ & $+27.1,+18.4,+15.6$ & $+18.4$ & yes & 0.25 \\
-		Iso.\ Forest & $+19.9,+12.2,+1.8$ & $+12.2$ & yes & 0.25 \\
-		EWMA & $+22.6,+5.0,+5.8$ & $+5.8$ & yes & 0.25 \\
-		CUSUM & $+22.6,+5.0,+5.4$ & $+5.4$ & yes & 0.25 \\
-		Hotelling $T^2$ & $+3.3,+12.3,+4.6$ & $+4.6$ & yes & 0.25 \\
-		Deep SVDD & $+15.2,0.0,+1.8$ & $+1.8$ & 2+,tie & 0.50 \\
-		RMS-trend & $-19.4,0.0,+2.8$ & 0.0 & no & 1.00 \\
-		LSTM-AE & $-1.4,-0.4,-1.7$ & $-1.4$ & yes ($-$) & 0.25 \\
-		TCN-AE & $-1.4,-0.4,-0.2$ & $-0.4$ & yes ($-$) & 0.25 \\
-		Transformer-AD & $-1.4,-0.4,-2.5$ & $-1.4$ & yes ($-$) & 0.25 \\
+		$3\sigma$ & $+25.8,+15.1,-1.0$ & $+15.1$ & no & 1.00 \\
+		Iso.\ Forest & $-0.7,+16.9,+3.4$ & $+3.4$ & no & 1.00 \\
+		EWMA & $-3.9,+4.3,+2.1$ & $+2.1$ & no & 1.00 \\
+		CUSUM & $+4.2,+4.7,+4.3$ & $+4.3$ & yes & 0.25 \\
+		Hotelling $T^2$ & $+1.0,+1.2,+81.7$ & $+1.2$ & yes & 0.25 \\
+		Deep SVDD & $+8.9,0.0,0.0$ & 0.0 & 1+,2 ties & 1.00 \\
+		One-class SVM & $-2.4,-5.5,+1.5$ & $-2.4$ & no & 1.00 \\
+		RMS-trend & $-0.2,0.0,+2.4$ & 0.0 & no & 1.00 \\
+		LSTM-AE & $-1.4,-0.4,+56.1$ & $-0.4$ & no & 1.00 \\
+		TCN-AE & $-1.4,-0.4,+9.0$ & $-0.4$ & no & 1.00 \\
+		Transformer-AD & $-1.4,-0.4,+68.8$ & $-0.4$ & no & 1.00 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
@@ -514,21 +517,22 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Holm--Bonferroni correction across the $N=44$ detector $\times$ dataset family (IMS $n=3$, XJTU-SY $n=10$, FEMTO $n=6$, Ferrara $n=6$; ONGC excluded, $n=1$). No hypothesis is rejected at $\alpha=0.05$ (0 of 44 survive). $\ddagger$: the three deep sequence models need a length-30 window sequence, so those XJTU tests are $n=3$. The $N=44$ family is the full evaluated set of eleven detectors (nine headline plus the additionally-evaluated Deep SVDD and one-class SVM), retained exactly as originally computed.}
+	\caption{Holm--Bonferroni correction across the $N=44$ detector $\times$ dataset family (IMS $n=3$, XJTU-SY $n=10$, FEMTO $n=6$, Ferrara $n=6$; ONGC excluded, $n=1$). No hypothesis is rejected at $\alpha=0.05$ (0 of 44 survive). $\ddagger$: the three deep sequence models need a length-30 window sequence, so those XJTU tests are $n=3$. The $N=44$ family is the full evaluated set of eleven detectors (nine headline plus the additionally-evaluated Deep SVDD and one-class SVM); IMS rows are computed on the 49-dimensional invariant feature schema.}
 	\label{tab:holm}
 	\begin{tabular}{l l r r c}
 		\hline \hline
 		\textbf{Dataset} & \textbf{Method} & \textbf{Raw $p$} & \textbf{Holm $p$} & \textbf{Rej.?} \\
 		\hline
-		IMS & $3\sigma$ & 0.250 & 1.000 & no \\
-		IMS & EWMA & 0.250 & 1.000 & no \\
+		IMS & $3\sigma$ & 1.000 & 1.000 & no \\
+		IMS & EWMA & 1.000 & 1.000 & no \\
 		IMS & CUSUM & 0.250 & 1.000 & no \\
 		IMS & Hotelling $T^2$ & 0.250 & 1.000 & no \\
-		IMS & Iso.\ Forest & 0.250 & 1.000 & no \\
-		IMS & Deep SVDD & 0.500 & 1.000 & no \\
-		IMS & LSTM-AE & 0.250 & 1.000 & no \\
-		IMS & TCN-AE & 0.250 & 1.000 & no \\
-		IMS & Transformer-AD & 0.250 & 1.000 & no \\
+		IMS & Iso.\ Forest & 1.000 & 1.000 & no \\
+		IMS & Deep SVDD & 1.000 & 1.000 & no \\
+		IMS & One-class SVM & 1.000 & 1.000 & no \\
+		IMS & LSTM-AE & 1.000 & 1.000 & no \\
+		IMS & TCN-AE & 1.000 & 1.000 & no \\
+		IMS & Transformer-AD & 1.000 & 1.000 & no \\
 		IMS & RMS-trend & 1.000 & 1.000 & no \\
 		XJTU & $3\sigma$ & 0.625 & 1.000 & no \\
 		XJTU & Iso.\ Forest & 0.180 & 1.000 & no \\
@@ -536,6 +540,7 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 		XJTU & CUSUM & 1.000 & 1.000 & no \\
 		XJTU & EWMA & 1.000 & 1.000 & no \\
 		XJTU & Deep SVDD & 1.000 & 1.000 & no \\
+		XJTU & One-class SVM & 1.000 & 1.000 & no \\
 		XJTU & LSTM-AE$^\ddagger$ & 1.000 & 1.000 & no \\
 		XJTU & TCN-AE$^\ddagger$ & 1.000 & 1.000 & no \\
 		XJTU & Transf.-AD$^\ddagger$ & 1.000 & 1.000 & no \\
@@ -546,6 +551,7 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 		FEMTO & Hotelling $T^2$ & 0.219 & 1.000 & no \\
 		FEMTO & Iso.\ Forest & 0.031 & 1.000 & no \\
 		FEMTO & Deep SVDD & 1.000 & 1.000 & no \\
+		FEMTO & One-class SVM & 0.688 & 1.000 & no \\
 		FEMTO & LSTM-AE & 0.688 & 1.000 & no \\
 		FEMTO & TCN-AE & 1.000 & 1.000 & no \\
 		FEMTO & Transf.-AD & 0.219 & 1.000 & no \\
@@ -556,6 +562,7 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 		Ferrara & Hotelling $T^2$ & 0.219 & 1.000 & no \\
 		Ferrara & Iso.\ Forest & 0.688 & 1.000 & no \\
 		Ferrara & Deep SVDD & 0.688 & 1.000 & no \\
+		Ferrara & One-class SVM & 0.219 & 1.000 & no \\
 		Ferrara & LSTM-AE & 0.688 & 1.000 & no \\
 		Ferrara & TCN-AE & 0.688 & 1.000 & no \\
 		Ferrara & Transf.-AD & 0.688 & 1.000 & no \\
@@ -927,14 +934,14 @@ The IMS trend has a clean candidate mechanism: bin-averaging is a low-pass filte
 For practitioners the message is reassuring and actionable. Storing bin-averaged vibration at SCADA rates---the default behavior of most historians---does not inherently sacrifice bearing-fault warning time relative to keeping decimated raw samples, and may even improve it for control-chart detectors on noisy long-runway data. The conformal results add a usable, distribution-free false-alarm guarantee wherever the normal region is genuinely stationary, and the trade-off curve turns the gated metric into an operating-point selector for a stated false-alarm budget. The ablations caution that more features are not better under a false-alarm budget: time-domain amplitude and impulsiveness statistics carry the usable signal on IMS, and spectral features must be admitted with care. Operators whose cost structure penalizes false alarms heavily---for instance, process plants where each alarm triggers a mandatory manual inspection---have a complementary operating point available. Deep SVDD consistently stays within budget at $\le 0.6\%$ pre-onset FAR across the swept threshold levels on IMS (Table~\ref{tab:tradeoff}), achieving 14.8~h of advance warning with near-zero false alarms. Where $3\sigma$ maximizes warning time within the 10\% budget, Deep SVDD minimizes nuisance alarms for operators requiring near-zero tolerance. Neither should be used on IMS test 1, which the conformal machinery correctly flags as uncalibrated (Table~\ref{tab:conformal}).
 
 \subsection{Summary of Key Outcomes}
-In one place, the numbers that matter. (1) Bounded non-destruction holds on all four inferential datasets (and the single-asset case study): no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}). (2) On IMS, aggregation gives a positive but non-significant trend---same sign in all three runs for every magnitude detector ($3\sigma$ $+18.4$~h median, IF $+12.2$~h, EWMA $+5.8$~h, CUSUM $+5.4$~h, Hotelling $T^2$ $+4.6$~h), but the exact sign test floors at $p=0.25$ at $n=3$. (3) Elsewhere the effect is null: the single-asset ONGC case study differs by $\le 1$~min, and XJTU-SY ($n=10$), FEMTO ($n=6$), and Ferrara ($n=6$) by $\le 8$~min median, with Isolation Forest reversing sign on FEMTO. (4) After Holm correction across the $N=44$ detector $\times$ dataset family, no hypothesis survives (smallest adjusted $p=1.00$). (5) Mechanism: the IMS advantage grows from $-0.35$~h to $+6.6$~h as SNR falls to 10~dB and is matched by a plain moving-average or Kalman filter on the decimated stream---so the cause is generic low-pass smoothing, not historian averaging specifically. The honest, replicated headline is therefore non-destruction, not ``aggregation helps.''
+In one place, the numbers that matter. (1) Bounded non-destruction holds on all four inferential datasets (and the single-asset case study): no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin, with the single exception, Isolation Forest on FEMTO, lying inside it (Section~\ref{sec:femto}). (2) On IMS, aggregation gives a positive but non-significant median shift ($3\sigma$ $+15.1$~h median, CUSUM $+4.3$~h, IF $+3.4$~h, EWMA $+2.1$~h, Hotelling $T^2$ $+1.2$~h), with the same sign in all three runs only for CUSUM and Hotelling $T^2$; the exact sign test floors at $p=0.25$ at $n=3$. (3) Elsewhere the effect is null: the single-asset ONGC case study differs by $\le 1$~min, and XJTU-SY ($n=10$), FEMTO ($n=6$), and Ferrara ($n=6$) by $\le 8$~min median, with Isolation Forest reversing sign on FEMTO. (4) After Holm correction across the $N=44$ detector $\times$ dataset family, no hypothesis survives (smallest adjusted $p=1.00$). (5) Mechanism: the IMS advantage grows from $-0.35$~h to $+6.6$~h as SNR falls to 10~dB and is matched by a plain moving-average or Kalman filter on the decimated stream---so the cause is generic low-pass smoothing, not historian averaging specifically. The honest, replicated headline is therefore non-destruction, not ``aggregation helps.''
 
 
 \section{Limitations and Threats to Validity}
 \label{sec:limitations}
 We state the limits of the evidence plainly, grouped by the kind of validity each concern bears on.
 
-\emph{External validity (generalization).} The IMS ``aggregation helps'' tendency is a sign-consistent but non-significant trend ($n=3$; Table~\ref{tab:imssweep}) and does not replicate on the larger XJTU (Table~\ref{tab:xjtu}) or FEMTO (Table~\ref{tab:femto}) sets---on FEMTO the only sign-consistent detector even trends in the opposite direction; we therefore claim only non-destruction as the cross-dataset headline, not a positive effect. ONGC is a single asset ($n=1$), reported as a descriptive case study with no inference (Table~\ref{tab:ongc}). The datasets, while deliberately diverse, are all rolling-element bearings; we do not claim the result transfers to gearboxes, blades, or other failure modes without further testing.
+\emph{External validity (generalization).} The IMS ``aggregation helps'' tendency is a positive-median but non-significant trend, sign-consistent only for CUSUM and Hotelling $T^2$ ($n=3$; Table~\ref{tab:imssweep}) and does not replicate on the larger XJTU (Table~\ref{tab:xjtu}) or FEMTO (Table~\ref{tab:femto}) sets---on FEMTO the only sign-consistent detector even trends in the opposite direction; we therefore claim only non-destruction as the cross-dataset headline, not a positive effect. ONGC is a single asset ($n=1$), reported as a descriptive case study with no inference (Table~\ref{tab:ongc}). The datasets, while deliberately diverse, are all rolling-element bearings; we do not claim the result transfers to gearboxes, blades, or other failure modes without further testing.
 
 \emph{Residual gaming surfaces of the metric.} We claim the metric defeats the specific latch-on (constant-on) exploit, not that it is unconditionally ungameable, and we name two surfaces we do not close. (a) A detector could in principle align its alarm threshold to fire just after the onset time $t_o^+$; because our onset is computed only from training-region statistics, this cannot use test-region information, but an adversary with knowledge of the onset rule could still tune toward it. (b) The onset health indicator shares its RMS/kurtosis basis with several of the detectors' own features, so onset and detection are not fully independent---a circularity that could, in principle, favor detectors aligned to the onset statistic. We acknowledge both rather than claim to have eliminated them; closing them (e.g.\ an onset signal disjoint from the detector features) is future work.
 
@@ -942,7 +949,7 @@ We state the limits of the evidence plainly, grouped by the kind of validity eac
 
 \emph{Internal validity (is the comparison fair?).} We use a single fixed hyperparameter protocol throughout to avoid optimistic per-condition tuning, and we expose threshold sensitivity through the full trade-off sweep (Table~\ref{tab:tradeoff}) rather than reporting a single hand-picked operating point. The controlled sampling sweep holds window content and persistence constant so that the aggregate-vs-decimate contrast isolates information loss; the few-windows regime at the largest coarsening factor is annotated rather than hidden. Stochastic detectors inject their seed explicitly so results are bit-reproducible.
 
-\emph{Statistical-conclusion validity.} Confidence intervals are wide on IMS ($n=3$); we resample runs, the genuine unit of generalization, rather than seeds, which would understate uncertainty. Crucially, the five sampling factors applied within a run are pseudoreplicates of one degradation trajectory, not independent observations: an earlier pooled 15-pair Wilcoxon test treated them as independent and thereby overstated significance. We collapse to one difference per run and apply an exact sign test, which at $n=3$ cannot fall below $p=0.25$; after Holm correction across the forty-four-test family nothing is significant (Table~\ref{tab:holm}). The IMS result is therefore a directional trend to be read together with the XJTU and FEMTO nulls, never as a significant effect. A parametric mixed-effects model is not used: with three random-effect levels it would be over-fit, and the assumption-light sign test is the defensible choice at this sample size. A formal power analysis makes the minimum-dataset requirement concrete: to detect the observed IMS effect (Cohen's $d \approx 0.7$--1.2 across the magnitude detectors) at $\alpha=0.05$ and power 0.80, a paired test needs $n \approx 6$ (at $d=1.2$) to $n \approx 17$ (at $d=0.7$) independent run-to-failure bearings; equivalently, the exact sign test we use cannot reach significance until at least six runs are sign-concordant ($2(\tfrac{1}{2})^6=0.031$). The three IMS runs are thus a factor of two to five short of the sample size a significance claim would require---the quantitative content of the ``long-runway, many-bearing campaign'' the future work calls for. Long-runway bearing datasets with multiple runs are rare in the public domain; the closest available single-bearing example is a KAIST bearing with a ${\sim}43$-hour lifecycle ($n=1$, insufficient for inference). Research groups with access to long-running industrial historian archives---gas turbines, compressors, paper machines---can directly apply our released pipeline to test this hypothesis; we provide loader templates for all public dataset formats used here to minimize integration effort.
+\emph{Statistical-conclusion validity.} Confidence intervals are wide on IMS ($n=3$); we resample runs, the genuine unit of generalization, rather than seeds, which would understate uncertainty. Crucially, the five sampling factors applied within a run are pseudoreplicates of one degradation trajectory, not independent observations: an earlier pooled 15-pair Wilcoxon test treated them as independent and thereby overstated significance. We collapse to one difference per run and apply an exact sign test, which at $n=3$ cannot fall below $p=0.25$; after Holm correction across the forty-four-test family nothing is significant (Table~\ref{tab:holm}). The IMS result is therefore a directional trend to be read together with the XJTU and FEMTO nulls, never as a significant effect. A parametric mixed-effects model is not used: with three random-effect levels it would be over-fit, and the assumption-light sign test is the defensible choice at this sample size. The minimum-dataset requirement follows directly from the test itself: the exact sign test we use cannot reach significance until at least six runs are sign-concordant ($2(\tfrac{1}{2})^6=0.031$). The three IMS runs are thus at least a factor of two short of the sample size a significance claim would require---the quantitative content of the ``long-runway, many-bearing campaign'' the future work calls for. Long-runway bearing datasets with multiple runs are rare in the public domain; the closest available single-bearing example is a KAIST bearing with a ${\sim}43$-hour lifecycle ($n=1$, insufficient for inference). Research groups with access to long-running industrial historian archives---gas turbines, compressors, paper machines---can directly apply our released pipeline to test this hypothesis; we provide loader templates for all public dataset formats used here to minimize integration effort.
 
 
 \section{Conclusion}
@@ -967,7 +974,7 @@ All code---detectors, the leakage-free onset, the gated metric, the sampling swe
 
 \FloatBarrier
 \section*{Appendix A: Reproducibility Settings}
-Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, taken verbatim from the released config.py. A single protocol is applied to every detector, dataset, run, and sampling factor---no per-condition tuning. Table~\ref{tab:compute} reports the wall-clock training and per-window inference cost of each detector on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step; inference is negligible for every detector---at most ${\sim}54$~$\mu$s per window (LSTM-AE), five orders of magnitude below the fastest historian polling interval in our study (10~s). Streaming condition monitoring at native SCADA rates is therefore not compute-bound for any of the eleven evaluated detectors.
+Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, taken verbatim from the released config.py. A single protocol is applied to every detector, dataset, run, and sampling factor---no per-condition tuning. Table~\ref{tab:compute} reports the wall-clock training and per-window inference cost of each detector on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step; inference is negligible for every detector---at most ${\sim}0.5$~ms per window (LSTM-AE), more than four orders of magnitude below the fastest historian polling interval in our study (10~s). Streaming condition monitoring at native SCADA rates is therefore not compute-bound for any of the eleven evaluated detectors.
 
 \begin{table}[t] \small
 	\begin{center}
@@ -1004,21 +1011,23 @@ Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, tak
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Per-detector compute cost on the largest IMS run (631 train / 506 test windows, single CPU core, median of five repeats). Even the slowest model's inference is $\ll$ the 10~s SCADA polling interval.}
+	\caption{Per-detector compute cost on the largest IMS run (631 train / 506 test windows, 49-dimensional invariant features, one core of an Intel Core i5-13420H, median of five repeats). Even the slowest model's inference is $\ll$ the 10~s SCADA polling interval.}
 	\label{tab:compute}
 	\begin{tabular}{l l r}
 		\hline \hline
 		\textbf{Detector} & \textbf{Train} & \textbf{Inf.\ ($\mu$s/win)} \\
 		\hline
-		$3\sigma$ & $<1$ ms & $<0.1$ \\
-		EWMA & $<1$ ms & 0.2 \\
-		CUSUM & $<1$ ms & 0.5 \\
-		Hotelling $T^2$ & 4 ms & 0.4 \\
-		Isolation Forest & 0.20 s & 24 \\
-		Deep SVDD & 0.41 s & 1.4 \\
-		LSTM-AE & 7.8 s & 54 \\
-		TCN-AE & 10.5 s & 47 \\
-		Transformer-AD & 10.3 s & 38 \\
+		$3\sigma$ & $<1$ ms & 0.2 \\
+		EWMA & $<1$ ms & 1.0 \\
+		CUSUM & $<1$ ms & 2.1 \\
+		RMS-trend & $<1$ ms & 0.3 \\
+		Hotelling $T^2$ & 20 ms & 1.5 \\
+		One-class SVM & 11 ms & 26 \\
+		Isolation Forest & 0.73 s & 120 \\
+		Deep SVDD & 2.27 s & 2.3 \\
+		LSTM-AE & 49.5 s & 513 \\
+		TCN-AE & 46.2 s & 379 \\
+		Transformer-AD & 41.6 s & 300 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
