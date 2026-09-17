@@ -421,7 +421,76 @@ def analyse_rf2():
     vf["validity_convention"] = ("D-7: valid_frac_d7 = valid / scoreable rows; "
                                  "valid_frac_strict = valid / all rows")
     _write(vf, "rf2_valid_fraction_agg_vs_dec.csv")
+    paired_validity(inv)
     return cc, gated, vf
+
+
+def paired_validity(long_df):
+    """
+    PAIRED valid-alarm comparison: only (run, factor, detector) cells that are scoreable
+    in BOTH modes enter, so aggregate and decimate share one denominator.
+
+    The unpaired fractions differ in denominator for two reasons, both removed here:
+    gating-induced unscoreability in one mode only (IMS 2nd_test aggregate f=10,20) and
+    detector-N/A cells present in one mode only (deep models on Ferrara/FEMTO).
+
+    Per dataset (pooled over detectors) and per dataset x detector:
+      n_pairs, n_excluded, valid_agg, valid_dec, discordant agg-only / dec-only,
+      exact two-sided McNemar p = binomial test on the discordant counts (descriptive:
+      cells within a run are pseudoreplicates), and a RUN-LEVEL exact sign test on
+      (valid fraction agg - valid fraction dec) per run, the Section 4.8 unit.
+    """
+    from scipy import stats
+    from src.stats_rigor import exact_sign_test
+
+    key = ["dataset", "short_name", "run", "factor"]
+    agg = long_df[long_df["mode"] == "aggregate"].set_index(key)
+    dec = long_df[long_df["mode"] == "decimate"].set_index(key)
+    allk = agg.index.union(dec.index)
+    a, d = agg.reindex(allk), dec.reindex(allk)
+    a_ok = (a["lead_time_hours"].notna() & a["scoreable"].eq(True)).values
+    d_ok = (d["lead_time_hours"].notna() & d["scoreable"].eq(True)).values
+    cells = pd.DataFrame({
+        "paired": a_ok & d_ok,
+        "agg_only_ok": a_ok & ~d_ok,
+        "dec_only_ok": ~a_ok & d_ok,
+        "va": a["valid_d7"].eq(True).values,
+        "vd": d["valid_d7"].eq(True).values,
+    }, index=allk).reset_index()
+
+    def summarise(sub, level):
+        p = sub[sub["paired"]]
+        b = int((p["va"] & ~p["vd"]).sum())
+        c = int((~p["va"] & p["vd"]).sum())
+        mcn = float(stats.binomtest(b, b + c, 0.5).pvalue) if b + c else 1.0
+        per_run = p.groupby("run")[["va", "vd"]].mean()
+        st = exact_sign_test((per_run["va"] - per_run["vd"]).values)
+        n = len(p)
+        return {
+            **level,
+            "n_cells_total": len(sub), "n_pairs": n, "n_excluded": len(sub) - n,
+            "n_excl_scoreable_agg_only": int(sub["agg_only_ok"].sum()),
+            "n_excl_scoreable_dec_only": int(sub["dec_only_ok"].sum()),
+            "n_excl_neither": int((~sub["paired"] & ~sub["agg_only_ok"]
+                                   & ~sub["dec_only_ok"]).sum()),
+            "valid_agg": int(p["va"].sum()), "valid_dec": int(p["vd"].sum()),
+            "frac_agg": p["va"].mean() if n else np.nan,
+            "frac_dec": p["vd"].mean() if n else np.nan,
+            "discordant_agg_only": b, "discordant_dec_only": c,
+            "mcnemar_exact_p_pooled_descriptive": mcn,
+            "run_n": st["n"], "run_pos": st["n_pos"], "run_neg": st["n_neg"],
+            "run_ties": st["n_zero"], "run_median_frac_diff": st["median"],
+            "run_sign_test_p": st["p_value"],
+        }
+
+    rows = [summarise(s, {"dataset": ds, "short_name": "ALL"})
+            for ds, s in cells.groupby("dataset")]
+    rows += [summarise(s, {"dataset": ds, "short_name": sn})
+             for (ds, sn), s in cells.groupby(["dataset", "short_name"])]
+    out = pd.DataFrame(rows)
+    out["validity_convention"] = ("D-7; paired on cells scoreable, with a lead, in BOTH modes")
+    _write(out, "rf2_valid_fraction_paired.csv")
+    return out
 
 
 def _reproduction(rr):

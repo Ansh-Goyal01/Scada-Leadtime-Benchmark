@@ -1933,6 +1933,103 @@ under any indicator.
 - **The D-2 code change itself was uncommitted** (`src/benchmark.py`, `src/sampling.py`), together
   with `tests/test_feature_mode.py`. Tests: 7 passed. **Committed `d873e58`.**
 
+### 5O.6 Paired valid-alarm comparison — the §5O.3 unpaired table is SUPERSEDED
+
+**Do not report §5O.3's unpaired fractions.** Their denominators differ between modes for two
+reasons: (i) gating-induced unscoreability in one mode only (IMS `2nd_test` aggregate f=10,20);
+(ii) **detector-N/A cells present in one mode only** (deep models give a lead at more factors under
+decimate on Ferrara/FEMTO). Reason (ii) was not the author's hypothesised mechanism. On Ferrara it
+is the **only** reason, because Ferrara's unscoreability (`E3`) is symmetric.
+
+Recomputed **paired**: only (run, factor, detector) cells that have a lead and are scoreable in
+**both** modes (`rf2_valid_fraction_paired.csv`, `paired_validity()`). The pooled McNemar p is
+**descriptive only**, because cells within a run are pseudoreplicates. The run-level sign test is
+the §4.8 unit.
+
+| Dataset | cells | paired | excluded (agg-only / dec-only / neither) | valid agg | valid dec | discordant agg-only / dec-only | pooled McNemar p | runs +/−/tie | run sign p |
+|---|---:|---:|---|---|---|---|---:|---|---:|
+| IMS | 165 | 131 | 34 (0 / 16 / 18) | 47 (35.9%) | 40 (30.5%) | 7 / 0 | 0.016 | 3/0/0 | 0.25 |
+| XJTU-SY | 495 | 202 | 293 (0 / 0 / 293) | 34 (16.8%) | 44 (21.8%) | 1 / 11 | 0.0063 | 0/3/4 | 0.25 |
+| FEMTO | 330 | 300 | 30 (0 / 15 / 15) | 94 (31.3%) | 96 (32.0%) | 18 / 20 | 0.87 | 2/3/1 | 1.00 |
+| **Ferrara** | 330 | **245** | 85 (0 / 18 / 67) | **103 (42.0%)** | **148 (60.4%)** | **9 / 54** | 6.1e-9 | **0/5/0** | **0.0625** (floor at n=5) |
+| ONGC | 55 | 55 | 0 | 6 | 6 | 1 / 1 | 1.00 | 0/0/1 | 1.00 |
+
+("neither" = N/A in both modes or unscoreable in both; XJTU's 293 are mostly deep-model N/A plus
+the unscoreable bearings.) **The IMS unpaired "47/131 vs 47/147" hid a direction:** paired, aggregate
+is valid more often (7 vs 0 discordant).
+
+**Ferrara: the gap SURVIVES pairing** (unpaired 42.0% vs 58.9%, i.e. 103/245 vs 155/263; paired
+42.0% vs 60.4%), with all 5 scoreable runs in the same direction. Per detector it is carried by the
+charts: CUSUM and EWMA 13/25 vs 24/25, Hotelling 8/25 vs 16/25, 3σ 15/25 vs 22/25.
+
+**⚠️ BUT IT IS NOT YET A REAL FINDING — see N-20.** By factor, Ferrara aggregate validity is
+0.60 / **0.00** / 0.41 / 0.55 / 0.50 against decimate 0.60 / 0.62 / 0.56 / 0.65 / 0.51. The collapse
+at f=2 is where the two modes are compared at **different logging intervals** (aggregate 1.00 min,
+decimate 0.17 min; 82 vs 492 test windows on E1). Pairing fixes the denominator, not this. **Verdict:
+neither "real" nor "artifact" can be recorded until N-20 is fixed and Ferrara is re-run. Keep it
+out of the paper.**
+
+### 5O.7 Generator coverage — Table 4 was the FOURTH orphaned artifact (N-21)
+
+Table 4 (`tab:decoupled`, `kurt_only` / `pca1` onset positions) had **no generating script and no
+result file anywhere in the repo**, and `kurt_only` is not even a health-indicator kind in
+`src/onset.py`. It has now been **reconstructed** (`src/rf2_rg3_gated_contrast.py` `onsets`, output
+`rg3_onsets.csv`: `kurt_only` = baseline-z of the mean `kurt_ch*` trend) and **reproduces Table 4
+exactly** on all 3 runs × 3 indicators, on both onset % and max lead.
+
+**Orphan count, corrected:** the author's note called Table 4 the *third* orphan, after N-15 and
+`gap_injection`. **§5E.7 already records a third: Table 25's compute timings had no generator**
+(now `src/compute_cost_ims.py`). Table 4 is therefore the **fourth**:
+
+| # | Artifact | Found | Generator now |
+|---|---|---|---|
+| 1 | Table 5 `persistence_sensitivity_IMS.csv` (N-15) | session 3 | `src/persistence_sweep_ims.py` |
+| 2 | Table 25 compute timings (§5E.7) | session 3 | `src/compute_cost_ims.py` |
+| 3 | Table 6 `gap_injection.csv` (N-19) | session 5 | `src/d19_gap_injection.py` (gap=0 arm only reproduces) |
+| 4 | **Table 4 decoupled onset (N-21)** | session 6 | `src/rf2_rg3_gated_contrast.py onsets` — **reproduces exactly** |
+
+🗣️ **Response to Review, disclosure paragraph:** list all four as evidence that generator coverage was
+audited artifact by artifact. Three now reproduce exactly. `gap_injection`'s gap>0 arms do not
+(its RNG draw was lost), and that must be stated.
+
+### 5O.8 Scope of the two live inconsistencies — every site still carrying legacy IMS values
+
+**(a) Missing detector rows.** OC-SVM appears in **no table body**. It is only in prose (`tex:110`,
+`tex:235`) and in Table 11's caption. Data rows per table (caption claim in brackets):
+
+| Table | rows | claimed | missing |
+|---|---:|---|---|
+| 2 `tab:imslead` | 10 | "all eleven" | OC-SVM |
+| 7 `tab:xjtu` | 7 | "seven non-sequence" | OC-SVM (non-sequence) — D-5 |
+| 8 `tab:femto`, 9 `tab:ferrara` | 10 each | "all eleven" (8) | OC-SVM — D-5 |
+| 10 `tab:imssweep` | 10 | "all eleven" (`tex:480`) | OC-SVM |
+| **11 `tab:holm`** | **40** | **N=44** | **4 OC-SVM rows** |
+| 14, 16, 22 | 7 each | — | deep ×3 + OC-SVM — **D-9 decided, never applied** |
+| 25 `tab:compute` | 9 | "eleven" (`tex:970`) | OC-SVM, RMS-trend (N-17) |
+
+**(b) Legacy IMS values still in print (D-2 re-baseline incomplete):**
+
+| Site | Legacy content | Invariant source |
+|---|---|---|
+| `tex:87` Intro "Finding" | "on IMS it shows a consistent positive trend" | direction not consistent (3σ, EWMA, IF each 2+/1−) |
+| `tex:95` Contribution 4 | "consistent positive trend for the variance-sensitive control charts" | same |
+| `tex:267` §6 summary (ii) | "same sign in all three runs … 3σ +18.4, IF +12.2, EWMA +5.8" | +15.1 / +3.4 / +2.1, not same-sign |
+| `tex:286–297` **Table 2 body** | 214.9 … 18.4, legacy CIs, legacy order | `benchmark_IMS_leadtime_ci_invariant.csv` (its prose at `tex:273` is ALREADY invariant, so the section contradicts itself) |
+| `tex:357` + `tex:361–371` **Table 5** + caption | legacy medians; "3σ and EWMA 3/0 at all four"; "valid 1.00" (N-15) | `persistence_sensitivity_IMS_invariant.csv` |
+| `tex:421` Figure 2 caption + `fig_crossdataset.png` | "IMS shows a consistent positive trend"; bars from `ims_runlevel_test.csv` (legacy) | `ims_runlevel_test_invariant.csv` |
+| `tex:478` §5.1 + `fig_sweep.png` | "58.0 h → 7.1 h … near 59 h"; plot from `benchmark_IMS_long.csv` | 64.6 → 24.8, near 64.6; `benchmark_IMS_long_invariant.csv` |
+| `tex:480` §6 prose | six legacy triples, "in no run does aggregation shorten", "p=0.25" floor as attained, deep medians −1.4/−0.4/−1.4 | §5B.0.1 / `ims_runlevel_test_invariant.csv` |
+| `tex:491–506` **Table 10** | every row | same |
+| `tex:523–532` **Table 11** IMS rows | raw p 0.250 ×8 | invariant raw p (6 move to 1.00) |
+| `tex:930` Summary (2) | "same sign in all three runs … +18.4, +12.2, +5.8, +5.4, +4.6; floors at p=0.25" | invariant |
+| `tex:937` External validity | "sign-consistent but non-significant trend" | not sign-consistent |
+| `tex:945` Statistical-conclusion validity | "Cohen's d ≈ 0.7–1.2" → n≈6–17. **No source file exists for this d range** (rule 1), and legacy run-level d does not give it either | remove or source |
+| `tex:970` + `tex:1008–1021` **Table 25** | timings measured at 445 dims on other hardware | `compute_cost_IMS_invariant.csv` + `_extra_` — option (c) of §5E.7 |
+
+**Already invariant (no change):** abstract `tex:63`, `tex:273` Table 2 prose, the D-17 appendix
+`tex:1051–1082`, `tex:166` (§4.2, now true), Tables 3/4/6/13–22/27/28 (§5C.3). `tex:718–723`
+token hits are Table 16 values (invariant path), a coincidental match.
+
 ## 6. Item checklist — all 41 reviewer items
 
 Legend: ⬜ not started · 🔄 in progress · ✅ done · ⛔ blocked · ➖ no action needed
@@ -2037,6 +2134,8 @@ These are the same class of defect Reviewer D is hunting. Numbered N-1 onward.
 | **N-18** | **§6.9 contradicts Table 16 about which detector has the highest raw lead.** `tex:640` states "EWMA attains the highest raw lead in Table~
 | **N-19** | **Table 6's caption claim is false, and `gap_injection.csv` is an orphaned artifact.** `tab:missing` (`tex:380`) asserted "Valid-alarm fractions (not shown) are unchanged across gap levels". Measured on the released file: IMS holds at 2/3 for all three detectors, but **XJTU-SY 3σ moves 5/10 → 6/10 → 5/10**. Separately, the file carries **no `far_preonset_pct` column** and **no generating script existed anywhere in the tree** (same class as N-15), so its validity flags could not be re-derived | **Medium** — a false invariance claim in a caption, on an artifact that could not be audited | ✅ **RESOLVED session 5.** New generator `src/d19_gap_injection.py` → `results/tables/gap_injection_far.csv`; gap=0 arm reconciles exactly, caption corrected to the measured values. ⚠️ gap>0 arms are **not** reproducible (original RNG draw lost) — Table 6's body left on the released numbers. §5N.3 |
 ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** and **Iso. Forest 174.7 h** against **EWMA 89.1 h**. The same paragraph and the Figure 6 caption (`tex:654`) say "EWMA and Isolation Forest dominate the upper-left", yet over the full swept curve **Hotelling T² strictly dominates EWMA on both axes** (lead 187.8 vs 174.8; min FAR 19.0 vs 20.8). A third clause, "the raw-lead column of Table 2, where EWMA leads", is additionally false under D-2. **The first two are wrong in the submitted manuscript, independent of the re-baseline** | **High** — a sixth internal contradiction, and it contradicts a table on the same page | ⬜ **NOT YET EDITED** — reported to the author session 4, awaiting decision. Sources: `results/tables/tradeoff_IMS.csv`, `results/tables/benchmark_IMS_leadtime_ci_invariant.csv`. §5L.3 |
+| **N-20** | **Aggregate and decimate are NOT compared at the same logging interval on the standard path.** `src/__init__.py:207`: `target_min = max(1, int(round(base_min * downsample_factor)))` rounds aggregation bins to whole minutes with a 1-min floor, while decimation takes exactly every k-th row. With sub-minute base spacing, "aggregate f=2" is a 12× (Ferrara, 5 s base) or 6× (FEMTO/ONGC, 10 s base) coarsening. Measured on the published files: effective interval differs between modes in **24/30** (run, factor) cells on FEMTO, **24/30** on Ferrara and **4/5** on ONGC; **0** on XJTU-SY (1-min base) and IMS (controlled path). E.g. Ferrara E1 f=2: aggregate 1.00 min / 82 test windows vs decimate 0.17 min / 492. Affects Tables 8 and 9, the ONGC case study, Figure 2, the FEMTO/Ferrara Holm cells, the D15 equivalence cells (R-2) and the Ferrara validity gap (§5O.6) | **High** — the matched-factor premise of the central comparison fails on two of four inferential datasets | ⬜ **NOT FIXED — needs brief rule 4 sign-off** (code change in `load_pipeline`) and FEMTO/Ferrara/ONGC reruns. Found session 6 |
+| **N-21** | **Table 4 (`tab:decoupled`) had no generator** — the fourth orphaned artifact (after N-15, Table 25, N-19); `kurt_only` was not an indicator kind in `src/onset.py` | Medium | ✅ **RESOLVED session 6** — reconstructed, reproduces exactly. §5O.7 |
 | **N-12** | **`Bearing1_2` legacy-metric substitution.** With no onset, `lead_time.py:234-240` writes **legacy FAR into `far_preonset_pct`** and **legacy VLT into `valid_alarm`**, under onset-relative column names. Verified on all 100 rows: `far_preonset_pct == far_legacy_pct` 100/100; `valid_alarm == (vlt_legacy > 0)` 100/100. Table 12's entry (V/5 = 1, 0.67 h, EWMA) is arithmetically correct but produced by a criterion the paper never states. Hotelling T² earned 1.083 h raw lead and was killed by the *legacy* 20%-marker rule, not Eq. 5. Worse than N-7's NaN case: a real-looking number occupies the `FAR_pre` column and **is not `FAR_pre`** | **High** — a silent metric substitution on a bearing that appears in a published table | ✅ diagnosed §5A → decision **D-8** (code fix signed off); fix in item 1.8 |
 
 ---
