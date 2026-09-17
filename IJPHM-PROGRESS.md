@@ -220,6 +220,7 @@ with `UnicodeEncodeError` on the default Windows console; every new script carri
 - **Manuscript UNFROZEN** (author instruction). Claude owns the `.tex`; prose arrives as text to insert. §0 rewritten, memory updated.
 - **RF-2 (1.1) and RG-3 (1.5) done in one pass**, §5O. New result files only; no published file or manuscript touched.
 - **Preservation:** N-3 negation in `.gitignore`; all result files committed; D-2 code (`d873e58`) and 15 revision scripts (`960f711`) committed. §5O.5.
+- **Session 6b:** paired validity (§5O.6); **N-20 found (High, open)**; N-21 (Table 4 = 4th orphan); **D-2 re-baseline applied to the manuscript + Table 11 at 44 rows** (§5O.9, `20658e5`, `6bb3f74`).
 - **New findings for the manuscript pass:** Tables 10/11 still carry legacy IMS values (D-2 swap not applied); Table 11 has 40 rows under an N=44 caption; Table 4 had no generator (now reproduced); the gated IMS contrast is onset-dependent.
 
 ## 4. Open decisions awaiting the author
@@ -2030,6 +2031,52 @@ audited artifact by artifact. Three now reproduce exactly. `gap_injection`'s gap
 `tex:1051–1082`, `tex:166` (§4.2, now true), Tables 3/4/6/13–22/27/28 (§5C.3). `tex:718–723`
 token hits are Table 16 values (invariant path), a coincidental match.
 
+### 5O.9 D-2 re-baseline COMPLETED + Table 11 at 44 rows — manuscript pass applied ✅
+
+**Commits:** `20658e5` (manuscript) · `6bb3f74` (Figures 2 and 3 + `paper/make_figures.py`, which was
+gitignored and is now force-tracked). Every site in §5O.8(b) was edited. The diff was reviewed
+before writing (rule 6); the full unified diff was generated from the scratchpad proposal.
+
+| Site | Now |
+|---|---|
+| `tex:87`, `:95` | "positive median shift … not consistent across the runs" |
+| `tex:267` | 3σ +15.1, CUSUM +4.3, IF +3.4, EWMA +2.1; only CUSUM and Hotelling positive in all three runs |
+| `tex:273` | "…followed by the one-class SVM, and Hotelling $T^2$ leads the **control charts**" (OC-SVM 180.3 now sits above Hotelling 174.8, so "classical detectors" would have been false) |
+| Table 2 | invariant means/CIs, re-ordered, **+ OC-SVM† 180.3 [65.5, 316.7]**; caption names the one-class SVM |
+| `tex:357` + Table 5 + caption | invariant medians; N-15 fix (full-res valid **0.67** ×4); **new row: pooled valid 0.67/0.67/0.53/0.33**; "does not depend on this parameter" **withdrawn**; "Non-destruction … stable throughout" removed from the caption |
+| Figure 2 caption + `fig_crossdataset.png` | invariant IMS bars |
+| `tex:478` + `fig_sweep.png` | 64.6 h → 24.8 h at 10×, aggregation near 64.6 h; invariant curve |
+| `tex:480` | CUSUM and Hotelling are the only sign-consistent detectors; 3σ/IF/EWMA each have a negative run; deep models + OC-SVM have negative medians, with test 3 strongly positive for the deep models (+56.1/+9.0/+68.8). **"in no run does aggregation shorten" removed** (the D-17 appendix at `tex:1054` already describes it as withdrawn, which is now true). **The "negligible magnitude … smoothing mechanism" explanation for the deep models was removed**, because it is false under D-2 |
+| Table 10 | invariant, **+ OC-SVM** |
+| **Table 11** | **44 rows** (4 OC-SVM rows added); IMS raw p invariant (**7** rows changed, not 6 as §5C said: Deep SVDD also moves, 0.50 → 1.00); caption "retained exactly as originally computed" → "IMS rows are computed on the 49-dimensional invariant feature schema" |
+| `tex:930`, `:937` | invariant medians; "sign-consistent only for CUSUM and Hotelling $T^2$" |
+| `tex:945` | **unsourced "Cohen's d ≈ 0.7–1.2 → n ≈ 6–17" removed** (rule 1). The exact sign-test statement is kept: six concordant runs are needed, so IMS is "at least a factor of two short" |
+| `tex:970` + Table 25 | **§5E.7 option (c)**: all **eleven** rows from this machine's invariant run (`compute_cost_IMS_invariant.csv` + `_extra_`); caption names "49-dimensional invariant features, one core of an Intel Core i5-13420H". Option (a) was impossible (original hardware unknown); (b) would leave a legacy-schema table. Sentence: "at most ~0.5 ms per window (LSTM-AE), more than four orders of magnitude below" 10 s (10 s / 513 µs ≈ 1.9×10⁴). **N-17 resolved in print** |
+
+**Verification.**
+- Tables 7–11, re-parsed from the new `.tex`, match the result files on **251/251** values.
+- Rebuilt with `tools/tectonic.exe`: **26 pages**, no errors or undefined references. The pre-edit HEAD was also rebuilt: 26 pages.
+- PyMuPDF sweep, base → new: `+18.4` 7→**0**, `consistent positive trend` 5→**0**, `58.0 h` 1→0, `214.9` 1→0, `Cohen` 1→0, legacy valid row 1→0, `54 µs` 1→0; `One-class SVM` 0→**7**; Table 11 dataset cells in the PDF **40→44**. The page render confirms Table 11 fits its float.
+- Residual hits reconciled: `27.1` is Table 16's FAR (invariant path); `in no run does aggregation` ×1 is the D-17 appendix's withdrawal sentence.
+
+**Rule 10 reference counts — RE-BASELINED on this build (the §0 checklist values are stale):**
+"never better" **0** · "never costs" **0** · "does not cost" **1** · "honest"/"honestly" **17** ·
+"non-destruction" **21** (22→21: the Table 5 caption clause) · em-dashes **180** in the PDF (186 in the pre-edit
+build) · **176** live `---` in the source (182 before). Negative hits were reconciled, not trusted: the
+"ﬁ" ligature hid "five orders", and line breaks rendered "sign- consistent" and "or- ders".
+
+**Left for the author's prose pass (not changed, flagged):**
+1. `tex:478` says the upturn is "at the very largest factor". In Figure 3 the deep models spike to
+   ~420 h at the **500-min** point, because only **one run** survives there (two at 250 min). The same
+   survivorship exists in the legacy data, so this is a pre-existing understatement, not new.
+2. `tex:480` no longer offers a mechanism for the deep models, and one may be wanted.
+3. Tables 7, 8, 9 (OC-SVM) and 14, 16, 22 (deep ×3 + OC-SVM) still lack their D-5/D-9 rows (§5O.8a),
+   and FEMTO/Ferrara values are provisional under **N-20**.
+4. Table 12 still carries the pre-D-7 validity counts (§5N.1 deferral), independent of D-2.
+5. `paper/build_pdf.sh` (untracked, gitignored) builds the superseded `scada_journal.tex`. It is stale,
+   same class as N-8. The IJPHM build command is
+   `tools/tectonic.exe --outdir <dir> scada_ijphm.tex`, run from `paper/files/`.
+
 ## 6. Item checklist — all 41 reviewer items
 
 Legend: ⬜ not started · 🔄 in progress · ✅ done · ⛔ blocked · ➖ no action needed
@@ -2174,7 +2221,9 @@ ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** an
 > 1. §6.6a: gated-contrast table + companion validity table (R-18); state the power loss (ties 59→108).
 > 2. §6.2 "invariant to the onset definition by construction": **true for raw lead (verified, 0.000 h)**,
 >    **false for gated L on IMS** (R-5). Bound it explicitly.
-> 3. Tables 10 and 11 still show **legacy** IMS values; apply the D-2 swap. Table 11 lacks the 4 OC-SVM rows.
+> 3. ~~Tables 10 and 11 still show legacy IMS values~~ ✅ **D-2 re-baseline completed and Table 11 at 44 rows (§5O.9, `20658e5`).**
+> 5. **N-20 (High, OPEN):** aggregate and decimate run at different logging intervals on FEMTO/Ferrara/ONGC (`src/__init__.py:207`). Needs rule-4 sign-off, a code fix, and reruns before Tables 8/9, Figure 2, the FEMTO/Ferrara Holm and equivalence cells, or the Ferrara validity gap can be trusted.
+> 6. D-5/D-9 rows still missing from Tables 7, 8, 9, 14, 16, 22 (§5O.8a).
 > 4. Table 4 now has a generator (`rg3_onsets.csv`); cite it in Data Availability.
 
 
