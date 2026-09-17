@@ -221,6 +221,7 @@ with `UnicodeEncodeError` on the default Windows console; every new script carri
 - **RF-2 (1.1) and RG-3 (1.5) done in one pass**, §5O. New result files only; no published file or manuscript touched.
 - **Preservation:** N-3 negation in `.gitignore`; all result files committed; D-2 code (`d873e58`) and 15 revision scripts (`960f711`) committed. §5O.5.
 - **Session 6b:** paired validity (§5O.6); **N-20 found (High, open)**; N-21 (Table 4 = 4th orphan); **D-2 re-baseline applied to the manuscript + Table 11 at 44 rows** (§5O.9, `20658e5`, `6bb3f74`).
+- **Session 6c:** **D-10 authorised; N-20 fixed** (`src/__init__.py`), IMS and XJTU-SY verified unchanged, FEMTO/Ferrara/ONGC re-run and propagated (§5O.10). No manuscript edit.
 - **New findings for the manuscript pass:** Tables 10/11 still carry legacy IMS values (D-2 swap not applied); Table 11 has 40 rows under an N=44 caption; Table 4 had no generator (now reproduced); the gated IMS contrast is onset-dependent.
 
 ## 4. Open decisions awaiting the author
@@ -235,6 +236,7 @@ with `UnicodeEncodeError` on the default Windows console; every new script carri
 | D-6 | Template check — the editor's letter says "PHM Conference Paper template" but this is the journal; the source uses `\documentclass[IJPHM,2026,0]{PHMSociety}` | ⬜ open | Verify against the IJPHM author guidelines; query the editor if ambiguous. |
 | D-7 | How validity is defined when `FAR_pre` is undefined (N-7) — strict Eq. 5, documented carve-out, or exclusion | ✅ **decided** | **Three-outcome validity: valid / invalid / unscoreable.** *Unscoreable* = pre-onset region empty, `FAR_pre` undefined. Unscoreable rows are **excluded from validity denominators** and reported explicitly. **Amend Eq. 5** in the manuscript to define this. **AND** report the strict-convention figures alongside (unscoreable counted as invalid), because a reviewer running Eq. 5 literally against the released CSVs lands on 73/450 — that number must appear in the paper. |
 | D-8 | `Bearing1_2` no-onset fallback — documentation gap or correctness bug | ✅ **decided** | **Correctness bug.** The fallback must stop writing legacy FAR into `far_preonset_pct` and legacy VLT into `valid_alarm` under onset-relative column names. **Emit NaN plus an explicit `no_onset` flag instead.** `Bearing1_2` is **unscoreable for all onset-relative quantities** and comes out of Table 12's validity columns with a stated flag. Its **raw lead-time contribution to Tables 7 and 11 is unaffected and stays.** Requires changing existing metric code — **brief rule 4 sign-off granted, scoped to this fallback branch only** (`src/lead_time.py:234-240` and the `benchmark.py:130` warning). |
+| D-10 | N-20: fix the aggregation resampling target so aggregate and decimate land on the same effective logging interval | ✅ **AUTHORISED (session 6, rule-4 sign-off)** | **Scope:** `src/__init__.py:207` and anything strictly required to make aggregate and decimate land on the same effective interval at the same nominal factor. **Not** detector, onset or metric code, seeds, or hyperparameters. **Fix:** resample at native spacing × factor in the native unit (seconds when sub-minute) instead of rounding to whole minutes. **Author's rationale:** §4.7 states the controlled sweep holds everything constant so that only the effective logging interval varies, isolating information loss from the window-counting confound. On FEMTO, Ferrara and ONGC it does not: the minute-rounding floor coarsens aggregate harder than decimate at the same factor. That is a defect in the exact mechanism the paper claims to have eliminated, so it cannot ship. **Mandatory check:** IMS (600 s native) and XJTU-SY (60 s native) must reproduce byte-identically; if either moves, stop. Then rerun FEMTO/Ferrara/ONGC and report before any manuscript edit. **Add N-20 to the Response to Review disclosure list** (with N-15, N-17, N-18, N-21). |
 | D-9 | Do Tables 14 (`tab:farbudget`) and 22 (`tab:phrank`) gain the three deep reconstruction rows and one-class SVM, alongside Table 16? *(The author labelled this "D-6"; **D-6 is already in use** for the template check, which remains open — recorded as D-9 to keep the register unambiguous.)* | ✅ **DECIDED — YES, both tables gain all four rows** (session 4) | **Author's rationale:** the **four-way inversion is a stronger demonstration of §6.12's thesis** than the single-detector version — **the top SEVEN detectors by prognostic horizon all score L = 0**, and the deployable choice **3σ ranks EIGHTH of eleven on PH while ranking FIRST on L** — a seven-way inversion. *(The rationale as first stated said "top four … ranks fifth"; the rebuild in §5J measured **seven / eighth**. The decision is unaffected and the demonstration is stronger. **Use seven-way / eighth everywhere, including the Response to Review.**)* **Consistency also requires it**: D2 puts the deep models in Table 16, and Tables 14, 16 and 22 all draw on the **same trade-off data**, so a detector present in one must be present in all three. Rebuilt tables in §5J. |
 
 ---
@@ -1989,6 +1991,8 @@ exactly** on all 3 runs × 3 indicators, on both onset % and max lead.
 | 3 | Table 6 `gap_injection.csv` (N-19) | session 5 | `src/d19_gap_injection.py` (gap=0 arm only reproduces) |
 | 4 | **Table 4 decoupled onset (N-21)** | session 6 | `src/rf2_rg3_gated_contrast.py onsets` — **reproduces exactly** |
 
+🗣️ **Response to Review — DEFECT DISCLOSURE LIST (author instruction, session 6):** **N-15** (Table 5 validity 1.00 not reproducible), **N-17** (compute-cost sentence overreached its table), **N-18** (EWMA-leads claims contradicting Table 16), **N-20** (aggregate and decimate compared at different logging intervals on FEMTO/Ferrara/ONGC; fixed; verdict and 30/30 equivalence unchanged, IF-on-FEMTO exception and FEMTO sign-consistency claim withdrawn), **N-21** (Table 4 orphaned, reconstructed). Every one was found unprompted.
+
 🗣️ **Response to Review, disclosure paragraph:** list all four as evidence that generator coverage was
 audited artifact by artifact. Three now reproduce exactly. `gap_injection`'s gap>0 arms do not
 (its RNG draw was lost), and that must be stated.
@@ -2076,6 +2080,121 @@ build) · **176** live `---` in the source (182 before). Negative hits were reco
 5. `paper/build_pdf.sh` (untracked, gitignored) builds the superseded `scada_journal.tex`. It is stale,
    same class as N-8. The IJPHM build command is
    `tools/tectonic.exe --outdir <dir> scada_ijphm.tex`, run from `paper/files/`.
+
+### 5O.10 N-20 FIXED (D-10) — verification and propagation. NO manuscript edit yet
+
+**Code** (`src/__init__.py:207-213`, the only change): aggregate bins at `round(base_min·60·factor)` **seconds**
+instead of `max(1, round(base_min·factor))` minutes. Nothing else touched: no detector, onset, metric,
+seed or hyperparameter change. Generators: `src/n20_resample_fix.py` (verify, rerun, chunked rerun) and
+`src/n20_propagate.py`. RF-2 gets `--arm n20` (outputs `*_n20.csv`).
+
+**Mandatory verification — PASSED; no scope creep.**
+- `load_pipeline` fingerprints (X_train, X_test, ts_test, features, interval) are identical before and after
+  for every IMS and XJTU-SY run × mode × factor: **117/117** (`n20_pipeline_hash_check.csv`). The pre-fix
+  hash was taken with `src/__init__.py` confirmed unmodified.
+- Full post-fix benchmark reruns (`n20_reproduction_check.csv`): **XJTU-SY raw file bytes identical** to
+  `benchmark_XJTU-SY_long.csv`. **IMS values and bytes identical** on all 24 shared columns of
+  `benchmark_IMS_long_invariant.csv`; the published file has one extra `feature_mode` column that
+  `ims_schema_check.py` appended.
+- FEMTO, Ferrara, ONGC: **every decimate row and every f=1 row is identical** to the published data (lead,
+  FAR, window count). Only aggregate f>1 rows change (lead changed in 192/240, 215/240 and 35/40 rows).
+  Agg/dec interval mismatches 24/24/4 → **0/0/0**. ONGC f=20 test windows 641 vs 640, an edge-bin effect.
+- ONGC ran as 20 atomic per-cell chunks (the harness killed whole-run jobs for low memory). The f=1 chunk
+  equals the published f=1 rows exactly, which shows chunking does not change results.
+
+**1. Raw-lead run-level contrast, published → post-fix** (`n20_raw_contrast_old_vs_new.csv`; median h, n₊/n₋/ties, p):
+
+| FEMTO | old | new |
+|---|---|---|
+| 3σ | −0.099, 1/5/0, 0.219 | −0.139, 1/5/0, 0.219 |
+| EWMA | +0.008, 3/3/0, 1.000 | +0.093, 4/2/0, 0.688 |
+| CUSUM | +0.001, 3/3/0, 1.000 | +0.101, 4/2/0, 0.688 |
+| Hotelling | +0.069, 5/1/0, 0.219 | +0.071, 5/1/0, 0.219 |
+| **Iso. Forest** | **−0.137, 0/6/0, 0.031 (sign-consistent)** | **−0.065, 2/4/0, 0.688** |
+| Deep SVDD | −0.003, 3/3/0, 1.000 | −0.004, 1/3/2, 0.625 |
+| LSTM-AE | −0.049, 2/4/0, 0.688 | −0.040, 0/3/3, 0.250 (sign-consistent −) |
+| TCN-AE | +0.001, 3/3/0, 1.000 | 0.000, 1/2/3, 1.000 |
+| Transformer-AD | +0.041, 5/1/0, 0.219 | −0.053, 0/4/2, 0.125 (sign-consistent −) |
+| RMS-trend | −0.025, 2/4/0, 0.688 | −0.017, 1/3/2, 0.625 |
+| OC-SVM | +0.036, 4/2/0, 0.688 | +0.024, 4/1/1, 0.375 |
+
+| Ferrara | old | new |
+|---|---|---|
+| 3σ | −0.021, 3/3/0, 1.000 | −0.015, 2/3/1, 1.000 |
+| EWMA | +0.007, 3/3/0, 1.000 | +0.008, 4/2/0, 0.688 |
+| CUSUM | +0.011, 4/2/0, 0.688 | +0.008, 5/1/0, 0.219 |
+| Hotelling | +0.046, 5/1/0, 0.219 | +0.010, 4/1/1, 0.375 |
+| Iso. Forest | −0.075, 2/4/0, 0.688 | +0.005, 3/2/1, 1.000 |
+| Deep SVDD | −0.006, 2/4/0, 0.688 | −0.003, 1/4/1, 0.375 |
+| LSTM-AE | +0.003, 4/2/0, 0.688 | 0.000, 2/2/2, 1.000 |
+| TCN-AE | +0.003, 4/2/0, 0.688 | +0.001, 3/1/2, 0.625 |
+| Transformer-AD | +0.003, 4/2/0, 0.688 | +0.001, 3/1/2, 0.625 |
+| RMS-trend | −0.003, 3/3/0, 1.000 | +0.009, 4/2/0, 0.688 |
+| OC-SVM | +0.020, 5/1/0, 0.219 | +0.011, 4/1/1, 0.375 |
+
+ONGC (n=1, h): Hotelling **+2.406 → +0.110**, RMS-trend **+0.001 → +4.575**, Iso. Forest +0.121 → +0.205,
+LSTM-AE −0.263 → −0.157, 3σ +0.011 → −0.012, CUSUM −0.017 → +0.002; the others are within 0.02 h.
+The ONGC table convention (median over factors, min): 3σ +0.5 → **0.0**, EWMA −1.1 → **−0.5**, Hotelling
++0.8 → **+0.4**, Iso. Forest +1.2 → +1.2, RMS-trend 0.0 → **+1.2** (`n20_ongc_minutes.csv`).
+
+**2. Holm N=44: 0/44 → 0/44; smallest adjusted p 1.00 → 1.00.** Smallest raw p **0.031 (FEMTO Iso. Forest) →
+0.125 (FEMTO Transformer-AD)**. Family ties 59 → 83, n₊+n₋ 195 → 171.
+
+**3. D15 equivalence (δ = 1 h) — SURVIVES.** It was recomputed through `d15_equivalence.analyse()` itself. The
+old-arm replay reproduces the published 60 rows (max |Δ| 3.6e-15, verdicts identical). Post-fix,
+**XJTU-SY 10/10, FEMTO 10/10, Ferrara 10/10 equivalent: 30/30 holds**; with OC-SVM, **33/33**. IMS
+(invariant) is unchanged, 2 superior / 8 inconclusive. No cell shows decimation superior beyond the margin.
+TOST feasible 22 → **14**, feasible-and-equivalent 17 → **13**.
+⚠️ **The abstract's exception clause does not survive:** Iso. Forest on FEMTO −0.257 [−0.544, −0.057] →
+**−0.180 [−0.488, +0.025]**; its CI now includes 0. Cells with the CI entirely below 0, post-fix (11-detector):
+XJTU Iso. Forest −0.100 [−0.162, −0.041], **FEMTO 3σ −0.213 [−0.449, −0.041]**, FEMTO LSTM-AE −0.061
+[−0.113, −0.013], FEMTO RMS-trend −0.123 [−0.327, −0.004], FEMTO Transformer-AD −0.077 [−0.153, −0.018].
+**Pre-fix there were already five such cells** (XJTU IF, FEMTO 3σ, FEMTO IF, FEMTO RMS, Ferrara IF), so "the
+one place decimation leads" was inaccurate even before N-20.
+
+**4. RF-2 gated (D-7), post-fix** (`rf2_gated_contrast_n20.csv`): Holm **0/44**, min adj p 1.00, min raw p
+0.0625 → **0.125**; ties 108 → **118**, n₊+n₋ 108 → **98**; 38 runs excluded (unchanged). Ferrara's
+EWMA and Hotelling 0/5 (p 0.0625) become **1/4 (0.375)** and **1/2/2 (1.00)**. ONGC Hotelling gated −4.67 → **+6.98**.
+
+**Paired valid-alarm comparison, post-fix** (`rf2_valid_fraction_paired_n20.csv`):
+
+| Dataset | pairs (excl.) | valid agg vs dec | discordant agg/dec | pooled McNemar | runs +/−/= | run p |
+|---|---|---|---|---:|---|---:|
+| FEMTO | 315 (15) | 112 (35.6%) vs 99 (31.4%) | 26 / 13 | 0.053 | 4/1/1 | 0.375 |
+| **Ferrara** | **263 (67)** | **144 (54.8%) vs 155 (58.9%)** | **11 / 22** | 0.080 | **2/3/0** | **1.00** |
+| ONGC | 55 (0) | 10 vs 6 | 4 / 0 | 0.125 | 1/0/0 | 1.00 |
+| IMS, XJTU-SY | unchanged (§5O.6) | | | | | |
+
+**VERDICT: the Ferrara validity gap was the bug.** Paired 42.0% vs 60.4% (9/54 discordant, 0+/5− runs) becomes
+54.8% vs 58.9% (11/22, 2+/3− runs, p = 1.00). The residual 4-point gap is not directional at the run level.
+The f=2 collapse (aggregate 0.00 valid) was the 12× over-coarsening. **Do not report a Ferrara validity finding.**
+
+**5. Manuscript numbers that move — 81 printed cells** (`n20_manuscript_cells.csv`; the old arm reproduces
+all 129 checked cells first):
+- **Table 8 `tab:femto`** `tex:438-447`: 29 cells, including 3σ −0.10→−0.14; EWMA 0.01→0.09 (4/2, 0.688);
+  CUSUM 0.00→0.10 (4/2, 0.688); **Iso. Forest −0.14→−0.07, 0/6→2/4, 0.031→0.688, Sign-con. yes→no**; Deep SVDD 1/3, 0.625;
+  LSTM-AE −0.04, 0/3, 0.250, **Sign-con. no→yes (−)**; TCN 1/2; **Transformer-AD 0.04→−0.05, 5/1→0/4, 0.219→0.125, Sign-con. no→yes (−)**;
+  RMS-trend −0.02, 1/3, 0.625. (The Sign-con. column is not in the parser; read from `all_same_sign`.) **Still no OC-SVM row** (D-5).
+- **Table 9 `tab:ferrara`** `tex:464-473`: 30 cells (every row; no detector sign-consistent, still true).
+- **Table 11 `tab:holm`** FEMTO rows `tex:549-558`, Ferrara rows `tex:560-569`: 18 raw p change; all Holm p stay 1.000.
+- **ONGC table** `tex:1152-1156`: 4 cells (above). The caption "about a minute or less" still holds (max 1.2 min).
+- **Figure 2** (`fig_crossdataset.png`): the FEMTO/Ferrara/ONGC bars move. Its generator reads
+  `femto_runlevel_test.csv` / `ferrara_runlevel_test.csv` / `benchmark_ONGC_paired_test.csv`, which are all pre-fix.
+- **Prose:**
+  - `tex:63` abstract, and the exception clause at `tex:87`, `:95`, `:929`, `:937`(1), and the conclusion: "the one place decimation leads, Isolation Forest on FEMTO (−0.26 h, 95% CI [−0.54, −0.06])" is **no longer true**. 30/30 and "no cell superior beyond the margin" still hold.
+  - `tex:267`, `:937`(3): "Isolation Forest reversing sign on FEMTO". Its median is still negative (−0.07) but it is no longer sign-consistent.
+  - `tex:937`(3): "≤ 8 min median" on the multi-bearing sets. **Post-fix the maximum is 0.139 h = 8.3 min (FEMTO 3σ)**; pre-fix it was 0.137 h = 8.2 min, so the claim already overshot by rounding.
+  - `tex:428`: "the one detector that is sign-consistent on FEMTO, Isolation Forest, trends negative (6/6 runs, median −0.14…)" is **false**. Post-fix, LSTM-AE (0/3) and Transformer-AD (0/4) are the sign-consistent ones, both negative.
+  - Table 8 caption: "the only sign-consistent detector, Isolation Forest, trends negative" is **false** (same reason).
+  - `tex:454`: "smallest sign-test p is 0.219 (Hotelling $T^2$)" → 0.219 (**CUSUM**).
+  - `tex:516` region (Holm prose), if it cites 0.031 / Iso. Forest on FEMTO → 0.125 / Transformer-AD on FEMTO (verify at edit time; rule 10).
+  - `tex:944`/`:937` external validity: "on FEMTO the only sign-consistent detector even trends in the opposite direction" is **true in spirit but names no detector**; re-check at edit time.
+- **Not moved:** IMS, XJTU-SY, Tables 2, 5, 7, 10 and Table 11's IMS/XJTU rows, and all non-benchmark artifacts. Every other `load_pipeline` aggregate caller (robustness, gap injection, feature-coarsening ablation) runs on IMS or XJTU-SY, whose pipeline outputs are proven unchanged.
+
+**Also found while scanning (D-2 residue from §5O.9, NOT edited):** `tex:398` "a consistent but non-significant
+positive trend on IMS" and **`tex:956` (Conclusion)** "on IMS shows a consistent, sign-concordant positive trend".
+The §5O.9 sweep matched only the literal "consistent positive trend", so §5O.9's "0 remaining" was wrong.
+This is a rule-10 miss, stated plainly.
 
 ## 6. Item checklist — all 41 reviewer items
 
@@ -2181,7 +2300,7 @@ These are the same class of defect Reviewer D is hunting. Numbered N-1 onward.
 | **N-18** | **§6.9 contradicts Table 16 about which detector has the highest raw lead.** `tex:640` states "EWMA attains the highest raw lead in Table~
 | **N-19** | **Table 6's caption claim is false, and `gap_injection.csv` is an orphaned artifact.** `tab:missing` (`tex:380`) asserted "Valid-alarm fractions (not shown) are unchanged across gap levels". Measured on the released file: IMS holds at 2/3 for all three detectors, but **XJTU-SY 3σ moves 5/10 → 6/10 → 5/10**. Separately, the file carries **no `far_preonset_pct` column** and **no generating script existed anywhere in the tree** (same class as N-15), so its validity flags could not be re-derived | **Medium** — a false invariance claim in a caption, on an artifact that could not be audited | ✅ **RESOLVED session 5.** New generator `src/d19_gap_injection.py` → `results/tables/gap_injection_far.csv`; gap=0 arm reconciles exactly, caption corrected to the measured values. ⚠️ gap>0 arms are **not** reproducible (original RNG draw lost) — Table 6's body left on the released numbers. §5N.3 |
 ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** and **Iso. Forest 174.7 h** against **EWMA 89.1 h**. The same paragraph and the Figure 6 caption (`tex:654`) say "EWMA and Isolation Forest dominate the upper-left", yet over the full swept curve **Hotelling T² strictly dominates EWMA on both axes** (lead 187.8 vs 174.8; min FAR 19.0 vs 20.8). A third clause, "the raw-lead column of Table 2, where EWMA leads", is additionally false under D-2. **The first two are wrong in the submitted manuscript, independent of the re-baseline** | **High** — a sixth internal contradiction, and it contradicts a table on the same page | ⬜ **NOT YET EDITED** — reported to the author session 4, awaiting decision. Sources: `results/tables/tradeoff_IMS.csv`, `results/tables/benchmark_IMS_leadtime_ci_invariant.csv`. §5L.3 |
-| **N-20** | **Aggregate and decimate are NOT compared at the same logging interval on the standard path.** `src/__init__.py:207`: `target_min = max(1, int(round(base_min * downsample_factor)))` rounds aggregation bins to whole minutes with a 1-min floor, while decimation takes exactly every k-th row. With sub-minute base spacing, "aggregate f=2" is a 12× (Ferrara, 5 s base) or 6× (FEMTO/ONGC, 10 s base) coarsening. Measured on the published files: effective interval differs between modes in **24/30** (run, factor) cells on FEMTO, **24/30** on Ferrara and **4/5** on ONGC; **0** on XJTU-SY (1-min base) and IMS (controlled path). E.g. Ferrara E1 f=2: aggregate 1.00 min / 82 test windows vs decimate 0.17 min / 492. Affects Tables 8 and 9, the ONGC case study, Figure 2, the FEMTO/Ferrara Holm cells, the D15 equivalence cells (R-2) and the Ferrara validity gap (§5O.6) | **High** — the matched-factor premise of the central comparison fails on two of four inferential datasets | ⬜ **NOT FIXED — needs brief rule 4 sign-off** (code change in `load_pipeline`) and FEMTO/Ferrara/ONGC reruns. Found session 6 |
+| **N-20** | **Aggregate and decimate are NOT compared at the same logging interval on the standard path.** `src/__init__.py:207`: `target_min = max(1, int(round(base_min * downsample_factor)))` rounds aggregation bins to whole minutes with a 1-min floor, while decimation takes exactly every k-th row. With sub-minute base spacing, "aggregate f=2" is a 12× (Ferrara, 5 s base) or 6× (FEMTO/ONGC, 10 s base) coarsening. Measured on the published files: effective interval differs between modes in **24/30** (run, factor) cells on FEMTO, **24/30** on Ferrara and **4/5** on ONGC; **0** on XJTU-SY (1-min base) and IMS (controlled path). E.g. Ferrara E1 f=2: aggregate 1.00 min / 82 test windows vs decimate 0.17 min / 492. Affects Tables 8 and 9, the ONGC case study, Figure 2, the FEMTO/Ferrara Holm cells, the D15 equivalence cells (R-2) and the Ferrara validity gap (§5O.6) | **High** — the matched-factor premise of the central comparison fails on two of four inferential datasets | 🔧 **FIXED session 6 under D-10** (`src/__init__.py:207-213`: bins at `round(base_min*60*factor)` seconds). **Verified:** (i) `load_pipeline` fingerprints for IMS and XJTU-SY identical before and after, 117/117 cells (`n20_pipeline_hash_check.csv`); (ii) full benchmark reruns reproduce the published files: XJTU-SY **raw file bytes identical**; IMS values and bytes identical on all 24 shared columns (the published invariant file carries one extra `feature_mode` column) (`n20_reproduction_check.csv`); (iii) FEMTO and Ferrara: every decimate row and every f=1 row identical to the published data; only aggregate f>1 rows change; agg/dec interval mismatches 24+24 → **0**. Propagation: §5O.10. Found session 6 |
 | **N-21** | **Table 4 (`tab:decoupled`) had no generator** — the fourth orphaned artifact (after N-15, Table 25, N-19); `kurt_only` was not an indicator kind in `src/onset.py` | Medium | ✅ **RESOLVED session 6** — reconstructed, reproduces exactly. §5O.7 |
 | **N-12** | **`Bearing1_2` legacy-metric substitution.** With no onset, `lead_time.py:234-240` writes **legacy FAR into `far_preonset_pct`** and **legacy VLT into `valid_alarm`**, under onset-relative column names. Verified on all 100 rows: `far_preonset_pct == far_legacy_pct` 100/100; `valid_alarm == (vlt_legacy > 0)` 100/100. Table 12's entry (V/5 = 1, 0.67 h, EWMA) is arithmetically correct but produced by a criterion the paper never states. Hotelling T² earned 1.083 h raw lead and was killed by the *legacy* 20%-marker rule, not Eq. 5. Worse than N-7's NaN case: a real-looking number occupies the `FAR_pre` column and **is not `FAR_pre`** | **High** — a silent metric substitution on a bearing that appears in a published table | ✅ diagnosed §5A → decision **D-8** (code fix signed off); fix in item 1.8 |
 
@@ -2194,11 +2313,12 @@ ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** an
 | ID | What | Status | Source file | Value |
 |---|---|---|---|---|
 | R-1 | Per-dataset coarsening level | ✅ resolved | code inspection, §5 above | IMS = (c); XJTU/FEMTO/Ferrara/ONGC = (b) |
-| R-2 | Equivalence bound / CIs (item 1.2 / D15) | ✅ resolved (session 4) | `results/tables/d15_equivalence_bootstrap.csv` · `results/tables/d15_equivalence_tost.csv` via `src/d15_equivalence.py` | **δ = 1 h**, pre-specified on operational grounds. 60 cells (6 dataset-arms × 10 detectors). **Bootstrap (primary):** 30 equivalent · 13 inconclusive · 7 **aggregate superior beyond margin** (never inferior) · 10 untestable (ONGC n=1). Equivalence is **complete on XJTU-SY (10/10), FEMTO (10/10) and Ferrara (10/10)**; **zero** IMS cells are equivalent under either schema. **TOST feasible in 22/60 cells**; feasible-and-equivalent in 17. Full table §5G.1 |
+| R-2 | Equivalence bound / CIs (item 1.2 / D15) — ⚠️ **FEMTO/Ferrara/ONGC values superseded by R-19 (N-20)**; the verdict 30/30 survives, the IF-on-FEMTO exception does not | ✅ resolved (session 4) | `results/tables/d15_equivalence_bootstrap.csv` · `results/tables/d15_equivalence_tost.csv` via `src/d15_equivalence.py` | **δ = 1 h**, pre-specified on operational grounds. 60 cells (6 dataset-arms × 10 detectors). **Bootstrap (primary):** 30 equivalent · 13 inconclusive · 7 **aggregate superior beyond margin** (never inferior) · 10 untestable (ONGC n=1). Equivalence is **complete on XJTU-SY (10/10), FEMTO (10/10) and Ferrara (10/10)**; **zero** IMS cells are equivalent under either schema. **TOST feasible in 22/60 cells**; feasible-and-equivalent in 17. Full table §5G.1 |
 | R-3 | Deep AE threshold-sweep rows (item 1.3 / D2) | ✅ resolved (session 4) — ⚠️ **CONTRADICTS §6.1** | `results/tables/tradeoff_IMS_deepmodels.csv` · `results/tables/tradeoff_IMS_deepmodels_long.csv` via `src/d2_deep_tradeoff.py` | Mean-across-runs Ld / FAR_pre at 95th·99th·99.5th — **LSTM-AE** 199.61/87.81† · 193.99/82.16† · 93.58/62.00† · **TCN-AE** 185.36/82.63† · 183.14/79.93† · 180.36/74.43† · **Transformer-AD** 183.97/81.05† · 181.75/79.18† · 178.69/71.99†. All nine cells daggered on the mean. **But LSTM-AE at the 99.5th percentile on `3rd_test` scores FAR_pre = 4.19% ≤ τ and lead = 59.67 h, `valid_alarm = True`** → valid_frac 0.33. §6.1's "regardless of threshold" is **false as written**. Detail §5G.2 |
 | R-4 | IMS test-3 under original label (item 1.4 / D17) | ✅ resolved (session 4) | `results/tables/d17_label_comparison.csv` · `results/tables/d17_ims_long_originallabel.csv` via `src/d17_original_label.py` | Medians (corrected → original): 3σ **+15.10 → +15.10** · CUSUM **+4.27 → +4.15** · EWMA **+2.10 → +0.00** · Hotelling **+1.17 → +1.17** · Iso. Forest **+3.43 → +0.00** · Deep SVDD **0.00 → 0.00** · RMS-trend **0.00 → 0.00** · LSTM-AE/TCN/Transformer **−0.42 → −0.42**. **No median flips sign.** Best p under either label = **0.25** (Hotelling); no detector reaches α under either. **Test 3 is a guaranteed miss for 6 of 10 detectors, NOT all 10** — n_eff falls to 2 for four detectors and 1 for two, but **stays 3 for Hotelling, LSTM-AE, TCN-AE and Transformer-AD**, which still earn lead in both modes. Detail §5G.4 |
 | R-5 | Contrast under disjoint onset (item 1.5 / G3) | ✅ resolved (session 6) | `results/tables/rg3_contrast_by_indicator.csv` · `rg3_raw_invariance.csv` · `rg3_reproduction_check.csv` · `rg3_onsets.csv` via `src/rf2_rg3_gated_contrast.py` | **Raw lead exactly invariant**: max abs dev **0.000 h** over 99 cells (rebuild reproduced 2,750/2,750 rows at Δ = 0). **Gated (D-7) max median shift vs rms_kurt:** IMS **4.27 h** (CUSUM +4.27, EWMA +2.10, Hotelling +3.50 → **0.00** under both; Iso. Forest +3.43 holds under pca1, → 0.00 under kurt_only); FEMTO ≤ 0.030; XJTU-SY ≤ 0.125; Ferrara 0.073 (pca1) / 0.603 (kurt_only, n=2); ONGC n=1 Hotelling −4.67 → +2.31. `kurt_only` undefined on ONGC. **Holm 0/44 under every indicator.** §5O.4 |
 | R-6 | Onset bias / variance | ⬜ | | |
+| R-19 | N-20 post-fix values (FEMTO/Ferrara/ONGC contrasts, Holm, D15, RF-2, paired validity) | ✅ measured (session 6), **NOT yet in the manuscript** | `results/tables/n20_raw_contrast_old_vs_new.csv` · `n20_manuscript_cells.csv` · `n20_ongc_minutes.csv` · `n20_d15_bootstrap_{old,new,new_11det}.csv` · `n20_d15_tost_*.csv` · `rf2_gated_contrast_n20.csv` · `rf2_valid_fraction_paired_n20.csv` via `src/n20_propagate.py`, `src/n20_resample_fix.py` | Holm 0/44 (min raw p 0.031 → 0.125); D15 **30/30** (33/33 with OC-SVM); IF on FEMTO −0.180 [−0.488, +0.025]; Ferrara paired validity 54.8% vs 58.9%, runs 2+/3−, p 1.00 (**the gap was the bug**); 81 printed cells move. §5O.10 |
 | R-18 | Gated aggregate−decimate contrast + validity companion (item 1.1 / F2) | ✅ resolved (session 6) | `results/tables/rf2_gated_contrast.csv` · `rf2_valid_fraction_agg_vs_dec.csv` · `rf2_crosscheck_raw_vs_published.csv` via `src/rf2_rg3_gated_contrast.py` | Raw column reproduces Tables 7–11: **238/238** (IMS legacy file). **Gated (D-7): Holm 0/44, min adj p 1.00**; ties **59 → 108**, n₊+n₋ **195 → 108**, **38** runs excluded as unscoreable. IMS 3σ **+15.10 → 0.00**; CUSUM +4.27, EWMA +2.10, Hotelling +3.50, Iso. Forest +3.43 (each 2+/0−/1 tie, p 0.50). Ferrara EWMA −0.114, Hotelling −0.064 (0+/5−, p 0.0625). Validity agg vs dec (valid/scoreable): IMS 47/131 vs 47/147 · XJTU-SY 34/202 vs 44/202 · FEMTO 94/300 vs 99/315 · Ferrara **103/245 vs 155/263**. 0 of 122 flips with identical raw lead. §5O.2–5O.3 |
 | R-7 | One-class SVM (item 1.7 / D3) | ✅ resolved (session 4) — **it EXISTS and RUNS** | `results/tables/d3_ocsvm_benchmark_long.csv` · `_leadtime_ci.csv` · `_holm_N44_invariant.csv` · `_holm_N44_legacy.csv` · `_tradeoff{,_long}.csv` · `_farbudget_phrank.csv` via `src/d3_ocsvm.py` | **Mean raw lead + 95% CI at f=1:** IMS **180.25** [65.50, 316.68] (n=3) · XJTU-SY **1.44** [0.82, 2.10] (n=10) · FEMTO **0.95** [0.69, 1.30] (n=6) · Ferrara **0.98** [0.52, 1.50] (n=6) · ONGC **35.34** (n=1). **Holm N=44: 0/44 rejections** under both IMS schemas (was 0/40) — verdict unchanged. **Table 16:** 180.25/63.21† · 92.47/56.68† · 92.47/55.45†. **Tables 14/22:** PH **180.2**, L = **0.0** at τ = 0.05/0.10/0.20. Detail §5G.3 |
 | R-8 | Deep-model architecture params (item 3.3 / G5) | ✅ resolved (session 4) | `results/tables/deep_model_params.csv` via `src/d3_compute_cost_extra.py`; hyperparameters from `src/config.py` `MODELS` | **LSTM-AE 54,657** params (`seq_len 30, latent 16, hidden 64, 50 ep`) · **TCN-AE 29,681** (`seq_len 30, ch 32, k 3, levels 4, 40 ep`) · **Transformer-AD 20,305** (`seq_len 30, d_model 32, nhead 2, layers 2, ff 64, 40 ep`). All at 49-dim invariant schema. LSTM-AE = **87 params per training window** at 631 windows — quantifies §4.5's data-starvation caveat. §5K.3 |
@@ -2222,7 +2342,7 @@ ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** an
 > 2. §6.2 "invariant to the onset definition by construction": **true for raw lead (verified, 0.000 h)**,
 >    **false for gated L on IMS** (R-5). Bound it explicitly.
 > 3. ~~Tables 10 and 11 still show legacy IMS values~~ ✅ **D-2 re-baseline completed and Table 11 at 44 rows (§5O.9, `20658e5`).**
-> 5. **N-20 (High, OPEN):** aggregate and decimate run at different logging intervals on FEMTO/Ferrara/ONGC (`src/__init__.py:207`). Needs rule-4 sign-off, a code fix, and reruns before Tables 8/9, Figure 2, the FEMTO/Ferrara Holm and equivalence cells, or the Ferrara validity gap can be trusted.
+> 5. **N-20 — FIXED and propagated (§5O.10). NEXT: the manuscript pass for the 81 cells + prose + Figure 2, plus D-2 residue at `tex:398` and `tex:956`. Awaiting author go-ahead.** Original note: aggregate and decimate run at different logging intervals on FEMTO/Ferrara/ONGC (`src/__init__.py:207`). Needs rule-4 sign-off, a code fix, and reruns before Tables 8/9, Figure 2, the FEMTO/Ferrara Holm and equivalence cells, or the Ferrara validity gap can be trusted.
 > 6. D-5/D-9 rows still missing from Tables 7, 8, 9, 14, 16, 22 (§5O.8a).
 > 4. Table 4 now has a generator (`rg3_onsets.csv`); cite it in Data Availability.
 
