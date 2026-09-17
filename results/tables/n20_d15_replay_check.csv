@@ -1,0 +1,2 @@
+rows_pub,rows_replay,rows_matched,max_abs_dev,verdicts_identical
+60,60,60,3.552713678800501e-15,True

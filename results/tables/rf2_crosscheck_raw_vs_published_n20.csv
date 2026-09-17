@@ -1,0 +1,329 @@
+table,dataset,short_name,field,published,dp,arm,computed,match
+tab:xjtu,XJTU-SY,three_sigma,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,three_sigma,n_pos,3.0,0,A: as printed (IMS legacy file),3.0,True
+tab:xjtu,XJTU-SY,three_sigma,n_neg,1.0,0,A: as printed (IMS legacy file),1.0,True
+tab:xjtu,XJTU-SY,three_sigma,sign_test_p,0.625,3,A: as printed (IMS legacy file),0.625,True
+tab:xjtu,XJTU-SY,ewma,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,ewma,n_pos,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,ewma,n_neg,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:xjtu,XJTU-SY,cusum,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,cusum,n_pos,1.0,0,A: as printed (IMS legacy file),1.0,True
+tab:xjtu,XJTU-SY,cusum,n_neg,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,cusum,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:xjtu,XJTU-SY,hotelling_t2,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,hotelling_t2,n_pos,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,hotelling_t2,n_neg,0.0,0,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,hotelling_t2,sign_test_p,0.5,3,A: as printed (IMS legacy file),0.5,True
+tab:xjtu,XJTU-SY,isolation_forest,median_diff_h,-0.1,2,A: as printed (IMS legacy file),-0.10277777777777772,True
+tab:xjtu,XJTU-SY,isolation_forest,n_pos,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,isolation_forest,n_neg,7.0,0,A: as printed (IMS legacy file),7.0,True
+tab:xjtu,XJTU-SY,isolation_forest,sign_test_p,0.18,3,A: as printed (IMS legacy file),0.1796875,True
+tab:xjtu,XJTU-SY,deep_svdd,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,deep_svdd,n_pos,3.0,0,A: as printed (IMS legacy file),3.0,True
+tab:xjtu,XJTU-SY,deep_svdd,n_neg,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,deep_svdd,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:xjtu,XJTU-SY,rms_trend,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:xjtu,XJTU-SY,rms_trend,n_pos,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,rms_trend,n_neg,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:xjtu,XJTU-SY,rms_trend,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:femto,FEMTO,three_sigma,median_diff_h,-0.1,2,A: as printed (IMS legacy file),-0.13861111111111116,False
+tab:femto,FEMTO,three_sigma,n_pos,1.0,0,A: as printed (IMS legacy file),1.0,True
+tab:femto,FEMTO,three_sigma,n_neg,5.0,0,A: as printed (IMS legacy file),5.0,True
+tab:femto,FEMTO,three_sigma,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.21875,True
+tab:femto,FEMTO,ewma,median_diff_h,0.01,2,A: as printed (IMS legacy file),0.09305555555555553,False
+tab:femto,FEMTO,ewma,n_pos,3.0,0,A: as printed (IMS legacy file),4.0,False
+tab:femto,FEMTO,ewma,n_neg,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:femto,FEMTO,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:femto,FEMTO,cusum,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.10083333333333339,False
+tab:femto,FEMTO,cusum,n_pos,3.0,0,A: as printed (IMS legacy file),4.0,False
+tab:femto,FEMTO,cusum,n_neg,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:femto,FEMTO,cusum,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:femto,FEMTO,hotelling_t2,median_diff_h,0.07,2,A: as printed (IMS legacy file),0.07138888888888892,True
+tab:femto,FEMTO,hotelling_t2,n_pos,5.0,0,A: as printed (IMS legacy file),5.0,True
+tab:femto,FEMTO,hotelling_t2,n_neg,1.0,0,A: as printed (IMS legacy file),1.0,True
+tab:femto,FEMTO,hotelling_t2,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.21875,True
+tab:femto,FEMTO,isolation_forest,median_diff_h,-0.14,2,A: as printed (IMS legacy file),-0.065,False
+tab:femto,FEMTO,isolation_forest,n_pos,0.0,0,A: as printed (IMS legacy file),2.0,False
+tab:femto,FEMTO,isolation_forest,n_neg,6.0,0,A: as printed (IMS legacy file),4.0,False
+tab:femto,FEMTO,isolation_forest,sign_test_p,0.031,3,A: as printed (IMS legacy file),0.6875,False
+tab:femto,FEMTO,deep_svdd,median_diff_h,-0.0,2,A: as printed (IMS legacy file),-0.0038888888888888827,True
+tab:femto,FEMTO,deep_svdd,n_pos,3.0,0,A: as printed (IMS legacy file),1.0,False
+tab:femto,FEMTO,deep_svdd,n_neg,3.0,0,A: as printed (IMS legacy file),3.0,True
+tab:femto,FEMTO,deep_svdd,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.625,False
+tab:femto,FEMTO,lstm_ae,median_diff_h,-0.05,2,A: as printed (IMS legacy file),-0.040277777777777746,False
+tab:femto,FEMTO,lstm_ae,n_pos,2.0,0,A: as printed (IMS legacy file),0.0,False
+tab:femto,FEMTO,lstm_ae,n_neg,4.0,0,A: as printed (IMS legacy file),3.0,False
+tab:femto,FEMTO,lstm_ae,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.25,False
+tab:femto,FEMTO,tcn,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:femto,FEMTO,tcn,n_pos,3.0,0,A: as printed (IMS legacy file),1.0,False
+tab:femto,FEMTO,tcn,n_neg,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:femto,FEMTO,tcn,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:femto,FEMTO,transformer_ad,median_diff_h,0.04,2,A: as printed (IMS legacy file),-0.05312499999999998,False
+tab:femto,FEMTO,transformer_ad,n_pos,5.0,0,A: as printed (IMS legacy file),0.0,False
+tab:femto,FEMTO,transformer_ad,n_neg,1.0,0,A: as printed (IMS legacy file),4.0,False
+tab:femto,FEMTO,transformer_ad,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.125,False
+tab:femto,FEMTO,rms_trend,median_diff_h,-0.03,2,A: as printed (IMS legacy file),-0.016666666666666677,False
+tab:femto,FEMTO,rms_trend,n_pos,2.0,0,A: as printed (IMS legacy file),1.0,False
+tab:femto,FEMTO,rms_trend,n_neg,4.0,0,A: as printed (IMS legacy file),3.0,False
+tab:femto,FEMTO,rms_trend,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:ferrara,Ferrara,three_sigma,median_diff_h,-0.02,2,A: as printed (IMS legacy file),-0.014583333333333393,False
+tab:ferrara,Ferrara,three_sigma,n_pos,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:ferrara,Ferrara,three_sigma,n_neg,3.0,0,A: as printed (IMS legacy file),3.0,True
+tab:ferrara,Ferrara,three_sigma,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:ferrara,Ferrara,ewma,median_diff_h,0.01,2,A: as printed (IMS legacy file),0.0075,True
+tab:ferrara,Ferrara,ewma,n_pos,3.0,0,A: as printed (IMS legacy file),4.0,False
+tab:ferrara,Ferrara,ewma,n_neg,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:ferrara,Ferrara,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:ferrara,Ferrara,cusum,median_diff_h,0.01,2,A: as printed (IMS legacy file),0.008333333333333318,True
+tab:ferrara,Ferrara,cusum,n_pos,4.0,0,A: as printed (IMS legacy file),5.0,False
+tab:ferrara,Ferrara,cusum,n_neg,2.0,0,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,cusum,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.21875,False
+tab:ferrara,Ferrara,hotelling_t2,median_diff_h,0.05,2,A: as printed (IMS legacy file),0.010416666666666657,False
+tab:ferrara,Ferrara,hotelling_t2,n_pos,5.0,0,A: as printed (IMS legacy file),4.0,False
+tab:ferrara,Ferrara,hotelling_t2,n_neg,1.0,0,A: as printed (IMS legacy file),1.0,True
+tab:ferrara,Ferrara,hotelling_t2,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.375,False
+tab:ferrara,Ferrara,isolation_forest,median_diff_h,-0.08,2,A: as printed (IMS legacy file),0.004861111111111101,False
+tab:ferrara,Ferrara,isolation_forest,n_pos,2.0,0,A: as printed (IMS legacy file),3.0,False
+tab:ferrara,Ferrara,isolation_forest,n_neg,4.0,0,A: as printed (IMS legacy file),2.0,False
+tab:ferrara,Ferrara,isolation_forest,sign_test_p,0.688,3,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,deep_svdd,median_diff_h,-0.01,2,A: as printed (IMS legacy file),-0.002916666666666663,False
+tab:ferrara,Ferrara,deep_svdd,n_pos,2.0,0,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,deep_svdd,n_neg,4.0,0,A: as printed (IMS legacy file),4.0,True
+tab:ferrara,Ferrara,deep_svdd,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.375,False
+tab:ferrara,Ferrara,lstm_ae,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0,True
+tab:ferrara,Ferrara,lstm_ae,n_pos,4.0,0,A: as printed (IMS legacy file),2.0,False
+tab:ferrara,Ferrara,lstm_ae,n_neg,2.0,0,A: as printed (IMS legacy file),2.0,True
+tab:ferrara,Ferrara,lstm_ae,sign_test_p,0.688,3,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,tcn,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0011574074074074056,True
+tab:ferrara,Ferrara,tcn,n_pos,4.0,0,A: as printed (IMS legacy file),3.0,False
+tab:ferrara,Ferrara,tcn,n_neg,2.0,0,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,tcn,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:ferrara,Ferrara,transformer_ad,median_diff_h,0.0,2,A: as printed (IMS legacy file),0.0011574074074074056,True
+tab:ferrara,Ferrara,transformer_ad,n_pos,4.0,0,A: as printed (IMS legacy file),3.0,False
+tab:ferrara,Ferrara,transformer_ad,n_neg,2.0,0,A: as printed (IMS legacy file),1.0,False
+tab:ferrara,Ferrara,transformer_ad,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:ferrara,Ferrara,rms_trend,median_diff_h,-0.0,2,A: as printed (IMS legacy file),0.00916666666666667,False
+tab:ferrara,Ferrara,rms_trend,n_pos,3.0,0,A: as printed (IMS legacy file),4.0,False
+tab:ferrara,Ferrara,rms_trend,n_neg,3.0,0,A: as printed (IMS legacy file),2.0,False
+tab:ferrara,Ferrara,rms_trend,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:imssweep,IMS,three_sigma,run_diff_1,25.8,1,A: as printed (IMS legacy file),27.0798,False
+tab:imssweep,IMS,three_sigma,run_diff_2,15.1,1,A: as printed (IMS legacy file),18.4333,False
+tab:imssweep,IMS,three_sigma,run_diff_3,-1.0,1,A: as printed (IMS legacy file),15.6333,False
+tab:imssweep,IMS,three_sigma,median_diff_h,15.1,1,A: as printed (IMS legacy file),18.43333333333333,False
+tab:imssweep,IMS,three_sigma,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:imssweep,IMS,isolation_forest,run_diff_1,-0.7,1,A: as printed (IMS legacy file),19.9431,False
+tab:imssweep,IMS,isolation_forest,run_diff_2,16.9,1,A: as printed (IMS legacy file),12.2,False
+tab:imssweep,IMS,isolation_forest,run_diff_3,3.4,1,A: as printed (IMS legacy file),1.7667,False
+tab:imssweep,IMS,isolation_forest,median_diff_h,3.4,1,A: as printed (IMS legacy file),12.2,False
+tab:imssweep,IMS,isolation_forest,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:imssweep,IMS,ewma,run_diff_1,-3.9,1,A: as printed (IMS legacy file),22.5667,False
+tab:imssweep,IMS,ewma,run_diff_2,4.3,1,A: as printed (IMS legacy file),5.0,False
+tab:imssweep,IMS,ewma,run_diff_3,2.1,1,A: as printed (IMS legacy file),5.7667,False
+tab:imssweep,IMS,ewma,median_diff_h,2.1,1,A: as printed (IMS legacy file),5.766666666666666,False
+tab:imssweep,IMS,ewma,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:imssweep,IMS,cusum,run_diff_1,4.2,1,A: as printed (IMS legacy file),22.5667,False
+tab:imssweep,IMS,cusum,run_diff_2,4.7,1,A: as printed (IMS legacy file),5.0,False
+tab:imssweep,IMS,cusum,run_diff_3,4.3,1,A: as printed (IMS legacy file),5.4333,False
+tab:imssweep,IMS,cusum,median_diff_h,4.3,1,A: as printed (IMS legacy file),5.433333333333334,False
+tab:imssweep,IMS,cusum,sign_test_p,0.25,2,A: as printed (IMS legacy file),0.25,True
+tab:imssweep,IMS,hotelling_t2,run_diff_1,1.0,1,A: as printed (IMS legacy file),3.2533,False
+tab:imssweep,IMS,hotelling_t2,run_diff_2,1.2,1,A: as printed (IMS legacy file),12.2667,False
+tab:imssweep,IMS,hotelling_t2,run_diff_3,81.7,1,A: as printed (IMS legacy file),4.6,False
+tab:imssweep,IMS,hotelling_t2,median_diff_h,1.2,1,A: as printed (IMS legacy file),4.600000000000001,False
+tab:imssweep,IMS,hotelling_t2,sign_test_p,0.25,2,A: as printed (IMS legacy file),0.25,True
+tab:imssweep,IMS,deep_svdd,run_diff_1,8.9,1,A: as printed (IMS legacy file),15.2464,False
+tab:imssweep,IMS,deep_svdd,run_diff_2,0.0,1,A: as printed (IMS legacy file),0.0,True
+tab:imssweep,IMS,deep_svdd,run_diff_3,0.0,1,A: as printed (IMS legacy file),1.7667,False
+tab:imssweep,IMS,deep_svdd,median_diff_h,0.0,1,A: as printed (IMS legacy file),1.766666666666667,False
+tab:imssweep,IMS,deep_svdd,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.5,False
+tab:imssweep,IMS,one_class_svm,run_diff_1,-2.4,1,A: as printed (IMS legacy file),-2.4333,True
+tab:imssweep,IMS,one_class_svm,run_diff_2,-5.5,1,A: as printed (IMS legacy file),-5.5,True
+tab:imssweep,IMS,one_class_svm,run_diff_3,1.5,1,A: as printed (IMS legacy file),1.5333,True
+tab:imssweep,IMS,one_class_svm,median_diff_h,-2.4,1,A: as printed (IMS legacy file),-2.4333333333332803,True
+tab:imssweep,IMS,one_class_svm,sign_test_p,1.0,2,A: as printed (IMS legacy file),1.0,True
+tab:imssweep,IMS,rms_trend,run_diff_1,-0.2,1,A: as printed (IMS legacy file),-19.4131,False
+tab:imssweep,IMS,rms_trend,run_diff_2,0.0,1,A: as printed (IMS legacy file),0.0,True
+tab:imssweep,IMS,rms_trend,run_diff_3,2.4,1,A: as printed (IMS legacy file),2.7667,False
+tab:imssweep,IMS,rms_trend,median_diff_h,0.0,1,A: as printed (IMS legacy file),0.0,True
+tab:imssweep,IMS,rms_trend,sign_test_p,1.0,2,A: as printed (IMS legacy file),1.0,True
+tab:imssweep,IMS,lstm_ae,run_diff_1,-1.4,1,A: as printed (IMS legacy file),-1.3889,True
+tab:imssweep,IMS,lstm_ae,run_diff_2,-0.4,1,A: as printed (IMS legacy file),-0.4167,True
+tab:imssweep,IMS,lstm_ae,run_diff_3,56.1,1,A: as printed (IMS legacy file),-1.6667,False
+tab:imssweep,IMS,lstm_ae,median_diff_h,-0.4,1,A: as printed (IMS legacy file),-1.3888888888889142,False
+tab:imssweep,IMS,lstm_ae,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:imssweep,IMS,tcn,run_diff_1,-1.4,1,A: as printed (IMS legacy file),-1.3889,True
+tab:imssweep,IMS,tcn,run_diff_2,-0.4,1,A: as printed (IMS legacy file),-0.4167,True
+tab:imssweep,IMS,tcn,run_diff_3,9.0,1,A: as printed (IMS legacy file),-0.1667,False
+tab:imssweep,IMS,tcn,median_diff_h,-0.4,1,A: as printed (IMS legacy file),-0.4166666666666572,True
+tab:imssweep,IMS,tcn,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:imssweep,IMS,transformer_ad,run_diff_1,-1.4,1,A: as printed (IMS legacy file),-1.3889,True
+tab:imssweep,IMS,transformer_ad,run_diff_2,-0.4,1,A: as printed (IMS legacy file),-0.4167,True
+tab:imssweep,IMS,transformer_ad,run_diff_3,68.8,1,A: as printed (IMS legacy file),-2.5,False
+tab:imssweep,IMS,transformer_ad,median_diff_h,-0.4,1,A: as printed (IMS legacy file),-1.3888888888889142,False
+tab:imssweep,IMS,transformer_ad,sign_test_p,1.0,2,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,three_sigma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,three_sigma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,ewma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,cusum,sign_test_p,0.25,3,A: as printed (IMS legacy file),0.25,True
+tab:holm,IMS,cusum,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,hotelling_t2,sign_test_p,0.25,3,A: as printed (IMS legacy file),0.25,True
+tab:holm,IMS,hotelling_t2,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,isolation_forest,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,isolation_forest,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,deep_svdd,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.5,False
+tab:holm,IMS,deep_svdd,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,one_class_svm,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,one_class_svm,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,lstm_ae,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,lstm_ae,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,tcn,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,tcn,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,transformer_ad,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,IMS,transformer_ad,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,rms_trend,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,IMS,rms_trend,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,three_sigma,sign_test_p,0.625,3,A: as printed (IMS legacy file),0.625,True
+tab:holm,XJTU-SY,three_sigma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,isolation_forest,sign_test_p,0.18,3,A: as printed (IMS legacy file),0.1796875,True
+tab:holm,XJTU-SY,isolation_forest,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,hotelling_t2,sign_test_p,0.5,3,A: as printed (IMS legacy file),0.5,True
+tab:holm,XJTU-SY,hotelling_t2,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,cusum,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,cusum,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,ewma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,deep_svdd,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,deep_svdd,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,one_class_svm,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,one_class_svm,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,lstm_ae,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,lstm_ae,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,tcn,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,tcn,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,transformer_ad,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,transformer_ad,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,rms_trend,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,XJTU-SY,rms_trend,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,three_sigma,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.21875,True
+tab:holm,FEMTO,three_sigma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:holm,FEMTO,ewma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,cusum,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:holm,FEMTO,cusum,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,hotelling_t2,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.21875,True
+tab:holm,FEMTO,hotelling_t2,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,isolation_forest,sign_test_p,0.031,3,A: as printed (IMS legacy file),0.6875,False
+tab:holm,FEMTO,isolation_forest,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,deep_svdd,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.625,False
+tab:holm,FEMTO,deep_svdd,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,one_class_svm,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.375,False
+tab:holm,FEMTO,one_class_svm,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,lstm_ae,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.25,False
+tab:holm,FEMTO,lstm_ae,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,tcn,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,tcn,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,transformer_ad,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.125,False
+tab:holm,FEMTO,transformer_ad,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,FEMTO,rms_trend,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:holm,FEMTO,rms_trend,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,three_sigma,sign_test_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,three_sigma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,ewma,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:holm,Ferrara,ewma,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,cusum,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.21875,False
+tab:holm,Ferrara,cusum,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,hotelling_t2,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.375,False
+tab:holm,Ferrara,hotelling_t2,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,isolation_forest,sign_test_p,0.688,3,A: as printed (IMS legacy file),1.0,False
+tab:holm,Ferrara,isolation_forest,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,deep_svdd,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.375,False
+tab:holm,Ferrara,deep_svdd,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,one_class_svm,sign_test_p,0.219,3,A: as printed (IMS legacy file),0.375,False
+tab:holm,Ferrara,one_class_svm,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,lstm_ae,sign_test_p,0.688,3,A: as printed (IMS legacy file),1.0,False
+tab:holm,Ferrara,lstm_ae,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,tcn,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:holm,Ferrara,tcn,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,transformer_ad,sign_test_p,0.688,3,A: as printed (IMS legacy file),0.625,False
+tab:holm,Ferrara,transformer_ad,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:holm,Ferrara,rms_trend,sign_test_p,1.0,3,A: as printed (IMS legacy file),0.6875,False
+tab:holm,Ferrara,rms_trend,holm_p,1.0,3,A: as printed (IMS legacy file),1.0,True
+tab:imssweep,IMS,three_sigma,run_diff_1,25.8,1,B: IMS invariant (D-2) vs printed legacy - differences expected,25.8131,True
+tab:imssweep,IMS,three_sigma,run_diff_2,15.1,1,B: IMS invariant (D-2) vs printed legacy - differences expected,15.1,True
+tab:imssweep,IMS,three_sigma,run_diff_3,-1.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-1.0,True
+tab:imssweep,IMS,three_sigma,median_diff_h,15.1,1,B: IMS invariant (D-2) vs printed legacy - differences expected,15.099999999999994,True
+tab:imssweep,IMS,three_sigma,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,isolation_forest,run_diff_1,-0.7,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.6667,True
+tab:imssweep,IMS,isolation_forest,run_diff_2,16.9,1,B: IMS invariant (D-2) vs printed legacy - differences expected,16.8667,True
+tab:imssweep,IMS,isolation_forest,run_diff_3,3.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,3.4333,True
+tab:imssweep,IMS,isolation_forest,median_diff_h,3.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,3.4333333333333336,True
+tab:imssweep,IMS,isolation_forest,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,ewma,run_diff_1,-3.9,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-3.8867,True
+tab:imssweep,IMS,ewma,run_diff_2,4.3,1,B: IMS invariant (D-2) vs printed legacy - differences expected,4.3333,True
+tab:imssweep,IMS,ewma,run_diff_3,2.1,1,B: IMS invariant (D-2) vs printed legacy - differences expected,2.1,True
+tab:imssweep,IMS,ewma,median_diff_h,2.1,1,B: IMS invariant (D-2) vs printed legacy - differences expected,2.1000000000000014,True
+tab:imssweep,IMS,ewma,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,cusum,run_diff_1,4.2,1,B: IMS invariant (D-2) vs printed legacy - differences expected,4.1533,True
+tab:imssweep,IMS,cusum,run_diff_2,4.7,1,B: IMS invariant (D-2) vs printed legacy - differences expected,4.6667,True
+tab:imssweep,IMS,cusum,run_diff_3,4.3,1,B: IMS invariant (D-2) vs printed legacy - differences expected,4.2667,True
+tab:imssweep,IMS,cusum,median_diff_h,4.3,1,B: IMS invariant (D-2) vs printed legacy - differences expected,4.266666666666669,True
+tab:imssweep,IMS,cusum,sign_test_p,0.25,2,B: IMS invariant (D-2) vs printed legacy - differences expected,0.25,True
+tab:imssweep,IMS,hotelling_t2,run_diff_1,1.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,hotelling_t2,run_diff_2,1.2,1,B: IMS invariant (D-2) vs printed legacy - differences expected,1.1667,True
+tab:imssweep,IMS,hotelling_t2,run_diff_3,81.7,1,B: IMS invariant (D-2) vs printed legacy - differences expected,81.7367,True
+tab:imssweep,IMS,hotelling_t2,median_diff_h,1.2,1,B: IMS invariant (D-2) vs printed legacy - differences expected,1.1666666666666643,True
+tab:imssweep,IMS,hotelling_t2,sign_test_p,0.25,2,B: IMS invariant (D-2) vs printed legacy - differences expected,0.25,True
+tab:imssweep,IMS,deep_svdd,run_diff_1,8.9,1,B: IMS invariant (D-2) vs printed legacy - differences expected,8.9298,True
+tab:imssweep,IMS,deep_svdd,run_diff_2,0.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,0.0,True
+tab:imssweep,IMS,deep_svdd,run_diff_3,0.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,0.0,True
+tab:imssweep,IMS,deep_svdd,median_diff_h,0.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,0.0,True
+tab:imssweep,IMS,deep_svdd,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,one_class_svm,run_diff_1,-2.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-2.4333,True
+tab:imssweep,IMS,one_class_svm,run_diff_2,-5.5,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-5.5,True
+tab:imssweep,IMS,one_class_svm,run_diff_3,1.5,1,B: IMS invariant (D-2) vs printed legacy - differences expected,1.5333,True
+tab:imssweep,IMS,one_class_svm,median_diff_h,-2.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-2.4333333333332803,True
+tab:imssweep,IMS,one_class_svm,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,rms_trend,run_diff_1,-0.2,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.1667,True
+tab:imssweep,IMS,rms_trend,run_diff_2,0.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,0.0,True
+tab:imssweep,IMS,rms_trend,run_diff_3,2.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,2.3667,True
+tab:imssweep,IMS,rms_trend,median_diff_h,0.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,0.0,True
+tab:imssweep,IMS,rms_trend,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,lstm_ae,run_diff_1,-1.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-1.3889,True
+tab:imssweep,IMS,lstm_ae,run_diff_2,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4167,True
+tab:imssweep,IMS,lstm_ae,run_diff_3,56.1,1,B: IMS invariant (D-2) vs printed legacy - differences expected,56.125,True
+tab:imssweep,IMS,lstm_ae,median_diff_h,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4166666666666572,True
+tab:imssweep,IMS,lstm_ae,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,tcn,run_diff_1,-1.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-1.3889,True
+tab:imssweep,IMS,tcn,run_diff_2,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4167,True
+tab:imssweep,IMS,tcn,run_diff_3,9.0,1,B: IMS invariant (D-2) vs printed legacy - differences expected,9.0,True
+tab:imssweep,IMS,tcn,median_diff_h,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4166666666666572,True
+tab:imssweep,IMS,tcn,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:imssweep,IMS,transformer_ad,run_diff_1,-1.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-1.3889,True
+tab:imssweep,IMS,transformer_ad,run_diff_2,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4167,True
+tab:imssweep,IMS,transformer_ad,run_diff_3,68.8,1,B: IMS invariant (D-2) vs printed legacy - differences expected,68.7917,True
+tab:imssweep,IMS,transformer_ad,median_diff_h,-0.4,1,B: IMS invariant (D-2) vs printed legacy - differences expected,-0.4166666666666572,True
+tab:imssweep,IMS,transformer_ad,sign_test_p,1.0,2,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,three_sigma,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,three_sigma,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,ewma,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,ewma,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,cusum,sign_test_p,0.25,3,B: IMS invariant (D-2) vs printed legacy - differences expected,0.25,True
+tab:holm,IMS,cusum,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,hotelling_t2,sign_test_p,0.25,3,B: IMS invariant (D-2) vs printed legacy - differences expected,0.25,True
+tab:holm,IMS,hotelling_t2,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,isolation_forest,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,isolation_forest,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,deep_svdd,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,deep_svdd,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,one_class_svm,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,one_class_svm,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,lstm_ae,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,lstm_ae,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,tcn,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,tcn,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,transformer_ad,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,transformer_ad,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,rms_trend,sign_test_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
+tab:holm,IMS,rms_trend,holm_p,1.0,3,B: IMS invariant (D-2) vs printed legacy - differences expected,1.0,True
