@@ -195,10 +195,10 @@ where $R_{\text{last}}$ is the final run of consecutive above-band samples, merg
 The persistence (5 samples) and gap (10 samples) tolerances of Algorithm~\ref{alg:onset} are fixed in samples of the health-indicator series, not physical time, and are held constant across datasets. Because the datasets are logged at different native intervals---${\sim}10$~min per snapshot for IMS (after resampling to a uniform grid), 1~min for XJTU-SY, and 10~s for FEMTO and ONGC---the same 5/10-sample bars correspond to different physical durations: ${\sim}50/100$~min on IMS, 5/10~min on XJTU, and 50/100~s on FEMTO/ONGC. This keeps the onset rule algorithmically identical everywhere at the price of exact physical-time comparability; the difference is negligible for long records but non-trivial for the shortest bearings---XJTU Bearing2\_4 (42~min total life) must clear a ${\sim}5$-minute persistence bar, roughly 12\% of its lifetime---so onset positions on the very shortest bearings carry this caveat.
 
 \medskip
-\noindent\textit{Caveat: onset positions on bearings with total lifetime below 2~h are treated as fragile throughout; per-bearing results in Tables~\ref{tab:xjtu}, \ref{tab:femto}, \ref{tab:ferrara}, and \ref{tab:perbearing} flag these cases explicitly rather than silently discarding them.}
+\noindent\textit{Caveat: onset positions on bearings with total lifetime below 2~h are treated as fragile throughout; per-bearing results in Tables~\ref{tab:crossds} and \ref{tab:perbearing} flag these cases explicitly rather than silently discarding them.}
 \medskip
 
-\noindent The sensitivity analyses probe the threshold multiplier $k$ (Table~\ref{tab:onsetsens}), not these fixed timing tolerances, which we leave in sample units for algorithmic reproducibility.
+\noindent The sensitivity analyses probe the threshold multiplier $k$ (Table~\ref{tab:onset}), not these fixed timing tolerances, which we leave in sample units for algorithmic reproducibility.
 
 \subsection{Onset-Relative Lead-Time Metric}
 Let the first sustained alarm time be FAT and the failure time $t_f$. The lead time is
@@ -232,7 +232,7 @@ The headline set comprises nine detectors, evaluated under one fixed hyperparame
 \item \emph{Deep reconstruction baselines:} an LSTM autoencoder \cite{malhotra2016lstm}, a Temporal Convolutional Network autoencoder (dilated causal convolutions), and a lightweight reconstruction Transformer \cite{vaswani2017attention}. Each is trained on normal feature-window sequences only and scores a window by its reconstruction error.
 \end{itemize}
 
-\emph{Additionally evaluated (not in the headline nine).} We also evaluate Deep SVDD \cite{ruff2018deep}---a one-class deep model whose MLP encoder maps normal data toward a fixed center, scoring a window by its squared distance to that center---and one-class SVM \cite{scholkopf2001estimating}. Deep SVDD produced no valid alarm on any FEMTO bearing at any training fraction (Section~\ref{sec:mintrain}) and is omitted from the headline set; its full numbers are retained, unchanged, in the result tables throughout (Tables~\ref{tab:imslead}, \ref{tab:xjtu}, \ref{tab:femto}, \ref{tab:ferrara}, \ref{tab:holm}, \ref{tab:farbudget}, \ref{tab:tradeoff}, and~\ref{tab:phrank}; Figure~\ref{fig:mintrain}). We keep it visible because it is the low-false-alarm operating point under the gated metric (Section~\ref{sec:tradeoff}, Table~\ref{tab:farbudget}). The deep sequence models carry an honest caveat: with on the order of 100 normal training windows they are data-starved. We include them both to provide a modern-baseline comparison and to determine empirically whether a finite commissioning-data requirement exists that makes deep reconstruction models competitive with SPC charts---and if so, to quantify it---a practically important question we address in Section~\ref{sec:mintrain}. We do not tune them per-dataset, the same fixed-protocol fairness applied to the SPC charts. On runs with fewer feature windows than the sequence length (short XJTU bearings, some coarse IMS factors) a sequence cannot be formed; we record that (run, detector) cell as an explicit N/A rather than dropping it silently. All non-conformal detectors alarm via a percentile threshold on training scores followed by a persistence filter, so the alarm semantics are identical across detectors and only the score differs.
+\emph{Additionally evaluated (not in the headline nine).} We also evaluate Deep SVDD \cite{ruff2018deep}---a one-class deep model whose MLP encoder maps normal data toward a fixed center, scoring a window by its squared distance to that center---and one-class SVM \cite{scholkopf2001estimating}. Deep SVDD produced no valid alarm on any FEMTO bearing at any training fraction (Section~\ref{sec:mintrain}) and is omitted from the headline set; its full numbers are retained, unchanged, in the result tables throughout (Tables~\ref{tab:imslead}, \ref{tab:crossds}, \ref{tab:holm}, \ref{tab:farbudget}, \ref{tab:tradeoff}, and~\ref{tab:phrank}; Figure~\ref{fig:mintrain}). We keep it visible because it is the low-false-alarm operating point under the gated metric (Section~\ref{sec:tradeoff}, Table~\ref{tab:farbudget}). The deep sequence models carry an honest caveat: with on the order of 100 normal training windows they are data-starved. We include them both to provide a modern-baseline comparison and to determine empirically whether a finite commissioning-data requirement exists that makes deep reconstruction models competitive with SPC charts---and if so, to quantify it---a practically important question we address in Section~\ref{sec:mintrain}. We do not tune them per-dataset, the same fixed-protocol fairness applied to the SPC charts. On runs with fewer feature windows than the sequence length (short XJTU bearings, some coarse IMS factors) a sequence cannot be formed; we record that (run, detector) cell as an explicit N/A rather than dropping it silently. All non-conformal detectors alarm via a percentile threshold on training scores followed by a persistence filter, so the alarm semantics are identical across detectors and only the score differs.
 
 \subsection{Conformal Calibration}
 A conformal detector \cite{vovk2005algorithmic} wraps Isolation Forest. Nonconformity scores are computed on a calibration split of normal data; a test point alarms when its conformal $p$-value falls below the target $\alpha$. Under exchangeability of the calibration and test scores this guarantees $\text{FAR} \le \alpha$ in finite samples. We do not assume the guarantee: we validate it empirically by measuring $\text{FAR}_{\text{pre}}$ over the onset-defined normal region across a grid of $\alpha$, and we report the runs where it fails together with the reason.
@@ -251,7 +251,7 @@ Results are emitted in long format, one row per run $\times$ mode $\times$ facto
 
 \emph{The run is the unit of inference.} A single physical bearing run produces one degradation trajectory; the five coarsening factors we apply to that run ($f \in \{1, 2, 5, 10, 20\}$) are not independent observations but repeated transformations of the same trajectory---statistical pseudoreplicates. Pooling them as $3 \times 5 = 15$ ``pairs'' per detector (as an earlier version of this work did) inflates the effective sample size fivefold and yields overconfident $p$-values. We therefore collapse each run to a single difference, the mean of (aggregate $-$ decimate) over factors, giving one observation per run: $n=3$ on IMS, $n=10$ on XJTU-SY, and $n=1$ on ONGC (a single asset, for which we report descriptive differences only and draw no inference).
 
-On the resulting run-level differences we apply an exact two-sided sign test (binomial, $H_0 : P(\text{aggregate} > \text{decimate}) = \tfrac{1}{2}$). The sign test is assumption-light and the conservative choice at small $n$: it uses only the direction of each run's difference, making no normality or symmetry assumption that $n=3$ could not support. A parametric mixed-effects model with three random-effect levels would be over-fit and is deliberately not used. Note that the test cannot reach significance at $n=3$: the most extreme outcome, all three runs concordant, gives $p = 2(\tfrac{1}{2})^3 = 0.25$. We report this floor explicitly so that the IMS direction is read as a trend, not a significant effect. Runs whose mean (aggregate $-$ decimate) difference is exactly zero after factor-collapsing are excluded from the sign-test count; the $n_+$ and $n_-$ tallies in Tables~\ref{tab:xjtu} and \ref{tab:femto} count only non-zero-difference runs. Across the detector $\times$ dataset family of aggregate-vs-decimate tests (ONGC excluded, $n=1$) we control the family-wise error rate with the Holm--Bonferroni step-down procedure at $\alpha=0.05$, stating the family size $N$ and the uncorrected $\text{FWER} = 1 - (1-\alpha)^N$ alongside. We use a single fixed hyperparameter protocol throughout to avoid optimistic, per-condition tuning bias.
+On the resulting run-level differences we apply an exact two-sided sign test (binomial, $H_0 : P(\text{aggregate} > \text{decimate}) = \tfrac{1}{2}$). The sign test is assumption-light and the conservative choice at small $n$: it uses only the direction of each run's difference, making no normality or symmetry assumption that $n=3$ could not support. A parametric mixed-effects model with three random-effect levels would be over-fit and is deliberately not used. Note that the test cannot reach significance at $n=3$: the most extreme outcome, all three runs concordant, gives $p = 2(\tfrac{1}{2})^3 = 0.25$. We report this floor explicitly so that the IMS direction is read as a trend, not a significant effect. Runs whose mean (aggregate $-$ decimate) difference is exactly zero after factor-collapsing are excluded from the sign-test count; the $n_+$ and $n_-$ tallies in Table~\ref{tab:crossds} count only non-zero-difference runs. Across the detector $\times$ dataset family of aggregate-vs-decimate tests (ONGC excluded, $n=1$) we control the family-wise error rate with the Holm--Bonferroni step-down procedure at $\alpha=0.05$, stating the family size $N$ and the uncorrected $\text{FWER} = 1 - (1-\alpha)^N$ alongside. We use a single fixed hyperparameter protocol throughout to avoid optimistic, per-condition tuning bias.
 
 
 \section{Experimental Setup}
@@ -300,27 +300,21 @@ Table~\ref{tab:imslead} reports the mean raw (ungated) detection lead time acros
 \end{figure}
 
 \subsection{Sensitivity of the Onset Definition}
-Because the entire metric is anchored to the degradation onset $t_o$, its robustness matters. Table~\ref{tab:onsetsens} sweeps the threshold multiplier $k$ of Eq.~(\ref{eq:onset}) for the default health indicator (the RMS/kurtosis maximum, terminal-excursion rule). The onset position is stable: across $k \in \{3,4,5\}$ it moves by less than two percent of run span on every run, and the implied maximum lead time (failure minus onset) changes only modestly. The table also exposes an important structural fact about the first IMS test: its onset sits at ${\sim}98\%$ of the run span, i.e.\ only ${\sim}12.9$~h before failure. This run degrades abruptly, so its ``pre-onset'' region is almost the entire record and, critically, may already contain early degradation---a fact that returns to explain the conformal result below.
+Because the entire metric is anchored to the degradation onset $t_o$, its robustness matters. Table~\ref{tab:onset} sweeps the threshold multiplier $k$ of Eq.~(\ref{eq:onset}) for the default health indicator (the RMS/kurtosis maximum, terminal-excursion rule). The onset position is stable: across $k \in \{3,4,5\}$ it moves by less than two percent of run span on every run, and the implied maximum lead time (failure minus onset) changes only modestly. The table also exposes an important structural fact about the first IMS test: its onset sits at ${\sim}98\%$ of the run span, i.e.\ only ${\sim}12.9$~h before failure. This run degrades abruptly, so its ``pre-onset'' region is almost the entire record and, critically, may already contain early degradation---a fact that returns to explain the conformal result below.
 
-\begin{table}[t] \small
+\begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{Onset sensitivity on IMS (default RMS/kurtosis indicator, terminal-excursion rule). Onset position is reported as a percentage of run span; max lead is failure minus onset.}
-	\label{tab:onsetsens}
-	\begin{tabular}{l c r r}
+	\caption{Onset position on IMS, as \% of run span, with the implied maximum lead (failure minus onset, h) in brackets. Left: the default RMS/kurtosis indicator with the terminal-excursion rule at threshold multiplier $k \in \{3,4,5\}$. Right: two decoupled indicators that do not share the amplitude basis of the magnitude detectors, at the default $k=4$. The default onset is stable to $k$; it shifts materially under the decoupled indicators on the slow-degrading tests 2 and 3, but the non-destruction headline is computed on raw lead and is unaffected by this choice.}
+	\label{tab:onset}
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{l c c c | c c}
 		\hline \hline
-		\textbf{Run} & \textbf{$k$} & \textbf{Onset (\% span)} & \textbf{Max lead (h)} \\
+		 & \multicolumn{3}{c|}{\textbf{rms\_kurt (default)}} & \multicolumn{2}{c}{\textbf{Decoupled, $k=4$}} \\
+		\textbf{Run} & $k=3$ & $k=4$ & $k=5$ & kurt\_only & pca1 \\
 		\hline
-		\multirow{3}{*}{1st\_test} & 3 & 98.4 & 12.9 \\
-		 & 4 & 98.4 & 12.9 \\
-		 & 5 & 98.5 & 12.7 \\
-		\hline
-		\multirow{3}{*}{2nd\_test} & 3 & 60.4 & 64.8 \\
-		 & 4 & 61.9 & 62.5 \\
-		 & 5 & 65.8 & 56.0 \\
-		\hline
-		\multirow{3}{*}{3rd\_test} & 3 & 94.5 & 59.3 \\
-		 & 4 & 95.9 & 44.5 \\
-		 & 5 & 96.1 & 42.2 \\
+		Test 1 & 98.4 [12.9] & 98.4 [12.9] & 98.5 [12.7] & 98.7 [10.4] & 98.7 [10.7] \\
+		Test 2 & 60.4 [64.8] & 61.9 [62.5] & 65.8 [56.0] & 98.8 [2.0] & 83.6 [26.8] \\
+		Test 3 & 94.5 [59.3] & 95.9 [44.5] & 96.1 [42.2] & 99.7 [3.5] & 97.2 [30.0] \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
@@ -328,30 +322,16 @@ Because the entire metric is anchored to the degradation onset $t_o$, its robust
 
 \emph{Short-bearing onset stability (XJTU and FEMTO).} A natural concern is that the fixed-sample onset parameters (persistence 5, gap tolerance 10) are a larger fraction of a sub-2-hour bearing than of a multi-week IMS run, so the onset could behave differently---or fail to fire---on the short campaigns. Repeating the $k \in \{3,4,5\}$ sweep on all sixteen short bearings shows it does not. Every bearing yields an onset at the default $k$, including the shortest runs in either campaign (XJTU Bearing2\_4 at 42~min / 0.68~h, FEMTO Bearing3\_1 at 1.43~h), so the persistence/gap filters do not preclude detection at short run length. The onset position is also stable to $k$: the median across-$k$ spread is 1.0 percentage points of run span on XJTU and 0.15 on FEMTO (versus 1.6 on IMS). We flag the two honest exceptions rather than hide them: XJTU Bearing1\_2 yields an onset at only one of the three $k$ values (its excursion is marginal), and FEMTO Bearing1\_1 has the widest spread (8.9 points)---both short-lived bearings whose marginal degradation the metric correctly treats as fragile. The stability claim therefore holds across all three run-to-failure datasets, with the fragility confined to exactly the bearings the per-bearing analysis already flags as hard.
 
-\emph{Onset under a decoupled health indicator.} A sharper concern is circularity: the default onset indicator shares its RMS/kurtosis basis with the detectors' own features, so onset and detection are not fully independent (Section~\ref{sec:limitations}). We probe this directly by recomputing the onset under two alternatives that do not share the amplitude basis of the magnitude detectors---a kurtosis-only indicator (impulsiveness alone) and the first principal component (pca1) of the health channels (Table~\ref{tab:decoupled}). The result is honest and two-sided. The onset position is not invariant to the indicator: on the slow-degrading runs (tests 2 and 3) a kurtosis-only onset fires much later than the RMS-inclusive default (98.8\% vs 61.9\% of span on test 2), because on these bearings amplitude rises before impulsiveness, so an indicator that ignores RMS only reacts near failure. This means the absolute lead magnitudes and the per-run pre-onset region do depend on the indicator, and we do not claim otherwise. What is not affected is the paper's central conclusion: the aggregate-vs-decimate contrast is computed on raw lead time (Section~\ref{sec:statproto}), which contains no onset term, so non-destruction is invariant to the onset definition by construction. The circularity therefore bears on the absolute warning-time numbers and on which alarms count as valid---quantities we already report as run-specific---but not on the sign-of-difference headline. Test 1, the abrupt run, agrees across all three onset definitions (${\sim}98$--99\% of span).
+\emph{Onset under a decoupled health indicator.} A sharper concern is circularity: the default onset indicator shares its RMS/kurtosis basis with the detectors' own features, so onset and detection are not fully independent (Section~\ref{sec:limitations}). We probe this directly by recomputing the onset under two alternatives that do not share the amplitude basis of the magnitude detectors---a kurtosis-only indicator (impulsiveness alone) and the first principal component (pca1) of the health channels (Table~\ref{tab:onset}, right). The result is honest and two-sided. The onset position is not invariant to the indicator: on the slow-degrading runs (tests 2 and 3) a kurtosis-only onset fires much later than the RMS-inclusive default (98.8\% vs 61.9\% of span on test 2), because on these bearings amplitude rises before impulsiveness, so an indicator that ignores RMS only reacts near failure. This means the absolute lead magnitudes and the per-run pre-onset region do depend on the indicator, and we do not claim otherwise. What is not affected is the paper's central conclusion: the aggregate-vs-decimate contrast is computed on raw lead time (Section~\ref{sec:statproto}), which contains no onset term, so non-destruction is invariant to the onset definition by construction. The circularity therefore bears on the absolute warning-time numbers and on which alarms count as valid---quantities we already report as run-specific---but not on the sign-of-difference headline. Test 1, the abrupt run, agrees across all three onset definitions (${\sim}98$--99\% of span).
+
+
+\emph{Alarm-persistence sensitivity.} The alarm-persistence filter (default 3 windows) is a fixed protocol choice, so we sweep it over $\{1,3,5,10\}$ windows on IMS (Table~\ref{tab:robust}a). The median direction is stable; its run-level consistency and the $3\sigma$ valid-alarm fraction are not. The $3\sigma$ and EWMA run-level medians are positive at all four settings, but neither is sign-consistent throughout: $3\sigma$ has one negative run at the default persistence ($n_+/n_-=2/1$, and 3/0 at the other three), EWMA is 2/1 at persistence 1, 3 and 5 and 3/0 only at 10, and the spike-robust Isolation Forest turns slightly negative at persistence 5 ($-0.8$~h). At full resolution the $3\sigma$ valid-alarm fraction is 0.67 at every persistence, because the first IMS test's alarm exceeds the pre-onset FAR budget. Pooled over the sampling sweep, however, it falls from 0.67 at persistence 1 and 3 to 0.53 at 5 and 0.33 at 10, so a longer persistence filter costs the deployable chart valid alarms at SCADA rates.
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Onset position (\% of run span) and implied max lead (h) on IMS under three health-indicator definitions. The default rms\_kurt shares its amplitude basis with the magnitude detectors; kurt\_only and pca1 do not. The onset shifts materially on the slow-degrading tests 2 and 3, which we report honestly---but the non-destruction headline is computed on raw lead and is unaffected by this choice.}
-	\label{tab:decoupled}
-	\begin{tabular}{l c c c}
-		\hline \hline
-		\textbf{Run} & \textbf{rms\_kurt} & \textbf{kurt\_only} & \textbf{pca1} \\
-		\hline
-		1st\_test & 98.4\% [12.9] & 98.7\% [10.4] & 98.7\% [10.7] \\
-		2nd\_test & 61.9\% [62.5] & 98.8\% [2.0] & 83.6\% [26.8] \\
-		3rd\_test & 95.9\% [44.5] & 99.7\% [3.5] & 97.2\% [30.0] \\
-		\hline \hline
-	\end{tabular}
-	\end{center}
-\end{table}
-
-\emph{Alarm-persistence sensitivity.} The alarm-persistence filter (default 3 windows) is a fixed protocol choice, so we sweep it over $\{1,3,5,10\}$ windows on IMS (Table~\ref{tab:persistence}). The median direction is stable; its run-level consistency and the $3\sigma$ valid-alarm fraction are not. The $3\sigma$ and EWMA run-level medians are positive at all four settings, but neither is sign-consistent throughout: $3\sigma$ has one negative run at the default persistence ($n_+/n_-=2/1$, and 3/0 at the other three), EWMA is 2/1 at persistence 1, 3 and 5 and 3/0 only at 10, and the spike-robust Isolation Forest turns slightly negative at persistence 5 ($-0.8$~h). At full resolution the $3\sigma$ valid-alarm fraction is 0.67 at every persistence, because the first IMS test's alarm exceeds the pre-onset FAR budget. Pooled over the sampling sweep, however, it falls from 0.67 at persistence 1 and 3 to 0.53 at 5 and 0.33 at 10, so a longer persistence filter costs the deployable chart valid alarms at SCADA rates.
-
-\begin{table}[t] \small
-	\begin{center}
-	\caption{Alarm-persistence sensitivity on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction (at full resolution, and pooled over the five sampling factors), at persistence $\in \{1,3,5,10\}$ windows. The median direction is stable; the pooled $3\sigma$ valid-alarm fraction halves by persistence 10.}
-	\label{tab:persistence}
+	\caption{Robustness of the IMS and XJTU-SY results. (a) Alarm persistence on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction (at full resolution, and pooled over the five sampling factors) at persistence $\in \{1,3,5,10\}$ windows. The median direction is stable; the pooled $3\sigma$ valid-alarm fraction halves by persistence 10. (b) Historian gaps: mean valid lead time (h) under random gaps of 0\%, 5\% and 20\%, averaged over the runs on which the alarm is valid. Valid-alarm fractions are unchanged across gap levels on IMS (2/3 for each detector at every level); on XJTU-SY the $3\sigma$ fraction moves by a single bearing (5/10, 6/10, 5/10) while EWMA (7/10) and Isolation Forest (4/10) hold. One random gap draw is used per level, so a one-bearing move is draw noise rather than a gap effect.}
+	\label{tab:robust}
+	\textbf{(a) Alarm persistence (IMS)}\\[2pt]
 	\begin{tabular}{l c c c c}
 		\hline \hline
 		\textbf{Persistence (windows)} & \textbf{1} & \textbf{3} & \textbf{5} & \textbf{10} \\
@@ -363,15 +343,7 @@ Because the entire metric is anchored to the degradation onset $t_o$, its robust
 		$3\sigma$ valid-alarm frac., all factors & 0.67 & 0.67 & 0.53 & 0.33 \\
 		\hline \hline
 	\end{tabular}
-	\end{center}
-\end{table}
-
-\emph{Missing-data (historian-gap) robustness.} Real historians drop records, so we inject random gaps---setting 5\% and 20\% of snapshot rows to missing (NaN, timestamp retained)---and re-measure lead time on IMS and XJTU (Table~\ref{tab:missing}). Warning time is robust to gaps of this magnitude: the SPC charts degrade negligibly ($3\sigma$ is unchanged on IMS through 20\% gaps; EWMA loses $<2$~h), and every detector's valid-alarm fraction is unchanged. The one visible sensitivity is Isolation Forest, whose IMS lead falls from 54.7 to 37.2~h at 20\% gaps---the same spike-sensitivity that makes it the weakest carrier of the aggregation trend. The finding is the missing-data analogue of non-destruction: dropping a fifth of the historian's records does not cost the control charts their warning time.
-
-\begin{table}[t] \small
-	\begin{center}
-	\caption{Missing-data robustness: mean valid lead time (h) under random historian gaps of 0\%, 5\%, 20\% on IMS and XJTU-SY, averaged over the runs on which the alarm is valid. Valid-alarm fractions are unchanged across gap levels on IMS (2/3 for each of the three detectors at every level) but not exactly constant on XJTU-SY, where the $3\sigma$ fraction moves by a single bearing (5/10, 6/10, 5/10 at 0\%, 5\%, 20\%) while EWMA (7/10) and Isolation Forest (4/10) hold. One random gap draw is used per level, so a one-bearing move is draw noise rather than a gap effect. The SPC charts are essentially gap-insensitive; only the spike-sensitive Isolation Forest degrades at 20\% on IMS.}
-	\label{tab:missing}
+	\\[6pt]\textbf{(b) Historian gaps}\\[2pt]
 	\begin{tabular}{l c c c | c c c}
 		\hline \hline
 		 & \multicolumn{3}{c|}{\textbf{IMS lead (h)}} & \multicolumn{3}{c}{\textbf{XJTU-SY lead (h)}} \\
@@ -385,24 +357,56 @@ Because the entire metric is anchored to the degradation onset $t_o$, its robust
 	\end{center}
 \end{table}
 
-\subsection{Generalization to XJTU-SY ($n=10$ bearings)}
-Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~\ref{tab:xjtu} shows that the IMS ``aggregation helps'' trend does not replicate: at the run level (collapsing factors, $n=10$) the median difference is 0~h for six of the seven detectors ($-0.10$~h for Isolation Forest), the sign test is non-significant for all ($p \ge 0.18$), and no direction is consistent across bearings. Crucially, aggregation does not destroy lead time either---the medians are flat and the per-run differences are within a few minutes. Lead times are short in absolute terms (0--3.5~h) because XJTU bearings are short-lived (52--533~min); over the five window-magnitude detectors (the three SPC charts $3\sigma$/EWMA/Hotelling, Isolation Forest, and the RMS-trend floor---the same five tallied per bearing in Table~\ref{tab:perbearing}), 209/450 evaluations yield a valid alarm, with honest heterogeneity: the shortest-lived and the abrupt-failure bearings are hard or impossible to warn on under any mechanism. The deep sequence models are mostly N/A here---only the three longest-lived bearings furnish enough feature windows to form a length-30 sequence (76/90 cells N/A per deep model), an honest consequence of short runs rather than a tuning failure---and where they do run they too show a null aggregate-vs-decimate difference. Halving the sequence length to 15 windows does not change this picture: it makes only one additional short bearing usable and the deep reconstruction models still yield a valid alarm on at most one of the ten bearings, so trading sequence context for a marginally larger sample does not make them competitive with the SPC charts. Figure~\ref{fig:crossdataset} summarizes the cross-dataset picture in one view: a positive but non-significant median shift on IMS that is not consistent across its three runs, and null effects on ONGC and XJTU.
+\emph{Missing-data (historian-gap) robustness.} Real historians drop records, so we inject random gaps---setting 5\% and 20\% of snapshot rows to missing (NaN, timestamp retained)---and re-measure lead time on IMS and XJTU (Table~\ref{tab:robust}b). Warning time is robust to gaps of this magnitude: the SPC charts degrade negligibly ($3\sigma$ is unchanged on IMS through 20\% gaps; EWMA loses $<2$~h), and every detector's valid-alarm fraction is unchanged. The one visible sensitivity is Isolation Forest, whose IMS lead falls from 54.7 to 37.2~h at 20\% gaps. The finding is the missing-data analogue of non-destruction: dropping a fifth of the historian's records does not cost the control charts their warning time.
 
-\begin{table}[t] \small
+
+\subsection{Generalization to XJTU-SY ($n=10$ bearings)}
+Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~\ref{tab:crossds} (XJTU-SY rows) shows that the IMS ``aggregation helps'' trend does not replicate: at the run level (collapsing factors, $n=10$) the median difference is 0~h for ten of the eleven detectors ($-0.10$~h for Isolation Forest), the sign test is non-significant for all ($p \ge 0.18$), and no direction is consistent across bearings. Crucially, aggregation does not destroy lead time either---the medians are flat and the per-run differences are within a few minutes. Lead times are short in absolute terms (0--3.5~h) because XJTU bearings are short-lived (52--533~min); over the five window-magnitude detectors (the three SPC charts $3\sigma$/EWMA/Hotelling, Isolation Forest, and the RMS-trend floor---the same five tallied per bearing in Table~\ref{tab:perbearing}), 209/450 evaluations yield a valid alarm, with honest heterogeneity: the shortest-lived and the abrupt-failure bearings are hard or impossible to warn on under any mechanism. The deep sequence models are mostly N/A here---only the three longest-lived bearings furnish enough feature windows to form a length-30 sequence (76/90 cells N/A per deep model), an honest consequence of short runs rather than a tuning failure---and where they do run they too show a null aggregate-vs-decimate difference. Halving the sequence length to 15 windows does not change this picture: it makes only one additional short bearing usable and the deep reconstruction models still yield a valid alarm on at most one of the ten bearings, so trading sequence context for a marginally larger sample does not make them competitive with the SPC charts. Figure~\ref{fig:crossdataset} summarizes the cross-dataset picture in one view: a positive but non-significant median shift on IMS that is not consistent across its three runs, and null effects on ONGC and XJTU.
+
+\begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{XJTU-SY ($n=10$): run-level sign test of aggregate vs decimate lead time, collapsing within-bearing sampling factors, for the seven non-sequence detectors. The three deep sequence models are $n=3$ on XJTU and are folded into Table~\ref{tab:holm}. No detector shows a significant or sign-consistent difference; Holm-adjusted $p$ in Table~\ref{tab:holm}.}
-	\label{tab:xjtu}
-	\begin{tabular}{l r c c r}
+	\caption{Run-level sign test of aggregate vs decimate lead time on the three multi-bearing datasets, collapsing the within-bearing sampling factors, for all eleven evaluated detectors. Med.\ $\Delta$ is the run-level median difference (h); $n_+/n_-$ count only non-zero-difference runs; S-c.\ marks sign consistency (yes$^{-}$: every non-zero run negative). $^\ddagger$: the three deep sequence models need a length-30 window sequence, so their XJTU-SY tests are $n=3$. No detector is significant after Holm correction (Table~\ref{tab:holm}); on FEMTO the only sign-consistent detectors, LSTM-AE and Transformer-AD, are both negative, and on Ferrara none is sign-consistent.}
+	\label{tab:crossds}
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{l l r c c r}
 		\hline \hline
-		\textbf{Method} & \textbf{Med.\ $\Delta$ (h)} & \textbf{$n_+/n_-$} & \textbf{Sign-con.} & \textbf{$p$} \\
+		\textbf{Data} & \textbf{Method} & \textbf{Med.\ $\Delta$} &\textbf{$n_+/n_-$} & \textbf{S-c.} & \textbf{$p$} \\
 		\hline
-		$3\sigma$ & 0.00 & 3/1 & no & 0.625 \\
-		EWMA & 0.00 & 2/2 & no & 1.000 \\
-		CUSUM & 0.00 & 1/2 & no & 1.000 \\
-		Hotelling $T^2$ & 0.00 & 2/0 & yes & 0.500 \\
-		Iso.\ Forest & $-0.10$ & 2/7 & no & 0.180 \\
-		Deep SVDD & 0.00 & 3/2 & no & 1.000 \\
-		RMS-trend & 0.00 & 2/2 & no & 1.000 \\
+		\multirow{11}{*}{\shortstack[l]{XJTU-SY\\($n=10$)}} & $3\sigma$ & 0.00 & 3/1 & no & 0.625 \\
+		 & EWMA & 0.00 & 2/2 & no & 1.000 \\
+		 & CUSUM & 0.00 & 1/2 & no & 1.000 \\
+		 & Hotelling $T^2$ & 0.00 & 2/0 & yes & 0.500 \\
+		 & Iso.\ Forest & $-0.10$ & 2/7 & no & 0.180 \\
+		 & Deep SVDD & 0.00 & 3/2 & no & 1.000 \\
+		 & One-class SVM & 0.00 & 1/0 & yes & 1.000 \\
+		 & LSTM-AE$^\ddagger$ & 0.00 & 1/0 & yes & 1.000 \\
+		 & TCN-AE$^\ddagger$ & 0.00 & 0/0 & no & 1.000 \\
+		 & Transf.-AD$^\ddagger$ & 0.00 & 0/0 & no & 1.000 \\
+		 & RMS-trend & 0.00 & 2/2 & no & 1.000 \\
+		\hline
+		\multirow{11}{*}{\shortstack[l]{FEMTO\\($n=6$)}} & $3\sigma$ & $-0.14$ & 1/5 & no & 0.219 \\
+		 & EWMA & 0.09 & 4/2 & no & 0.688 \\
+		 & CUSUM & 0.10 & 4/2 & no & 0.688 \\
+		 & Hotelling $T^2$ & 0.07 & 5/1 & no & 0.219 \\
+		 & Iso.\ Forest & $-0.07$ & 2/4 & no & 0.688 \\
+		 & Deep SVDD & $-0.00$ & 1/3 & no & 0.625 \\
+		 & One-class SVM & 0.02 & 4/1 & no & 0.375 \\
+		 & LSTM-AE & $-0.04$ & 0/3 & yes$^{-}$ & 0.250 \\
+		 & TCN-AE & 0.00 & 1/2 & no & 1.000 \\
+		 & Transf.-AD & $-0.05$ & 0/4 & yes$^{-}$ & 0.125 \\
+		 & RMS-trend & $-0.02$ & 1/3 & no & 0.625 \\
+		\hline
+		\multirow{11}{*}{\shortstack[l]{Ferrara\\($n=6$)}} & $3\sigma$ & $-0.01$ & 2/3 & no & 1.000 \\
+		 & EWMA & 0.01 & 4/2 & no & 0.688 \\
+		 & CUSUM & 0.01 & 5/1 & no & 0.219 \\
+		 & Hotelling $T^2$ & 0.01 & 4/1 & no & 0.375 \\
+		 & Iso.\ Forest & 0.00 & 3/2 & no & 1.000 \\
+		 & Deep SVDD & $-0.00$ & 1/4 & no & 0.375 \\
+		 & One-class SVM & 0.01 & 4/1 & no & 0.375 \\
+		 & LSTM-AE & 0.00 & 2/2 & no & 1.000 \\
+		 & TCN-AE & 0.00 & 3/1 & no & 0.625 \\
+		 & Transf.-AD & 0.00 & 3/1 & no & 0.625 \\
+		 & RMS-trend & 0.01 & 4/2 & no & 0.688 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
@@ -416,56 +420,12 @@ Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~
 \end{figure*}
 
 \subsection{Generalization to FEMTO/PRONOSTIA ($n=6$ bearings)}\label{sec:femto}
-The six FEMTO Learning\_set bearings provide a second, fully independent multi-bearing test, and---unlike XJTU, where most bearings are too short to form a length-30 sequence---all six are long enough that every detector, including the four deep reconstruction models, runs on the full $n=6$. Table~\ref{tab:femto} shows the same verdict as XJTU: at the run level the median aggregate$-$decimate difference is within $\pm9$~min for every detector, only LSTM-AE and Transformer-AD are sign-consistent, both negative (0/3 and 0/4 non-zero runs), and the smallest sign-test $p$ is 0.125 (Transformer-AD, raw)---which does not survive the Holm correction across the family (Table~\ref{tab:holm}). Decimation leads aggregation in several FEMTO cells, but never by more than the $\pm 1$~h operational margin: the run-level 95\% bootstrap interval lies wholly below zero for $3\sigma$ (mean $-0.21$~h, $[-0.44,-0.04]$), LSTM-AE, RMS-trend and Transformer-AD, and every FEMTO interval lies inside $\pm 1$~h. These cells bound rather than overturn the non-destruction conclusion: the direction of any residual aggregate-vs-decimate effect is dataset-specific noise, while the robust, replicated conclusion is non-destruction. Across all eleven evaluated detectors (every one runs on the full $n=6$), 211/660 evaluations yield a valid alarm; as on XJTU, the short-lived bearings (${\sim}1.4$--7.8~h) keep absolute lead times small.
+The six FEMTO Learning\_set bearings provide a second, fully independent multi-bearing test, and---unlike XJTU, where most bearings are too short to form a length-30 sequence---all six are long enough that every detector, including the four deep reconstruction models, runs on the full $n=6$. Table~\ref{tab:crossds} (FEMTO rows) shows the same verdict as XJTU: at the run level the median aggregate$-$decimate difference is within $\pm9$~min for every detector, only LSTM-AE and Transformer-AD are sign-consistent, both negative (0/3 and 0/4 non-zero runs), and the smallest sign-test $p$ is 0.125 (Transformer-AD, raw)---which does not survive the Holm correction across the family (Table~\ref{tab:holm}). Decimation leads aggregation in several FEMTO cells, but never by more than the $\pm 1$~h operational margin: the run-level 95\% bootstrap interval lies wholly below zero for $3\sigma$ (mean $-0.21$~h, $[-0.44,-0.04]$), LSTM-AE, RMS-trend and Transformer-AD, and every FEMTO interval lies inside $\pm 1$~h. These cells bound rather than overturn the non-destruction conclusion: the direction of any residual aggregate-vs-decimate effect is dataset-specific noise, while the robust, replicated conclusion is non-destruction. Across all eleven evaluated detectors (every one runs on the full $n=6$), 211/660 evaluations yield a valid alarm; as on XJTU, the short-lived bearings (${\sim}1.4$--7.8~h) keep absolute lead times small.
 
-\begin{table}[t] \small
-	\begin{center}
-	\caption{FEMTO/PRONOSTIA ($n=6$): run-level sign test of aggregate vs decimate lead time. All eleven evaluated detectors (nine headline plus Deep SVDD) run on the full $n=6$. No detector survives Holm correction (Table~\ref{tab:holm}); the two sign-consistent detectors, LSTM-AE and Transformer-AD, are both negative and non-significant.}
-	\label{tab:femto}
-	\begin{tabular}{l r c c r}
-		\hline \hline
-		\textbf{Method} & \textbf{Med.\ $\Delta$ (h)} & \textbf{$n_+/n_-$} & \textbf{Sign-con.} & \textbf{$p$} \\
-		\hline
-		$3\sigma$ & $-0.14$ & 1/5 & no & 0.219 \\
-		EWMA & 0.09 & 4/2 & no & 0.688 \\
-		CUSUM & 0.10 & 4/2 & no & 0.688 \\
-		Hotelling $T^2$ & 0.07 & 5/1 & no & 0.219 \\
-		Iso.\ Forest & $-0.07$ & 2/4 & no & 0.688 \\
-		Deep SVDD & $-0.00$ & 1/3 & no & 0.625 \\
-		LSTM-AE & $-0.04$ & 0/3 & yes ($-$) & 0.250 \\
-		TCN-AE & 0.00 & 1/2 & no & 1.000 \\
-		Transformer-AD & $-0.05$ & 0/4 & yes ($-$) & 0.125 \\
-		RMS-trend & $-0.02$ & 1/3 & no & 0.625 \\
-		\hline \hline
-	\end{tabular}
-	\end{center}
-\end{table}
 
 \subsection{Generalization to University of Ferrara ($n=6$ bearings)}
-The University of Ferrara campaign \cite{arpa2024ferrara} adds a fifth, fully independent run-to-failure dataset and a second constant-condition multi-bearing rig beyond FEMTO. Table~\ref{tab:ferrara} gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate$-$decimate difference is within $\pm5$~min for every detector, no detector is sign-consistent across the six bearings, and the smallest sign-test $p$ is 0.219 (CUSUM)---not significant even before correction. Like the other short-lived campaigns, Ferrara's 0.7--6.8~h lifetimes mean it cannot confirm or deny the IMS positive trend; what it does add is a second independent replication of non-destruction on a modern (2024) rig. The larger per-run negatives (the $-0.5$ to $-1.1$~h entries) are all on E1, whose degradation onset sits within ${\sim}0.1$~h of failure (an abrupt, near-coincident-onset bearing analogous to IMS test 1), not a systematic aggregation penalty.
+The University of Ferrara campaign \cite{arpa2024ferrara} adds a fifth, fully independent run-to-failure dataset and a second constant-condition multi-bearing rig beyond FEMTO. Table~\ref{tab:crossds} (Ferrara rows) gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate$-$decimate difference is within $\pm5$~min for every detector, no detector is sign-consistent across the six bearings, and the smallest sign-test $p$ is 0.219 (CUSUM)---not significant even before correction. Like the other short-lived campaigns, Ferrara's 0.7--6.8~h lifetimes mean it cannot confirm or deny the IMS positive trend; what it does add is a second independent replication of non-destruction on a modern (2024) rig. The larger per-run negatives (the $-0.5$ to $-1.1$~h entries) are all on E1, whose degradation onset sits within ${\sim}0.1$~h of failure (an abrupt, near-coincident-onset bearing analogous to IMS test 1), not a systematic aggregation penalty.
 
-\begin{table}[t] \small
-	\begin{center}
-	\caption{University of Ferrara 2024 ($n=6$): run-level sign test of aggregate vs decimate lead time. As on XJTU-SY and FEMTO the effect is null---no detector is sign-consistent and none survives Holm correction (Table~\ref{tab:holm}). $n_+/n_-$ count only non-zero-difference runs.}
-	\label{tab:ferrara}
-	\begin{tabular}{l r c c r}
-		\hline \hline
-		\textbf{Method} & \textbf{Med.\ $\Delta$ (h)} & \textbf{$n_+/n_-$} & \textbf{Sign-con.} & \textbf{$p$} \\
-		\hline
-		$3\sigma$ & $-0.01$ & 2/3 & no & 1.000 \\
-		EWMA & 0.01 & 4/2 & no & 0.688 \\
-		CUSUM & 0.01 & 5/1 & no & 0.219 \\
-		Hotelling $T^2$ & 0.01 & 4/1 & no & 0.375 \\
-		Iso.\ Forest & 0.00 & 3/2 & no & 1.000 \\
-		Deep SVDD & $-0.00$ & 1/4 & no & 0.375 \\
-		LSTM-AE & 0.00 & 2/2 & no & 1.000 \\
-		TCN-AE & 0.00 & 3/1 & no & 0.625 \\
-		Transformer-AD & 0.00 & 3/1 & no & 0.625 \\
-		RMS-trend & 0.01 & 4/2 & no & 0.688 \\
-		\hline \hline
-	\end{tabular}
-	\end{center}
-\end{table}
 
 \subsection{Aggregate vs Decimate on IMS: a Positive but Inconsistent Median Shift}
 Figure~\ref{fig:sweep} plots lead time against the effective logging interval for both mechanisms. Under aggregation, lead time remains high and stable as the interval coarsens; under decimation it degrades faster, with $3\sigma$ and Isolation Forest collapsing at coarse intervals (for example, $3\sigma$ falls from 64.6~h at full rate to 24.8~h at a $10\times$ decimation, while aggregation holds it near 64.6~h). The upturn at the very largest factor reflects the few-windows regime, where only one or two runs survive and the mean is no longer comparable; we annotate rather than hide it.
@@ -592,9 +552,9 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 \end{table}
 
 \subsection{Conformal Calibration}
-Table~\ref{tab:conformal} reports the empirical pre-onset false-alarm rate of the conformal Isolation Forest against the target $\alpha$ on each IMS run, and Figure~\ref{fig:conf_ims} plots it. The distribution-free guarantee $\text{FAR} \le \alpha$ holds on test 2 (0\% through $\alpha=0.10$) and is essentially satisfied on test 3 (0.9\% at $\alpha=0.01$, 4.4\% at $\alpha=0.05$---so it holds through $\alpha=0.05$---while it slightly exceeds the bound at $\alpha=0.10$, where the empirical FAR is 13\%). It is violated on test 1 for a principled reason that Table~\ref{tab:onsetsens} already foretold: that run's onset fires only ${\sim}12$~h before failure, so its ``pre-onset'' region spans almost the whole record and already contains degradation; exchangeability between the calibration and ``normal'' scores therefore fails, and the empirical FAR sits at 0.74--0.85 regardless of $\alpha$. We report this run rather than discarding it, because it delimits exactly when the conformal guarantee is and is not usable in prognostics: it requires a genuinely stationary normal region, which an abrupt late-onset failure does not provide. The XJTU calibration (Figure~\ref{fig:conf_xjtu}) tells the same story at scale: bearings with a substantial stationary pre-onset region (e.g.\ Bearing2\_3, calibrated through $\alpha=0.05$) honor the bound, while those with only one or two pre-onset windows---an artifact of the short XJTU lifetimes---cannot satisfy a finite-sample guarantee and are honestly flagged uncalibrated rather than silently passed. The conformal machinery thus doubles as a per-asset usability test: it reports whether enough stationary normal data exists to control the false-alarm rate at all.
+Table~\ref{tab:conformal} reports the empirical pre-onset false-alarm rate of the conformal Isolation Forest against the target $\alpha$ on each IMS run, and Figure~\ref{fig:conformal}a plots it. The distribution-free guarantee $\text{FAR} \le \alpha$ holds on test 2 (0\% through $\alpha=0.10$) and is essentially satisfied on test 3 (0.9\% at $\alpha=0.01$, 4.4\% at $\alpha=0.05$---so it holds through $\alpha=0.05$---while it slightly exceeds the bound at $\alpha=0.10$, where the empirical FAR is 13\%). It is violated on test 1 for a principled reason that Table~\ref{tab:onset} already foretold: that run's onset fires only ${\sim}12$~h before failure, so its ``pre-onset'' region spans almost the whole record and already contains degradation; exchangeability between the calibration and ``normal'' scores therefore fails, and the empirical FAR sits at 0.74--0.85 regardless of $\alpha$. We report this run rather than discarding it, because it delimits exactly when the conformal guarantee is and is not usable in prognostics: it requires a genuinely stationary normal region, which an abrupt late-onset failure does not provide. The XJTU calibration (Figure~\ref{fig:conformal}b) tells the same story at scale: bearings with a substantial stationary pre-onset region (e.g.\ Bearing2\_3, calibrated through $\alpha=0.05$) honor the bound, while those with only one or two pre-onset windows---an artifact of the short XJTU lifetimes---cannot satisfy a finite-sample guarantee and are honestly flagged uncalibrated rather than silently passed. The conformal machinery thus doubles as a per-asset usability test: it reports whether enough stationary normal data exists to control the false-alarm rate at all.
 
-\emph{FEMTO and ONGC calibration.} The same per-asset usability test on FEMTO (Figure~\ref{fig:conf_femto}) and the ONGC turbine (Figure~\ref{fig:conf_ongc}) confirms the pattern and its honest limits. On FEMTO, no bearing honors the bound at $\alpha=0.05$ (empirical pre-onset FAR 0.08--0.56; pooled 0.27), because the short 1.4--7.8~h lifetimes leave a pre-onset region that is neither long nor stationary---the same reason the short XJTU bearings and IMS test 1 fail. The two bearings with the most stationary normal region (Bearing2\_2 at 0.08, Bearing1\_2 at 0.10) come closest, while the abrupt Bearing1\_1 (0.56) violates it badly---exactly the diagnostic the conformal machinery is meant to provide. On the real ONGC historian stream the single-asset calibration tracks the diagonal much more closely (empirical FAR 0.016, 0.030, 0.096 at $\alpha=0.01, 0.02, 0.05$), sitting a modest 1.5--2$\times$ above the target---consistent with a genuine, mostly-stationary operating record whose normal region only mildly violates exchangeability. The conformal guarantee is therefore usable where a stationary normal region exists (ONGC, the longer IMS/XJTU bearings) and correctly self-reports as invalid where it does not (short FEMTO/XJTU bearings, abrupt onsets).
+\emph{FEMTO and ONGC calibration.} The same per-asset usability test on FEMTO (Figure~\ref{fig:conformal}c) and the ONGC turbine (Figure~\ref{fig:conformal}d) confirms the pattern and its honest limits. On FEMTO, no bearing honors the bound at $\alpha=0.05$ (empirical pre-onset FAR 0.08--0.56; pooled 0.27), because the short 1.4--7.8~h lifetimes leave a pre-onset region that is neither long nor stationary---the same reason the short XJTU bearings and IMS test 1 fail. The two bearings with the most stationary normal region (Bearing2\_2 at 0.08, Bearing1\_2 at 0.10) come closest, while the abrupt Bearing1\_1 (0.56) violates it badly---exactly the diagnostic the conformal machinery is meant to provide. On the real ONGC historian stream the single-asset calibration tracks the diagonal much more closely (empirical FAR 0.016, 0.030, 0.096 at $\alpha=0.01, 0.02, 0.05$), sitting a modest 1.5--2$\times$ above the target---consistent with a genuine, mostly-stationary operating record whose normal region only mildly violates exchangeability. The conformal guarantee is therefore usable where a stationary normal region exists (ONGC, the longer IMS/XJTU bearings) and correctly self-reports as invalid where it does not (short FEMTO/XJTU bearings, abrupt onsets).
 
 \begin{table}[t] \small
 	\begin{center}
@@ -612,30 +572,18 @@ Table~\ref{tab:conformal} reports the empirical pre-onset false-alarm rate of th
 	\end{center}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig_conf_ims}
-\caption{Conformal calibration on IMS: empirical pre-onset FAR vs target $\alpha$. Points on or below the diagonal satisfy the distribution-free guarantee. Test 1 violates it because its near-failure onset leaves no genuinely stationary normal region.}
-\label{fig:conf_ims}
-\end{figure}
+\includegraphics[width=0.78\textwidth]{fig_conformal_panels}
+\caption{Conformal calibration: empirical pre-onset FAR vs target $\alpha$; points on or below the diagonal satisfy the distribution-free guarantee. (a) IMS: test 1 violates it because its near-failure onset leaves no genuinely stationary normal region. (b) XJTU-SY: bearings with a substantial stationary pre-onset region honor the bound; those with only one or two pre-onset windows cannot support a finite-sample guarantee and are flagged uncalibrated. (c) FEMTO/PRONOSTIA: no bearing honors the bound at $\alpha=0.05$, because the short, non-stationary pre-onset regions of these 1.4--7.8~h bearings cannot support it. (d) ONGC turbine ($n=1$ case study, Appendix~D.2): the real historian stream tracks the diagonal closely, a modest 1.5--2$\times$ above target, consistent with a mostly-stationary normal region.}
+\label{fig:conformal}
+\end{figure*}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig_conf_xjtu}
-\caption{Conformal calibration on the XJTU-SY bearings. Bearings with a substantial stationary pre-onset region honor the bound; those with only one or two pre-onset windows cannot support a finite-sample guarantee and are flagged uncalibrated.}
-\label{fig:conf_xjtu}
-\end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig_conf_femto}
-\caption{Conformal calibration on the six FEMTO/PRONOSTIA bearings. No bearing honors the bound at $\alpha=0.05$; the short, non-stationary pre-onset regions of these 1.4--7.8~h bearings mean the finite-sample guarantee cannot hold, and the machinery flags them uncalibrated.}
-\label{fig:conf_femto}
-\end{figure}
 
 \subsection{Lead-Time--vs--False-Alarm Trade-off}
 \label{sec:tradeoff}
-Sweeping the alarm-threshold percentile traces a prognostics analog of the ROC curve (Figure~\ref{fig:tradeoff_ims}, Table~\ref{tab:tradeoff}): tightening the threshold lowers both pre-onset FAR and lead time together, letting an operator select an operating point for a stated false-alarm budget. On the achievable frontier---highest lead at the lowest FAR each detector attains---Hotelling $T^2$ and Isolation Forest dominate the upper-left, while the naive RMS-trend baseline collapses to near-zero lead as soon as the threshold is tightened. At a strict 99.5th-percentile threshold, for instance, $3\sigma$ retains 56.3~h of lead at 8.9\% pre-onset FAR, whereas RMS-trend has collapsed to 1.3~h. This converts the single gated number into a usable operating-point selector. Note that many entries in Table~\ref{tab:tradeoff} sit above the $\tau=10\%$ false-alarm budget; under the gated metric those operating points are invalid and we mark them with a dagger. This has a concrete consequence for detector choice: Hotelling $T^2$ attains the highest raw lead of any control chart in Table~\ref{tab:tradeoff} but its pre-onset FAR exceeds the $\tau=10\%$ budget at every threshold tested (all three Hotelling $T^2$ entries are daggered), so under the gated metric it has no valid operating point on IMS. EWMA and CUSUM behave the same way: their pre-onset FAR sits at 19.0--22.1\% across the swept thresholds, never dipping below the budget, so neither has a valid operating point---the two memory-based control charts share this liability, and neither should be recommended under a 10\% budget. Deep SVDD occupies the opposite corner: it stays comfortably within budget ($\le 0.6\%$ FAR) but only by firing late, buying that low false-alarm rate with a short $\le 14.8$~h lead. The $3\sigma$ chart, by contrast, reaches a valid point (56.3~h of lead at 8.9\% FAR at the 99.5th percentile) and is therefore the recommended chart under a 10\% budget---a ranking that the raw-lead column of Table~\ref{tab:imslead}, where the deep reconstruction models lead, would by itself obscure. The same trade-off computed on the ten XJTU bearings (Figure~\ref{fig:tradeoff_xjtu}) has the same qualitative shape at the shorter absolute lead times those bearings allow, confirming that the operating-point selection generalizes beyond the laboratory rig.
+Sweeping the alarm-threshold percentile traces a prognostics analog of the ROC curve (Figure~\ref{fig:tradeoffs}a, Table~\ref{tab:tradeoff}): tightening the threshold lowers both pre-onset FAR and lead time together, letting an operator select an operating point for a stated false-alarm budget. On the achievable frontier---highest lead at the lowest FAR each detector attains---Hotelling $T^2$ and Isolation Forest dominate the upper-left, while the naive RMS-trend baseline collapses to near-zero lead as soon as the threshold is tightened. At a strict 99.5th-percentile threshold, for instance, $3\sigma$ retains 56.3~h of lead at 8.9\% pre-onset FAR, whereas RMS-trend has collapsed to 1.3~h. This converts the single gated number into a usable operating-point selector. Note that many entries in Table~\ref{tab:tradeoff} sit above the $\tau=10\%$ false-alarm budget; under the gated metric those operating points are invalid and we mark them with a dagger. This has a concrete consequence for detector choice: Hotelling $T^2$ attains the highest raw lead of any control chart in Table~\ref{tab:tradeoff} but its pre-onset FAR exceeds the $\tau=10\%$ budget at every threshold tested (all three Hotelling $T^2$ entries are daggered), so under the gated metric it has no valid operating point on IMS. EWMA and CUSUM behave the same way: their pre-onset FAR sits at 19.0--22.1\% across the swept thresholds, never dipping below the budget, so neither has a valid operating point---the two memory-based control charts share this liability, and neither should be recommended under a 10\% budget. Deep SVDD occupies the opposite corner: it stays comfortably within budget ($\le 0.6\%$ FAR) but only by firing late, buying that low false-alarm rate with a short $\le 14.8$~h lead. The $3\sigma$ chart, by contrast, reaches a valid point (56.3~h of lead at 8.9\% FAR at the 99.5th percentile) and is therefore the recommended chart under a 10\% budget---a ranking that the raw-lead column of Table~\ref{tab:imslead}, where the deep reconstruction models lead, would by itself obscure. The same trade-off computed on the ten XJTU bearings (Figure~\ref{fig:tradeoffs}b) has the same qualitative shape at the shorter absolute lead times those bearings allow, confirming that the operating-point selection generalizes beyond the laboratory rig.
 
 \emph{Sensitivity to the false-alarm budget.} The budget $\tau$ is a policy input, so we report how the detector recommendation moves with it rather than fixing $\tau=10\%$ silently (Table~\ref{tab:farbudget}). The recommendation is not $\tau$-invariant, and we state this plainly. At $\tau=0.20$ the $3\sigma$ chart gives the longest valid lead (77.0~h), now joined by CUSUM, Hotelling $T^2$, and Isolation Forest as their pre-onset FAR falls within the looser budget. At $\tau=0.10$ the $3\sigma$ chart remains the best valid chart (56.3~h). But at a strict $\tau=0.05$ no control chart qualifies at all---only Deep SVDD (14.8~h) and the RMS-trend floor (34.7~h) stay within a 5\% budget---so an operator with a very low nuisance-alarm tolerance should prefer the low-FAR Deep SVDD operating point over any chart. The $3\sigma$ recommendation therefore holds for $\tau \ge 0.10$ on IMS and inverts toward the low-FAR detectors below it. Crucially, the cross-dataset non-destruction headline is untouched by this choice: it is computed on raw (ungated) lead-time differences (Section~\ref{sec:statproto}) and does not depend on $\tau$ at all.
 
@@ -646,19 +594,12 @@ Sweeping the alarm-threshold percentile traces a prognostics analog of the ROC c
 \end{equation}
 For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$--$10^4$ times a routine inspection, and the pre-onset window count is of order $k \sim 10^3$ on the runs studied here, so Eq.~(\ref{eq:costratio}) places the break-even budget at $\tau^* \sim 0.1$--1 (Table~\ref{tab:taugrid}): our $\tau=0.10$ is the conservative end of that range and is justified whenever failures are at least ${\sim}100\times$ costlier than inspections. The strict $\tau=0.05$ column of Table~\ref{tab:farbudget} corresponds to the opposite regime---inspections that are themselves disruptive (e.g.\ requiring a shutdown), so $\rho$ is small---exactly where the low-FAR Deep SVDD point becomes the economical choice. We stress this is an order-of-magnitude anchor, not a site-specific optimisation: the true optimum requires an operator's actual $c_I$ and $c_F$, which we do not have, and Eq.~(\ref{eq:costratio}) is offered so a practitioner can substitute their own.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig_tradeoff_ims}
-\caption{Lead-time vs pre-onset-FAR trade-off on IMS (threshold percentile swept, mean across runs). Up-and-to-the-left is better. Hotelling $T^2$ and Isolation Forest dominate the achievable frontier---highest lead at the lowest attainable FAR; the RMS-trend baseline collapses at low FAR.}
-\label{fig:tradeoff_ims}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig_tradeoff_xjtu}
-\caption{Lead-time vs pre-onset-FAR trade-off on the ten XJTU-SY bearings. The curve has the same qualitative shape as IMS at the shorter absolute lead times XJTU's short-lived bearings permit, showing the operating-point selection generalizes.}
-\label{fig:tradeoff_xjtu}
-\end{figure}
+\includegraphics[width=\textwidth]{fig_tradeoff_panels}
+\caption{Lead-time vs pre-onset-FAR trade-off (threshold percentile swept, mean across runs); up-and-to-the-left is better. (a) IMS: Hotelling $T^2$ and Isolation Forest dominate the achievable frontier---highest lead at the lowest attainable FAR; the RMS-trend baseline collapses at low FAR. (b) The ten XJTU-SY bearings: the same qualitative shape at the shorter absolute lead times these short-lived bearings permit, showing that the operating-point selection generalizes.}
+\label{fig:tradeoffs}
+\end{figure*}
 
 
 \begin{table}[t] \small
@@ -783,7 +724,7 @@ To check that this recommendation is not specific to Isolation Forest, we repeat
 \end{table}
 
 \subsection{Spectral vs Time-Domain Features, per Run}
-A dedicated time-vs-spectral comparison (Table~\ref{tab:spectral}) confirms the ablation at the level of individual runs and alarms. Adding spectral features to the time-domain set does not improve valid detection on IMS, and on test 2 it actively harms the control charts: the $3\sigma$, EWMA, and Hotelling detectors jump to 100\% pre-onset FAR (invalid) when spectral features are included, while the same detectors are valid with time-only features. Isolation Forest, which is less sensitive to a few noisy dimensions, remains valid in both settings. The first test is unwarnable for every configuration because of its near-failure onset, consistent with Table~\ref{tab:onsetsens} and the conformal result. The practical lesson is that frequency-domain features must be admitted with care under a false-alarm budget: their extra sensitivity cuts both ways.
+A dedicated time-vs-spectral comparison (Table~\ref{tab:spectral}) confirms the ablation at the level of individual runs and alarms. Adding spectral features to the time-domain set does not improve valid detection on IMS, and on test 2 it actively harms the control charts: the $3\sigma$, EWMA, and Hotelling detectors jump to 100\% pre-onset FAR (invalid) when spectral features are included, while the same detectors are valid with time-only features. Isolation Forest, which is less sensitive to a few noisy dimensions, remains valid in both settings. The first test is unwarnable for every configuration because of its near-failure onset, consistent with Table~\ref{tab:onset} and the conformal result. The practical lesson is that frequency-domain features must be admitted with care under a false-alarm budget: their extra sensitivity cuts both ways.
 
 \begin{table}[t] \small
 	\begin{center}
@@ -886,11 +827,11 @@ For practitioners the message is reassuring and actionable. Storing bin-averaged
 \label{sec:limitations}
 We state the limits of the evidence plainly, grouped by the kind of validity each concern bears on.
 
-\emph{External validity (generalization).} The IMS ``aggregation helps'' tendency is a positive-median but non-significant trend, sign-consistent only for CUSUM and Hotelling $T^2$ ($n=3$; Table~\ref{tab:imssweep}) and does not replicate on the larger XJTU (Table~\ref{tab:xjtu}) or FEMTO (Table~\ref{tab:femto}) sets---on FEMTO the only sign-consistent detectors, LSTM-AE and Transformer-AD, are negative; we therefore claim only non-destruction as the cross-dataset headline, not a positive effect. ONGC is a single asset ($n=1$), reported as a descriptive case study with no inference (Table~\ref{tab:ongc}). The datasets, while deliberately diverse, are all rolling-element bearings; we do not claim the result transfers to gearboxes, blades, or other failure modes without further testing.
+\emph{External validity (generalization).} The IMS ``aggregation helps'' tendency is a positive-median but non-significant trend, sign-consistent only for CUSUM and Hotelling $T^2$ ($n=3$; Table~\ref{tab:imssweep}) and does not replicate on the larger XJTU or FEMTO sets (Table~\ref{tab:crossds})---on FEMTO the only sign-consistent detectors, LSTM-AE and Transformer-AD, are negative; we therefore claim only non-destruction as the cross-dataset headline, not a positive effect. ONGC is a single asset ($n=1$), reported as a descriptive case study with no inference (Table~\ref{tab:ongc}). The datasets, while deliberately diverse, are all rolling-element bearings; we do not claim the result transfers to gearboxes, blades, or other failure modes without further testing.
 
 \emph{Residual gaming surfaces of the metric.} We claim the metric defeats the specific latch-on (constant-on) exploit, not that it is unconditionally ungameable, and we name two surfaces we do not close. (a) A detector could in principle align its alarm threshold to fire just after the onset time $t_o^+$; because our onset is computed only from training-region statistics, this cannot use test-region information, but an adversary with knowledge of the onset rule could still tune toward it. (b) The onset health indicator shares its RMS/kurtosis basis with several of the detectors' own features, so onset and detection are not fully independent---a circularity that could, in principle, favor detectors aligned to the onset statistic. We acknowledge both rather than claim to have eliminated them; closing them (e.g.\ an onset signal disjoint from the detector features) is future work.
 
-\emph{Construct validity (does the metric measure warning time?).} The onset definition, although leakage-free and stable to its threshold multiplier across $k \in \{3,4,5\}$ (Table~\ref{tab:onsetsens}), is not the ground-truth defect-initiation time, which is unobservable in these datasets. A late onset---as on IMS test 1, where degradation and failure are nearly coincident---inflates the pre-onset region, can mark a genuine early detection invalid, and breaks the conformal exchangeability assumption (Table~\ref{tab:conformal}). The per-bearing XJTU breakdown (Table~\ref{tab:perbearing}) shows the same effect: bearings whose physics provides essentially no warning runway score zero valid alarms regardless of detector, which is correct behavior but means the valid-alarm fraction is partly a property of the bearings, not only of the methods.
+\emph{Construct validity (does the metric measure warning time?).} The onset definition, although leakage-free and stable to its threshold multiplier across $k \in \{3,4,5\}$ (Table~\ref{tab:onset}), is not the ground-truth defect-initiation time, which is unobservable in these datasets. A late onset---as on IMS test 1, where degradation and failure are nearly coincident---inflates the pre-onset region, can mark a genuine early detection invalid, and breaks the conformal exchangeability assumption (Table~\ref{tab:conformal}). The per-bearing XJTU breakdown (Table~\ref{tab:perbearing}) shows the same effect: bearings whose physics provides essentially no warning runway score zero valid alarms regardless of detector, which is correct behavior but means the valid-alarm fraction is partly a property of the bearings, not only of the methods.
 
 \emph{Internal validity (is the comparison fair?).} We use a single fixed hyperparameter protocol throughout to avoid optimistic per-condition tuning, and we expose threshold sensitivity through the full trade-off sweep (Table~\ref{tab:tradeoff}) rather than reporting a single hand-picked operating point. The controlled sampling sweep holds window content and persistence constant so that the aggregate-vs-decimate contrast isolates information loss; the few-windows regime at the largest coarsening factor is annotated rather than hidden. Stochastic detectors inject their seed explicitly so results are bit-reproducible.
 
@@ -1084,7 +1025,7 @@ The IMS trend admits a clean candidate mechanism: bin-averaging is a low-pass fi
 \subsection*{D.2 Single-Asset ONGC Case Study}
 The ONGC record is a real Solar-Turbine low-pressure-compressor (LPC) dataset: four vibration channels logged at a 10~s SCADA rate over ${\sim}5$ days (42,698 rows), ending in a genuine operator shutdown on 2023-11-13 09:46. This is authentic historian data with a real, documented event---the maintenance record confirms the shutdown followed a rolling-element bearing fault on the LPC---and the data-derived degradation onset (2023-11-13 03:44) precedes the operator's action by roughly six hours. ONGC is the only dataset that requires no simulated coarsening to be SCADA-rate: it is the historian.
 
-On genuine 10~s industrial SCADA data ending in a real operator shutdown, every detector achieves a long warning: $3\sigma$, EWMA, Hotelling $T^2$, and Isolation Forest each alarm roughly 35~h before the labeled failure, and even the naive RMS-trend baseline gives ${\sim}22.8$~h. More to the point of this paper, the aggregate-vs-decimate difference is at most about a minute for every detector (Table~\ref{tab:ongc}). Because ONGC is a single asset ($n=1$), we treat it as a descriptive case study and draw no statistical inference from it. On data that is already a real historian stream, the choice of logging mechanism does not materially change warning time. This is the cleanest possible illustration of the practical question---it uses no simulated coarsening---and it is consistent with ``averaging is not the enemy.'' The conformal calibration on this stream (Figure~\ref{fig:conf_ongc}) tracks the diagonal closely, consistent with a mostly-stationary normal region.
+On genuine 10~s industrial SCADA data ending in a real operator shutdown, every detector achieves a long warning: $3\sigma$, EWMA, Hotelling $T^2$, and Isolation Forest each alarm roughly 35~h before the labeled failure, and even the naive RMS-trend baseline gives ${\sim}22.8$~h. More to the point of this paper, the aggregate-vs-decimate difference is at most about a minute for every detector (Table~\ref{tab:ongc}). Because ONGC is a single asset ($n=1$), we treat it as a descriptive case study and draw no statistical inference from it. On data that is already a real historian stream, the choice of logging mechanism does not materially change warning time. This is the cleanest possible illustration of the practical question---it uses no simulated coarsening---and it is consistent with ``averaging is not the enemy.'' The conformal calibration on this stream (Figure~\ref{fig:conformal}d) tracks the diagonal closely, consistent with a mostly-stationary normal region.
 
 \begin{table}[H] \small
 	\begin{center}
@@ -1104,11 +1045,5 @@ On genuine 10~s industrial SCADA data ending in a real operator shutdown, every 
 	\end{center}
 \end{table}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{fig_conf_ongc}
-\caption{Conformal calibration on the ONGC turbine ($n=1$ case study): empirical pre-onset FAR vs target $\alpha$. The real historian stream tracks the diagonal closely, a modest 1.5--2$\times$ above target, consistent with a mostly-stationary normal region.}
-\label{fig:conf_ongc}
-\end{figure}
 
 \end{document}
