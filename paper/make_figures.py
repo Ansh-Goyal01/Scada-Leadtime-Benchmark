@@ -103,14 +103,14 @@ def fig_crossdataset():
     runlevel = {}
     for ds, fname in [("IMS", "ims_runlevel_test_invariant.csv"),  # D-2
                       ("XJTU-SY", "xjtu_sy_runlevel_test.csv"),
-                      ("FEMTO", "femto_runlevel_test.csv"),
-                      ("Ferrara", "ferrara_runlevel_test.csv")]:
+                      ("FEMTO", "femto_runlevel_test_n20.csv"),  # N-20 post-fix
+                      ("Ferrara", "ferrara_runlevel_test_n20.csv")]:  # N-20 post-fix
         p = os.path.join(TAB, fname)
         if os.path.exists(p):
             runlevel[ds] = pd.read_csv(p)
-    # ONGC: single-asset case study — take the descriptive median diff (minutes→hours)
+    # ONGC: single-asset case study — take the descriptive median diff (already in hours)
     ongc = None
-    p_ongc = os.path.join(TAB, "benchmark_ONGC_paired_test.csv")
+    p_ongc = os.path.join(TAB, "benchmark_ONGC_paired_test_n20.csv")  # N-20 post-fix
     if os.path.exists(p_ongc):
         ongc = pd.read_csv(p_ongc)
 
@@ -131,8 +131,8 @@ def fig_crossdataset():
             if ongc is None:
                 return 0.0
             r = ongc[ongc.method == m]
-            # ONGC paired CSV is in minutes; show on the hour axis (≈0 by design)
-            return float(r["median_diff_agg_minus_dec"].iloc[0]) / 60.0 if len(r) else 0.0
+            # The paired CSV is in HOURS (lead_time_hours); the former /60 drew ONGC 60x too small.
+            return float(r["median_diff_agg_minus_dec"].iloc[0]) if len(r) else 0.0
         tbl = runlevel.get(ds)
         if tbl is None:
             return 0.0

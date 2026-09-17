@@ -1,0 +1,11 @@
+dataset,method,metric,test,n_pairs,statistic,p_value,median_diff_agg_minus_dec,mean_diff_agg_minus_dec,rank_biserial
+ONGC,3σ Rule (σ=3.0),lead_time_hours,wilcoxon,5,4.0,0.875,0.0,-0.011666666666664582,0.0
+ONGC,"CUSUM (k=0.5, h=5.0)",lead_time_hours,wilcoxon,5,5.0,1.0,0.0,0.0018333333333345081,0.0
+ONGC,Deep SVDD,lead_time_hours,wilcoxon,5,0.0,0.5,0.0,0.0122222222222222,0.4
+ONGC,"EWMA (λ=0.2, k=3.0)",lead_time_hours,wilcoxon,5,0.0,0.125,-0.008055555555557703,-0.012111111111111938,-0.8
+ONGC,Hotelling T²,lead_time_hours,wilcoxon,5,0.0,0.125,0.005833333333335133,0.1096111111111128,0.8
+ONGC,Isolation Forest,lead_time_hours,wilcoxon,5,0.0,0.125,0.019722222222220864,0.20461111111111024,0.8
+ONGC,LSTM-Autoencoder,lead_time_hours,wilcoxon,5,4.0,0.875,0.003055555555555145,-0.15711111111111223,0.4
+ONGC,RMS-Trend (kσ),lead_time_hours,wilcoxon,5,0.0,0.125,0.019722222222224417,4.574611111111112,0.8
+ONGC,TCN-Autoencoder,lead_time_hours,wilcoxon,5,4.0,0.875,0.003055555555555145,-0.15716666666666726,0.4
+ONGC,Transformer-AD,lead_time_hours,wilcoxon,5,3.0,0.625,0.0027777777777799884,0.0038888888888891416,0.4
