@@ -61,6 +61,10 @@ So the failure mode that matters is not an unpolished sentence. It is a number i
 
     Also beware the reverse failure: piping grep through `cut`/`head` truncates long single-line paragraphs and hides real matches inside them. This manuscript stores whole paragraphs on one line — never judge a match from a truncated prefix.
 
+    **Extension (author instruction, session 6): sweep the CONCEPT, not one phrase.** A claim can be written many ways, and a sweep for one exact string misses the rest. The "consistent positive trend" sweep of the D-2 pass missed `tex:398` ("a consistent but non-significant positive trend") and `tex:956` ("a consistent, sign-concordant positive trend"). **For any claim-removal sweep: first write down the paraphrases** (synonyms, reordered modifiers, negated forms, the numbers the claim cites, the table/row it points at), **then search each one**, in the `.tex` and in the PyMuPDF text. Record the paraphrase list with the result, so the next reader can see what was covered.
+
+    **Extension (author instruction, session 6): tool-presence checks fall under this rule too.** `command -v` searches `PATH` only; probe the filesystem (`ls tools/`, `find . -iname '*tectonic*'`) before concluding a tool is absent.
+
 ## Phases
 
 ### Phase 0 — Discovery, and the one blocking question. ✅ COMPLETE (session 1)

@@ -132,7 +132,8 @@ uploaded externally does include them — the external revision is not working f
 5. Never invent citations. Use `⟦CITE: …⟧` placeholders.
 6. Stop at every gate. Show a diff before every manuscript edit.
 7. **Record every completed item in this file immediately.** A "no edits" instruction **never** covers this file — "no edits" means no manuscript, code, or result-file edits. This file is exempt; a read-only phase still ends with it written.
-8. **A negative `grep` of the `.tex` proves nothing.** Macros, math mode and line wrapping defeat literal search; and truncating grep output (`cut`, `head`) hides matches inside this manuscript's very long single-line paragraphs. For any occurrence sweep, **compile the PDF, extract its text, cross-check against the source, and reconcile before acting.** Verified PDF counts: "never better" ×3 · "never costs" ×2 · "does not cost" ×2 · "honest"/"honestly" ×18 · "non-destruction" ×20 · em-dashes ×180. Fewer than these from a `.tex` grep = failed search. Full rule: brief rule 10.
+8. **Sweep the CONCEPT, not one phrase** (session 6): list the paraphrases of a claim first, then search each in the `.tex` and the PyMuPDF text (brief rule 10 extension). Tool presence: probe the filesystem, not only `PATH`.
+9. **A negative `grep` of the `.tex` proves nothing.** Macros, math mode and line wrapping defeat literal search; and truncating grep output (`cut`, `head`) hides matches inside this manuscript's very long single-line paragraphs. For any occurrence sweep, **compile the PDF, extract its text, cross-check against the source, and reconcile before acting.** Verified PDF counts: "never better" ×3 · "never costs" ×2 · "does not cost" ×2 · "honest"/"honestly" ×18 · "non-destruction" ×20 · em-dashes ×180. Fewer than these from a `.tex` grep = failed search. Full rule: brief rule 10.
 
 ---
 
@@ -221,6 +222,7 @@ with `UnicodeEncodeError` on the default Windows console; every new script carri
 - **RF-2 (1.1) and RG-3 (1.5) done in one pass**, §5O. New result files only; no published file or manuscript touched.
 - **Preservation:** N-3 negation in `.gitignore`; all result files committed; D-2 code (`d873e58`) and 15 revision scripts (`960f711`) committed. §5O.5.
 - **Session 6b:** paired validity (§5O.6); **N-20 found (High, open)**; N-21 (Table 4 = 4th orphan); **D-2 re-baseline applied to the manuscript + Table 11 at 44 rows** (§5O.9, `20658e5`, `6bb3f74`).
+- **Session 6d:** **N-20 manuscript pass applied** (§5O.11, `394cd96`): 81 cells, exception removed at 6 sites (concept-swept), Figure 2 regenerated (+ ONGC ÷60 bug), D-2 residue at 398/929/956/516; D19 response rewritten; brief rule 10 extended.
 - **Session 6c:** **D-10 authorised; N-20 fixed** (`src/__init__.py`), IMS and XJTU-SY verified unchanged, FEMTO/Ferrara/ONGC re-run and propagated (§5O.10). No manuscript edit.
 - **New findings for the manuscript pass:** Tables 10/11 still carry legacy IMS values (D-2 swap not applied); Table 11 has 40 rows under an N=44 caption; Table 4 had no generator (now reproduced); the gated IMS contrast is onset-dependent.
 
@@ -2196,6 +2198,75 @@ positive trend on IMS" and **`tex:956` (Conclusion)** "on IMS shows a consistent
 The §5O.9 sweep matched only the literal "consistent positive trend", so §5O.9's "0 remaining" was wrong.
 This is a rule-10 miss, stated plainly.
 
+### 5O.11 N-20 manuscript pass APPLIED — commit `394cd96` (author GO, session 6)
+
+**Scope delivered:** all 81 cells (Tables 8, 9; Table 11 FEMTO/Ferrara rows; ONGC table), the prose
+sites, Figure 2, and the two surviving D-2 sentences (`tex:398`, `tex:956`). Table rows were
+**generated** from `n20_raw_contrast_old_vs_new.csv` / `n20_ongc_minutes.csv`, not typed. Re-parsed
+Tables 7–11 match their sources **251/251**.
+
+**The IF-on-FEMTO exception (D19 in the response letter; the author calls it RD-16).** Removed from
+**all six sites**: abstract `tex:63`, `tex:87`, `tex:95`, `tex:929`, `tex:937`(1), Conclusion `tex:956`.
+It is replaced by a **margin-based bound**, not an absence-of-negatives claim: *no cell shows decimation
+superior beyond ±1 h; the five cells whose interval lies wholly below zero (IF on XJTU-SY; 3σ, LSTM-AE,
+RMS-trend, Transformer-AD on FEMTO) favour decimation by less than that margin.* The abstract adds "the
+widest such interval (3σ on FEMTO) reaching only −0.44 h" (`n20_d15_bootstrap_new.csv`, 10-detector
+family: 3σ −0.213 [−0.443, −0.042]).
+
+**Concept sweep (rule 10, extended), .tex and PyMuPDF text.** Paraphrase list searched: single/sole/the
+one/only exception; one place / only place; decimation leads / wins / is better / outperforms /
+superior; never better; never costs; IF on FEMTO / Isolation Forest on FEMTO / Iso. Forest on FEMTO /
+IF…FEMTO within a sentence; reversing/reverses sign; sign reversal; opposite sign/direction; trends
+negative; only sign-consistent; "one detector that is sign"; 6/6; 0/6; 0.031; 0.26; 0.54; 0.06];
+−0.14; consistent…positive; sign-concordant; same sign in all three; in no run does aggregation;
+consistently positive. **Result: zero surviving instances of the old claim.** Residual hits are all
+intended:
+- the six new bounded-form sentences;
+- "In one place, the numbers that matter" (an unrelated phrase);
+- `tex:944`'s new LSTM-AE/Transformer-AD sentence;
+- `tex:952`'s arithmetic 2(½)⁶ = 0.031 / "sign-concordant";
+- Table 8's new 3σ −0.14;
+- the D-17 appendix sentence recording "in no run" as withdrawn.
+
+In the PDF, "five cells" reads "ﬁve" (a ligature); the concept regex found it.
+
+**Other edits.**
+- `tex:428` §6.4: sign-consistent detectors are LSTM-AE and Transformer-AD (0/3, 0/4), the smallest p is
+  0.125, and there is a new margin paragraph (3σ −0.21 h [−0.44, −0.04]). The valid count is
+  **193/660 → 211/660** (old reproduced from file first). "Opposite sign to its IMS trend" is removed.
+- Table 8 caption: two sign-consistent detectors, both negative.
+- `tex:454` §6.5: smallest p is 0.219 (**CUSUM**). The E1 negatives (published range "−1.0 to −1.5 h",
+  reproduced as −0.93 to −1.52) become **−0.5 to −1.1 h**; "few-minute" is removed.
+- `tex:516` Holm prose: min raw p **0.125 (Transformer-AD on FEMTO)**; "every uncorrected p exceeds 0.1"
+  (was 0.03); "IMS sign-consistency" → "positive IMS median shift" (D-2 residue).
+- `tex:929`: the mechanism sentence "weakest for Isolation Forest" is **false under D-2** (IMS: EWMA +2.1
+  < IF +3.4) and is replaced by "largest median shift in 3σ (+15.1 h), not consistent in direction".
+- `tex:937`(3): ONGC "≤ 1 min" (false even pre-fix: max 1.2 min) → "at most ~1 min"; "≤ 8 min"
+  (pre-fix max already 8.2) → **"≤ 9 min"** (post-fix max 8.3); IF-reversal clause removed.
+- `tex:267`: IF-reversal clause → "negative FEMTO medians lie well inside the ±1 h margin".
+- `tex:944`: "only sign-consistent detectors, LSTM-AE and Transformer-AD, are negative" ("opposite
+  direction" removed; their IMS medians are also negative).
+- `tex:398`, `tex:956`: D-2 residue fixed.
+
+**Figure 2.** Inputs regenerated by `src/n20_figure_inputs.py`, which **replays** the three published
+generator outputs exactly before writing `*_n20.csv`. **An existing Figure 2 bug was fixed along the
+way:** `make_figures.py` divided the ONGC paired median (already in hours) by 60 again under a false
+"minutes→hours" comment, so the ONGC bars were drawn 60× too small. Still open (register 4.1): the
+legend reads "ONGC (n=1 (case study))".
+
+**Build and sweep.** tectonic, **26 pages** (unchanged), no errors or undefined references. Rule-10
+counts on this build: "never better" 0 · "never costs" 0 · "does not cost" 1 · "non-destruction" 21 ·
+em-dashes **179** (180 before; one `---` removed with the old §6.4 sentence). "honest" reads 16 under
+plain whitespace-joining in *both* builds; §5O.9's 17 was measured with hyphen rejoining. It is
+unchanged, and this is a method difference only.
+
+**Not done (flagged):**
+- The abstract's "all 30 dataset × detector cells" still counts the 10-detector family, while the paper
+  now evaluates eleven. The 11-detector result is **33/33** (`n20_d15_bootstrap_new_11det.csv`). Say
+  30 or 33 deliberately.
+- OC-SVM rows in Tables 7–9 and D-9 rows in Tables 14/16/22 are still missing (§5O.8a).
+- The body has no equivalence table or TOST prose yet (R-2 / R-19 hold the numbers).
+
 ## 6. Item checklist — all 41 reviewer items
 
 Legend: ⬜ not started · 🔄 in progress · ✅ done · ⛔ blocked · ➖ no action needed
@@ -2342,7 +2413,7 @@ ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** an
 > 2. §6.2 "invariant to the onset definition by construction": **true for raw lead (verified, 0.000 h)**,
 >    **false for gated L on IMS** (R-5). Bound it explicitly.
 > 3. ~~Tables 10 and 11 still show legacy IMS values~~ ✅ **D-2 re-baseline completed and Table 11 at 44 rows (§5O.9, `20658e5`).**
-> 5. **N-20 — FIXED and propagated (§5O.10). NEXT: the manuscript pass for the 81 cells + prose + Figure 2, plus D-2 residue at `tex:398` and `tex:956`. Awaiting author go-ahead.** Original note: aggregate and decimate run at different logging intervals on FEMTO/Ferrara/ONGC (`src/__init__.py:207`). Needs rule-4 sign-off, a code fix, and reruns before Tables 8/9, Figure 2, the FEMTO/Ferrara Holm and equivalence cells, or the Ferrara validity gap can be trusted.
+> 5. **N-20 — FIXED, propagated (§5O.10) and applied to the manuscript (§5O.11, `394cd96`).** Original note: aggregate and decimate run at different logging intervals on FEMTO/Ferrara/ONGC (`src/__init__.py:207`). Needs rule-4 sign-off, a code fix, and reruns before Tables 8/9, Figure 2, the FEMTO/Ferrara Holm and equivalence cells, or the Ferrara validity gap can be trusted.
 > 6. D-5/D-9 rows still missing from Tables 7, 8, 9, 14, 16, 22 (§5O.8a).
 > 4. Table 4 now has a generator (`rg3_onsets.csv`); cite it in Data Availability.
 
