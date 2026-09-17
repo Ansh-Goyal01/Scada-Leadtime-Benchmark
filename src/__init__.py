@@ -205,8 +205,12 @@ def load_pipeline(run_name: str = "2nd_test",
         raise ValueError(f"Unknown downsample_mode '{downsample_mode}'")
     if downsample_mode != "none" and downsample_factor > 1:
         if downsample_mode == "aggregate":
-            target_min = max(1, int(round(base_min * downsample_factor)))
-            df = resample_uniform(df, f"{target_min}min")
+            # N-20 / D-10: bin at the true target interval, native spacing x factor, in
+            # seconds. The former whole-minute rounding with a 1-min floor coarsened
+            # sub-minute data (FEMTO/ONGC 10 s, Ferrara 5 s) harder than decimation at the
+            # same factor. Whole-minute native spacings (IMS, XJTU-SY) are unchanged.
+            target_s = max(1, int(round(base_min * 60.0 * downsample_factor)))
+            df = resample_uniform(df, f"{target_s}s")
         else:  # decimate — keep every k-th row of the uniform grid
             df = df.iloc[::downsample_factor].copy()
     effective_interval_min = _median_spacing_minutes(df.index)

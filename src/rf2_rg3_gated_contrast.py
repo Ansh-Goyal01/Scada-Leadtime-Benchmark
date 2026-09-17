@@ -90,6 +90,7 @@ TEX_NAMES = {
     r"Hotelling $T^2$": "hotelling_t2", r"Iso.\ Forest": "isolation_forest",
     "Deep SVDD": "deep_svdd", "RMS-trend": "rms_trend", "LSTM-AE": "lstm_ae",
     "TCN-AE": "tcn", "Transformer-AD": "transformer_ad", "Transf.-AD": "transformer_ad",
+    "One-class SVM": "one_class_svm",
 }
 TEX_DATASETS = {"IMS": "IMS", "XJTU": "XJTU-SY", "FEMTO": "FEMTO", "Ferrara": "Ferrara"}
 
@@ -106,6 +107,8 @@ def _read(name):
 
 
 def _write(df, name):
+    if ARM == "n20":                       # never overwrite the pre-fix outputs
+        name = name.replace(".csv", "_n20.csv")
     path = os.path.join(_tables_dir(), name)
     df.to_csv(path, index=False)
     logger.info("Saved -> %s (%d rows)", path, len(df))
@@ -128,8 +131,17 @@ def add_gated_columns(long_df):
     return df
 
 
+# N-20 / D-10: post-fix reruns (10 detectors + OC-SVM already inside) for the datasets whose
+# aggregate arm was on the wrong logging interval. Used only when ARM == "n20".
+N20_FILES = {ds: f"n20_rerun_long_{ds}.csv" for ds in ("FEMTO", "Ferrara", "ONGC")}
+ARM = "published"
+
+
 def load_published(dataset, legacy_ims=False):
-    """Published long rows for one dataset with its OC-SVM rows appended."""
+    """Published long rows for one dataset with its OC-SVM rows appended
+    (or, when ARM == "n20", the post-fix rerun for FEMTO/Ferrara/ONGC)."""
+    if ARM == "n20" and dataset in N20_FILES:
+        return _read(N20_FILES[dataset])
     fname = IMS_LEGACY if (legacy_ims and dataset == "IMS") else PUBLISHED[dataset]
     base = _read(fname)
     oc = _read(OCSVM_FILE)
@@ -618,7 +630,11 @@ def main(argv=None):
     r.add_argument("--indicator", required=True, choices=INDICATORS)
     a = sp.add_parser("analyse")
     a.add_argument("--part", choices=["rf2", "rg3", "all"], default="all")
+    a.add_argument("--arm", choices=["published", "n20"], default="published",
+                   help="n20: FEMTO/Ferrara/ONGC from the post-fix reruns; outputs get _n20")
     args = ap.parse_args(argv)
+    global ARM
+    ARM = getattr(args, "arm", "published")
 
     if args.cmd == "onsets":
         print(compute_onsets().to_string(index=False))
