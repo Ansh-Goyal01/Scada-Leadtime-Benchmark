@@ -592,7 +592,7 @@ Sweeping the alarm-threshold percentile traces a prognostics analog of the ROC c
 \tau^* \approx \frac{c_F}{k\,c_I} = \frac{\rho}{k}, \qquad \rho \equiv c_F/c_I.
 \label{eq:costratio}
 \end{equation}
-For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$--$10^4$ times a routine inspection, and the pre-onset window count is of order $k \sim 10^3$ on the runs studied here, so Eq.~(\ref{eq:costratio}) places the break-even budget at $\tau^* \sim 0.1$--1 (Table~\ref{tab:taugrid}): our $\tau=0.10$ is the conservative end of that range and is justified whenever failures are at least ${\sim}100\times$ costlier than inspections. The strict $\tau=0.05$ column of Table~\ref{tab:farbudget} corresponds to the opposite regime---inspections that are themselves disruptive (e.g.\ requiring a shutdown), so $\rho$ is small---exactly where the low-FAR Deep SVDD point becomes the economical choice. We stress this is an order-of-magnitude anchor, not a site-specific optimisation: the true optimum requires an operator's actual $c_I$ and $c_F$, which we do not have, and Eq.~(\ref{eq:costratio}) is offered so a practitioner can substitute their own.
+For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$--$10^4$ times a routine inspection, and the pre-onset window count is of order $k \sim 10^3$ on the runs studied here, so Eq.~(\ref{eq:costratio}) places the break-even budget at $\tau^* \sim 0.1$--1---$\tau^*$ saturates at 1 for $\rho \ge 10^3$ and falls to 0.10 at $\rho=10^2$, $k=10^3$---and our $\tau=0.10$ is the conservative end of that range and is justified whenever failures are at least ${\sim}100\times$ costlier than inspections. The strict $\tau=0.05$ column of Table~\ref{tab:farbudget} corresponds to the opposite regime---inspections that are themselves disruptive (e.g.\ requiring a shutdown), so $\rho$ is small---exactly where the low-FAR Deep SVDD point becomes the economical choice. We stress this is an order-of-magnitude anchor, not a site-specific optimisation: the true optimum requires an operator's actual $c_I$ and $c_F$, which we do not have, and Eq.~(\ref{eq:costratio}) is offered so a practitioner can substitute their own.
 
 \begin{figure*}[t]
 \centering
@@ -617,22 +617,6 @@ For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$-
 		Iso.\ Forest & 0.0 & 0.0 & 53.4 \\
 		Deep SVDD & 14.8 & 14.8 & 14.8 \\
 		RMS-trend & 34.7 & 34.7 & 34.7 \\
-		\hline \hline
-	\end{tabular}
-	\end{center}
-\end{table}
-
-\begin{table}[t] \small
-	\begin{center}
-	\caption{The break-even budget $\tau^* = \rho/k$ from Eq.~(\ref{eq:costratio}) (clipped to $[0,1]$), over failure-to-inspection cost ratios $\rho \in \{10^2, 10^3, 10^4\}$ and pre-onset window counts $k \in \{10^2, 10^3, 10^4\}$. The chosen $\tau=0.10$ sits inside this range across the mid-to-high cost ratios typical of rolling-element bearings. Every entry is computed directly from Eq.~(\ref{eq:costratio}); no experimental quantity enters.}
-	\label{tab:taugrid}
-	\begin{tabular}{l c c c}
-		\hline \hline
-		 & \textbf{$\rho{=}10^2$} & \textbf{$\rho{=}10^3$} & \textbf{$\rho{=}10^4$} \\
-		\hline
-		$k{=}10^2$ & 1.00 & 1.00 & 1.00 \\
-		$k{=}10^3$ & 0.10 & 1.00 & 1.00 \\
-		$k{=}10^4$ & 0.01 & 0.10 & 1.00 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
