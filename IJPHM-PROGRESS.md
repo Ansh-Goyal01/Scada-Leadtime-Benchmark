@@ -65,7 +65,7 @@ count as unmeasured until the next build.
 | **SHA-256 at freeze** | `a2e498de76c115cb455b4614c92fa64ec0067f9980cd5f6923dedfa294cd7454` |
 | **Git state at freeze** | ✅ **COMMITTED** as `8e619e3` on `ijphm-r1` (2026-09-09) — *"chore: freeze manuscript at external-revision handoff (SHA a2e498de)"*. Was `d2ec5d6` + 34/4 uncommitted; author authorised the baseline commit. |
 | **Exported for upload** | `scada_ijphm_current.tex` (repo root) — `cmp`-verified byte-identical |
-| **Last successful build** | 2026-07-08, **25 pages** — predates 5 revision commits + the uncommitted work. Do **not** cite 25 as current. |
+| **Last successful build** | 2026-09-19, **24 pages** (tectonic 0.16.9, counted from the PDF page tree). The 2026-07-08 "25 pages" came from a frozen XeLaTeX `.log`; tectonic writes no `.log`, so that file never updated. Do **not** grep the `.log`. |
 
 ✅ **Resolved 2026-09-09.** The baseline is now committed as `8e619e3`, so the freeze point is
 recoverable and there is an exact diff anchor for every incoming replacement. The commit captured
@@ -2506,3 +2506,41 @@ ef{tab:tradeoff}", but the published Table 16 gives **Hotelling T² 176.9 h** an
 3. **Item 2.7 / 2.8** — amend Eq. 5; restate every gate-dependent number under both conventions.
 
 ⚠️ Before 2.8, audit the five unmeasured ablation locations in §5A.6. They are gate-dependent by construction but come from the ablation result files, which were **not** part of the Phase 0.5(A) audit. Do not assume they move.
+
+---
+
+## Page target — CLOSED at 24 pages (2026-09-19)
+
+**Decision (author, 2026-09-19): 24 pages is the landing zone. Stop cutting.** No reviewer set a
+page limit, and every specific length complaint Reviewer D named is now addressed. The earlier
+18.5-page target (25 − 6.5, allowing 1.5 pages for pending additions) is **withdrawn**; it was not
+reachable by the C1–C6 plan, whose own estimates summed to 3.7 pages.
+
+**Reserve cut (held, NOT applied):** Sec. 7.1 "What Changed the Story" is the single reserve.
+Apply it only if the incoming prose additions push the paper past an acceptable length at the end.
+
+### Cuts applied this session (each independently revertible)
+
+| Cut | Commit | Result |
+|---|---|---|
+| Missing-data contradiction fix (not a cut) | `8cf56a8` | 25 pages |
+| C1 — four ablation tables to `tab:ablation_general` alone | `ef37a40` | **25 to 24** |
+| C1 fixup — acute-accent artifact (backslash-apostrophe renders as an accent) | `5bbdf42` | 24 |
+| C2 — delete `tab:taugrid` (pure arithmetic from Eq. costratio) | `68bcb52` | 24 |
+| C3 — Sec. 6.2 onset prose 4698 to 2845 chars | `5c6f7f3` | 24 |
+| C4 — 18 self-descriptive statements to 0; non-destruction 17 to 6 | `48a02ee` | 24 |
+| C5 — em-dash pass, rendered 167 to 95 | `f78ef9c` | 24 |
+| C6 — Appendix B walkthrough 1146 to 850 chars | `08f6f65` | 24 |
+
+Only C1 crossed a page boundary. C2–C6 removed ~3,400 characters of column height that is banked
+but did not tip a page.
+
+### Measurement corrections established this session
+
+- **Page count:** read `fitz.open(pdf).page_count`. The `.log` is a stale XeLaTeX artifact.
+- **Em-dashes:** the Phase 7 revision above is confirmed correct. Rendered baseline was **167**,
+  now **95**, against the ~100 target. A naive source `grep` overcounts by **54** comment rules.
+- **Table numbering:** author-facing numbers ran **+4** ahead of the compiled PDF (stale
+  pre-Group-B numbering). Work from `\label{}` keys, not printed numbers.
+- **Backslash-apostrophe is LaTeX's acute accent**, not an apostrophe. It compiles silently and
+  renders wrong; guard generated prose against it and verify in extracted PDF text.
