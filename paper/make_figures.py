@@ -116,12 +116,17 @@ def fig_crossdataset():
 
     methods = ["3σ Rule (σ=3.0)", "EWMA (λ=0.2, k=3.0)", "CUSUM (k=0.5, h=5.0)",
                "Hotelling T²", "Isolation Forest", "Deep SVDD", "RMS-Trend (kσ)"]
-    short = {"3σ Rule (σ=3.0)": "3σ", "EWMA (λ=0.2, k=3.0)": "EWMA",
-             "CUSUM (k=0.5, h=5.0)": "CUSUM", "Hotelling T²": "Hot. T²",
+    # Display labels use mathtext, not literal Greek/superscript characters: the
+    # literals were emitted as UTF-8 and re-read as cp1252, which is what produced
+    # the "3ĺf" / "Hot. TÂ²" mojibake (RD-11..RD-14). Mathtext removes the
+    # encoding dependency entirely. The dict KEYS are data keys matching the
+    # method column of the benchmark CSVs — do not touch them.
+    short = {"3σ Rule (σ=3.0)": r"$3\sigma$", "EWMA (λ=0.2, k=3.0)": "EWMA",
+             "CUSUM (k=0.5, h=5.0)": "CUSUM", "Hotelling T²": r"Hot. $T^2$",
              "Isolation Forest": "IsoForest", "Deep SVDD": "D.SVDD",
              "RMS-Trend (kσ)": "RMS-trend"}
     datasets = ["IMS", "ONGC", "XJTU-SY", "FEMTO", "Ferrara"]
-    n_label = {"IMS": "n=3", "ONGC": "n=1 (case study)", "XJTU-SY": "n=10",
+    n_label = {"IMS": "n=3", "ONGC": "n=1, case study", "XJTU-SY": "n=10",
                "FEMTO": "n=6", "Ferrara": "n=6"}
     colors = {"IMS": "#E91E63", "ONGC": "#1565C0", "XJTU-SY": "#2E7D32",
               "FEMTO": "#F57F17", "Ferrara": "#6A1B9A"}
@@ -154,7 +159,8 @@ def fig_crossdataset():
     ax.axhline(0, color="black", linewidth=0.8)
     ax.set_xticks(x)
     ax.set_xticklabels([short[m] for m in methods], fontsize=8)
-    ax.set_ylabel("Median run-level lead-time Δ\n(aggregate − decimate), h")
+    ax.set_ylabel("Median run-level lead-time $\\Delta$\n"
+                  "(aggregate $-$ decimate), h")
     ax.set_title("Aggregation vs decimation across datasets (run-level; none significant)",
                  fontsize=9.5, fontweight="bold")
     ax.legend(fontsize=7.5)
@@ -186,8 +192,9 @@ def fig_training_sweep():
         "lstm_ae": ("deep recon.", "#C62828"), "tcn": ("deep recon.", "#EF5350"),
         "transformer_ad": ("deep recon.", "#FF8A80"),
     }
-    labels = {"three_sigma": "3σ", "ewma": "EWMA", "cusum": "CUSUM",
-              "hotelling_t2": "Hot. T²", "isolation_forest": "IsoForest",
+    # Mathtext, not literal Greek/superscripts — see the note in fig_crossdataset.
+    labels = {"three_sigma": r"$3\sigma$", "ewma": "EWMA", "cusum": "CUSUM",
+              "hotelling_t2": r"Hot. $T^2$", "isolation_forest": "IsoForest",
               "deep_svdd": "Deep SVDD", "lstm_ae": "LSTM-AE", "tcn": "TCN-AE",
               "transformer_ad": "Transformer-AD"}
 
@@ -206,8 +213,8 @@ def fig_training_sweep():
     if not spc.empty:
         base = float(spc["valid_frac"].mean())
         ax.axhline(base, color="#1565C0", linestyle="--", linewidth=1.0, alpha=0.6)
-        ax.text(0.205, base + 0.02, f"SPC baseline ≈ {base:.2f}", fontsize=7,
-                color="#1565C0")
+        ax.text(0.205, base + 0.02, "SPC baseline $\\approx$ %.2f" % base,
+                fontsize=7, color="#1565C0")
     ax.text(0.50, 0.06, "no crossover: deep models never reach the SPC baseline",
             fontsize=7.5, style="italic", ha="center", color="#555555")
 
@@ -216,8 +223,9 @@ def fig_training_sweep():
     ax.set_xlim(0.18, 0.62)
     ax.set_ylim(-0.02, 1.0)
     ax.set_xticks([0.2, 0.3, 0.4, 0.5, 0.6])
-    ax.set_title("Minimum training data for deep models to match SPC charts\n"
-                 "on FEMTO/PRONOSTIA (n=6 bearings)", fontsize=9.5, fontweight="bold")
+    # No in-plot title (RD-11..RD-14): the old title asserted the deep models
+    # "match SPC charts", which the LaTeX caption correctly denies — there is no
+    # crossover. The caption carries the title; that is IJPHM house style.
     ax.legend(fontsize=6.5, ncol=3, loc="upper right")
     ax.grid(alpha=0.3)
     plt.tight_layout()
