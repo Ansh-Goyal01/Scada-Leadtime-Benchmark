@@ -165,7 +165,8 @@ def load_pipeline(run_name: str = "2nd_test",
                   downsample_mode: str = "none",
                   use_spectral: bool = None,
                   dataset: str = "IMS",
-                  signal_transform=None) -> dict:
+                  signal_transform=None,
+                  train_fraction: float = None) -> dict:
     """
     One-call loader: preprocess → (SCADA-rate downsample) → feature extract → split → scale.
 
@@ -197,7 +198,13 @@ def load_pipeline(run_name: str = "2nd_test",
     bundle = load_run(dataset, run_name, use_spectral=bool(use_spectral))
     df = bundle.snapshot_df
     failure_time = bundle.failure_time
-    train_fraction = bundle.train_fraction
+    # N-22: the training fraction is the per-dataset bundle default unless the
+    # caller passes one explicitly. Mutating SPLIT["train_fraction"] has never
+    # affected this path, which is why src/training_sweep.py was not in fact
+    # sweeping T; it now passes train_fraction= directly. Callers that omit the
+    # argument are unchanged.
+    if train_fraction is None:
+        train_fraction = bundle.train_fraction
 
     # SCADA-rate sampling constraint: coarsen the grid before feature extraction.
     base_min = _median_spacing_minutes(df.index)

@@ -73,7 +73,10 @@ def sweep_bearing(bearing: str,
             SPLIT["calibration_fraction"] = CAL_FRACTION
             SPLIT["test_fraction"] = round(1.0 - T - CAL_FRACTION, 4)
 
-            pipe = load_pipeline(bearing, dataset=dataset)
+            # N-22: pass T explicitly. Mutating SPLIT["train_fraction"] above has
+            # no effect on load_pipeline, which took the fraction from the dataset
+            # bundle, so every T previously produced the identical training split.
+            pipe = load_pipeline(bearing, dataset=dataset, train_fraction=T)
             df = pipe["df_full"]
             n = len(df)
             train_end = df.index[min(int(n * T), n - 1)]
