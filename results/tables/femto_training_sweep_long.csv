@@ -206,6 +206,9 @@ FEMTO,Bearing3_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,20,0.08055555555555556,1.49253
 FEMTO,Bearing3_1,0.2,Hotelling T²,hotelling_t2,20,0.65,29.850746268656714,False,False
 FEMTO,Bearing3_1,0.2,Isolation Forest,isolation_forest,20,0.06666666666666667,0.0,True,False
 FEMTO,Bearing3_1,0.2,Deep SVDD,deep_svdd,20,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.2,LSTM-Autoencoder,lstm_ae,20,,,False,True
+FEMTO,Bearing3_1,0.2,TCN-Autoencoder,tcn,20,,,False,True
+FEMTO,Bearing3_1,0.2,Transformer-AD,transformer_ad,20,,,False,True
 FEMTO,Bearing3_1,0.3,RMS-Trend (kσ),rms_trend,30,0.0,0.0,False,False
 FEMTO,Bearing3_1,0.3,3σ Rule (σ=3.0),three_sigma,30,0.06666666666666667,0.0,True,False
 FEMTO,Bearing3_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,30,0.06666666666666667,0.0,True,False
