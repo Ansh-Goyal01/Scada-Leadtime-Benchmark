@@ -314,12 +314,29 @@ PLOT = {
         "#9C27B0",   # purple   — LSTM-AE
         "#00BCD4",   # cyan     — Conformal IF
     ],
+    # One distinct colour per detector. Callers do method_colors.get(short_name, None)
+    # and pass the result straight to matplotlib, so a MISSING key is not "no colour" --
+    # it silently falls back to the default property cycle (#1f77b4/#ff7f0e/#2ca02c),
+    # which duplicates 3-sigma / Hotelling / EWMA. Five detectors (rms_trend, cusum,
+    # deep_svdd, tcn, transformer_ad) were unassigned and collided that way. All eleven
+    # detectors in EXPERIMENT["methods_to_run"] + conformal_if are now assigned; the
+    # additions were chosen by greedy max-min search on CIELAB distance, giving a
+    # minimum pairwise dE(CIE76) of 38.4 (verified in tests/test_plot_colors.py).
+    # NOTE: eleven categories cannot be made dichromat-safe by hue alone -- under
+    # simulated tritanopia EWMA and Conformal-IF converge. Distinguishing all eleven
+    # for colour-vision-deficient readers needs a redundant channel (line style or
+    # marker), which these plot helpers do not yet vary. See N-25.
     "method_colors": {
-        "three_sigma":       "#2196F3",
-        "ewma":              "#4CAF50",
-        "hotelling_t2":      "#FF9800",
-        "isolation_forest":  "#E91E63",
-        "lstm_ae":           "#9C27B0",
-        "conformal_if":      "#00BCD4",
+        "rms_trend":         "#9E9E9E",   # grey        - naive RMS floor baseline
+        "three_sigma":       "#2196F3",   # blue
+        "ewma":              "#4CAF50",   # green
+        "cusum":             "#827717",   # dark olive
+        "hotelling_t2":      "#FF9800",   # orange
+        "isolation_forest":  "#E91E63",   # pink
+        "deep_svdd":         "#4E342E",   # maroon
+        "lstm_ae":           "#9C27B0",   # purple
+        "tcn":               "#00695C",   # dark teal
+        "transformer_ad":    "#1A237E",   # navy
+        "conformal_if":      "#00BCD4",   # cyan
     },
 }

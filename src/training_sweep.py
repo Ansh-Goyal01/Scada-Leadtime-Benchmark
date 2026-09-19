@@ -44,7 +44,13 @@ CAL_FRACTION = 0.10
 
 def _is_na(result: dict) -> bool:
     """A deep sequence model that could not form a length-seq_len sequence reports a
-    non-finite lead with no alarm time; treat that as N/A rather than a miss."""
+    non-finite lead with no alarm time; treat that as N/A rather than a miss.
+
+    N-23: evaluate_all_methods now tags such a cell with an explicit ``na`` flag
+    (record_short_run_na=True below), which we trust in preference to inferring N/A
+    from the numerics."""
+    if result.get("na") is True:
+        return True
     lead = result.get("lead_time_hours", np.nan)
     fat = result.get("FAT", None)
     return (fat is None or (isinstance(fat, float) and np.isnan(fat))) and not np.isfinite(lead)
@@ -92,6 +98,9 @@ def sweep_bearing(bearing: str,
                 threshold_percentile=THRESHOLD["percentile"],
                 alarm_persistence=THRESHOLD["alarm_persistence"],
                 t_onset=onset, far_budget=0.10, X_cal=pipe.get("X_cal"),
+                # N-23: record too-few-window cells as explicit N/A (Sec. 4.5) so
+                # na_count is populated and n_bearings stays at the full n=6.
+                record_short_run_na=True,
             )
             for r in results:
                 na = _is_na(r)

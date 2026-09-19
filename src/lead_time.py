@@ -21,6 +21,8 @@ import os
 import logging
 from typing import Optional, List
 
+from src.deep_baselines import ShortRunError   # N-23: too-few-window cells are N/A, not drops
+
 logger = logging.getLogger(__name__)
 
 
@@ -274,6 +276,43 @@ def evaluate_method(detector,
     return result
 
 
+def _short_run_na_result(detector,
+                         timestamps_test: pd.DatetimeIndex,
+                         failure_time,
+                         t_onset) -> dict:
+    """Explicit N/A record for a (run, detector) cell that could not form a sequence.
+
+    N-23: a deep sequence model raises ShortRunError when the run has fewer training
+    feature-windows than seq_len. Section 4.5 promises such a cell is reported as an
+    explicit N/A, not dropped. This mirrors the reconciliation branch in
+    benchmark.run_benchmark(): every numeric is NaN, no alarm was raised, and
+    valid_alarm is False, so an N/A is never counted as a genuine detection.
+    """
+    return {
+        "method":         detector.name,
+        "short_name":     detector.short_name,
+        "threshold":      float("nan"),
+        "FAT":            None,
+        "lead_time_hours":      float("nan"),
+        "detection_delay_hours": None,
+        "far_preonset_pct":     float("nan"),
+        "max_lead_hours":       float("nan"),
+        "lead_norm":            float("nan"),
+        "t_onset":              t_onset,
+        "VLT_hours":      float("nan"),
+        "FAR_pct":        float("nan"),
+        "alarm_raised":   False,
+        "valid_alarm":    False,
+        "scores_train":   None,
+        "scores_test":    None,
+        "alarm_signal":   None,
+        "timestamps":     timestamps_test,
+        "failure_time":   failure_time,
+        "normal_end":     None,
+        "na":             True,
+    }
+
+
 def evaluate_all_methods(detectors: list,
                          X_train: np.ndarray,
                          X_test: np.ndarray,
@@ -285,9 +324,17 @@ def evaluate_all_methods(detectors: list,
                          alarm_persistence: int = 3,
                          t_onset: Optional[pd.Timestamp] = None,
                          far_budget: float = 0.10,
-                         X_cal: Optional[np.ndarray] = None) -> tuple:
+                         X_cal: Optional[np.ndarray] = None,
+                         record_short_run_na: bool = False) -> tuple:
     """
     Run evaluate_method() for all detectors, return (summary_df, all_results).
+
+    record_short_run_na (N-23): when True, a detector that raises ShortRunError
+    (too few training windows to form a length-seq_len sequence) contributes an
+    explicit N/A record to ``all_results`` instead of being dropped, so callers can
+    separate "not evaluable" from "evaluated and missed". Left False by default so
+    that already-published artifacts produced through this function are byte-identical;
+    ``benchmark.run_benchmark`` independently reconciles its own N/A rows. See N-24.
     """
     rows = []
     all_results = []
@@ -323,6 +370,13 @@ def evaluate_all_methods(detectors: list,
                 "VLT (hours)":        round(result["VLT_hours"], 2),
                 "FAR (%)":            round(result["FAR_pct"], 2),
             })
+        except ShortRunError as e:
+            # N-23: too few windows to form a sequence is an explicit N/A per Sec. 4.5,
+            # not a miss and not a silent drop.
+            logger.warning(f"Method {det.name} not evaluable (N/A): {e}")
+            if record_short_run_na:
+                all_results.append(_short_run_na_result(
+                    det, timestamps_test, failure_time, t_onset))
         except Exception as e:
             logger.error(f"Method {det.name} failed: {e}")
 
