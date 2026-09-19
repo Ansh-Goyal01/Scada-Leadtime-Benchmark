@@ -1994,7 +1994,7 @@ exactly** on all 3 runs × 3 indicators, on both onset % and max lead.
 | 3 | Table 6 `gap_injection.csv` (N-19) | session 5 | `src/d19_gap_injection.py` (gap=0 arm only reproduces) |
 | 4 | **Table 4 decoupled onset (N-21)** | session 6 | `src/rf2_rg3_gated_contrast.py onsets` — **reproduces exactly** |
 
-🗣️ **Response to Review — DEFECT DISCLOSURE LIST (author instruction, session 6):** **N-15** (Table 5 validity 1.00 not reproducible), **N-17** (compute-cost sentence overreached its table), **N-18** (EWMA-leads claims contradicting Table 16), **N-20** (aggregate and decimate compared at different logging intervals on FEMTO/Ferrara/ONGC; fixed; verdict and 30/30 equivalence unchanged, IF-on-FEMTO exception and FEMTO sign-consistency claim withdrawn), **N-21** (Table 4 orphaned, reconstructed). Every one was found unprompted.
+🗣️ **Response to Review — DEFECT DISCLOSURE LIST (author instruction, session 6):** **N-15** (Table 5 validity 1.00 not reproducible), **N-17** (compute-cost sentence overreached its table), **N-18** (EWMA-leads claims contradicting Table 16), **N-20** (aggregate and decimate compared at different logging intervals on FEMTO/Ferrara/ONGC; fixed; verdict and 30/30 equivalence unchanged, IF-on-FEMTO exception and FEMTO sign-consistency claim withdrawn), **N-21** (Table 4 orphaned, reconstructed), **N-22** (the FEMTO training-fraction sweep did not vary the training fraction: load_pipeline took it from the dataset bundle and never read the swept SPLIT value, so all five T produced one identical training split; fixed, re-run, and the no-crossover conclusion survives). Every one was found unprompted.
 
 🗣️ **Response to Review, disclosure paragraph:** list all four as evidence that generator coverage was
 audited artifact by artifact. Three now reproduce exactly. `gap_injection`'s gap>0 arms do not
@@ -2691,3 +2691,100 @@ quoted until the sweep is fixed.
 
 Option 2 is the smallest correct change; option 3 is the only one that needs no
 re-run.
+
+---
+
+## N-22 re-run outcome (2026-09-19) - fix verified, no-crossover conclusion SURVIVES
+
+Fix committed `df7d54e` (option 2, rule-4 sign-off): `load_pipeline` gained
+`train_fraction: float = None`, falling back to `bundle.train_fraction`;
+`src/training_sweep.py` passes T. Two sites only; no detector, onset, metric,
+seed or hyperparameter code touched.
+
+### Mandatory regression check - PASSED
+
+Fingerprint over X_train/X_cal/X_test + ts_train/ts_cal/ts_test, omitting
+`train_fraction` vs passing the bundle value explicitly:
+
+| case | omitted | explicit | |
+|---|---|---|---|
+| FEMTO Bearing1_1 | 83e0c4dbbd47dcbf | 83e0c4dbbd47dcbf | identical |
+| FEMTO Bearing3_1 | 2edd577e6aa32da2 | 2edd577e6aa32da2 | identical |
+| IMS 2nd_test | d669981828ece4c7 | d669981828ece4c7 | identical |
+
+**Independent confirmation from the re-run itself:** every delta in the T = 0.50
+column is exactly zero. 0.50 is the bundle default, so the published run (pinned
+there for all T) must agree with the corrected run at T = 0.50 and at no other T.
+It does. That is the fix behaving exactly as predicted.
+
+### 1. n_train_windows now varies with T
+
+| bearing | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | published (all T) |
+|---|---|---|---|---|---|---|
+| Bearing1_1 | 111 | 167 | 223 | 279 | 335 | 279 |
+| Bearing1_2 | 34 | 51 | 69 | 86 | 103 | 86 |
+| Bearing2_1 | 36 | 54 | 72 | 90 | 108 | 90 |
+| Bearing2_2 | 31 | 47 | 63 | 79 | 94 | 79 |
+| Bearing3_1 | 20 | 30 | 40 | 51 | 61 | 51 |
+| Bearing3_2 | 65 | 97 | 130 | 163 | 195 | 163 |
+
+### 2. Valid-alarm fraction - 25 of 50 cells moved
+
+| detector | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 |
+|---|---|---|---|---|---|
+| three_sigma | 1.000 | 0.833 | 0.667 | 0.667 | 0.667 |
+| ewma | 0.667 | 0.667 | 0.667 | 0.667 | 0.667 |
+| cusum | 0.500 | 0.500 | 0.500 | 0.667 | 0.500 |
+| hotelling_t2 | 0.667 | 0.333 | 0.500 | 0.500 | 0.500 |
+| isolation_forest | 0.667 | 0.167 | 0.500 | 0.667 | 0.667 |
+| rms_trend | 0.000 | 0.333 | 0.500 | 0.500 | 0.500 |
+| deep_svdd | 0.000 | 0.000 | 0.000 | 0.000 | 0.167 |
+| lstm_ae | 0.200 | 0.000 | 0.000 | 0.333 | 0.167 |
+| tcn | 0.200 | 0.000 | 0.000 | 0.167 | 0.167 |
+| transformer_ad | 0.200 | 0.167 | 0.167 | 0.333 | 0.000 |
+
+### 3. Crossover test - NO CROSSOVER
+
+SPC baseline (mean of the four charts) by T: 0.708, 0.583, 0.583, 0.625, 0.583.
+Best deep reconstruction value anywhere in the range is 0.333 (LSTM-AE and
+Transformer-AD at T = 0.50), against a baseline of 0.625 there. No deep
+reconstruction model reaches or exceeds the SPC baseline at any T.
+
+Checked specifically at the highest T on the three longest bearings, as asked:
+LSTM-AE, TCN-AE and Transformer-AD are invalid on all three, while 3-sigma and
+EWMA are valid on two of three. **RG-4's scoping does not invert.** Deep SVDD
+does move off zero for the first time: 0.167 at T = 0.60.
+
+### 4. NEW DEFECT EXPOSED - N-23: silent drop, not N/A
+
+At T = 0.20 Bearing3_1 has 20 windows, below the length-30 sequence requirement.
+The three deep sequence models raise "LSTM-AE needs >= 30 windows; run has 20",
+and the run is **dropped** rather than recorded as N/A: `n_bearings` is 5 for
+those three detectors at T = 0.20 and 6 everywhere else, while `na_count` stays
+0 in every cell. Their T = 0.20 fractions are therefore x/5 while every other
+cell is x/6 - 0.200 is 1/5, not a 6-bearing value.
+
+This contradicts Sec. 4.5, which states that such a cell is recorded "as an
+explicit N/A rather than dropping it silently". The published run never hit this
+path because the training split was always the 0.50 default. Needs its own
+sign-off; not fixed here.
+
+### Manuscript sites that move (prose NOT edited, per instruction)
+
+| line | what breaks |
+|---|---|
+| L730 | "At no training fraction did any bearing fail to form a length-30 sequence, so every cell is a genuine evaluation rather than an N/A" - false; Bearing3_1 fails at T = 0.20 |
+| L732 | "0.67--0.83 ... with as little as T=0.20 and are stable or only mildly lower thereafter" - 3-sigma now runs 1.00 to 0.667, a clear decline; Isolation Forest dips to 0.167 at T = 0.30 |
+| L732 | "LSTM-AE and Transformer-AD 0.33--0.50, TCN-AE 0.17--0.33" - now 0.000--0.333 and 0.000--0.200 |
+| L732 | "Deep SVDD produces no valid alarm on any FEMTO bearing at any T" - false; 0.167 at T = 0.60 |
+| L734 | "do not overtake them anywhere in the 0.20--0.60 training range" - still TRUE, and now actually tested |
+| L739 | caption "SPC charts (blue) sit at the top and are flat from T=0.20" - false; 3-sigma declines monotonically |
+| L739 | caption "never reach it---no crossover" - still TRUE |
+| Fig. 10 | all curves; in-plot annotation "SPC baseline ~ 0.67" becomes "~ 0.62" |
+| Fig. 10 | y-axis "(n = 6 bearings)" is wrong for the three deep models at T = 0.20 (n = 5), pending N-23 |
+| L96 | "competitive with SPC charts within the tested training-fraction range [0.20, 0.60]" - survives |
+| L235 | "Deep SVDD produced no valid alarm on any FEMTO bearing at any training fraction" - false, same as L732 |
+| L777 | conclusion "minimum training-data requirement" sentence - survives, wording per BLOCK 4 |
+
+Figure 10 has been regenerated into `paper/figs/` (gitignored) for inspection but
+**not** installed into `paper/files/`, since manuscript edits are on hold.

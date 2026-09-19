@@ -1,34 +1,34 @@
 dataset,bearing,train_fraction,method,short_name,n_train_windows,lead_time_hours,far_preonset_pct,valid_alarm,na
-FEMTO,Bearing1_1,0.2,RMS-Trend (kσ),rms_trend,279,0.06111111111111111,0.0,True,False
-FEMTO,Bearing1_1,0.2,3σ Rule (σ=3.0),three_sigma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,279,0.4222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.2,Hotelling T²,hotelling_t2,279,0.575,0.0,True,False
-FEMTO,Bearing1_1,0.2,Isolation Forest,isolation_forest,279,0.17222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.2,Deep SVDD,deep_svdd,279,0.0,0.0,False,False
-FEMTO,Bearing1_1,0.2,LSTM-Autoencoder,lstm_ae,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.2,TCN-Autoencoder,tcn,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.2,Transformer-AD,transformer_ad,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.3,RMS-Trend (kσ),rms_trend,279,0.06111111111111111,0.0,True,False
-FEMTO,Bearing1_1,0.3,3σ Rule (σ=3.0),three_sigma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,279,0.4222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.3,Hotelling T²,hotelling_t2,279,0.575,0.0,True,False
-FEMTO,Bearing1_1,0.3,Isolation Forest,isolation_forest,279,0.17222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.3,Deep SVDD,deep_svdd,279,0.0,0.0,False,False
-FEMTO,Bearing1_1,0.3,LSTM-Autoencoder,lstm_ae,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.3,TCN-Autoencoder,tcn,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.3,Transformer-AD,transformer_ad,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.4,RMS-Trend (kσ),rms_trend,279,0.06111111111111111,0.0,True,False
-FEMTO,Bearing1_1,0.4,3σ Rule (σ=3.0),three_sigma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,279,0.4222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.4,Hotelling T²,hotelling_t2,279,0.575,0.0,True,False
-FEMTO,Bearing1_1,0.4,Isolation Forest,isolation_forest,279,0.17222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.4,Deep SVDD,deep_svdd,279,0.0,0.0,False,False
-FEMTO,Bearing1_1,0.4,LSTM-Autoencoder,lstm_ae,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.4,TCN-Autoencoder,tcn,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.4,Transformer-AD,transformer_ad,279,3.1166666666666667,100.0,False,False
+FEMTO,Bearing1_1,0.2,RMS-Trend (kσ),rms_trend,111,0.0,0.0,False,False
+FEMTO,Bearing1_1,0.2,3σ Rule (σ=3.0),three_sigma,111,4.1305555555555555,2.2026431718061676,True,False
+FEMTO,Bearing1_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,111,4.186111111111111,10.13215859030837,False,False
+FEMTO,Bearing1_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,111,4.1722222222222225,59.471365638766514,False,False
+FEMTO,Bearing1_1,0.2,Hotelling T²,hotelling_t2,111,4.1305555555555555,2.2026431718061676,True,False
+FEMTO,Bearing1_1,0.2,Isolation Forest,isolation_forest,111,4.1305555555555555,3.9647577092511015,True,False
+FEMTO,Bearing1_1,0.2,Deep SVDD,deep_svdd,111,0.0,0.0,False,False
+FEMTO,Bearing1_1,0.2,LSTM-Autoencoder,lstm_ae,111,5.0472222222222225,81.4977973568282,False,False
+FEMTO,Bearing1_1,0.2,TCN-Autoencoder,tcn,111,5.45,100.0,False,False
+FEMTO,Bearing1_1,0.2,Transformer-AD,transformer_ad,111,4.186111111111111,59.91189427312775,False,False
+FEMTO,Bearing1_1,0.3,RMS-Trend (kσ),rms_trend,167,0.04722222222222222,0.0,True,False
+FEMTO,Bearing1_1,0.3,3σ Rule (σ=3.0),three_sigma,167,4.1305555555555555,1.9762845849802373,True,False
+FEMTO,Bearing1_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,167,4.1305555555555555,3.557312252964427,True,False
+FEMTO,Bearing1_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,167,4.1305555555555555,45.059288537549406,False,False
+FEMTO,Bearing1_1,0.3,Hotelling T²,hotelling_t2,167,4.1305555555555555,33.59683794466403,False,False
+FEMTO,Bearing1_1,0.3,Isolation Forest,isolation_forest,167,4.1305555555555555,13.438735177865613,False,False
+FEMTO,Bearing1_1,0.3,Deep SVDD,deep_svdd,167,0.0,0.0,False,False
+FEMTO,Bearing1_1,0.3,LSTM-Autoencoder,lstm_ae,167,4.186111111111111,84.18972332015811,False,False
+FEMTO,Bearing1_1,0.3,TCN-Autoencoder,tcn,167,4.186111111111111,85.37549407114624,False,False
+FEMTO,Bearing1_1,0.3,Transformer-AD,transformer_ad,167,4.186111111111111,85.37549407114624,False,False
+FEMTO,Bearing1_1,0.4,RMS-Trend (kσ),rms_trend,223,0.06111111111111111,0.0,True,False
+FEMTO,Bearing1_1,0.4,3σ Rule (σ=3.0),three_sigma,223,0.575,0.0,True,False
+FEMTO,Bearing1_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,223,0.5472222222222223,0.0,True,False
+FEMTO,Bearing1_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,223,1.3388888888888888,6.122448979591836,True,False
+FEMTO,Bearing1_1,0.4,Hotelling T²,hotelling_t2,223,2.658333333333333,38.775510204081634,False,False
+FEMTO,Bearing1_1,0.4,Isolation Forest,isolation_forest,223,1.8388888888888888,12.755102040816327,False,False
+FEMTO,Bearing1_1,0.4,Deep SVDD,deep_svdd,223,0.0,0.0,False,False
+FEMTO,Bearing1_1,0.4,LSTM-Autoencoder,lstm_ae,223,3.8944444444444444,100.0,False,False
+FEMTO,Bearing1_1,0.4,TCN-Autoencoder,tcn,223,3.8944444444444444,100.0,False,False
+FEMTO,Bearing1_1,0.4,Transformer-AD,transformer_ad,223,3.8944444444444444,100.0,False,False
 FEMTO,Bearing1_1,0.5,RMS-Trend (kσ),rms_trend,279,0.06111111111111111,0.0,True,False
 FEMTO,Bearing1_1,0.5,3σ Rule (σ=3.0),three_sigma,279,0.15833333333333333,0.0,True,False
 FEMTO,Bearing1_1,0.5,"EWMA (λ=0.2, k=3.0)",ewma,279,0.15833333333333333,0.0,True,False
@@ -39,46 +39,46 @@ FEMTO,Bearing1_1,0.5,Deep SVDD,deep_svdd,279,0.0,0.0,False,False
 FEMTO,Bearing1_1,0.5,LSTM-Autoencoder,lstm_ae,279,3.1166666666666667,100.0,False,False
 FEMTO,Bearing1_1,0.5,TCN-Autoencoder,tcn,279,3.1166666666666667,100.0,False,False
 FEMTO,Bearing1_1,0.5,Transformer-AD,transformer_ad,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.6,RMS-Trend (kσ),rms_trend,279,0.06111111111111111,0.0,True,False
-FEMTO,Bearing1_1,0.6,3σ Rule (σ=3.0),three_sigma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,279,0.15833333333333333,0.0,True,False
-FEMTO,Bearing1_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,279,0.4222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.6,Hotelling T²,hotelling_t2,279,0.575,0.0,True,False
-FEMTO,Bearing1_1,0.6,Isolation Forest,isolation_forest,279,0.17222222222222222,0.0,True,False
-FEMTO,Bearing1_1,0.6,Deep SVDD,deep_svdd,279,0.0,0.0,False,False
-FEMTO,Bearing1_1,0.6,LSTM-Autoencoder,lstm_ae,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.6,TCN-Autoencoder,tcn,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_1,0.6,Transformer-AD,transformer_ad,279,3.1166666666666667,100.0,False,False
-FEMTO,Bearing1_2,0.2,RMS-Trend (kσ),rms_trend,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.2,3σ Rule (σ=3.0),three_sigma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.2,Hotelling T²,hotelling_t2,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.2,Isolation Forest,isolation_forest,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.2,Deep SVDD,deep_svdd,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.2,LSTM-Autoencoder,lstm_ae,86,0.1388888888888889,3.225806451612903,True,False
-FEMTO,Bearing1_2,0.2,TCN-Autoencoder,tcn,86,0.5694444444444444,11.29032258064516,False,False
-FEMTO,Bearing1_2,0.2,Transformer-AD,transformer_ad,86,0.18055555555555555,8.064516129032258,True,False
-FEMTO,Bearing1_2,0.3,RMS-Trend (kσ),rms_trend,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.3,3σ Rule (σ=3.0),three_sigma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.3,Hotelling T²,hotelling_t2,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.3,Isolation Forest,isolation_forest,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.3,Deep SVDD,deep_svdd,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.3,LSTM-Autoencoder,lstm_ae,86,0.1388888888888889,3.225806451612903,True,False
-FEMTO,Bearing1_2,0.3,TCN-Autoencoder,tcn,86,0.5694444444444444,11.29032258064516,False,False
-FEMTO,Bearing1_2,0.3,Transformer-AD,transformer_ad,86,0.18055555555555555,8.064516129032258,True,False
-FEMTO,Bearing1_2,0.4,RMS-Trend (kσ),rms_trend,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.4,3σ Rule (σ=3.0),three_sigma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.4,Hotelling T²,hotelling_t2,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.4,Isolation Forest,isolation_forest,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.4,Deep SVDD,deep_svdd,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.4,LSTM-Autoencoder,lstm_ae,86,0.1388888888888889,3.225806451612903,True,False
-FEMTO,Bearing1_2,0.4,TCN-Autoencoder,tcn,86,0.5694444444444444,11.29032258064516,False,False
-FEMTO,Bearing1_2,0.4,Transformer-AD,transformer_ad,86,0.18055555555555555,8.064516129032258,True,False
+FEMTO,Bearing1_1,0.6,RMS-Trend (kσ),rms_trend,335,0.06111111111111111,0.0,True,False
+FEMTO,Bearing1_1,0.6,3σ Rule (σ=3.0),three_sigma,335,0.11666666666666667,0.0,True,False
+FEMTO,Bearing1_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,335,0.36666666666666664,0.0,True,False
+FEMTO,Bearing1_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,335,0.3527777777777778,0.0,True,False
+FEMTO,Bearing1_1,0.6,Hotelling T²,hotelling_t2,335,0.95,5.357142857142857,True,False
+FEMTO,Bearing1_1,0.6,Isolation Forest,isolation_forest,335,0.15833333333333333,0.0,True,False
+FEMTO,Bearing1_1,0.6,Deep SVDD,deep_svdd,335,0.0,0.0,False,False
+FEMTO,Bearing1_1,0.6,LSTM-Autoencoder,lstm_ae,335,2.338888888888889,100.0,False,False
+FEMTO,Bearing1_1,0.6,TCN-Autoencoder,tcn,335,2.338888888888889,100.0,False,False
+FEMTO,Bearing1_1,0.6,Transformer-AD,transformer_ad,335,2.338888888888889,100.0,False,False
+FEMTO,Bearing1_2,0.2,RMS-Trend (kσ),rms_trend,34,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.2,3σ Rule (σ=3.0),three_sigma,34,0.125,0.8771929824561403,True,False
+FEMTO,Bearing1_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,34,0.9166666666666666,9.649122807017543,True,False
+FEMTO,Bearing1_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,34,0.9166666666666666,35.08771929824561,False,False
+FEMTO,Bearing1_2,0.2,Hotelling T²,hotelling_t2,34,1.5972222222222223,7.017543859649122,True,False
+FEMTO,Bearing1_2,0.2,Isolation Forest,isolation_forest,34,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.2,Deep SVDD,deep_svdd,34,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.2,LSTM-Autoencoder,lstm_ae,34,1.6944444444444444,100.0,False,False
+FEMTO,Bearing1_2,0.2,TCN-Autoencoder,tcn,34,1.6944444444444444,100.0,False,False
+FEMTO,Bearing1_2,0.2,Transformer-AD,transformer_ad,34,1.6944444444444444,100.0,False,False
+FEMTO,Bearing1_2,0.3,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.3,3σ Rule (σ=3.0),three_sigma,51,0.125,1.0416666666666665,True,False
+FEMTO,Bearing1_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,51,0.9027777777777778,4.166666666666666,True,False
+FEMTO,Bearing1_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,51,0.9027777777777778,3.125,True,False
+FEMTO,Bearing1_2,0.3,Hotelling T²,hotelling_t2,51,0.125,1.0416666666666665,True,False
+FEMTO,Bearing1_2,0.3,Isolation Forest,isolation_forest,51,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.3,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.3,LSTM-Autoencoder,lstm_ae,51,0.9444444444444444,62.5,False,False
+FEMTO,Bearing1_2,0.3,TCN-Autoencoder,tcn,51,1.0,66.66666666666666,False,False
+FEMTO,Bearing1_2,0.3,Transformer-AD,transformer_ad,51,0.20833333333333334,7.291666666666667,True,False
+FEMTO,Bearing1_2,0.4,RMS-Trend (kσ),rms_trend,69,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.4,3σ Rule (σ=3.0),three_sigma,69,0.125,1.2658227848101267,True,False
+FEMTO,Bearing1_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,69,0.125,1.2658227848101267,True,False
+FEMTO,Bearing1_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,69,0.9166666666666666,12.658227848101266,False,False
+FEMTO,Bearing1_2,0.4,Hotelling T²,hotelling_t2,69,0.125,1.2658227848101267,True,False
+FEMTO,Bearing1_2,0.4,Isolation Forest,isolation_forest,69,0.05555555555555555,0.0,True,False
+FEMTO,Bearing1_2,0.4,Deep SVDD,deep_svdd,69,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.4,LSTM-Autoencoder,lstm_ae,69,0.8055555555555556,37.9746835443038,False,False
+FEMTO,Bearing1_2,0.4,TCN-Autoencoder,tcn,69,0.8055555555555556,44.303797468354425,False,False
+FEMTO,Bearing1_2,0.4,Transformer-AD,transformer_ad,69,0.20833333333333334,8.860759493670885,True,False
 FEMTO,Bearing1_2,0.5,RMS-Trend (kσ),rms_trend,86,0.0,0.0,False,False
 FEMTO,Bearing1_2,0.5,3σ Rule (σ=3.0),three_sigma,86,0.125,1.6129032258064515,True,False
 FEMTO,Bearing1_2,0.5,"EWMA (λ=0.2, k=3.0)",ewma,86,0.125,1.6129032258064515,True,False
@@ -89,46 +89,46 @@ FEMTO,Bearing1_2,0.5,Deep SVDD,deep_svdd,86,0.0,0.0,False,False
 FEMTO,Bearing1_2,0.5,LSTM-Autoencoder,lstm_ae,86,0.1388888888888889,3.225806451612903,True,False
 FEMTO,Bearing1_2,0.5,TCN-Autoencoder,tcn,86,0.5694444444444444,11.29032258064516,False,False
 FEMTO,Bearing1_2,0.5,Transformer-AD,transformer_ad,86,0.18055555555555555,8.064516129032258,True,False
-FEMTO,Bearing1_2,0.6,RMS-Trend (kσ),rms_trend,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.6,3σ Rule (σ=3.0),three_sigma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.6,Hotelling T²,hotelling_t2,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.6,Isolation Forest,isolation_forest,86,0.125,1.6129032258064515,True,False
-FEMTO,Bearing1_2,0.6,Deep SVDD,deep_svdd,86,0.0,0.0,False,False
-FEMTO,Bearing1_2,0.6,LSTM-Autoencoder,lstm_ae,86,0.1388888888888889,3.225806451612903,True,False
-FEMTO,Bearing1_2,0.6,TCN-Autoencoder,tcn,86,0.5694444444444444,11.29032258064516,False,False
-FEMTO,Bearing1_2,0.6,Transformer-AD,transformer_ad,86,0.18055555555555555,8.064516129032258,True,False
-FEMTO,Bearing2_1,0.2,RMS-Trend (kσ),rms_trend,90,0.18055555555555555,0.0,True,False
-FEMTO,Bearing2_1,0.2,3σ Rule (σ=3.0),three_sigma,90,0.8055555555555556,17.543859649122805,False,False
-FEMTO,Bearing2_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,90,0.8472222222222222,29.82456140350877,False,False
-FEMTO,Bearing2_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,90,0.8472222222222222,78.94736842105263,False,False
-FEMTO,Bearing2_1,0.2,Hotelling T²,hotelling_t2,90,0.8055555555555556,22.807017543859647,False,False
-FEMTO,Bearing2_1,0.2,Isolation Forest,isolation_forest,90,0.8055555555555556,12.280701754385964,False,False
-FEMTO,Bearing2_1,0.2,Deep SVDD,deep_svdd,90,0.0,0.0,False,False
-FEMTO,Bearing2_1,0.2,LSTM-Autoencoder,lstm_ae,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.2,TCN-Autoencoder,tcn,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.2,Transformer-AD,transformer_ad,90,0.6111111111111112,43.859649122807014,False,False
-FEMTO,Bearing2_1,0.3,RMS-Trend (kσ),rms_trend,90,0.18055555555555555,10.0,True,False
-FEMTO,Bearing2_1,0.3,3σ Rule (σ=3.0),three_sigma,90,0.8055555555555556,30.0,False,False
-FEMTO,Bearing2_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,90,0.8472222222222222,42.857142857142854,False,False
-FEMTO,Bearing2_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,90,0.8472222222222222,82.85714285714286,False,False
-FEMTO,Bearing2_1,0.3,Hotelling T²,hotelling_t2,90,0.8055555555555556,35.714285714285715,False,False
-FEMTO,Bearing2_1,0.3,Isolation Forest,isolation_forest,90,0.8055555555555556,25.71428571428571,False,False
-FEMTO,Bearing2_1,0.3,Deep SVDD,deep_svdd,90,0.0,0.0,False,False
-FEMTO,Bearing2_1,0.3,LSTM-Autoencoder,lstm_ae,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.3,TCN-Autoencoder,tcn,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.3,Transformer-AD,transformer_ad,90,0.6111111111111112,54.285714285714285,False,False
-FEMTO,Bearing2_1,0.4,RMS-Trend (kσ),rms_trend,90,0.18055555555555555,9.859154929577464,True,False
-FEMTO,Bearing2_1,0.4,3σ Rule (σ=3.0),three_sigma,90,0.8055555555555556,29.577464788732392,False,False
-FEMTO,Bearing2_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,90,0.8472222222222222,43.66197183098591,False,False
-FEMTO,Bearing2_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,90,0.8472222222222222,83.09859154929578,False,False
-FEMTO,Bearing2_1,0.4,Hotelling T²,hotelling_t2,90,0.8055555555555556,36.61971830985916,False,False
-FEMTO,Bearing2_1,0.4,Isolation Forest,isolation_forest,90,0.8055555555555556,25.352112676056336,False,False
-FEMTO,Bearing2_1,0.4,Deep SVDD,deep_svdd,90,0.0,0.0,False,False
-FEMTO,Bearing2_1,0.4,LSTM-Autoencoder,lstm_ae,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.4,TCN-Autoencoder,tcn,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.4,Transformer-AD,transformer_ad,90,0.6111111111111112,54.929577464788736,False,False
+FEMTO,Bearing1_2,0.6,RMS-Trend (kσ),rms_trend,103,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.6,3σ Rule (σ=3.0),three_sigma,103,0.125,2.272727272727273,True,False
+FEMTO,Bearing1_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,103,0.125,2.272727272727273,True,False
+FEMTO,Bearing1_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,103,0.125,2.272727272727273,True,False
+FEMTO,Bearing1_2,0.6,Hotelling T²,hotelling_t2,103,0.125,2.272727272727273,True,False
+FEMTO,Bearing1_2,0.6,Isolation Forest,isolation_forest,103,0.125,2.272727272727273,True,False
+FEMTO,Bearing1_2,0.6,Deep SVDD,deep_svdd,103,0.0,0.0,False,False
+FEMTO,Bearing1_2,0.6,LSTM-Autoencoder,lstm_ae,103,0.1111111111111111,0.0,True,False
+FEMTO,Bearing1_2,0.6,TCN-Autoencoder,tcn,103,0.1111111111111111,0.0,True,False
+FEMTO,Bearing1_2,0.6,Transformer-AD,transformer_ad,103,0.18055555555555555,11.363636363636363,False,False
+FEMTO,Bearing2_1,0.2,RMS-Trend (kσ),rms_trend,36,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.2,3σ Rule (σ=3.0),three_sigma,36,0.20833333333333334,0.0,True,False
+FEMTO,Bearing2_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,36,0.9027777777777778,29.72972972972973,False,False
+FEMTO,Bearing2_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,36,0.9027777777777778,44.14414414414414,False,False
+FEMTO,Bearing2_1,0.2,Hotelling T²,hotelling_t2,36,1.7361111111111112,19.81981981981982,False,False
+FEMTO,Bearing2_1,0.2,Isolation Forest,isolation_forest,36,0.7916666666666666,3.6036036036036037,True,False
+FEMTO,Bearing2_1,0.2,Deep SVDD,deep_svdd,36,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.2,LSTM-Autoencoder,lstm_ae,36,1.7638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.2,TCN-Autoencoder,tcn,36,1.7638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.2,Transformer-AD,transformer_ad,36,1.7638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.3,RMS-Trend (kσ),rms_trend,54,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.3,3σ Rule (σ=3.0),three_sigma,54,0.20833333333333334,8.49056603773585,True,False
+FEMTO,Bearing2_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,54,0.9027777777777778,38.67924528301887,False,False
+FEMTO,Bearing2_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,54,0.8888888888888888,57.54716981132076,False,False
+FEMTO,Bearing2_1,0.3,Hotelling T²,hotelling_t2,54,0.8055555555555556,23.58490566037736,False,False
+FEMTO,Bearing2_1,0.3,Isolation Forest,isolation_forest,54,0.2361111111111111,11.320754716981133,False,False
+FEMTO,Bearing2_1,0.3,Deep SVDD,deep_svdd,54,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.3,LSTM-Autoencoder,lstm_ae,54,1.5138888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.3,TCN-Autoencoder,tcn,54,1.5138888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.3,Transformer-AD,transformer_ad,54,1.5138888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.4,RMS-Trend (kσ),rms_trend,72,0.18055555555555555,3.3707865168539324,True,False
+FEMTO,Bearing2_1,0.4,3σ Rule (σ=3.0),three_sigma,72,0.2361111111111111,13.48314606741573,False,False
+FEMTO,Bearing2_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,72,0.8472222222222222,34.831460674157306,False,False
+FEMTO,Bearing2_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,72,0.8472222222222222,66.29213483146067,False,False
+FEMTO,Bearing2_1,0.4,Hotelling T²,hotelling_t2,72,0.8055555555555556,29.213483146067414,False,False
+FEMTO,Bearing2_1,0.4,Isolation Forest,isolation_forest,72,0.7916666666666666,16.853932584269664,False,False
+FEMTO,Bearing2_1,0.4,Deep SVDD,deep_svdd,72,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.4,LSTM-Autoencoder,lstm_ae,72,1.2638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.4,TCN-Autoencoder,tcn,72,1.2638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.4,Transformer-AD,transformer_ad,72,1.2638888888888888,100.0,False,False
 FEMTO,Bearing2_1,0.5,RMS-Trend (kσ),rms_trend,90,0.18055555555555555,9.859154929577464,True,False
 FEMTO,Bearing2_1,0.5,3σ Rule (σ=3.0),three_sigma,90,0.8055555555555556,29.577464788732392,False,False
 FEMTO,Bearing2_1,0.5,"EWMA (λ=0.2, k=3.0)",ewma,90,0.8472222222222222,43.66197183098591,False,False
@@ -139,46 +139,46 @@ FEMTO,Bearing2_1,0.5,Deep SVDD,deep_svdd,90,0.0,0.0,False,False
 FEMTO,Bearing2_1,0.5,LSTM-Autoencoder,lstm_ae,90,1.0138888888888888,100.0,False,False
 FEMTO,Bearing2_1,0.5,TCN-Autoencoder,tcn,90,1.0138888888888888,100.0,False,False
 FEMTO,Bearing2_1,0.5,Transformer-AD,transformer_ad,90,0.6111111111111112,54.929577464788736,False,False
-FEMTO,Bearing2_1,0.6,RMS-Trend (kσ),rms_trend,90,0.18055555555555555,10.0,True,False
-FEMTO,Bearing2_1,0.6,3σ Rule (σ=3.0),three_sigma,90,0.8055555555555556,30.0,False,False
-FEMTO,Bearing2_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,90,0.8472222222222222,42.857142857142854,False,False
-FEMTO,Bearing2_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,90,0.8472222222222222,82.85714285714286,False,False
-FEMTO,Bearing2_1,0.6,Hotelling T²,hotelling_t2,90,0.8055555555555556,35.714285714285715,False,False
-FEMTO,Bearing2_1,0.6,Isolation Forest,isolation_forest,90,0.8055555555555556,25.71428571428571,False,False
-FEMTO,Bearing2_1,0.6,Deep SVDD,deep_svdd,90,0.0,0.0,False,False
-FEMTO,Bearing2_1,0.6,LSTM-Autoencoder,lstm_ae,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.6,TCN-Autoencoder,tcn,90,1.0138888888888888,100.0,False,False
-FEMTO,Bearing2_1,0.6,Transformer-AD,transformer_ad,90,0.6111111111111112,54.285714285714285,False,False
-FEMTO,Bearing2_2,0.2,RMS-Trend (kσ),rms_trend,79,0.0,,False,False
-FEMTO,Bearing2_2,0.2,3σ Rule (σ=3.0),three_sigma,79,0.12777777777777777,,True,False
-FEMTO,Bearing2_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,79,0.8638888888888889,,True,False
-FEMTO,Bearing2_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,79,0.8361111111111111,,True,False
-FEMTO,Bearing2_2,0.2,Hotelling T²,hotelling_t2,79,0.8777777777777778,,True,False
-FEMTO,Bearing2_2,0.2,Isolation Forest,isolation_forest,79,0.8916666666666667,,True,False
-FEMTO,Bearing2_2,0.2,Deep SVDD,deep_svdd,79,0.0,,False,False
-FEMTO,Bearing2_2,0.2,LSTM-Autoencoder,lstm_ae,79,0.8916666666666667,,True,False
-FEMTO,Bearing2_2,0.2,TCN-Autoencoder,tcn,79,0.8916666666666667,,True,False
-FEMTO,Bearing2_2,0.2,Transformer-AD,transformer_ad,79,0.8916666666666667,,True,False
-FEMTO,Bearing2_2,0.3,RMS-Trend (kσ),rms_trend,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.3,3σ Rule (σ=3.0),three_sigma,79,0.12777777777777777,0.0,True,False
-FEMTO,Bearing2_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,79,0.8638888888888889,27.77777777777778,False,False
-FEMTO,Bearing2_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,79,0.8361111111111111,92.5925925925926,False,False
-FEMTO,Bearing2_2,0.3,Hotelling T²,hotelling_t2,79,0.8777777777777778,25.925925925925924,False,False
-FEMTO,Bearing2_2,0.3,Isolation Forest,isolation_forest,79,0.8916666666666667,22.22222222222222,False,False
-FEMTO,Bearing2_2,0.3,Deep SVDD,deep_svdd,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.3,LSTM-Autoencoder,lstm_ae,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.3,TCN-Autoencoder,tcn,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.3,Transformer-AD,transformer_ad,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.4,RMS-Trend (kσ),rms_trend,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.4,3σ Rule (σ=3.0),three_sigma,79,0.12777777777777777,8.333333333333332,True,False
-FEMTO,Bearing2_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,79,0.8638888888888889,33.33333333333333,False,False
-FEMTO,Bearing2_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,79,0.8361111111111111,93.33333333333333,False,False
-FEMTO,Bearing2_2,0.4,Hotelling T²,hotelling_t2,79,0.8777777777777778,31.666666666666664,False,False
-FEMTO,Bearing2_2,0.4,Isolation Forest,isolation_forest,79,0.8916666666666667,28.333333333333332,False,False
-FEMTO,Bearing2_2,0.4,Deep SVDD,deep_svdd,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.4,LSTM-Autoencoder,lstm_ae,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.4,TCN-Autoencoder,tcn,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.4,Transformer-AD,transformer_ad,79,0.8916666666666667,100.0,False,False
+FEMTO,Bearing2_1,0.6,RMS-Trend (kσ),rms_trend,108,0.18055555555555555,5.769230769230769,True,False
+FEMTO,Bearing2_1,0.6,3σ Rule (σ=3.0),three_sigma,108,0.2361111111111111,23.076923076923077,False,False
+FEMTO,Bearing2_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,108,0.7361111111111112,36.53846153846153,False,False
+FEMTO,Bearing2_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,108,0.7222222222222222,63.46153846153846,False,False
+FEMTO,Bearing2_1,0.6,Hotelling T²,hotelling_t2,108,0.2638888888888889,28.846153846153843,False,False
+FEMTO,Bearing2_1,0.6,Isolation Forest,isolation_forest,108,0.2638888888888889,26.923076923076923,False,False
+FEMTO,Bearing2_1,0.6,Deep SVDD,deep_svdd,108,0.0,0.0,False,False
+FEMTO,Bearing2_1,0.6,LSTM-Autoencoder,lstm_ae,108,0.7638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.6,TCN-Autoencoder,tcn,108,0.7638888888888888,100.0,False,False
+FEMTO,Bearing2_1,0.6,Transformer-AD,transformer_ad,108,0.3611111111111111,34.61538461538461,False,False
+FEMTO,Bearing2_2,0.2,RMS-Trend (kσ),rms_trend,31,0.0,,False,False
+FEMTO,Bearing2_2,0.2,3σ Rule (σ=3.0),three_sigma,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,Hotelling T²,hotelling_t2,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,Isolation Forest,isolation_forest,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,Deep SVDD,deep_svdd,31,0.0,,False,False
+FEMTO,Bearing2_2,0.2,LSTM-Autoencoder,lstm_ae,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,TCN-Autoencoder,tcn,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.2,Transformer-AD,transformer_ad,31,1.5444444444444445,,True,False
+FEMTO,Bearing2_2,0.3,RMS-Trend (kσ),rms_trend,47,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.3,3σ Rule (σ=3.0),three_sigma,47,1.3222222222222222,100.0,False,False
+FEMTO,Bearing2_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,47,1.3083333333333333,98.82352941176471,False,False
+FEMTO,Bearing2_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,47,1.2944444444444445,97.6470588235294,False,False
+FEMTO,Bearing2_2,0.3,Hotelling T²,hotelling_t2,47,1.3222222222222222,100.0,False,False
+FEMTO,Bearing2_2,0.3,Isolation Forest,isolation_forest,47,0.975,20.0,False,False
+FEMTO,Bearing2_2,0.3,Deep SVDD,deep_svdd,47,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.3,LSTM-Autoencoder,lstm_ae,47,1.3222222222222222,100.0,False,False
+FEMTO,Bearing2_2,0.3,TCN-Autoencoder,tcn,47,1.3222222222222222,100.0,False,False
+FEMTO,Bearing2_2,0.3,Transformer-AD,transformer_ad,47,1.3222222222222222,100.0,False,False
+FEMTO,Bearing2_2,0.4,RMS-Trend (kσ),rms_trend,63,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.4,3σ Rule (σ=3.0),three_sigma,63,1.1,44.0,False,False
+FEMTO,Bearing2_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,63,1.0444444444444445,57.333333333333336,False,False
+FEMTO,Bearing2_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,63,1.0027777777777778,90.66666666666666,False,False
+FEMTO,Bearing2_2,0.4,Hotelling T²,hotelling_t2,63,1.0722222222222222,58.666666666666664,False,False
+FEMTO,Bearing2_2,0.4,Isolation Forest,isolation_forest,63,1.0583333333333333,41.333333333333336,False,False
+FEMTO,Bearing2_2,0.4,Deep SVDD,deep_svdd,63,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.4,LSTM-Autoencoder,lstm_ae,63,1.1,100.0,False,False
+FEMTO,Bearing2_2,0.4,TCN-Autoencoder,tcn,63,1.1,100.0,False,False
+FEMTO,Bearing2_2,0.4,Transformer-AD,transformer_ad,63,1.1,100.0,False,False
 FEMTO,Bearing2_2,0.5,RMS-Trend (kσ),rms_trend,79,0.0,0.0,False,False
 FEMTO,Bearing2_2,0.5,3σ Rule (σ=3.0),three_sigma,79,0.12777777777777777,11.29032258064516,False,False
 FEMTO,Bearing2_2,0.5,"EWMA (λ=0.2, k=3.0)",ewma,79,0.8638888888888889,35.483870967741936,False,False
@@ -189,46 +189,43 @@ FEMTO,Bearing2_2,0.5,Deep SVDD,deep_svdd,79,0.0,0.0,False,False
 FEMTO,Bearing2_2,0.5,LSTM-Autoencoder,lstm_ae,79,0.8916666666666667,100.0,False,False
 FEMTO,Bearing2_2,0.5,TCN-Autoencoder,tcn,79,0.8916666666666667,100.0,False,False
 FEMTO,Bearing2_2,0.5,Transformer-AD,transformer_ad,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.6,RMS-Trend (kσ),rms_trend,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.6,3σ Rule (σ=3.0),three_sigma,79,0.12777777777777777,12.698412698412698,False,False
-FEMTO,Bearing2_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,79,0.8638888888888889,36.507936507936506,False,False
-FEMTO,Bearing2_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,79,0.8361111111111111,93.65079365079364,False,False
-FEMTO,Bearing2_2,0.6,Hotelling T²,hotelling_t2,79,0.8777777777777778,34.92063492063492,False,False
-FEMTO,Bearing2_2,0.6,Isolation Forest,isolation_forest,79,0.8916666666666667,31.746031746031743,False,False
-FEMTO,Bearing2_2,0.6,Deep SVDD,deep_svdd,79,0.0,0.0,False,False
-FEMTO,Bearing2_2,0.6,LSTM-Autoencoder,lstm_ae,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.6,TCN-Autoencoder,tcn,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing2_2,0.6,Transformer-AD,transformer_ad,79,0.8916666666666667,100.0,False,False
-FEMTO,Bearing3_1,0.2,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.2,3σ Rule (σ=3.0),three_sigma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.2,Hotelling T²,hotelling_t2,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.2,Isolation Forest,isolation_forest,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.2,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.2,LSTM-Autoencoder,lstm_ae,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.2,TCN-Autoencoder,tcn,51,0.09444444444444444,5.555555555555555,True,False
-FEMTO,Bearing3_1,0.2,Transformer-AD,transformer_ad,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.3,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.3,3σ Rule (σ=3.0),three_sigma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.3,Hotelling T²,hotelling_t2,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.3,Isolation Forest,isolation_forest,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.3,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.3,LSTM-Autoencoder,lstm_ae,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.3,TCN-Autoencoder,tcn,51,0.09444444444444444,5.555555555555555,True,False
-FEMTO,Bearing3_1,0.3,Transformer-AD,transformer_ad,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.4,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.4,3σ Rule (σ=3.0),three_sigma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.4,Hotelling T²,hotelling_t2,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.4,Isolation Forest,isolation_forest,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.4,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.4,LSTM-Autoencoder,lstm_ae,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.4,TCN-Autoencoder,tcn,51,0.09444444444444444,5.555555555555555,True,False
-FEMTO,Bearing3_1,0.4,Transformer-AD,transformer_ad,51,0.08055555555555556,2.7777777777777777,True,False
+FEMTO,Bearing2_2,0.6,RMS-Trend (kσ),rms_trend,94,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.6,3σ Rule (σ=3.0),three_sigma,94,0.12777777777777777,17.02127659574468,False,False
+FEMTO,Bearing2_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,94,0.12777777777777777,17.02127659574468,False,False
+FEMTO,Bearing2_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,94,0.12777777777777777,17.02127659574468,False,False
+FEMTO,Bearing2_2,0.6,Hotelling T²,hotelling_t2,94,0.12777777777777777,17.02127659574468,False,False
+FEMTO,Bearing2_2,0.6,Isolation Forest,isolation_forest,94,0.12777777777777777,17.02127659574468,False,False
+FEMTO,Bearing2_2,0.6,Deep SVDD,deep_svdd,94,0.0,0.0,False,False
+FEMTO,Bearing2_2,0.6,LSTM-Autoencoder,lstm_ae,94,0.6694444444444444,100.0,False,False
+FEMTO,Bearing2_2,0.6,TCN-Autoencoder,tcn,94,0.6694444444444444,100.0,False,False
+FEMTO,Bearing2_2,0.6,Transformer-AD,transformer_ad,94,0.6694444444444444,100.0,False,False
+FEMTO,Bearing3_1,0.2,RMS-Trend (kσ),rms_trend,20,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.2,3σ Rule (σ=3.0),three_sigma,20,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.2,"EWMA (λ=0.2, k=3.0)",ewma,20,0.08055555555555556,1.4925373134328357,True,False
+FEMTO,Bearing3_1,0.2,"CUSUM (k=0.5, h=5.0)",cusum,20,0.08055555555555556,1.4925373134328357,True,False
+FEMTO,Bearing3_1,0.2,Hotelling T²,hotelling_t2,20,0.65,29.850746268656714,False,False
+FEMTO,Bearing3_1,0.2,Isolation Forest,isolation_forest,20,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.2,Deep SVDD,deep_svdd,20,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.3,RMS-Trend (kσ),rms_trend,30,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.3,3σ Rule (σ=3.0),three_sigma,30,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.3,"EWMA (λ=0.2, k=3.0)",ewma,30,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.3,"CUSUM (k=0.5, h=5.0)",cusum,30,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.3,Hotelling T²,hotelling_t2,30,0.08055555555555556,1.7543859649122806,True,False
+FEMTO,Bearing3_1,0.3,Isolation Forest,isolation_forest,30,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.3,Deep SVDD,deep_svdd,30,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.3,LSTM-Autoencoder,lstm_ae,30,0.41388888888888886,43.859649122807014,False,False
+FEMTO,Bearing3_1,0.3,TCN-Autoencoder,tcn,30,0.8583333333333333,100.0,False,False
+FEMTO,Bearing3_1,0.3,Transformer-AD,transformer_ad,30,0.42777777777777776,45.614035087719294,False,False
+FEMTO,Bearing3_1,0.4,RMS-Trend (kσ),rms_trend,40,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.4,3σ Rule (σ=3.0),three_sigma,40,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.4,"EWMA (λ=0.2, k=3.0)",ewma,40,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.4,"CUSUM (k=0.5, h=5.0)",cusum,40,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.4,Hotelling T²,hotelling_t2,40,0.08055555555555556,2.1739130434782608,True,False
+FEMTO,Bearing3_1,0.4,Isolation Forest,isolation_forest,40,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.4,Deep SVDD,deep_svdd,40,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.4,LSTM-Autoencoder,lstm_ae,40,0.1361111111111111,10.869565217391305,False,False
+FEMTO,Bearing3_1,0.4,TCN-Autoencoder,tcn,40,0.275,32.608695652173914,False,False
+FEMTO,Bearing3_1,0.4,Transformer-AD,transformer_ad,40,0.1638888888888889,15.217391304347828,False,False
 FEMTO,Bearing3_1,0.5,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
 FEMTO,Bearing3_1,0.5,3σ Rule (σ=3.0),three_sigma,51,0.06666666666666667,0.0,True,False
 FEMTO,Bearing3_1,0.5,"EWMA (λ=0.2, k=3.0)",ewma,51,0.06666666666666667,0.0,True,False
@@ -239,46 +236,46 @@ FEMTO,Bearing3_1,0.5,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
 FEMTO,Bearing3_1,0.5,LSTM-Autoencoder,lstm_ae,51,0.08055555555555556,2.7777777777777777,True,False
 FEMTO,Bearing3_1,0.5,TCN-Autoencoder,tcn,51,0.09444444444444444,5.555555555555555,True,False
 FEMTO,Bearing3_1,0.5,Transformer-AD,transformer_ad,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.6,RMS-Trend (kσ),rms_trend,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.6,3σ Rule (σ=3.0),three_sigma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.6,Hotelling T²,hotelling_t2,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.6,Isolation Forest,isolation_forest,51,0.06666666666666667,0.0,True,False
-FEMTO,Bearing3_1,0.6,Deep SVDD,deep_svdd,51,0.0,0.0,False,False
-FEMTO,Bearing3_1,0.6,LSTM-Autoencoder,lstm_ae,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_1,0.6,TCN-Autoencoder,tcn,51,0.09444444444444444,5.555555555555555,True,False
-FEMTO,Bearing3_1,0.6,Transformer-AD,transformer_ad,51,0.08055555555555556,2.7777777777777777,True,False
-FEMTO,Bearing3_2,0.2,RMS-Trend (kσ),rms_trend,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.2,3σ Rule (σ=3.0),three_sigma,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,163,0.1,0.0,True,False
-FEMTO,Bearing3_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,163,0.35,3.225806451612903,True,False
-FEMTO,Bearing3_2,0.2,Hotelling T²,hotelling_t2,163,0.5722222222222222,12.096774193548388,False,False
-FEMTO,Bearing3_2,0.2,Isolation Forest,isolation_forest,163,0.5305555555555556,2.4193548387096775,True,False
-FEMTO,Bearing3_2,0.2,Deep SVDD,deep_svdd,163,0.0,0.0,False,False
-FEMTO,Bearing3_2,0.2,LSTM-Autoencoder,lstm_ae,163,0.5305555555555556,25.0,False,False
-FEMTO,Bearing3_2,0.2,TCN-Autoencoder,tcn,163,0.5444444444444444,25.806451612903224,False,False
-FEMTO,Bearing3_2,0.2,Transformer-AD,transformer_ad,163,0.5166666666666667,24.193548387096776,False,False
-FEMTO,Bearing3_2,0.3,RMS-Trend (kσ),rms_trend,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.3,3σ Rule (σ=3.0),three_sigma,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,163,0.1,0.0,True,False
-FEMTO,Bearing3_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,163,0.35,3.225806451612903,True,False
-FEMTO,Bearing3_2,0.3,Hotelling T²,hotelling_t2,163,0.5722222222222222,12.096774193548388,False,False
-FEMTO,Bearing3_2,0.3,Isolation Forest,isolation_forest,163,0.5305555555555556,2.4193548387096775,True,False
-FEMTO,Bearing3_2,0.3,Deep SVDD,deep_svdd,163,0.0,0.0,False,False
-FEMTO,Bearing3_2,0.3,LSTM-Autoencoder,lstm_ae,163,0.5305555555555556,25.0,False,False
-FEMTO,Bearing3_2,0.3,TCN-Autoencoder,tcn,163,0.5444444444444444,25.806451612903224,False,False
-FEMTO,Bearing3_2,0.3,Transformer-AD,transformer_ad,163,0.5166666666666667,24.193548387096776,False,False
-FEMTO,Bearing3_2,0.4,RMS-Trend (kσ),rms_trend,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.4,3σ Rule (σ=3.0),three_sigma,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,163,0.1,0.0,True,False
-FEMTO,Bearing3_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,163,0.35,2.459016393442623,True,False
-FEMTO,Bearing3_2,0.4,Hotelling T²,hotelling_t2,163,0.5722222222222222,10.655737704918032,False,False
-FEMTO,Bearing3_2,0.4,Isolation Forest,isolation_forest,163,0.5305555555555556,2.459016393442623,True,False
-FEMTO,Bearing3_2,0.4,Deep SVDD,deep_svdd,163,0.0,0.0,False,False
-FEMTO,Bearing3_2,0.4,LSTM-Autoencoder,lstm_ae,163,0.5305555555555556,23.770491803278688,False,False
-FEMTO,Bearing3_2,0.4,TCN-Autoencoder,tcn,163,0.5444444444444444,24.59016393442623,False,False
-FEMTO,Bearing3_2,0.4,Transformer-AD,transformer_ad,163,0.5166666666666667,22.950819672131146,False,False
+FEMTO,Bearing3_1,0.6,RMS-Trend (kσ),rms_trend,61,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.6,3σ Rule (σ=3.0),three_sigma,61,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.6,"EWMA (λ=0.2, k=3.0)",ewma,61,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.6,"CUSUM (k=0.5, h=5.0)",cusum,61,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.6,Hotelling T²,hotelling_t2,61,0.08055555555555556,3.8461538461538463,True,False
+FEMTO,Bearing3_1,0.6,Isolation Forest,isolation_forest,61,0.06666666666666667,0.0,True,False
+FEMTO,Bearing3_1,0.6,Deep SVDD,deep_svdd,61,0.0,0.0,False,False
+FEMTO,Bearing3_1,0.6,LSTM-Autoencoder,lstm_ae,61,0.42777777777777776,100.0,False,False
+FEMTO,Bearing3_1,0.6,TCN-Autoencoder,tcn,61,0.42777777777777776,100.0,False,False
+FEMTO,Bearing3_1,0.6,Transformer-AD,transformer_ad,61,0.42777777777777776,100.0,False,False
+FEMTO,Bearing3_2,0.2,RMS-Trend (kσ),rms_trend,65,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.2,3σ Rule (σ=3.0),three_sigma,65,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.2,"EWMA (λ=0.2, k=3.0)",ewma,65,0.07222222222222222,0.0,True,False
+FEMTO,Bearing3_2,0.2,"CUSUM (k=0.5, h=5.0)",cusum,65,0.058333333333333334,0.0,True,False
+FEMTO,Bearing3_2,0.2,Hotelling T²,hotelling_t2,65,0.5722222222222222,9.45945945945946,True,False
+FEMTO,Bearing3_2,0.2,Isolation Forest,isolation_forest,65,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.2,Deep SVDD,deep_svdd,65,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.2,LSTM-Autoencoder,lstm_ae,65,0.5305555555555556,13.963963963963963,False,False
+FEMTO,Bearing3_2,0.2,TCN-Autoencoder,tcn,65,0.5444444444444444,14.414414414414415,False,False
+FEMTO,Bearing3_2,0.2,Transformer-AD,transformer_ad,65,0.5305555555555556,13.963963963963963,False,False
+FEMTO,Bearing3_2,0.3,RMS-Trend (kσ),rms_trend,97,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.3,3σ Rule (σ=3.0),three_sigma,97,0.058333333333333334,0.0,True,False
+FEMTO,Bearing3_2,0.3,"EWMA (λ=0.2, k=3.0)",ewma,97,0.1,0.0,True,False
+FEMTO,Bearing3_2,0.3,"CUSUM (k=0.5, h=5.0)",cusum,97,0.11388888888888889,0.5291005291005291,True,False
+FEMTO,Bearing3_2,0.3,Hotelling T²,hotelling_t2,97,0.5722222222222222,10.052910052910052,False,False
+FEMTO,Bearing3_2,0.3,Isolation Forest,isolation_forest,97,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.3,Deep SVDD,deep_svdd,97,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.3,LSTM-Autoencoder,lstm_ae,97,0.5305555555555556,16.402116402116402,False,False
+FEMTO,Bearing3_2,0.3,TCN-Autoencoder,tcn,97,0.5305555555555556,16.402116402116402,False,False
+FEMTO,Bearing3_2,0.3,Transformer-AD,transformer_ad,97,0.5305555555555556,16.402116402116402,False,False
+FEMTO,Bearing3_2,0.4,RMS-Trend (kσ),rms_trend,130,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.4,3σ Rule (σ=3.0),three_sigma,130,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.4,"EWMA (λ=0.2, k=3.0)",ewma,130,0.1,0.0,True,False
+FEMTO,Bearing3_2,0.4,"CUSUM (k=0.5, h=5.0)",cusum,130,0.11388888888888889,0.0,True,False
+FEMTO,Bearing3_2,0.4,Hotelling T²,hotelling_t2,130,0.5722222222222222,8.441558441558442,True,False
+FEMTO,Bearing3_2,0.4,Isolation Forest,isolation_forest,130,0.5305555555555556,1.948051948051948,True,False
+FEMTO,Bearing3_2,0.4,Deep SVDD,deep_svdd,130,0.0,0.0,False,False
+FEMTO,Bearing3_2,0.4,LSTM-Autoencoder,lstm_ae,130,0.5305555555555556,18.83116883116883,False,False
+FEMTO,Bearing3_2,0.4,TCN-Autoencoder,tcn,130,0.5444444444444444,19.480519480519483,False,False
+FEMTO,Bearing3_2,0.4,Transformer-AD,transformer_ad,130,0.5166666666666667,18.181818181818183,False,False
 FEMTO,Bearing3_2,0.5,RMS-Trend (kσ),rms_trend,163,0.044444444444444446,0.0,True,False
 FEMTO,Bearing3_2,0.5,3σ Rule (σ=3.0),three_sigma,163,0.044444444444444446,0.0,True,False
 FEMTO,Bearing3_2,0.5,"EWMA (λ=0.2, k=3.0)",ewma,163,0.1,0.0,True,False
@@ -289,13 +286,13 @@ FEMTO,Bearing3_2,0.5,Deep SVDD,deep_svdd,163,0.0,0.0,False,False
 FEMTO,Bearing3_2,0.5,LSTM-Autoencoder,lstm_ae,163,0.5305555555555556,23.770491803278688,False,False
 FEMTO,Bearing3_2,0.5,TCN-Autoencoder,tcn,163,0.5444444444444444,24.59016393442623,False,False
 FEMTO,Bearing3_2,0.5,Transformer-AD,transformer_ad,163,0.5166666666666667,22.950819672131146,False,False
-FEMTO,Bearing3_2,0.6,RMS-Trend (kσ),rms_trend,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.6,3σ Rule (σ=3.0),three_sigma,163,0.044444444444444446,0.0,True,False
-FEMTO,Bearing3_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,163,0.1,0.0,True,False
-FEMTO,Bearing3_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,163,0.35,2.459016393442623,True,False
-FEMTO,Bearing3_2,0.6,Hotelling T²,hotelling_t2,163,0.5722222222222222,10.655737704918032,False,False
-FEMTO,Bearing3_2,0.6,Isolation Forest,isolation_forest,163,0.5305555555555556,2.459016393442623,True,False
-FEMTO,Bearing3_2,0.6,Deep SVDD,deep_svdd,163,0.0,0.0,False,False
-FEMTO,Bearing3_2,0.6,LSTM-Autoencoder,lstm_ae,163,0.5305555555555556,23.770491803278688,False,False
-FEMTO,Bearing3_2,0.6,TCN-Autoencoder,tcn,163,0.5444444444444444,24.59016393442623,False,False
-FEMTO,Bearing3_2,0.6,Transformer-AD,transformer_ad,163,0.5166666666666667,22.950819672131146,False,False
+FEMTO,Bearing3_2,0.6,RMS-Trend (kσ),rms_trend,195,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.6,3σ Rule (σ=3.0),three_sigma,195,0.058333333333333334,0.0,True,False
+FEMTO,Bearing3_2,0.6,"EWMA (λ=0.2, k=3.0)",ewma,195,0.5166666666666667,8.98876404494382,True,False
+FEMTO,Bearing3_2,0.6,"CUSUM (k=0.5, h=5.0)",cusum,195,0.43333333333333335,17.97752808988764,False,False
+FEMTO,Bearing3_2,0.6,Hotelling T²,hotelling_t2,195,0.5722222222222222,14.606741573033707,False,False
+FEMTO,Bearing3_2,0.6,Isolation Forest,isolation_forest,195,0.5305555555555556,3.3707865168539324,True,False
+FEMTO,Bearing3_2,0.6,Deep SVDD,deep_svdd,195,0.044444444444444446,0.0,True,False
+FEMTO,Bearing3_2,0.6,LSTM-Autoencoder,lstm_ae,195,0.5305555555555556,32.58426966292135,False,False
+FEMTO,Bearing3_2,0.6,TCN-Autoencoder,tcn,195,0.5444444444444444,33.70786516853933,False,False
+FEMTO,Bearing3_2,0.6,Transformer-AD,transformer_ad,195,0.5305555555555556,32.58426966292135,False,False
