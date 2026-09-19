@@ -2615,3 +2615,79 @@ in scope - raise with the author:
    `fig_conformal_panels` and `fig_tradeoff_panels`. The register calls in-plot
    titles contrary to IJPHM house style, and only Fig. 10's was ordered
    removed. Decide whether the rest should go too.
+
+---
+
+## N-22 (HIGH, NEW 2026-09-19) — the FEMTO training-fraction sweep does not vary the training fraction
+
+**Found while verifying item (b) for the RG-4 prose blocks. Blocks 2, 3 and 4 are
+NOT inserted pending this.**
+
+`src/training_sweep.py` sweeps `T` over {0.20, 0.30, 0.40, 0.50, 0.60} by mutating
+the shared `SPLIT` dict (lines 72-74) and then calling
+`load_pipeline(bearing, dataset=dataset)` (line 76). Its docstring states this
+works "because load_pipeline reads src.config.SPLIT at call time".
+
+**It does not.** `load_pipeline` in `src/__init__.py` takes the training fraction
+from the dataset bundle:
+
+- line 200: `train_fraction = bundle.train_fraction`
+- line 250: `temporal_split(feat_df, train_frac=train_fraction, cal_frac=SPLIT["calibration_fraction"])`
+
+`SPLIT["train_fraction"]` is never read in `src/__init__.py`. Only
+`calibration_fraction` (line 251) and `normal_period_fraction` (lines 282, 323)
+are. The training split therefore stays at `bundle.train_fraction = 0.50` for
+every T.
+
+**Runtime proof** (FEMTO Bearing1_1, mutating SPLIT exactly as the sweep does):
+
+| T | len(ts_train) | X_train.shape | len(ts_test) |
+|---|---|---|---|
+| 0.20 | 279 | (279, 49) | 224 |
+| 0.60 | 279 | (279, 49) | 224 |
+
+Identical. Corroborating evidence in the released results:
+`results/tables/femto_training_sweep_long.csv` records `n_train_windows`
+(= `len(pipe["ts_train"])`) as constant across all five T for every bearing —
+279, 163, 90, 86, 79, 51 — when it should grow with T.
+
+**What the experiment actually varied.** `train_end` (line 79) is computed
+independently as `df.index[int(n * T)]` and passed to `onset_for_run`, so the
+*onset anchor* moves with T while the training data does not. The small
+variation visible in Figure 10 is an onset effect, not a training-data effect.
+
+**Blast radius.** Every claim of the form "at any training fraction" or "no
+crossover in [0.20, 0.60]":
+
+- Sec. 6 minimum-training-data subsection (the whole subsection)
+- Figure 10 (`fig_mintrain`) and its caption, including the "no crossover"
+  annotation
+- the RG-4 discussion adjacent to `tab:phrank`
+- the existing Conclusion sentence about the crossover training fraction
+- pending BLOCK 2 (abstract), BLOCK 3 (practical recommendation) and BLOCK 4
+  (conclusion edit)
+
+**Not affected:** N-20 is unrelated and provably did not touch this sweep —
+`load_pipeline` is called with `downsample_factor=1, downsample_mode="none"`
+(the defaults), and the N-20 fix sits inside
+`if downsample_mode != "none" and downsample_factor > 1:`, a branch that cannot
+execute here. Item (a) verified clean.
+
+**Supporting figures for the RG-4 prose, measured:** trainable-parameter counts
+at the 49-dim width are LSTM-AE 54,657, TCN-AE 29,681, Transformer-AD 20,305 —
+i.e. **2.0 to 5.5 x 10^4**, not "2-5 x 10^4" as drafted. Deep SVDD is 1,824.
+FEMTO normal-training windows at the *default* 0.50 split: 51, 79, 86, 90, 163,
+279 (median 88) — "on the order of 10^2" holds, but a T = 0.20 count cannot be
+quoted until the sweep is fixed.
+
+**Fix options (author decision):**
+
+1. Make `load_pipeline` honour `SPLIT["train_fraction"]` when the caller has set
+   it, then re-run the sweep. Changes Figure 10 and the subsection's numbers.
+2. Add an explicit `train_fraction=` argument to `load_pipeline` and have
+   `training_sweep.py` pass T. Cleaner, same re-run cost.
+3. Withdraw the training-fraction claim and rescope the subsection to what was
+   actually measured (onset-anchor sensitivity at a fixed 0.50 training split).
+
+Option 2 is the smallest correct change; option 3 is the only one that needs no
+re-run.
