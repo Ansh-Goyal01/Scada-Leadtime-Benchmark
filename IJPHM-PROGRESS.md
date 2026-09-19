@@ -2547,43 +2547,71 @@ but did not tip a page.
 
 ---
 
-## Additions pass (2026-09-19) — RG-5, equivalence table, figures, abbreviations
+## Additions pass (2026-09-19) - RG-5, equivalence table, figures, abbreviations
 
 | Item | Status | Commit |
 |---|---|---|
-| RG-5 deep-model architecture table (Appendix A, tab:deeparch) | DONE | 1f42a47 |
-| Equivalence table, 33/33 cells (Sec. 6, tab:equiv) | DONE | 1f42a47 |
-| Figures RD-11..RD-14 (mojibake, in-plot title, doubled paren) | DONE | 97101a2 |
-| Abbreviations RD-7 / RD-8 / RF-7 | DONE | 1f42a47 |
+| RG-5 deep-model architecture table (Appendix A, `tab:deeparch`) | DONE | `1f42a47` |
+| Equivalence table, 33/33 cells (Sec. 6, `tab:equiv`) | DONE | `1f42a47` |
+| Figures RD-11..RD-14 (mojibake, in-plot title, doubled paren) | DONE | `97101a2` |
+| Abbreviations RD-7 / RD-8 / RF-7 | DONE | `1f42a47` |
 
-### BLOCKER: manuscript not compiled since 08f6f65
+**Page count: 25** (was 24 at `08f6f65`). The three new floats and the
+abbreviation expansions cost one page. Sec. 7.1 "What Changed the Story"
+remains the held reserve cut if the incoming prose pushes this further.
 
-A machine Application Control policy began blocking 
-mid-session (exit 126, "An Application Control policy has blocked this file").
-The same policy blocked pymupdf native DLL. Page count is therefore
-UNVERIFIED for every change after 08f6f65 (page target closure, RG-5 table,
-equivalence table, abbreviations). Last confirmed count: 24 pages at 08f6f65.
+### Compile note (resolved)
 
-Three floats and ~1.3 k characters of prose were added after that point, so the
-paper is expected to grow. Re-run the build once the policy is lifted and
-re-check before relying on any page number.
-
-Substituted validation: structural check of braces, environment nesting,
-ref/label integrity, citation keys against ijphm.bib, control characters,
-cp1252 mojibake signatures and math-delimiter parity. All pass. This does NOT
-substitute for a compile.
+A machine Application Control policy blocked `tools/tectonic.exe` and pymupdf's
+native DLL for part of this session (exit 126, "An Application Control policy
+has blocked this file"). It cleared on its own and the manuscript built
+normally. If it recurs: `pypdf` is a working substitute for page counting and
+text extraction, and matplotlib is unaffected, but there is no substitute for
+the compile itself - do not report a page count from a stale PDF, and note that
+tectonic writes no `.log`, so `scada_ijphm.log` is a frozen XeLaTeX artifact.
 
 ### Data-source correction
 
-The equivalence table must be built from 
-(2026-09-17, 11 detectors, 33 equivalent cells), not
- (2026-09-06, 10 detectors, 30 equivalent
-cells). The latter predates N-20 and omits One-Class SVM. R-19 already
-recorded this as "30/30 (33/33 with OC-SVM)".
+The equivalence table must be built from `n20_d15_bootstrap_new_11det.csv`
+(2026-09-17, 11 detectors, 33 equivalent cells), **not**
+`d15_equivalence_bootstrap.csv` (2026-09-06, 10 detectors, 30 equivalent
+cells). The latter predates N-20 and omits One-Class SVM. R-19 already recorded
+this as "30/30 (33/33 with OC-SVM)". The abstract moved 30 -> 33 cells, and the
+IMS clause 8 of 10 -> 9 of 11, to match.
+
+Widest CI endpoint across the 33 cells is 0.560 h, so the 1 h margin is cleared
+with room to spare.
 
 ### Finding: no early stopping exists
 
-RG-5 asked for the early-stopping rule. There is none in the code: no
-patience, best-state or no-improvement logic in ,
- or . Every deep model runs its full epoch
-budget. The table records "none" rather than inventing a rule.
+RG-5 asked for the early-stopping rule. There is none in the code: no patience,
+best-state or no-improvement logic in `src/deep_baselines.py`, `src/models.py`
+or `src/baselines_extra.py`. Every deep model runs its full epoch budget
+(LSTM-AE 50, the rest 40). The table records "none" rather than inventing a
+rule.
+
+Parameter counts were **measured** by instantiating each model factory at
+`n_features = 49`, not copied: LSTM-AE 54,657, TCN-AE 29,681, Transformer-AD
+20,305 (all three matching the author's figures) and Deep SVDD 1,824.
+
+Secondary finding: LSTM-AE's configured `dropout = 0.1` is inert. PyTorch
+applies recurrent dropout only between stacked LSTM layers and the encoder and
+decoder are one layer each, so the setting has no effect. Recorded as a table
+footnote.
+
+### Figures
+
+Root cause was UTF-8 bytes re-read as cp1252, not fonts. The affected display
+labels now use matplotlib mathtext, which removes the encoding dependency.
+`figure1.png` and `fig_sweep.png` regenerate byte-identical, confirming no
+collateral change. All six figures were rendered and inspected.
+
+Two cosmetic issues found while checking, **not** fixed because they were not
+in scope - raise with the author:
+
+1. `fig_sweep` (Fig. 3): the legend sits on top of the Decimate panel's data
+   and hides several lines.
+2. `fig_crossdataset` (Fig. 2) still carries an in-plot title, as do
+   `fig_conformal_panels` and `fig_tradeoff_panels`. The register calls in-plot
+   titles contrary to IJPHM house style, and only Fig. 10's was ordered
+   removed. Decide whether the rest should go too.
