@@ -83,7 +83,11 @@ def fig_leadtime_vs_sampling():
         ax.set_title(mode.capitalize(), fontsize=10, fontweight="bold")
         ax.grid(alpha=0.3, which="both")
     axes[0].set_ylabel("Detection lead time (h)")
-    axes[1].legend(fontsize=6.5, loc="best")
+    # Legend outside the axes: loc="best" landed it on the Decimate panel's data
+    # and hid several detector lines.
+    handles, lbls = axes[0].get_legend_handles_labels()
+    fig.legend(handles, lbls, fontsize=6.5, loc="center left",
+               bbox_to_anchor=(1.005, 0.5), frameon=True, borderaxespad=0.0)
     plt.suptitle("Lead time vs SCADA-rate sampling (IMS, controlled sweep)",
                  fontsize=10.5, fontweight="bold", y=1.02)
     plt.tight_layout()
@@ -161,8 +165,8 @@ def fig_crossdataset():
     ax.set_xticklabels([short[m] for m in methods], fontsize=8)
     ax.set_ylabel("Median run-level lead-time $\\Delta$\n"
                   "(aggregate $-$ decimate), h")
-    ax.set_title("Aggregation vs decimation across datasets (run-level; none significant)",
-                 fontsize=9.5, fontweight="bold")
+    # No in-plot title: the LaTeX caption carries the description, and an in-plot
+    # title can drift out of sync with it (same reason the mintrain title went).
     ax.legend(fontsize=7.5)
     ax.grid(alpha=0.3, axis="y")
     plt.tight_layout()
