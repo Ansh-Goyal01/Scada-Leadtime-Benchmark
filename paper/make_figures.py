@@ -19,11 +19,20 @@ TAB = os.path.join(ROOT, "results", "tables")
 RFIG = os.path.join(ROOT, "results", "figures")
 os.makedirs(FIGS, exist_ok=True)
 
-METHOD_COLORS = {
-    "3σ Rule (σ=3.0)": "#2196F3", "EWMA (λ=0.2, k=3.0)": "#4CAF50",
-    "Hotelling T²": "#FF9800", "Isolation Forest": "#E91E63",
-    "RMS-Trend (kσ)": "#9C27B0",
-}
+# Single source of truth for detector colours: src.config.PLOT["method_colors"],
+# keyed by short_name. This module previously kept its own five-entry table keyed by
+# the long display name, which (a) left the other five detectors to matplotlib's
+# default cycle -- duplicating 3-sigma / Hotelling / EWMA -- and (b) painted
+# RMS-Trend "#9C27B0", which is LSTM-AE's canonical colour. Resolve by short_name.
+from src.config import PLOT as _PLOT
+
+METHOD_COLORS = dict(_PLOT["method_colors"])
+
+
+def _color_for(short_name):
+    """Canonical colour for a detector. Returns None only for a genuinely unknown
+    short_name, which is loud in review rather than silently recycled."""
+    return METHOD_COLORS.get(short_name)
 
 
 def fig_rms_degradation():
@@ -67,17 +76,18 @@ def fig_leadtime_vs_sampling():
     # D-2: IMS is re-baselined onto the 49-dim invariant schema (legacy file kept for the letter).
     long = pd.read_csv(os.path.join(TAB, "benchmark_IMS_long_invariant.csv"))
     # mean across runs per (mode, factor, method)
-    g = (long.groupby(["mode", "factor", "effective_interval_min", "method"])
+    g = (long.groupby(["mode", "factor", "effective_interval_min",
+                       "method", "short_name"])
          ["lead_time_hours"].mean().reset_index())
     modes = ["aggregate", "decimate"]
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.2), sharey=True)
     for ax, mode in zip(axes, modes):
         sub = g[g["mode"] == mode]
-        for m, ms in sub.groupby("method"):
+        for (m, sn), ms in sub.groupby(["method", "short_name"]):
             ms = ms.sort_values("effective_interval_min")
             ax.plot(ms["effective_interval_min"], ms["lead_time_hours"],
                     "o-", markersize=4, linewidth=1.5,
-                    color=METHOD_COLORS.get(m), label=m)
+                    color=_color_for(sn), label=m)
         ax.set_xscale("log")
         ax.set_xlabel("Effective logging interval (min)")
         ax.set_title(mode.capitalize(), fontsize=10, fontweight="bold")
