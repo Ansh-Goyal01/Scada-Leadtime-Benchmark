@@ -2544,3 +2544,46 @@ but did not tip a page.
   pre-Group-B numbering). Work from `\label{}` keys, not printed numbers.
 - **Backslash-apostrophe is LaTeX's acute accent**, not an apostrophe. It compiles silently and
   renders wrong; guard generated prose against it and verify in extracted PDF text.
+
+---
+
+## Additions pass (2026-09-19) — RG-5, equivalence table, figures, abbreviations
+
+| Item | Status | Commit |
+|---|---|---|
+| RG-5 deep-model architecture table (Appendix A, tab:deeparch) | DONE | 1f42a47 |
+| Equivalence table, 33/33 cells (Sec. 6, tab:equiv) | DONE | 1f42a47 |
+| Figures RD-11..RD-14 (mojibake, in-plot title, doubled paren) | DONE | 97101a2 |
+| Abbreviations RD-7 / RD-8 / RF-7 | DONE | 1f42a47 |
+
+### BLOCKER: manuscript not compiled since 08f6f65
+
+A machine Application Control policy began blocking 
+mid-session (exit 126, "An Application Control policy has blocked this file").
+The same policy blocked pymupdf native DLL. Page count is therefore
+UNVERIFIED for every change after 08f6f65 (page target closure, RG-5 table,
+equivalence table, abbreviations). Last confirmed count: 24 pages at 08f6f65.
+
+Three floats and ~1.3 k characters of prose were added after that point, so the
+paper is expected to grow. Re-run the build once the policy is lifted and
+re-check before relying on any page number.
+
+Substituted validation: structural check of braces, environment nesting,
+ref/label integrity, citation keys against ijphm.bib, control characters,
+cp1252 mojibake signatures and math-delimiter parity. All pass. This does NOT
+substitute for a compile.
+
+### Data-source correction
+
+The equivalence table must be built from 
+(2026-09-17, 11 detectors, 33 equivalent cells), not
+ (2026-09-06, 10 detectors, 30 equivalent
+cells). The latter predates N-20 and omits One-Class SVM. R-19 already
+recorded this as "30/30 (33/33 with OC-SVM)".
+
+### Finding: no early stopping exists
+
+RG-5 asked for the early-stopping rule. There is none in the code: no
+patience, best-state or no-improvement logic in ,
+ or . Every deep model runs its full epoch
+budget. The table records "none" rather than inventing a rule.
