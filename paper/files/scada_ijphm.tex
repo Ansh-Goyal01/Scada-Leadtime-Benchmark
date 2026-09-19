@@ -60,7 +60,7 @@
 
 % Abstract
 \begin{abstract}%
-Anomaly detectors for rolling-element-bearing prognostics are typically evaluated by classification accuracy, which answers whether a fault is detected but not how early or at what false-alarm cost. We argue that lead time, the warning interval before failure, is the operationally decisive quantity, and we make it the primary evaluation object through a latch-on-resistant, false-alarm-gated metric. Warning time is credited only when the pre-onset false-alarm rate lies within a stated budget $\tau$, so a degenerate constant-on detector is provably scored invalid. We then ask whether the bin-averaged logging of a SCADA historian destroys detection lead time relative to simple decimation. Eleven detectors (four SPC charts, Isolation Forest, three deep reconstruction autoencoders, an RMS-trend baseline, and two one-class models) are assessed under a controlled sampling sweep across four inferential run-to-failure datasets: XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$). On IMS the variance-sensitive charts show a positive median shift ($3\sigma$ $+15.1$~h), but the direction is not consistent across the three runs and does not survive Holm correction across the $N=44$ family (smallest adjusted $p=1.00$). We state the cross-dataset conclusion as a bounded equivalence rather than an accepted null: against a pre-specified $\pm 1$~h operational margin, the run-level aggregate-minus-decimate difference is equivalent to zero in all 30 dataset $\times$ detector cells on the three multi-bearing campaigns, while on IMS the intervals are too wide at $n=3$ to decide in 8 of 10 cells and favour aggregation beyond the margin in the other 2, and the single-asset gas-turbine record (ONGC, $n=1$) cannot be tested. No cell shows decimation superior beyond the margin; in the five cells whose interval lies wholly below zero, decimation leads by less than the margin, the widest such interval ($3\sigma$ on FEMTO) reaching only $-0.44$~h. The full pipeline, detectors, and result tables are released at \nburl{https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark}.
+Anomaly detectors for rolling-element-bearing prognostics are typically evaluated by classification accuracy, which answers whether a fault is detected but not how early or at what false-alarm cost. We argue that lead time, the warning interval before failure, is the operationally decisive quantity, and we make it the primary evaluation object through a latch-on-resistant, false-alarm-gated metric. Warning time is credited only when the pre-onset false-alarm rate lies within a stated budget $\tau$, so a degenerate constant-on detector is provably scored invalid. We then ask whether the bin-averaged logging of a SCADA historian destroys detection lead time relative to simple decimation. Eleven detectors (four statistical process control (SPC) charts, Isolation Forest, three deep reconstruction autoencoders, an RMS-trend baseline, and two one-class models) are assessed under a controlled sampling sweep across four inferential run-to-failure datasets: XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$). On IMS the variance-sensitive charts show a positive median shift ($3\sigma$ $+15.1$~h), but the direction is not consistent across the three runs and does not survive Holm correction across the $N=44$ family (smallest adjusted $p=1.00$). We state the cross-dataset conclusion as a bounded equivalence rather than an accepted null: against a pre-specified $\pm 1$~h operational margin, the run-level aggregate-minus-decimate difference is equivalent to zero in all 33 dataset $\times$ detector cells on the three multi-bearing campaigns, while on IMS the intervals are too wide at $n=3$ to decide in 9 of 11 cells and favour aggregation beyond the margin in the other 2, and the single-asset gas-turbine record of the Oil and Natural Gas Corporation (ONGC, $n=1$) cannot be tested. No cell shows decimation superior beyond the margin; in the five cells whose interval lies wholly below zero, decimation leads by less than the margin, the widest such interval ($3\sigma$ on FEMTO) reaching only $-0.44$~h. The full pipeline, detectors, and result tables are released at \nburl{https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark}.
 \end{abstract}
 
 \medskip
@@ -72,9 +72,9 @@ Anomaly detectors for rolling-element-bearing prognostics are typically evaluate
 \label{sec:intro}
 Condition-based maintenance (CBM) and prognostics and health management (PHM) promise to replace fixed-interval servicing with data-driven intervention, reducing both unplanned downtime and unnecessary maintenance \cite{jardine2006review,lee2014prognostics,lei2018machinery}. Rolling-element bearings are the most common failure mode in rotating machinery, and a large literature applies statistical control charts, classical machine learning, and deep models to detect incipient bearing faults from vibration \cite{randall2011rolling,zhao2019deep}. The economic case is well established: a warning delivered hours or days before a catastrophic seizure lets an operator schedule an orderly shutdown, order parts, and avoid secondary damage to shafts, housings, and couplings.
 
-Despite this, most published detectors are evaluated with classification metrics---accuracy, precision/recall, ROC--AUC. These answer ``was the failure detected?'' but not the question a maintenance planner actually asks: ``how many hours of warning did we get, and how often did the system cry wolf?'' A detector that warns 48~h ahead at a low nuisance-alarm rate is operationally distinct from one that fires minutes before breakdown or one that alarms every day. The prognostics community has long advocated time-aware metrics \cite{saxena2008metrics,saxena2010metrics,goebel2011comparison}, yet lead time is rarely the headline quantity in detector benchmarks, and ad hoc lead-time definitions are easy to game. In particular, any lead-time metric that does not pair warning time with a false-alarm constraint can be trivially maximized by a detector that simply alarms from the first sample---a ``latch-on'' exploit that earns the full run length as lead time while being operationally useless.
+Despite this, most published detectors are evaluated with classification metrics---accuracy, precision/recall, and receiver operating characteristic area under the curve (ROC--AUC). These answer ``was the failure detected?'' but not the question a maintenance planner actually asks: ``how many hours of warning did we get, and how often did the system cry wolf?'' A detector that warns 48~h ahead at a low nuisance-alarm rate is operationally distinct from one that fires minutes before breakdown or one that alarms every day. The prognostics community has long advocated time-aware metrics \cite{saxena2008metrics,saxena2010metrics,goebel2011comparison}, yet lead time is rarely the headline quantity in detector benchmarks, and ad hoc lead-time definitions are easy to game. In particular, any lead-time metric that does not pair warning time with a false-alarm constraint can be trivially maximized by a detector that simply alarms from the first sample---a ``latch-on'' exploit that earns the full run length as lead time while being operationally useless.
 
-A second, eminently practical question motivates this study. Industrial SCADA historians rarely store raw high-rate vibration; they store decimated or time-averaged summaries at a coarse logging interval \cite{tautzweinert2017using}---seconds to minutes, rather than the tens of kilohertz at which accelerometers are sampled. The folklore concern is that averaging destroys the kurtosis and crest-factor transients that signal an incipient spall: if true, the very act of long-term storage would blind any prognostic algorithm that consumes the historian. Whether this is actually true is an empirical question that, to our knowledge, has not been tested with a sound lead-time metric across multiple datasets. The answer matters: if averaging is harmless, operators can store compact, cheap, bin-averaged streams without sacrificing warning time; if it is harmful, the implication is that prognostics-grade monitoring requires separate high-rate acquisition.
+A second, eminently practical question motivates this study. Industrial Supervisory Control and Data Acquisition (SCADA) historians rarely store raw high-rate vibration; they store decimated or time-averaged summaries at a coarse logging interval \cite{tautzweinert2017using}---seconds to minutes, rather than the tens of kilohertz at which accelerometers are sampled. The folklore concern is that averaging destroys the kurtosis and crest-factor transients that signal an incipient spall: if true, the very act of long-term storage would blind any prognostic algorithm that consumes the historian. Whether this is actually true is an empirical question that, to our knowledge, has not been tested with a sound lead-time metric across multiple datasets. The answer matters: if averaging is harmless, operators can store compact, cheap, bin-averaged streams without sacrificing warning time; if it is harmful, the implication is that prognostics-grade monitoring requires separate high-rate acquisition.
 
 This paper makes both questions precise and answers them. We state the arc explicitly:
 
@@ -82,9 +82,9 @@ This paper makes both questions precise and answers them. We state the arc expli
 
 \textbf{Solution.} We make lead time gated by a leakage-free false-alarm rate the primary metric---warning time counts only when the pre-onset false-alarm rate is within budget---so that the degenerate latch-on detector is provably scored invalid rather than winning.
 
-\textbf{Method.} Under this metric we run a controlled sampling sweep that holds window content and alarm persistence constant, applied to nine detectors (four SPC charts, Isolation Forest, three deep reconstruction autoencoders, and an RMS-trend baseline; Deep SVDD additionally evaluated) across four inferential run-to-failure datasets---XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$), plus a real single-asset ONGC gas-turbine SCADA record analyzed as a case study (Appendix~D.2)---with run-level significance tests (the run, not the within-run sampling factor, is the unit of inference) and Holm correction.
+\textbf{Method.} Under this metric we run a controlled sampling sweep that holds window content and alarm persistence constant, applied to nine detectors (four SPC charts, Isolation Forest, three deep reconstruction autoencoders, and an RMS-trend baseline; Deep SVDD, a deep support vector data description model, additionally evaluated) across four inferential run-to-failure datasets---XJTU-SY ($n=10$), FEMTO/PRONOSTIA ($n=6$), University of Ferrara ($n=6$), and NASA IMS ($n=3$), plus a real single-asset ONGC gas-turbine SCADA record analyzed as a case study (Appendix~D.2)---with run-level significance tests (the run, not the within-run sampling factor, is the unit of inference) and Holm correction.
 
-\textbf{Finding.} The folklore is refuted on every dataset tested: historian-style aggregation does not destroy lead time. On the large multi-bearing sets (XJTU-SY, FEMTO, Ferrara) the difference is negligible; on IMS the median shift is positive for most magnitude detectors but not consistent in direction across the three runs (not significant at $n=3$); the single-asset turbine record agrees (case study, Appendix~D.2). The defensible cross-dataset conclusion is bounded non-destruction: no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin; the five cells whose interval lies wholly below zero (Isolation Forest on XJTU-SY; $3\sigma$, LSTM-AE, RMS-trend and Transformer-AD on FEMTO) favour decimation by less than that margin (Section~\ref{sec:femto}).
+\textbf{Finding.} The folklore is refuted on every dataset tested: historian-style aggregation does not destroy lead time. On the large multi-bearing sets (XJTU-SY, FEMTO, Ferrara) the difference is negligible; on IMS the median shift is positive for most magnitude detectors but not consistent in direction across the three runs (not significant at $n=3$); the single-asset turbine record agrees (case study, Appendix~D.2). The defensible cross-dataset conclusion is bounded non-destruction: no dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin; the five cells whose interval lies wholly below zero (Isolation Forest on XJTU-SY; $3\sigma$, the long short-term memory autoencoder (LSTM-AE), RMS-trend and Transformer-AD on FEMTO) favour decimation by less than that margin (Section~\ref{sec:femto}).
 
 \textbf{Contributions.} We make five contributions.
 
@@ -115,7 +115,7 @@ Univariate and multivariate statistical-process-control charts---the $3\sigma$ r
 Conformal prediction \cite{vovk2005algorithmic,laxhammar2014online} provides a distribution-free guarantee that the false-alarm rate is bounded by a target $\alpha$ under exchangeability. This is attractive for prognostics because it converts a detector's raw score into an alarm with an interpretable, finite-sample false-alarm guarantee. We wire conformal calibration into the lead-time pipeline and, rather than assuming the guarantee, test it empirically across runs---including a run where exchangeability provably fails because the ``normal'' region already contains degradation.
 
 \subsection{Vibration Features}
-Bearing-defect frequencies, spectral kurtosis \cite{antoni2006spectral}, and envelope (demodulation) analysis \cite{randall2011rolling} are the classical frequency-domain tools for bearing diagnostics. We include FFT band energies, spectral kurtosis, and Hilbert-envelope amplitudes at the bearing characteristic frequencies, and we ablate them against pure time-domain statistics to see which family actually carries prognostic lead time under our gated metric.
+Bearing-defect frequencies, spectral kurtosis \cite{antoni2006spectral}, and envelope (demodulation) analysis \cite{randall2011rolling} are the classical frequency-domain tools for bearing diagnostics. We include fast Fourier transform (FFT) band energies, spectral kurtosis, and Hilbert-envelope amplitudes at the bearing characteristic frequencies, and we ablate them against pure time-domain statistics to see which family actually carries prognostic lead time under our gated metric.
 
 \subsection{SCADA-Based Condition Monitoring}
 \citeA{tautzweinert2017using} review SCADA-data condition monitoring and note explicitly that historian aggregation is a recognized but under-quantified concern: practitioners suspect that coarse averaging hurts fault detection, but the magnitude of the effect has not been measured with a principled warning-time metric. The present paper addresses exactly this gap, and reaches the perhaps surprising conclusion that, for bearing faults, the concern is not borne out.
@@ -161,7 +161,7 @@ XJTU-SY ($n=10$) is our primary inferential dataset; IMS ($n=3$) is retained for
 For each run we observe a sequence of snapshots indexed by time $t$. A feature extractor maps each snapshot (and a short trailing window) to a vector $x_t \in \mathbb{R}^d$. A detector assigns a score $s_t$ and, via a threshold and a persistence filter, an alarm indicator $a_t \in \{0,1\}$. Each run has a failure time $t_f$ and is split at a train boundary $t_b$; all scaling and threshold statistics are fit on $\{t \le t_b\}$ only. The two quantities we care about are the lead time (how long before $t_f$ the first sustained alarm fires) and the pre-onset false-alarm rate (how often the detector alarms while the machine is still healthy). The remainder of this section makes each ingredient precise.
 
 \subsection{Channel-Invariant Feature Schema}
-Each snapshot yields per-channel time-domain statistics---RMS, kurtosis, skewness, peak-to-peak, crest factor, and variance---and, for raw-waveform datasets, frequency-domain features: FFT band energies, spectral kurtosis \cite{antoni2006spectral}, and Hilbert-envelope amplitudes at the bearing characteristic frequencies (BPFO, BPFI, BSF, FTF), computed from the dataset geometry.
+Each snapshot yields per-channel time-domain statistics---RMS, kurtosis, skewness, peak-to-peak, crest factor, and variance---and, for raw-waveform datasets, frequency-domain features: FFT band energies, spectral kurtosis \cite{antoni2006spectral}, and Hilbert-envelope amplitudes at the bearing characteristic frequencies---ball pass frequency outer race (BPFO), ball pass frequency inner race (BPFI), ball spin frequency (BSF) and fundamental train frequency (FTF)---computed from the dataset geometry.
 
 A naive feature scheme that concatenates per-channel statistics and all cross-channel pairs is channel-count dependent and ill-posed: it produces 445 features for a 4-channel run and 1465 for an 8-channel run, against only ${\sim}100$ training snapshots, i.e.\ $p \gg n$. Such a space overfits, is not comparable across runs with different channel counts, and silently inflates the apparent dimensionality. We therefore aggregate each statistic family across physical channels (taking the mean and the max over channels) and summarize each aggregated series over a rolling window with four descriptors (mean, standard deviation, max, and linear-trend slope), plus one cross-channel RMS-coherence feature. This yields a fixed 49-dimensional space that is identical across 4- and 8-channel assets and directly comparable across datasets. A train-fit variance top-$k$ selection ($k \le 50$) then guarantees $p < n$. All scaling is fit on the training split only, so no test-region statistic leaks into the features.
 
@@ -226,8 +226,8 @@ The headline set comprises nine detectors, evaluated under one fixed hyperparame
 \item \emph{RMS-trend} (naive baseline): alarm when the mean-RMS exceeds $k\sigma$ above its training baseline. Included to verify that the metric penalizes a weak detector.
 \item \emph{$3\sigma$ rule:} alarm when the $\ell_2$-norm health index exceeds three training standard deviations.
 \item \emph{EWMA} \cite{roberts1959control}: an exponentially weighted moving-average control chart ($\lambda=0.2$, $k=3.0$), sensitive to small sustained shifts.
-\item \emph{CUSUM} \cite{page1954continuous}: a two-sided tabular cumulative-sum control chart ($k=0.5$, $h=5.0$) on the monitored magnitude---the classic change-point chart, most sensitive to a small sustained mean shift such as slow degradation onset. Deterministic.
-\item \emph{Hotelling $T^2$} \cite{hotelling1947multivariate}: computed in a PCA-reduced subspace (rank $\ll n$) so the covariance is well-conditioned.
+\item \emph{CUSUM} \cite{page1954continuous}: a two-sided tabular cumulative sum (CUSUM) control chart ($k=0.5$, $h=5.0$) on the monitored magnitude---the classic change-point chart, most sensitive to a small sustained mean shift such as slow degradation onset. Deterministic.
+\item \emph{Hotelling $T^2$} \cite{hotelling1947multivariate}: computed in a principal component analysis (PCA)-reduced subspace (rank $\ll n$) so the covariance is well-conditioned.
 \item \emph{Isolation Forest} \cite{liu2008isolation}: an unsupervised ensemble that isolates anomalies with few random splits.
 \item \emph{Deep reconstruction baselines:} an LSTM autoencoder \cite{malhotra2016lstm}, a Temporal Convolutional Network autoencoder (dilated causal convolutions), and a lightweight reconstruction Transformer \cite{vaswani2017attention}. Each is trained on normal feature-window sequences only and scores a window by its reconstruction error.
 \end{itemize}
@@ -412,6 +412,31 @@ Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~
 	\end{center}
 \end{table}
 
+\begin{table*}[t] \small
+	\begin{center}
+	\caption{Equivalence of the run-level aggregate$-$decimate lead-time difference against a pre-specified margin $\delta = 1$~h, on the three multi-bearing inferential campaigns for all eleven evaluated detectors. Each cell gives the run-level mean difference (h) and its 95\% bootstrap confidence interval over runs; a cell is equivalent when the whole interval lies inside $[-\delta, +\delta]$. \textbf{All 33 of 33 cells are equivalent}, and no interval endpoint reaches $\pm 0.6$~h, so the margin is cleared with an order of magnitude to spare. Deep sequence models are evaluated on the bearings long enough to form a length-30 sequence ($n=3$ on XJTU-SY). IMS is equivalent in no cell at $n=3$, its intervals being too wide to decide, and ONGC is untestable at $n=1$; neither enters this family.}
+	\label{tab:equiv}
+	\begin{tabular}{l r l r l r l}
+		\hline \hline
+		 & \multicolumn{2}{c}{\textbf{XJTU-SY} ($n=10$)} & \multicolumn{2}{c}{\textbf{FEMTO} ($n=6$)} & \multicolumn{2}{c}{\textbf{Ferrara} ($n=6$)} \\
+		\textbf{Detector} & \textbf{Mean $\Delta$} & \textbf{95\% CI} & \textbf{Mean $\Delta$} & \textbf{95\% CI} & \textbf{Mean $\Delta$} & \textbf{95\% CI} \\
+		\hline
+		$3\sigma$ & $+0.030$ & [$+0.000$, $+0.065$] & $-0.213$ & [$-0.449$, $-0.041$] & $-0.122$ & [$-0.432$, $+0.080$] \\
+		EWMA & $-0.002$ & [$-0.012$, $+0.005$] & $+0.078$ & [$-0.005$, $+0.163$] & $-0.167$ & [$-0.560$, $+0.046$] \\
+		CUSUM & $+0.000$ & [$-0.012$, $+0.013$] & $+0.098$ & [$-0.005$, $+0.207$] & $+0.024$ & [$-0.001$, $+0.053$] \\
+		Hotelling $T^2$ & $+0.088$ & [$+0.000$, $+0.260$] & $-0.019$ & [$-0.321$, $+0.194$] & $-0.078$ & [$-0.351$, $+0.090$] \\
+		Iso.\ Forest & $-0.100$ & [$-0.162$, $-0.041$] & $-0.180$ & [$-0.505$, $+0.025$] & $-0.162$ & [$-0.495$, $+0.049$] \\
+		One-Class SVM & $+0.006$ & [$+0.000$, $+0.019$] & $-0.053$ & [$-0.259$, $+0.075$] & $-0.009$ & [$-0.058$, $+0.023$] \\
+		Deep SVDD & $+0.015$ & [$-0.038$, $+0.065$] & $-0.015$ & [$-0.040$, $+0.002$] & $-0.007$ & [$-0.016$, $+0.000$] \\
+		LSTM-AE & $+0.056$ & [$+0.000$, $+0.167$] & $-0.061$ & [$-0.113$, $-0.013$] & $-0.073$ & [$-0.255$, $+0.039$] \\
+		TCN-AE & $+0.000$ & [$+0.000$, $+0.000$] & $-0.009$ & [$-0.040$, $+0.014$] & $-0.089$ & [$-0.292$, $+0.023$] \\
+		Transformer-AD & $+0.000$ & [$+0.000$, $+0.000$] & $-0.077$ & [$-0.153$, $-0.018$] & $-0.082$ & [$-0.353$, $+0.091$] \\
+		RMS-trend & $-0.015$ & [$-0.055$, $+0.015$] & $-0.123$ & [$-0.327$, $-0.004$] & $+0.005$ & [$-0.015$, $+0.023$] \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table*}
+
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_crossdataset}
@@ -420,7 +445,7 @@ Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~
 \end{figure*}
 
 \subsection{Generalization to FEMTO/PRONOSTIA ($n=6$ bearings)}\label{sec:femto}
-The six FEMTO Learning\_set bearings provide a second, fully independent multi-bearing test, and---unlike XJTU, where most bearings are too short to form a length-30 sequence---all six are long enough that every detector, including the four deep reconstruction models, runs on the full $n=6$. Table~\ref{tab:crossds} (FEMTO rows) shows the same verdict as XJTU: at the run level the median aggregate$-$decimate difference is within $\pm9$~min for every detector, only LSTM-AE and Transformer-AD are sign-consistent, both negative (0/3 and 0/4 non-zero runs), and the smallest sign-test $p$ is 0.125 (Transformer-AD, raw)---which does not survive the Holm correction across the family (Table~\ref{tab:holm}). Decimation leads aggregation in several FEMTO cells, but never by more than the $\pm 1$~h operational margin: the run-level 95\% bootstrap interval lies wholly below zero for $3\sigma$ (mean $-0.21$~h, $[-0.44,-0.04]$), LSTM-AE, RMS-trend and Transformer-AD, and every FEMTO interval lies inside $\pm 1$~h. These cells bound rather than overturn that conclusion: the direction of any residual aggregate-vs-decimate effect is dataset-specific noise, while the robust, replicated conclusion is non-destruction. Across all eleven evaluated detectors (every one runs on the full $n=6$), 211/660 evaluations yield a valid alarm; as on XJTU, the short-lived bearings (${\sim}1.4$--7.8~h) keep absolute lead times small.
+The six FEMTO Learning\_set bearings provide a second, fully independent multi-bearing test, and---unlike XJTU, where most bearings are too short to form a length-30 sequence---all six are long enough that every detector, including the four deep reconstruction models, runs on the full $n=6$. Table~\ref{tab:crossds} (FEMTO rows) shows the same verdict as XJTU: at the run level the median aggregate$-$decimate difference is within $\pm9$~min for every detector, only LSTM-AE and Transformer-AD are sign-consistent, both negative (0/3 and 0/4 non-zero runs), and the smallest sign-test $p$ is 0.125 (Transformer-AD, raw)---which does not survive the Holm correction across the family (Table~\ref{tab:holm}). Decimation leads aggregation in several FEMTO cells, but never by more than the $\pm 1$~h operational margin: the run-level 95\% bootstrap interval lies wholly below zero for $3\sigma$ (mean $-0.21$~h, $[-0.44,-0.04]$), LSTM-AE, RMS-trend and Transformer-AD, and every FEMTO interval lies inside $\pm 1$~h. Table~\ref{tab:equiv} reports the full equivalence family: all 33 of the 33 dataset $\times$ detector cells on XJTU-SY, FEMTO and Ferrara are equivalent at $\delta = 1$~h, with no interval endpoint reaching $\pm 0.6$~h. These cells bound rather than overturn that conclusion: the direction of any residual aggregate-vs-decimate effect is dataset-specific noise, while the robust, replicated conclusion is non-destruction. Across all eleven evaluated detectors (every one runs on the full $n=6$), 211/660 evaluations yield a valid alarm; as on XJTU, the short-lived bearings (${\sim}1.4$--7.8~h) keep absolute lead times small.
 
 
 \subsection{Generalization to University of Ferrara ($n=6$ bearings)}
@@ -768,7 +793,7 @@ All code---detectors, the leakage-free onset, the gated metric, the sampling swe
 
 \FloatBarrier
 \section*{Appendix A: Reproducibility Settings}
-Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, taken verbatim from the released config.py. A single protocol is applied to every detector, dataset, run, and sampling factor---no per-condition tuning. Table~\ref{tab:compute} reports the wall-clock training and per-window inference cost of each detector on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step; inference is negligible for every detector---at most ${\sim}0.5$~ms per window (LSTM-AE), more than four orders of magnitude below the fastest historian polling interval in our study (10~s). Streaming condition monitoring at native SCADA rates is therefore not compute-bound for any of the eleven evaluated detectors.
+Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, taken verbatim from the released config.py. Table~\ref{tab:deeparch} gives the architectures and training protocol of the four deep models, transcribed from the same source, with trainable parameter counts measured at the 49-dimensional invariant feature width. A single protocol is applied to every detector, dataset, run, and sampling factor---no per-condition tuning. Table~\ref{tab:compute} reports the wall-clock training and per-window inference cost of each detector on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step; inference is negligible for every detector---at most ${\sim}0.5$~ms per window (LSTM-AE), more than four orders of magnitude below the fastest historian polling interval in our study (10~s). Streaming condition monitoring at native SCADA rates is therefore not compute-bound for any of the eleven evaluated detectors.
 
 \begin{table}[t] \small
 	\begin{center}
@@ -826,6 +851,46 @@ Table~\ref{tab:hyperparams} lists the fixed hyperparameters used throughout, tak
 	\end{tabular}
 	\end{center}
 \end{table}
+
+\begin{table*}[t] \small
+	\begin{center}
+	\caption{Deep-model architectures and training protocol, transcribed from the released
+	\texttt{config.py} and model definitions. All four are trained with Adam at a fixed learning
+	rate with no per-dataset tuning and no early stopping: every model runs its full epoch budget.
+	Parameter counts are measured at the $49$-dimensional invariant feature width (Appendix~B).
+	Deep SVDD scores individual windows and so takes no sequence length.}
+	\label{tab:deeparch}
+	\begin{tabular}{l l l l l}
+		\hline \hline
+		 & \textbf{LSTM-AE} & \textbf{TCN-AE} & \textbf{Transformer-AD} & \textbf{Deep SVDD} \\
+		\hline
+		Structure & 1-layer LSTM encoder & 4 temporal blocks, & 2 encoder layers, & 2 linear layers, \\
+		 & + linear to latent; & 2 dilated causal & linear input projection & bias-free, \\
+		 & 1-layer LSTM decoder & convolutions each, & and reconstruction head & ReLU between \\
+		 & + linear to output & residual, $1{\times}1$ head & & \\
+		Hidden width & 64 & 32 channels & $d_{\text{model}}=32$; FFN 64 & 32 \\
+		Latent width & 16 & --- & --- & 8 \\
+		Kernel / dilations & --- & $k=3$; $1,2,4,8$ & --- & --- \\
+		Attention heads & --- & --- & 2 & --- \\
+		Sequence length & 30 windows & 30 windows & 30 windows & n/a (per-window) \\
+		\hline
+		Optimiser & Adam & Adam & Adam & Adam \\
+		Learning rate & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ \\
+		Batch size & 32 & 32 & 32 & 32 \\
+		Epochs & 50 & 40 & 40 & 40 \\
+		Dropout & 0.1$^{\dagger}$ & 0.1 & 0.1 & --- \\
+		Early stopping & none & none & none & none \\
+		Loss & MSE reconstruction & MSE reconstruction & MSE reconstruction & mean squared distance \\
+		 & & & & to the fixed center \\
+		Seed & 42 & 42 & 42 & 42 \\
+		\hline
+		Trainable parameters & 54{,}657 & 29{,}681 & 20{,}305 & 1{,}824 \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+	{\footnotesize $^{\dagger}$PyTorch applies recurrent dropout only between stacked LSTM layers,
+	so at one layer the configured 0.1 has no effect on LSTM-AE.}
+\end{table*}
 
 \FloatBarrier
 \section*{Appendix B: The 49-Dimensional Invariant Feature Space}
