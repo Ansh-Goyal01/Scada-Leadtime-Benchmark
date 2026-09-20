@@ -60,7 +60,7 @@ def fig_rms_degradation():
     ax.axvline(t_fail, color="#B71C1C", linestyle="-", linewidth=1.8, label="failure")
     ax.set_xlabel("Time")
     ax.set_ylabel("Health indicator $h(t)$ (mean RMS)")
-    ax.set_title("IMS Bearing 2nd_test — degradation trajectory", fontsize=10, fontweight="bold")
+    # No in-plot title (D13/D16): the LaTeX caption carries it - IJPHM house style.
     ax.legend(fontsize=7, loc="upper left")
     ax.grid(alpha=0.3)
     fig.autofmt_xdate()
@@ -98,8 +98,8 @@ def fig_leadtime_vs_sampling():
     handles, lbls = axes[0].get_legend_handles_labels()
     fig.legend(handles, lbls, fontsize=6.5, loc="center left",
                bbox_to_anchor=(1.005, 0.5), frameon=True, borderaxespad=0.0)
-    plt.suptitle("Lead time vs SCADA-rate sampling (IMS, controlled sweep)",
-                 fontsize=10.5, fontweight="bold", y=1.02)
+    # No in-plot suptitle (D13/D16): the caption carries it. Panel titles
+    # ("Aggregate"/"Decimate") stay - they label the panels, not the figure.
     plt.tight_layout()
     out = os.path.join(FIGS, "fig_leadtime_vs_sampling.png")
     fig.savefig(out, dpi=200, bbox_inches="tight")
@@ -227,7 +227,9 @@ def fig_training_sweep():
     if not spc.empty:
         base = float(spc["valid_frac"].mean())
         ax.axhline(base, color="#1565C0", linestyle="--", linewidth=1.0, alpha=0.6)
-        ax.text(0.205, base + 0.02, "SPC baseline $\\approx$ %.2f" % base,
+        # Below the dashed baseline: at base+0.02 the label sat on the EWMA line
+        # (0.667). The 0.50-0.62 band is clear at T=0.20 (D16).
+        ax.text(0.205, base - 0.062, "SPC baseline $\\approx$ %.2f" % base,
                 fontsize=7, color="#1565C0")
     ax.text(0.50, 0.06, "no crossover: deep models never reach the SPC baseline",
             fontsize=7.5, style="italic", ha="center", color="#555555")
