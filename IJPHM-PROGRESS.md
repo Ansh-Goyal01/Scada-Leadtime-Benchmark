@@ -2788,3 +2788,43 @@ sign-off; not fixed here.
 
 Figure 10 has been regenerated into `paper/figs/` (gitignored) for inspection but
 **not** installed into `paper/files/`, since manuscript edits are on hold.
+
+---
+
+## 5Q. Sessions 7-9 — 2026-09-20 — N-23, colour collisions, §6.13, prose blocks, ONGC release, PUBLISH
+
+**Published:** `main` fast-forwarded to `1e638df` and pushed; tag **`v1.1.0`** pushed.
+Verified from a clean clone of the public repo (not the working tree): 143 result CSVs
+present, all 11 ONGC paths cited in Data Availability resolve, and
+`tests/test_ongc_release.py` passes 5/5 against the clone with `src` resolved from the
+clone. No `data/raw`, zero ONGC parquets in the public tree.
+
+### New defects found this batch
+
+| ID | Defect | Severity | Status |
+|----|--------|----------|--------|
+| **N-24** | `lead_time.evaluate_all_methods` still silently DROPS a `ShortRunError` cell for callers other than `training_sweep` (`record_short_run_na` defaults False). `benchmark.run_benchmark` reconciles its own N/A rows, so the main tables are unaffected, but `tradeoff`/`robustness`/`ablation`/`feature_coarsening_ablation` would gain honest N/A rows on coarsened runs if the default flipped. Deliberately left off to keep published artifacts byte-identical. | Medium | ⬜ |
+| **N-25** | Eleven detector colours cannot be made dichromat-safe by hue alone. Under simulated tritanopia EWMA and Conformal-IF converge to dE 0; under protanopia Isolation Forest and TCN-AE reach dE 10.8. Distinguishing all eleven for colour-vision-deficient readers needs a redundant channel (line style or marker), which the plot helpers do not vary. | Medium | ⬜ |
+| **N-26** | `paper/make_figures.py` kept a SECOND colour table, five entries keyed by display name, diverging from `config.PLOT`. It painted RMS-Trend `#9C27B0` (LSTM-AE's colour) and left five detectors to matplotlib's default cycle. In the SUBMITTED Figure 3, EWMA and LSTM-AE were the same green and Hotelling T2 and Deep SVDD the same orange. | High | ✅ FIXED |
+| **N-27** | Long `\texttt{}` filenames in Data Availability overflowed the column and rendered clipped (`ongc_health_indicator.c`). Found by rendering page 20 to an image. | High | ✅ FIXED |
+| **N-28** | `DatetimeIndex.view("int64")` exposes the backing unit (microseconds), not nanoseconds; a hard-coded `/1e9` reported `interval_s = 0.01` for the 10 s ONGC stream. | Medium | ✅ FIXED |
+
+### N-23 resolved
+`evaluate_all_methods` caught `ShortRunError` in a bare `except Exception` that logged and
+dropped the cell, so `training_sweep`'s `na_count` could only ever be 0 and `n_bearings`
+fell to 5. Fixed with `_short_run_na_result()` + opt-in `record_short_run_na`. Sweep
+re-emitted: `na_count` = 3 (Bearing3_1 at T=0.20, 20 windows vs seq_len 30), `n_bearings`
+= 6 everywhere, every other cell byte-identical. TCN-AE's range corrects 0.000-0.200 ->
+0.000-0.167 as the denominator goes 5 -> 6.
+
+### RG-7 / D-5 — ONGC derived artifacts released
+`src/export_ongc_derived.py` -> `results/tables/ongc_health_indicator.csv` (42,698 rows)
+and `ongc_onset_markers.csv`. The exporter refuses to write if the recomputed onset is not
+the published `2023-11-13 03:44:01`, and refuses any frame carrying a channel-level column.
+Withheld: raw waveforms, per-channel `rms_ch*`, asset identifiers. The indicator is one
+baseline-standardized scalar per timestamp aggregated over four channels, so per-channel
+values cannot be recovered and no absolute amplitude is disclosed.
+
+### N-4 resolved
+`.zenodo.json` and `CITATION.cff` both retitled to the submission title and corrected to
+five datasets with Ferrara included; version 1.1.0, released 2026-09-20.
