@@ -17,8 +17,9 @@ to the original length):
                              d_model / few heads / few layers, sized for the tiny
                              (~100-window) normal training sets in this study.
 
-HONEST CAVEAT (stated in the paper): with on the order of 100 normal training
-windows these sequence models are data-starved. We report them for completeness
+HONEST CAVEAT (stated in the paper): across bearings and training fractions the FEMTO
+runs furnish between 20 and 335 normal training windows (median 88 at the default
+split), so these sequence models are data-starved. We report them for completeness
 and modern-baseline coverage, NOT as favored methods, and we do not tune them
 per-dataset — the same fixed-protocol fairness applied to the SPC charts. On
 short runs (XJTU/ONGC), where the number of feature windows is below the
