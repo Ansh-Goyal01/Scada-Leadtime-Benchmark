@@ -51,7 +51,10 @@ def fig_rms_degradation():
     t_fail = pd.Timestamp(pipe["failure_time"])
     onset = onset_for_run(df, train_end=train_end, t_fail=t_fail)
 
-    fig, ax = plt.subplots(figsize=(7, 3.1))
+    # Height 3.1in left the rotated y-label taller than the canvas, so its
+    # closing ")" was cut off even with bbox_inches="tight" (D16 audit). The
+    # axes must be tall enough to hold the label; 3.8in clears it.
+    fig, ax = plt.subplots(figsize=(7, 3.8))
     ax.plot(hi.index, hi.values, color="#1565C0", linewidth=1.0, label="mean RMS")
     ax.axvspan(hi.index[0], train_end, alpha=0.08, color="green")
     ax.axvline(train_end, color="green", linestyle=":", linewidth=1.2, label="train boundary")
@@ -227,17 +230,21 @@ def fig_training_sweep():
     if not spc.empty:
         base = float(spc["valid_frac"].mean())
         ax.axhline(base, color="#1565C0", linestyle="--", linewidth=1.0, alpha=0.6)
-        # Below the dashed baseline: at base+0.02 the label sat on the EWMA line
-        # (0.667). The 0.50-0.62 band is clear at T=0.20 (D16).
-        ax.text(0.205, base - 0.062, "SPC baseline $\\approx$ %.2f" % base,
+        # Below the baseline the descending Hot. T^2 line crossed this label
+        # (final D16 pass). Above it, at T in [0.205,0.27], every series is
+        # either <=0.667 (EWMA, IsoForest) or >=0.87 (3sigma), so 0.74 is clear.
+        ax.text(0.205, 0.74, "SPC baseline $\\approx$ %.2f" % base,
                 fontsize=7, color="#1565C0")
-    ax.text(0.50, 0.06, "no crossover: deep models never reach the SPC baseline",
+    # D16 audit: at y=0.06 this sat in the densest part of the plot and four
+    # series crossed it. For T>=0.42 no detector exceeds 0.667, and the legend
+    # is lifted into headroom above 0.98, so y=0.82 is provably clear.
+    ax.text(0.50, 0.82, "no crossover: deep models never reach the SPC baseline",
             fontsize=7.5, style="italic", ha="center", color="#555555")
 
     ax.set_xlabel("Training fraction $T$")
     ax.set_ylabel("Valid-alarm fraction ($n{=}6$ bearings)")
     ax.set_xlim(0.18, 0.62)
-    ax.set_ylim(-0.02, 1.0)
+    ax.set_ylim(-0.02, 1.18)   # headroom so the legend clears the annotation
     ax.set_xticks([0.2, 0.3, 0.4, 0.5, 0.6])
     # No in-plot title (RD-11..RD-14): the old title asserted the deep models
     # "match SPC charts", which the LaTeX caption correctly denies — there is no

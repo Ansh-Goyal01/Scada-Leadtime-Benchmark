@@ -27,6 +27,16 @@ results/figures/
 results/tables/*
 !results/tables/*.csv
 !results/tables/*.log
+# MANIFEST.md maps every manuscript float to the file that backs it; the paper's
+# Data Availability statement now cites it by name, so it must be tracked.
+!results/tables/*.md
+# Superseded arms are kept for provenance, with a README saying why each was
+# retired. Same "dir/* + re-include" form: a bare directory name stops git
+# descending, so negations inside it would never match.
+!results/tables/superseded/
+results/tables/superseded/*
+!results/tables/superseded/*.csv
+!results/tables/superseded/*.md
 
 # ── Trained model weights ────────────────────────────────────────────────────
 *.pt
@@ -51,6 +61,10 @@ tools/
 # Note the paper/* + re-include form: a bare "paper/" stops git descending, so
 # negations inside it would never match.
 paper/*
+# Generators and verifiers are part of the reproducible pipeline: verify_tables.py
+# is cited in the Data Availability statement as what makes "no number is
+# hand-edited" checkable, so it cannot live only in a working tree.
+!paper/*.py
 !paper/files/
 paper/files/*
 !paper/files/*.tex
