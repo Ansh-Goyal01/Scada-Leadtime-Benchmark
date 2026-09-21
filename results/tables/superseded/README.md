@@ -27,4 +27,23 @@ Two revisions produced the split:
 | `n20_d15_bootstrap_new.csv` | Post-N-20 but ten detectors only, before the one-class SVM joined the family. Table 6 needs all eleven, so it uses the `_11det` file. |
 | `n20_d15_tost_new.csv` | Same ten-detector limitation; superseded by `n20_d15_tost_new_11det.csv`. |
 
+| `d3_ocsvm_holm_N44_invariant.csv` | **Pre-N-20.** The D3 build of the N=44 sign-test family; its FEMTO and Ferrara rows predate the N-20 fix. Gives 0.031 for Isolation Forest on FEMTO, the value Reviewer D flagged; the post-fix family gives 0.688. Table 8 uses `n20_raw_contrast_old_vs_new.csv` (`arm=new`). |
+| `d3_ocsvm_holm_N44_legacy.csv` | Same file on the pre-D-2 445-dim arm: stale on both axes. |
+| `femto_runlevel_test.csv` | Pre-N-20 FEMTO run-level sign test; replaced by `femto_runlevel_test_n20.csv`. |
+| `ferrara_runlevel_test.csv` | Pre-N-20 Ferrara run-level sign test; replaced by `ferrara_runlevel_test_n20.csv`. |
+| `benchmark_ONGC_paired_test.csv` | Pre-N-20 ONGC paired test; replaced by `benchmark_ONGC_paired_test_n20.csv`. |
+| `rf2_crosscheck_raw_vs_published.csv` | Pre-N-20 RF-2 cross-check; replaced by `rf2_crosscheck_raw_vs_published_n20.csv`. |
+| `rf2_gated_contrast.csv` | Pre-N-20 gated contrast; Table 10 uses `rf2_gated_contrast_n20.csv`. |
+| `rf2_valid_fraction_agg_vs_dec.csv` | Pre-N-20 validity table; replaced by the `_n20` file. |
+| `rf2_valid_fraction_paired.csv` | Pre-N-20 paired validity table; replaced by the `_n20` file. |
+| `paired_tests_holm.csv` | Pre-N-20 *and* pre-D-2 forty-test Holm family, superseded by the N=44 family. |
+| `paired_tests_holm_invariant.csv` | Pre-N-20 forty-test Holm family on the invariant schema; superseded by the N=44 family. |
+
 Git history is intact — these were moved with `git mv`, not rewritten.
+
+**Note on regeneration.** Several of these are output paths of scripts that are
+still runnable (`src/d3_ocsvm.py`, `src/rf2_rg3_gated_contrast.py`,
+`src/n20_figure_inputs.py`, `src/stats_rigor.py`). Re-running those scripts
+writes the pre-fix name back into `results/tables/`. Nothing in the manuscript
+reads them, but if you re-run, check this list before trusting a file that
+reappears there.

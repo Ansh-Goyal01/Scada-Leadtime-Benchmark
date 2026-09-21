@@ -32,6 +32,25 @@ def load(name):
         return list(csv.DictReader(fh))
 
 
+# ------------------------------------------------------------- provenance
+# The N-20 fix (2026-09-17) changed the FEMTO, Ferrara and ONGC results and was
+# a verified no-op on IMS and XJTU-SY. Every file produced before it is
+# therefore invalid for FEMTO/Ferrara/ONGC. The N=44 sign-test family must be
+# read from the post-fix rerun below, NEVER from the pre-fix D3 output
+# d3_ocsvm_holm_N44_invariant.csv (now in superseded/).
+HOLM_SOURCE = "n20_raw_contrast_old_vs_new.csv"
+
+
+def load_holm_family():
+    """The N=44 detector x dataset family as re-run after the N-20 fix."""
+    rows = [r for r in load(HOLM_SOURCE)
+            if r["arm"] == "new" and r["dataset"] != "ONGC"]
+    for r in rows:                      # normalise to the legacy column names
+        r.setdefault("median_diff", r["median_diff_h"])
+        r.setdefault("n_runs", r["n_runs_tested"])
+    return rows
+
+
 def table_block(label):
     """LaTeX source of the float carrying \\label{<label>}."""
     src = TEX.read_text(encoding="utf-8")
@@ -131,14 +150,26 @@ _GAPROWS = None
 
 
 def gap_cell(ds, det, gap):
-    """Table 4b basis: mean lead over runs that produced a VALID alarm."""
+    """Table 4b basis: mean lead over runs that produced a VALID alarm, then
+    averaged over the independent gap draws (defect D18).
+
+    The released gap_injection.csv holds ONE draw per level, and its 5% cell for
+    Hotelling T^2 on IMS (58.0 h) does not reproduce in any of five further
+    draws. The manuscript states across-draw magnitudes, so this reads the
+    multi-seed file.
+    """
     global _GAPROWS
     if _GAPROWS is None:
-        _GAPROWS = load("gap_injection.csv")
-    v = [float(r["lead"]) for r in _GAPROWS
-         if r["dataset"] == ds and r["short_name"] == det
-         and float(r["gap"]) == gap and r["valid"] == "True"]
-    return statistics.mean(v) if v else None
+        _GAPROWS = load("d18_gap_injection_multiseed.csv")
+    per_seed = {}
+    for r in _GAPROWS:
+        if (r["dataset"] != ds or r["short_name"] != det
+                or float(r["gap"]) != gap or r["valid"] != "True"):
+            continue
+        per_seed.setdefault(r["gap_seed"], []).append(float(r["lead"]))
+    if not per_seed:
+        return None
+    return statistics.mean([statistics.mean(v) for v in per_seed.values()])
 
 
 def check_gap(bad):
@@ -186,7 +217,7 @@ def check_tradeoff(bad):
 # --------------------------------------------------- Table 7: IMS run-level
 def check_imssweep(bad):
     src = index(load("ims_runlevel_test_invariant.csv"))
-    for r in load("d3_ocsvm_holm_N44_invariant.csv"):
+    for r in load_holm_family():
         if r["dataset"] == "IMS":
             src.setdefault(key_of(r["method"]), r)
     n = 0
@@ -242,7 +273,7 @@ HOLM_COLS = ("IMS", "XJTU-SY", "FEMTO", "Ferrara")
 
 def check_holm(bad):
     """Table 8 is a detector x dataset matrix of raw sign-test p-values."""
-    rows = load("d3_ocsvm_holm_N44_invariant.csv")
+    rows = load_holm_family()
     src = index(rows, ds_field="dataset")
     n = 0
     for cells in rows_of("tab:holm"):
@@ -266,6 +297,20 @@ def check_holm(bad):
     n += 1
     if len(rows) != 44:
         bad.append(("T8 family size N=44", str(len(rows)), 44))
+    n += 1
+    # N-20 provenance guard: the post-fix family has no nominally significant
+    # cell, and its smallest raw p is 0.125 on FEMTO/Transformer-AD. The
+    # pre-fix D3 file gives 0.031 on FEMTO/Isolation Forest instead, so this
+    # fails immediately if anyone re-points check_holm at a stale source.
+    ps = [(float(r["sign_test_p"]), r["dataset"], r["method"]) for r in rows]
+    lo = min(ps)
+    if abs(lo[0] - 0.125) > 1e-12 or lo[1] != "FEMTO" or "Transformer" not in lo[2]:
+        bad.append(("T8 N-20 provenance: smallest raw p",
+                    "%.3f %s %s" % lo, "0.125 FEMTO Transformer-AD"))
+    n += 1
+    if [x for x in ps if x[0] < 0.05]:
+        bad.append(("T8 N-20 provenance: no cell significant uncorrected",
+                    str([x for x in ps if x[0] < 0.05]), "none"))
     n += 1
     return n
 

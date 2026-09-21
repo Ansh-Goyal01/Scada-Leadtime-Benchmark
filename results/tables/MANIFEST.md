@@ -24,11 +24,11 @@ Rows marked *[doc]* are documented by inspection but not yet auto-checked.
 | 2 | `tab:imslead` | `benchmark_IMS_leadtime_ci_invariant.csv` (`mode=aggregate`, `factor=1`) | **[auto]** |
 | 3 | `tab:onset` | `onset_sensitivity.csv`; decoupled-indicator columns from `rg3_onsets.csv` | *[doc]* |
 | 4 | `tab:robust` (a) | `persistence_sensitivity_IMS_invariant.csv` | *[doc]* |
-| 4 | `tab:robust` (b) | `gap_injection.csv` — mean `lead` over rows with `valid == True` | **[auto]** |
+| 4 | `tab:robust` (b) | `d18_gap_injection_multiseed.csv` — mean `lead` over rows with `valid == True`, then over the five gap draws — **not** `gap_injection.csv`, which holds one draw | **[auto]** |
 | 5 | `tab:crossds` | `xjtu_sy_runlevel_test.csv`, `femto_runlevel_test_n20.csv`, `ferrara_runlevel_test_n20.csv`, `ims_runlevel_test_invariant.csv` | *[doc]* |
 | 6 | `tab:equiv` | `n20_d15_bootstrap_new_11det.csv` — **not** `d15_equivalence_bootstrap.csv` | **[auto]** |
-| 7 | `tab:imssweep` | `ims_runlevel_test_invariant.csv`; one-class SVM row from `d3_ocsvm_holm_N44_invariant.csv` | **[auto]** |
-| 8 | `tab:holm` | `d3_ocsvm_holm_N44_invariant.csv` (`sign_test_p`) | **[auto]** |
+| 7 | `tab:imssweep` | `ims_runlevel_test_invariant.csv`; one-class SVM row from `n20_raw_contrast_old_vs_new.csv` (`arm=new`) | **[auto]** |
+| 8 | `tab:holm` | `n20_raw_contrast_old_vs_new.csv` (`arm=new`, `dataset != ONGC`, `sign_test_p`) — **not** `d3_ocsvm_holm_N44_invariant.csv`, which is pre-N-20 | **[auto]** |
 | 9 | `tab:perbearing` | `benchmark_XJTU-SY_long.csv` | *[doc]* |
 | 10 | `tab:gatedcontrast` | `rf2_gated_contrast_n20.csv` (`metric` in `raw`, `gated_D7`) | *[doc]* |
 | 11 | `tab:conformal` | `calibration_IMS.csv`, `calibration_IMS_pooled.csv` | *[doc]* |
@@ -56,6 +56,21 @@ Rows marked *[doc]* are documented by inspection but not yet auto-checked.
 | 5 | `fig:tradeoffs` | `fig_tradeoff_panels.png` | `paper/make_tradeoff_panels.py` + `paper/make_panels.py` | `tradeoff_IMS.csv`, `tradeoff_IMS_deepmodels.csv`, `tradeoff_XJTU-SY.csv` |
 | 6 | `fig:mintrain` | `fig_mintrain.png` | `paper/make_figures.py::fig_training_sweep` | `femto_training_sweep.csv` |
 
+## Provenance rule (N-20)
+
+The N-20 fix landed 2026-09-17 21:56. It changed the **FEMTO, Ferrara and
+ONGC** results and was a verified no-op on **IMS and XJTU-SY**. Therefore:
+
+- For FEMTO, Ferrara and ONGC, only a file produced *after* that timestamp is
+  canonical. Pre-fix files are in `superseded/`.
+- For IMS and XJTU-SY, earlier files remain valid, and the `_invariant` /
+  `legacy` feature-schema axis (defect D-2) is the one that matters instead.
+
+`paper/verify_tables.py::check_holm` carries a guard that fails if the N=44
+family is ever re-sourced from a pre-fix file: the post-fix family's smallest
+raw p is 0.125 (Transformer-AD on FEMTO) and no cell is significant
+uncorrected, where the pre-fix file gives 0.031 (Isolation Forest on FEMTO).
+
 ## Files kept here that back no float
 
 Still read or written by code, so not moved — but no table or figure in the
@@ -65,10 +80,14 @@ manuscript is generated from them:
   pre-N-20 baseline**, retained because `src/n20_propagate.py::d15_replay_check`
   replays against them to show the N-20 rerun changed no verdict. Ten detectors
   only (no one-class SVM). Table 6 uses `n20_d15_bootstrap_new_11det.csv`.
-- `d3_ocsvm_holm_N44_legacy.csv` — legacy 445-dim arm, written alongside the
-  invariant arm by `src/d3_ocsvm.py`. Tables 7 and 8 use the `_invariant` file.
-- `benchmark_IMS_long.csv`, `paired_tests_holm.csv`,
-  `persistence_sensitivity_IMS.csv` — legacy-arm inputs still referenced by
-  helper scripts.
+- `gap_injection.csv`, `gap_injection_far.csv` — the **single-draw** gap sweep.
+  `gap_injection.csv` is the originally released file (N-19: its generator was
+  lost, so its gap > 0 draw cannot be regenerated); `gap_injection_far.csv` is
+  the N-19 reconstruction, which reproduces the gap = 0 arm exactly (78/78
+  cells) and so validates the generator. Both are retained as provenance for
+  that reconciliation. Table 4(b) uses `d18_gap_injection_multiseed.csv`.
+- `benchmark_IMS_long.csv`, `persistence_sensitivity_IMS.csv` — legacy-arm
+  inputs still referenced by helper scripts. Both are IMS-only, where the N-20
+  fix was a verified no-op, so they remain valid.
 
 See `superseded/README.md` for arms moved out of the way.

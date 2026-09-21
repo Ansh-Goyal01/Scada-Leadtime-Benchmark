@@ -197,8 +197,8 @@ paper/                methods + results write-up with all tables/figures
   for the magnitude-monitoring detectors, but the exact sign test floors at *p* = 0.25 at
   n = 3 and nothing survives Holm correction. It does **not** replicate on XJTU-SY (n = 10),
   FEMTO (n = 6), or ONGC (n = 1 case study), where the difference is negligible (median |diff| ≤ 8
-  min on both run-to-failure sets; one detector, Isolation Forest on FEMTO, is all-6-runs negative
-  at a nominal sign-test p = 0.031 but does **not** survive Holm). The cross-dataset claim is
+  min on both run-to-failure sets; the smallest raw sign-test p anywhere in the N = 44 family is
+  0.125, Transformer-AD on FEMTO, so no cell is significant even before Holm correction). The cross-dataset claim is
   therefore *non-destruction*, not "averaging helps." XJTU and FEMTO bearings are also
   short-lived (XJTU 52–533 min; FEMTO ~1.5–7.5 h), so absolute lead times there are small and
   some abrupt-failure bearings are essentially unwarnable.

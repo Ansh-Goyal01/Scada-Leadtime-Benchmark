@@ -349,7 +349,7 @@ Table~\ref{tab:imslead} reports the mean raw (ungated) detection lead time acros
 \begin{table}[t] \small
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
-	\caption{Robustness of the IMS and XJTU-SY results. (a) Alarm persistence on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction (at full resolution, and pooled over the five sampling factors) at persistence $\in \{1,3,5,10\}$ windows. The median direction is stable; the pooled $3\sigma$ valid-alarm fraction halves by persistence 10. (b) Historian gaps: mean valid lead time (h) under random gaps of 0\%, 5\% and 20\%, averaged over the runs on which the alarm is valid. Valid-alarm fractions are unchanged across gap levels on IMS (2/3 for each detector at every level); on XJTU-SY the $3\sigma$ fraction moves by a single bearing (5/10, 6/10, 5/10) while EWMA (7/10) and Isolation Forest (4/10) hold. One random gap draw is used per level, so a one-bearing move is draw noise rather than a gap effect.}
+	\caption{Robustness of the IMS and XJTU-SY results. (a) Alarm persistence on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction (at full resolution, and pooled over the five sampling factors) at persistence $\in \{1,3,5,10\}$ windows. The median direction is stable; the pooled $3\sigma$ valid-alarm fraction halves by persistence 10. (b) Historian gaps: mean valid lead time (h) under random gaps of 0\%, 5\% and 20\%, averaged over the runs on which the alarm is valid and then over \emph{five independent gap draws} per level (defect D18): one draw cannot separate a gap effect from the draw. Valid-alarm fractions are unchanged across gap levels and across draws on IMS (2/3 for each detector at every level); on XJTU-SY they move by at most two bearings across draws. Only one cell is materially draw-dependent: Hotelling $T^2$ on IMS at 20\%, which ranges from 58.0 to 186.1~h over the five draws. Every other cell varies by less than 3.4~h on IMS and 0.37~h on XJTU-SY across draws.}
 	\label{tab:robust}
 	\textbf{(a) Alarm persistence (IMS)}\\[2pt]
 	\begin{tabular}{l c c c c}
@@ -369,17 +369,17 @@ Table~\ref{tab:imslead} reports the mean raw (ungated) detection lead time acros
 		 & \multicolumn{3}{c|}{\textbf{IMS lead (h)}} & \multicolumn{3}{c}{\textbf{XJTU-SY lead (h)}} \\
 		\textbf{Detector} & 0\% & 5\% & 20\% & 0\% & 5\% & 20\% \\
 		\hline
-		$3\sigma$ & 42.6 & 42.6 & 42.6 & 1.0 & 0.9 & 0.9 \\
-		EWMA & 41.8 & 41.8 & 40.5 & 1.3 & 1.0 & 1.0 \\
-		CUSUM & 39.7 & 39.7 & 37.2 & 1.2 & 1.3 & 1.2 \\
-		Hot.\ $T^2$ & 186.1 & 58.0 & 58.0 & 1.2 & 1.2 & 1.2 \\
-		Iso.\ Forest & 54.7 & 53.4 & 37.2 & 1.2 & 1.2 & 1.1 \\
+		$3\sigma$ & 42.6 & 42.8 & 43.4 & 1.0 & 1.0 & 1.0 \\
+		EWMA & 41.8 & 41.8 & 41.7 & 1.3 & 1.3 & 1.2 \\
+		CUSUM & 39.7 & 39.3 & 39.0 & 1.2 & 1.3 & 1.2 \\
+		Hot.\ $T^2$ & 186.1 & 186.1 & 134.9 & 1.2 & 1.2 & 1.2 \\
+		Iso.\ Forest & 54.7 & 54.3 & 53.8 & 1.2 & 1.1 & 1.1 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
 \end{table}
 
-\emph{Missing-data (historian-gap) robustness.} Real historians drop records, so we inject random gaps, setting 5\% and 20\% of snapshot rows to missing (NaN, timestamp retained), and re-measure lead time on IMS and XJTU (Table~\ref{tab:robust}b). The effect is detector-specific rather than uniform, and we state it per chart against the $\pm 1$~h operational margin. Two of the four control charts stay inside that margin on both datasets: $3\sigma$ is unchanged on IMS and loses 0.07~h on XJTU-SY, and EWMA loses 1.25~h on IMS and 0.38~h on XJTU-SY. Two exceed it on IMS: CUSUM loses 2.50~h, and Hotelling $T^2$ loses 128.09~h, collapsing from 186.1 to 58.0~h as soon as 5\% of rows are missing.Valid-alarm fractions are unchanged on IMS (2/3 for every detector at every gap level), while on XJTU-SY the $3\sigma$ fraction moves by a single bearing (5/10, 6/10, 5/10) and EWMA (7/10) and Isolation Forest (4/10) hold; with one random gap draw per level, a one-bearing move is draw noise rather than a gap effect. Isolation Forest loses 17.50~h on IMS, and on XJTU-SY no detector moves by more than 0.38~h. The bounded statement is therefore narrower than the sampling result, and we scope it accordingly: at 20\% missing rows the univariate control charts lose at most 2.50~h of warning time, while the detectors that depend on a full covariance estimate---Hotelling $T^2$ most severely, Isolation Forest less so---lose substantially more. We claim gap-tolerance for the univariate charts at this magnitude of loss, and explicitly not for the multivariate detectors.
+\emph{Missing-data (historian-gap) robustness.} Real historians drop records, so we inject random gaps, setting 5\% and 20\% of snapshot rows to missing (NaN, timestamp retained), and re-measure lead time on IMS and XJTU-SY (Table~\ref{tab:robust}b). A single random draw cannot separate a gap effect from the draw, so we repeat every gap level over five independent draws and state magnitudes only from the across-draw result. On that basis every detector on both datasets stays inside the $\pm 1$~h operational margin at 20\% missing rows, with one exception. The across-draw mean change at 20\% is $+0.83$~h for $3\sigma$ on IMS and $-0.04$~h on XJTU-SY, $-0.08$ and $-0.12$~h for EWMA, $-0.67$ and $-0.02$~h for CUSUM, and $-0.92$ and $-0.07$~h for Isolation Forest. The exception is Hotelling $T^2$ on IMS, which loses 51.2~h on average at 20\% missing---but that loss is bimodal across draws, ranging from 0 to 128.1~h, because it turns entirely on whether the draw removes the rows carrying IMS test~3's early alarm. At 5\% missing, Hotelling $T^2$ is unchanged in all five draws. An earlier single-draw run reported a 128.1~h collapse already at 5\%; that figure is a property of that one draw and we do not state it. Valid-alarm fractions are unchanged on IMS (2/3 for every detector at every gap level, in every draw), and move by at most two bearings on XJTU-SY. The bounded statement is therefore narrower than the sampling result, and we scope it accordingly: at 20\% missing rows the univariate control charts and Isolation Forest lose at most 1~h of warning time on either dataset, while the detector that depends on a full covariance estimate, Hotelling $T^2$, can lose far more on a short-runway dataset---though whether it does is draw-dependent at $n=3$. We claim gap-tolerance for the univariate charts and Isolation Forest at this magnitude of loss, and explicitly not for Hotelling $T^2$.
 
 \subsection{Generalization to XJTU-SY ($n=10$ bearings)}
 Ten run-to-failure bearings provide a far stronger test than IMS's three. Table~\ref{tab:crossds} (XJTU-SY rows) shows that the IMS ``aggregation helps'' trend does not replicate: at the run level (collapsing factors, $n=10$) the median difference is 0~h for ten of the eleven detectors ($-0.10$~h for Isolation Forest), the sign test is non-significant for all ($p \ge 0.18$), and no direction is consistent across bearings. Crucially, aggregation does not destroy lead time either: the medians are flat and the per-run differences are within a few minutes. Lead times are short in absolute terms (0--3.5~h) because XJTU bearings are short-lived (52--533~min); over the five window-magnitude detectors (the three SPC charts $3\sigma$/EWMA/Hotelling, Isolation Forest, and the RMS-trend floor, the same five tallied per bearing in Table~\ref{tab:perbearing}), 209/450 evaluations yield a valid alarm, with marked heterogeneity: the shortest-lived and the abrupt-failure bearings are hard or impossible to warn on under any mechanism. The deep sequence models are mostly N/A here: only the three longest-lived bearings furnish enough feature windows to form a length-30 sequence (76/90 cells N/A per deep model), a consequence of short runs rather than a tuning failure, and where they do run they too show a null aggregate-vs-decimate difference. Halving the sequence length to 15 windows does not change this picture: it makes only one additional short bearing usable and the deep reconstruction models still yield a valid alarm on at most one of the ten bearings, so trading sequence context for a marginally larger sample does not make them competitive with the SPC charts. Figure~\ref{fig:crossdataset} summarizes the cross-dataset picture in one view: a positive but non-significant median shift on IMS that is not consistent across its three runs, and null effects on ONGC and XJTU.
@@ -509,11 +509,11 @@ Table~\ref{tab:imssweep} gives the run-level test over all eleven evaluated dete
 \end{table}
 
 \subsection{Multiple-Comparison Correction}
-The aggregate-vs-decimate question is asked once per detector on each inferential dataset, so the family of hypotheses is the $11 \times 4 = 44$ detector $\times$ dataset tests over IMS, XJTU-SY, FEMTO, and Ferrara (ONGC, $n=1$, is excluded). The uncorrected family-wise error rate at $\alpha=0.05$ is $1 - (1-0.05)^{44} \approx 0.90$, which is exactly why a correction is required. We apply Holm--Bonferroni to the forty-four run-level sign-test $p$-values (Table~\ref{tab:holm}). No hypothesis survives (0 of 44): the smallest raw $p$-value is 0.031 (Isolation Forest on FEMTO, the one cell that is nominally significant at an uncorrected $\alpha=0.05$, with all six runs negative), and after Holm correction across the $N=44$ family its adjusted $p$ is 1.00, still far above $\alpha$. Every one of the forty-four adjusted $p$-values is 1.00. The conclusion is unambiguous and conservative: after honoring the run structure and correcting for multiple comparisons, there is no statistically significant aggregate-vs-decimate effect on any dataset. The positive IMS median shift remains a reportable trend; it is simply not, and cannot be at $n=3$, a significant one. We note that the family is heterogeneous in power: the three deep sequence models contribute $n=3$ XJTU tests rather than $n=10$ (marked $\ddagger$ in Table~\ref{tab:holm}), and those three cells rest on the longest-lived---hence most warnable---bearings. Because every uncorrected $p$ in the family already exceeds 0.1, this heterogeneity does not change any rejection decision; we flag it so the $N=44$ count is not read as forty-four equally-powered tests.
+The aggregate-vs-decimate question is asked once per detector on each inferential dataset, so the family of hypotheses is the $11 \times 4 = 44$ detector $\times$ dataset tests over IMS, XJTU-SY, FEMTO, and Ferrara (ONGC, $n=1$, is excluded). The uncorrected family-wise error rate at $\alpha=0.05$ is $1 - (1-0.05)^{44} \approx 0.90$, which is exactly why a correction is required. We apply Holm--Bonferroni to the forty-four run-level sign-test $p$-values (Table~\ref{tab:holm}). No hypothesis survives (0 of 44): the smallest raw $p$-value is 0.125 (Transformer-AD on FEMTO), and after Holm correction across the $N=44$ family its adjusted $p$ is 1.00, still far above $\alpha$. Every one of the forty-four adjusted $p$-values is 1.00. The conclusion is unambiguous and conservative: after honoring the run structure and correcting for multiple comparisons, there is no statistically significant aggregate-vs-decimate effect on any dataset. The positive IMS median shift remains a reportable trend; it is simply not, and cannot be at $n=3$, a significant one. We note that the family is heterogeneous in power: the three deep sequence models contribute $n=3$ XJTU tests rather than $n=10$ (marked $\ddagger$ in Table~\ref{tab:holm}), and those three cells rest on the longest-lived---hence most warnable---bearings. Because every uncorrected $p$ in the family already exceeds 0.1, this heterogeneity does not change any rejection decision; we flag it so the $N=44$ count is not read as forty-four equally-powered tests.
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Holm--Bonferroni correction across the $N=44$ detector $\times$ dataset family (IMS $n=3$, XJTU-SY $n=10$, FEMTO $n=6$, University of Ferrara $n=6$; ONGC, $n=1$, is excluded). Cells are the raw run-level sign-test $p$-value for the aggregate-vs-decimate comparison, grouped by dataset across the columns. The smallest is 0.031 (Isolation Forest on FEMTO, all six runs negative), the only cell nominally significant at an uncorrected $\alpha=0.05$. \emph{After Holm correction every one of the forty-four adjusted $p$-values is 1.00 and no hypothesis is rejected at $\alpha=0.05$}; the adjusted-$p$ and rejection columns are therefore omitted rather than repeated forty-four times.}
+	\caption{Holm--Bonferroni correction across the $N=44$ detector $\times$ dataset family (IMS $n=3$, XJTU-SY $n=10$, FEMTO $n=6$, University of Ferrara $n=6$; ONGC, $n=1$, is excluded). Cells are the raw run-level sign-test $p$-value for the aggregate-vs-decimate comparison, grouped by dataset across the columns. The smallest is 0.125 (Transformer-AD on FEMTO); no cell is nominally significant at an uncorrected $\alpha=0.05$. $^\ddagger$: the three deep sequence models need a length-30 window sequence, so their XJTU-SY tests are $n=3$. \emph{After Holm correction every one of the forty-four adjusted $p$-values is 1.00 and no hypothesis is rejected at $\alpha=0.05$}; the adjusted-$p$ and rejection columns are therefore omitted rather than repeated forty-four times.}
 	\label{tab:holm}
 	\begin{tabular}{l cccc}
 		\hline \hline
@@ -522,16 +522,16 @@ The aggregate-vs-decimate question is asked once per detector on each inferentia
 		\textbf{Detector} & \textbf{IMS} & \textbf{XJTU-SY} & \textbf{FEMTO} & \textbf{Ferrara} \\
 		\hline
 		$3\sigma$ & 1.000 & 0.625 & 0.219 & 1.000 \\
-		EWMA & 1.000 & 1.000 & 1.000 & 1.000 \\
-		CUSUM & 0.250 & 1.000 & 1.000 & 0.688 \\
-		Hotelling $T^2$ & 0.250 & 0.500 & 0.219 & 0.219 \\
-		Iso.\ Forest & 1.000 & 0.180 & 0.031 & 0.688 \\
-		One-class SVM & 1.000 & 1.000 & 0.688 & 0.219 \\
-		Deep SVDD & 1.000 & 1.000 & 1.000 & 0.688 \\
-		LSTM-AE & 1.000 & 1.000 & 0.688 & 0.688 \\
-		TCN-AE & 1.000 & 1.000 & 1.000 & 0.688 \\
-		Transf.-AD & 1.000 & 1.000 & 0.219 & 0.688 \\
-		RMS-trend & 1.000 & 1.000 & 0.688 & 1.000 \\
+		EWMA & 1.000 & 1.000 & 0.688 & 0.688 \\
+		CUSUM & 0.250 & 1.000 & 0.688 & 0.219 \\
+		Hotelling $T^2$ & 0.250 & 0.500 & 0.219 & 0.375 \\
+		Iso.\ Forest & 1.000 & 0.180 & 0.688 & 1.000 \\
+		One-class SVM & 1.000 & 1.000 & 0.375 & 0.375 \\
+		Deep SVDD & 1.000 & 1.000 & 0.625 & 0.375 \\
+		LSTM-AE & 1.000 & $1.000^\ddagger$ & 0.250 & 1.000 \\
+		TCN-AE & 1.000 & $1.000^\ddagger$ & 1.000 & 0.625 \\
+		Transf.-AD & 1.000 & $1.000^\ddagger$ & 0.125 & 0.625 \\
+		RMS-trend & 1.000 & 1.000 & 0.625 & 0.688 \\
 		\hline \hline
 	\end{tabular}
 	\end{center}
