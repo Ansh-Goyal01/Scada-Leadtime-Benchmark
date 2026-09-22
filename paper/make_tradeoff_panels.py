@@ -20,6 +20,7 @@ import sys
 
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -52,6 +53,14 @@ def _place_labels(fig, ax, leg, pending):
     from different detectors still coincide. This does a greedy pass: the
     first offset that collides with nothing already placed wins; if every
     candidate collides the label is dropped rather than printed illegibly.
+
+    The offsets only resolve label-vs-label and label-vs-legend collisions.
+    They cannot resolve label-vs-curve: in the dense IMS elbow every candidate
+    offset still lands on some detector's line, and although the label is drawn
+    above the line (zorder 5 vs 3), an unhaloed digit sitting on a 1.8 pt
+    coloured line is not readable at the 7 in printed width. Each label is
+    therefore stroked with a white outline, which clears a band around the
+    glyphs without hiding the curve.
     """
     fig.canvas.draw()
     rend = fig.canvas.get_renderer()
@@ -61,7 +70,9 @@ def _place_labels(fig, ax, leg, pending):
     for x, y, text, color in sorted(pending, key=lambda t: (-t[1], t[0])):
         for off in _OFFSETS:
             ann = ax.annotate(text, (x, y), textcoords="offset points",
-                              xytext=off, fontsize=7, color=color, zorder=5)
+                              xytext=off, fontsize=7, color=color, zorder=5,
+                              path_effects=[pe.withStroke(linewidth=2.2,
+                                                          foreground="white")])
             bb = ann.get_window_extent(rend)
             if not any(_overlaps(bb, t) for t in taken):
                 taken.append(bb)
