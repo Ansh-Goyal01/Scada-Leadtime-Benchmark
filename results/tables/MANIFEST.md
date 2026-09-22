@@ -130,6 +130,7 @@ proven N-20-invariant under the rule above, so the pre-fix file stays canonical.
 | `benchmark_ONGC_long.csv` | all modes, all factors | **no longer released** -- the ONGC availability statement now names `n20_rerun_long_ONGC.csv`; still read by `tests/test_ongc_release.py` and `src/export_ongc_derived.py` | pre-fix; retained only as the published pre-N-20 baseline |
 | `benchmark_{FEMTO,Ferrara,ONGC}_{aggregate,leadtime_ci}.csv` | no code consumer | **nothing** | pre-fix; superseded by the `_n20` forms for ONGC, unused for FEMTO/Ferrara |
 | `benchmark_{FEMTO,Ferrara}_paired_test.csv` | no code consumer | **nothing** | pre-fix; unused |
+| `rg3_rerun_long_{FEMTO,Ferrara,ONGC}_{rms_kurt,kurt_only,pca1}.csv` | all modes, all factors, via `src/rf2_rg3_gated_contrast.py::analyse_rg3` | **no manuscript number** -- the decoupled-indicator passage and Table 3 cite IMS only. The two ONGC arms are released as provenance and are labelled pre-N-20 in the availability statement | pre-fix; `rg3_rerun_long_ONGC_rms_kurt.csv` reproduces `benchmark_ONGC_long.csv` on all 100 rows and differs from the post-fix rerun in 35 of the 40 `aggregate, factor>1` cells |
 | `d3_ocsvm_benchmark_long.csv` | `factor==1 & mode=="aggregate"` only | OC-SVM factor-1 derivations (invariant). Its `aggregate, factor>1` rows are pre-fix and must not be read | pre-fix file, invariant slice only |
 
 ### Invariance proof for the calibration files
