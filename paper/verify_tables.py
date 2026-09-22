@@ -387,6 +387,349 @@ def check_d17label(bad):
                 n += 1
     return n
 
+# ================================================================ N-20 rule
+# Defect N-20 (fixed 2026-09-17 21:56) changed ONLY the aggregate resampling
+# interval, and only where the native spacing is sub-minute -- FEMTO, Ferrara
+# and ONGC. src/sampling.py:166 records why factor 1 escapes it: "factor=1 is
+# identical across modes (no downsampling)", so at factor 1 the resampler is
+# never entered. The consequence, MEASURED by check_n20_rule below rather than
+# assumed:
+#
+#     aggregate, factor 1   -> identical pre- and post-fix
+#     decimate,  any factor -> identical pre- and post-fix
+#     aggregate, factor > 1 -> changed
+#
+# So an artifact computed from factor-1 rows alone is N-20-invariant and its
+# pre-fix file stays canonical; anything reading an aggregate row at factor > 1
+# must come from the post-fix rerun. check_n20_rule re-measures the rule on
+# every test run, so it cannot quietly stop holding under a regenerated file.
+N20_ARMS = {
+    "FEMTO":   ("benchmark_FEMTO_long.csv",   "n20_rerun_long_FEMTO_main.csv"),
+    "Ferrara": ("benchmark_Ferrara_long.csv", "n20_rerun_long_Ferrara_main.csv"),
+    "ONGC":    ("benchmark_ONGC_long.csv",    "n20_rerun_long_ONGC_main.csv"),
+}
+N20_KEY = ("dataset", "run", "seed", "short_name", "mode", "factor")
+N20_METRICS = ("effective_interval_min", "lead_time_hours", "detection_delay_hours",
+               "far_preonset_pct", "lead_norm", "valid_alarm")
+
+
+def _n20_index(rows):
+    return {tuple(r[k] for k in N20_KEY): r for r in rows}
+
+
+def _same_cell(a, b):
+    """Equality that tolerates float text and the True/False valid_alarm column."""
+    if a == b:
+        return True
+    try:
+        fa, fb = float(a), float(b)
+    except ValueError:
+        return False
+    if fa != fa and fb != fb:          # NaN == NaN for our purpose
+        return True
+    return abs(fa - fb) <= 1e-9
+
+
+def check_n20_rule(bad):
+    """Re-measure the N-20 invariance rule the MANIFEST relies on."""
+    n = 0
+    for ds, (pre_f, post_f) in sorted(N20_ARMS.items()):
+        pre, post = _n20_index(load(pre_f)), _n20_index(load(post_f))
+        shared = sorted(set(pre) & set(post))
+        if not shared:
+            bad.append(("N-20 rule %s: no comparable rows" % ds, "0", "600 or 100"))
+            continue
+        groups = {}
+        for k in shared:
+            mode, factor = k[4], int(float(k[5]))
+            diff = sum(0 if _same_cell(pre[k][c], post[k][c]) else 1 for c in N20_METRICS)
+            g = groups.setdefault((mode, factor), [0, 0])
+            g[0] += 1
+            g[1] += diff
+        for (mode, factor), (cells, diffs) in sorted(groups.items()):
+            invariant_expected = (factor == 1) or (mode == "decimate")
+            if invariant_expected and diffs:
+                bad.append(("N-20 rule %s %s f=%d must be invariant" % (ds, mode, factor),
+                            "%d differing values" % diffs, "0"))
+            if not invariant_expected and diffs == 0:
+                bad.append(("N-20 rule %s %s f=%d must have changed" % (ds, mode, factor),
+                            "0 differing values", "> 0"))
+            n += 1
+    return n
+
+
+# --------------------------------------- FEMTO valid-alarm count (Section 6.2)
+# "Across all eleven evaluated detectors ... 211/660 evaluations yield a valid
+# alarm" spans BOTH modes and ALL five factors, so it is NOT factor-1 only and
+# must come from the post-fix rerun. The pre-fix pair (ten detectors in
+# benchmark_FEMTO_long.csv plus one-class SVM in d3_ocsvm_benchmark_long.csv)
+# gives 193/660 instead -- the guard below fails if anyone re-points this at it.
+FEMTO_VALID_SOURCE = "n20_rerun_long_FEMTO.csv"
+FEMTO_VALID_PREFIX_PAIR = ("benchmark_FEMTO_long.csv", "d3_ocsvm_benchmark_long.csv")
+
+
+def _count_valid(rows, dataset=None):
+    rows = [r for r in rows if dataset is None or r["dataset"] == dataset]
+    return sum(1 for r in rows if r["valid_alarm"] in ("True", "true", "1")), len(rows)
+
+
+def check_femto_valid(bad):
+    got, total = _count_valid(load(FEMTO_VALID_SOURCE))
+    n = 0
+    for printed, expected, label in ((211, got, "valid alarms"), (660, total, "evaluations")):
+        if printed != expected:
+            bad.append(("S6.2 FEMTO %s" % label, str(printed), expected))
+        n += 1
+    dets = len({r["short_name"] for r in load(FEMTO_VALID_SOURCE)})
+    if dets != 11:
+        bad.append(("S6.2 FEMTO detector count", str(dets), 11))
+    n += 1
+    # provenance guard: the superseded pre-fix pair gives 193/660, not 211/660
+    v1, t1 = _count_valid(load(FEMTO_VALID_PREFIX_PAIR[0]))
+    v2, t2 = _count_valid(load(FEMTO_VALID_PREFIX_PAIR[1]), dataset="FEMTO")
+    if (v1 + v2, t1 + t2) != (193, 660):
+        bad.append(("S6.2 N-20 provenance: pre-fix pair fingerprint",
+                    "%d/%d" % (v1 + v2, t1 + t2), "193/660"))
+    n += 1
+    if v1 + v2 == got:
+        bad.append(("S6.2 N-20 provenance: arms must differ",
+                    "pre-fix equals post-fix", "211 != 193"))
+    n += 1
+    return n
+
+
+# ------------------------------- Table 5: FEMTO / Ferrara cross-dataset rows
+# Ten detectors come from the post-fix run-level files; the eleventh (one-class
+# SVM) from the post-fix raw contrast, arm "new". Every one of these rows
+# collapses over BOTH modes and ALL five factors, so none is factor-1 only and
+# none may be read from a pre-fix file.
+CROSSDS_SOURCES = {"FEMTO": "femto_runlevel_test_n20.csv",
+                   "Ferrara": "ferrara_runlevel_test_n20.csv"}
+CROSSDS_OCSVM = "n20_raw_contrast_old_vs_new.csv"
+
+
+def _crossds_src():
+    src = {}
+    for ds, fname in CROSSDS_SOURCES.items():
+        for r in load(fname):
+            k = key_of(r["method"])
+            if k:
+                src[(ds, k)] = (float(r["median_diff"]), r["n_pos"], r["n_neg"],
+                                r["all_same_sign"], float(r["sign_test_p"]))
+    for r in load(CROSSDS_OCSVM):
+        if r["arm"] == "new" and r["dataset"] in CROSSDS_SOURCES and key_of(r["method"]) == "ocsvm":
+            src[(r["dataset"], "ocsvm")] = (float(r["median_diff_h"]), r["n_pos"], r["n_neg"],
+                                            r["all_same_sign"], float(r["sign_test_p"]))
+    return src
+
+
+def _crossds_rows():
+    """Table 5 rows, with the dataset each belongs to.
+
+    The multirow cells embed a line break inside shortstack, which would
+    truncate the row, so that inner break is neutralised before splitting.
+    """
+    out, ds = [], None
+    inner = BS + BS + "("
+    for line in table_block("tab:crossds").split(chr(10)):
+        line = line.strip()
+        if line.startswith(BS + "multirow"):
+            for cand in ("XJTU-SY", "FEMTO", "Ferrara", "IMS"):
+                if cand + inner in line or cand + BS + BS in line:
+                    ds = cand
+            line = line.replace(inner, "(")
+        if "&" not in line or (BS + BS) not in line:
+            continue
+        cells = [c.strip() for c in line.split(BS + BS)[0].split("&")]
+        if len(cells) == 6:
+            out.append((ds, cells[1:]))
+    return out
+
+
+def check_crossds(bad):
+    src = _crossds_src()
+    n = 0
+    for ds, cells in _crossds_rows():
+        k = key_of(cells[0])
+        if ds not in CROSSDS_SOURCES or k is None:
+            continue
+        exp = src.get((ds, k))
+        if exp is None:
+            bad.append(("T5 %s %s missing in post-N-20 source" % (ds, k), "row present", "absent"))
+            continue
+        med, npos, nneg, same, p = exp
+        n += cmp_cell("T5 %s %s median" % (ds, k), cells[1], med, bad)
+        printed_counts = plain(cells[2])
+        if printed_counts != "%s/%s" % (npos, nneg):
+            bad.append(("T5 %s %s n+/n-" % (ds, k), printed_counts, "%s/%s" % (npos, nneg)))
+        n += 1
+        # The cell is "yes"/"no", and a sign-consistent cell may carry a
+        # superscript direction marker ("yes$^{-}$"), which plain() renders as
+        # a trailing - or +. Both the verdict and the marker are checked.
+        printed_same = plain(cells[3]).lower()
+        marker = ""
+        if printed_same[-1:] in ("-", "+"):
+            printed_same, marker = printed_same[:-1], printed_same[-1:]
+        expect_same = "yes" if same in ("True", "true") else "no"
+        if printed_same != expect_same:
+            bad.append(("T5 %s %s sign-consistent" % (ds, k), printed_same, expect_same))
+        n += 1
+        if marker:
+            want = "-" if med < 0 else "+"
+            if marker != want:
+                bad.append(("T5 %s %s direction marker" % (ds, k), marker, want))
+            n += 1
+        elif expect_same == "yes":
+            bad.append(("T5 %s %s direction marker" % (ds, k), "absent", "- or +"))
+            n += 1
+        n += cmp_cell("T5 %s %s sign-test p" % (ds, k), cells[4], p, bad)
+    if n == 0:
+        bad.append(("T5 FEMTO/Ferrara rows parsed", "0", "> 0"))
+    return n
+
+
+# ---------------------------------------------- Table 10: gated contrast
+# Caption already says "on the post-N-20 reruns over all eleven detectors".
+# Every column collapses over both modes and all five factors.
+GATED_SOURCE = "rf2_gated_contrast_n20.csv"
+GATED_ORDER = ("XJTU-SY", "FEMTO", "Ferrara", "IMS")
+
+
+def _gated_stats(metric):
+    out = {}
+    for ds in GATED_ORDER:
+        rows = [r for r in load(GATED_SOURCE)
+                if r["dataset"] == ds and r["metric"] == metric]
+        if not rows:
+            continue
+        meds = sorted(float(r["median_diff_h"]) for r in rows)
+        out[ds] = (statistics.median(meds),
+                   sum(1 for v in meds if v > 0),
+                   sum(1 for v in meds if v < 0),
+                   sum(1 for v in meds if v == 0),
+                   sum(float(r["n_effective"]) for r in rows) / len(rows),
+                   len(rows))
+    return out
+
+
+def check_gatedcontrast(bad):
+    metric, n = None, 0
+    seen = set()
+    for line in table_block("tab:gatedcontrast").split(chr(10)):
+        line = line.strip()
+        if "Raw lead time" in line:
+            metric = "raw"
+            continue
+        if "Gated lead time" in line:
+            metric = "gated_D7"
+            continue
+        if metric is None or "&" not in line or (BS + BS) not in line:
+            continue
+        cells = [c.strip() for c in line.split(BS + BS)[0].split("&")]
+        if len(cells) != 4 or cells[0] not in GATED_ORDER:
+            continue
+        ds = cells[0]
+        exp = _gated_stats(metric).get(ds)
+        if exp is None:
+            bad.append(("T10 %s %s missing in source" % (metric, ds), "row present", "absent"))
+            continue
+        med, npos, nneg, nzero, neff, ndet = exp
+        seen.add((metric, ds))
+        n += cmp_cell("T10 %s %s median" % (metric, ds), cells[1], med, bad)
+        printed = plain(cells[2])
+        want = "%d/%d/%d" % (npos, nneg, nzero)
+        if printed != want:
+            bad.append(("T10 %s %s n+/n-/0" % (metric, ds), printed, want))
+        n += 1
+        n += cmp_cell("T10 %s %s n_eff" % (metric, ds), cells[3], neff, bad)
+        if ndet != 11:
+            bad.append(("T10 %s %s detector count" % (metric, ds), str(ndet), 11))
+        n += 1
+    if len(seen) != 8:
+        bad.append(("T10 rows parsed", str(len(seen)), 8))
+    return n
+
+
+# ------------------------- Figure 4c/4d: FEMTO and ONGC conformal calibration
+# calibration_{FEMTO,ONGC}[_pooled].csv predate the N-20 fix but are invariant
+# under it for a reason stronger than the factor-1 rule: src/calibration.py
+# calls load_pipeline WITHOUT downsample arguments, so it runs at the defaults
+# downsample_mode="none", downsample_factor=1 and never enters the resampling
+# code the fix changed. The structural guard below asserts that: the files carry
+# no mode or factor column at all, so no resampled row can reach them. If a
+# future rerun ever adds one, this fails and the invariance claim must be redone.
+CALIB_INVARIANT = ("calibration_FEMTO.csv", "calibration_FEMTO_pooled.csv",
+                   "calibration_ONGC.csv", "calibration_ONGC_pooled.csv")
+
+
+def check_calibration_invariance(bad):
+    n = 0
+    for fname in CALIB_INVARIANT:
+        cols = {c.lower() for c in load(fname)[0]}
+        leaked = cols & {"mode", "factor", "effective_interval_min"}
+        if leaked:
+            bad.append(("Fig4 N-20 invariance: %s is resample-free" % fname,
+                        "has " + ",".join(sorted(leaked)), "no mode/factor column"))
+        n += 1
+    # Section 6.11 prose: FEMTO pre-onset FAR 0.08--0.56 at alpha=0.05, pooled 0.27
+    at05 = [float(r["empirical_far"]) for r in load("calibration_FEMTO.csv")
+            if abs(float(r["alpha"]) - 0.05) < 1e-9]
+    if len(at05) != 6:
+        bad.append(("S6.11 FEMTO bearings at alpha=0.05", str(len(at05)), 6))
+    n += 1
+    for printed, got, label in ((0.08, min(at05), "FAR lower"), (0.56, max(at05), "FAR upper")):
+        if not matches(printed, got, 2):
+            bad.append(("S6.11 FEMTO %s" % label, str(printed), round(got, 2)))
+        n += 1
+    pooled = {float(r["alpha"]): float(r["empirical_far_mean"])
+              for r in load("calibration_FEMTO_pooled.csv")}
+    if not matches(0.27, pooled[0.05], 2):
+        bad.append(("S6.11 FEMTO pooled FAR", "0.27", round(pooled[0.05], 2)))
+    n += 1
+    # Section 6.11 prose: ONGC empirical FAR 0.016, 0.030, 0.096 at alpha 0.01/0.02/0.05
+    ongc = {float(r["alpha"]): float(r["empirical_far"]) for r in load("calibration_ONGC.csv")}
+    for alpha, printed in ((0.01, 0.016), (0.02, 0.030), (0.05, 0.096)):
+        if not matches(printed, ongc[alpha], 3):
+            bad.append(("S6.11 ONGC FAR at alpha=%.2f" % alpha, str(printed), round(ongc[alpha], 3)))
+        n += 1
+    return n
+
+
+# ------------------------------------------- Table 23: ONGC median difference
+# Table 23 reports the POST-fix per-detector medians, column new_min. The same
+# file keeps the pre-fix column old_min, whose largest magnitude is 4.5 min --
+# which would falsify the caption "All differences are about a minute or less".
+# The guard pins both, so reading the wrong column fails loudly.
+ONGC_MINUTES = "n20_ongc_minutes.csv"
+ONGC_MINUTES_COL = "new_min"          # post-fix column; "old_min" is the pre-fix arm
+ONGC_ROW_KEYS = {"3sigma": "three_sigma", "ewma": "ewma", "hotelling": "hotelling_t2",
+                 "isoforest": "isolation_forest", "rmstrend": "rms_trend"}
+
+
+def check_ongc_minutes(bad):
+    rows = {r["short_name"]: r for r in load(ONGC_MINUTES)}
+    n = 0
+    for cells in rows_of("tab:ongc"):
+        if len(cells) != 2:
+            continue
+        k = key_of(cells[0])
+        name = ONGC_ROW_KEYS.get(k)
+        if name is None:
+            continue
+        n += cmp_cell("T23 ONGC %s median" % k, cells[1], float(rows[name][ONGC_MINUTES_COL]), bad)
+    if n != 5:
+        bad.append(("T23 rows parsed", str(n), 5))
+    new_max = max(abs(float(r[ONGC_MINUTES_COL])) for r in rows.values())
+    old_max = max(abs(float(r["old_min"])) for r in rows.values())
+    if new_max > 1.5:
+        bad.append(("T23 caption: about a minute or less", "%.2f min" % new_max, "<= 1.5 min"))
+    n += 1
+    # provenance guard: the pre-fix column must still be the one that breaks the caption
+    if old_max <= 1.5:
+        bad.append(("T23 N-20 provenance: old_min fingerprint", "%.2f min" % old_max, "> 1.5 min"))
+    n += 1
+    return n
+
 
 CHECKS = [("Table 2 IMS lead + CI", check_imslead),
           ("Table 19 label contrast", check_d17label),
@@ -394,8 +737,13 @@ CHECKS = [("Table 2 IMS lead + CI", check_imslead),
           ("Table 6 equivalence", check_equiv),
           ("Table 7 IMS run-level", check_imssweep),
           ("Table 8 Holm", check_holm),
-          ("Table 12 trade-off", check_tradeoff)]
-
+          ("Table 12 trade-off", check_tradeoff),
+          ("Table 5 cross-dataset", check_crossds),
+          ("Table 10 gated contrast", check_gatedcontrast),
+          ("Table 23 ONGC minutes", check_ongc_minutes),
+          ("Fig 4 calibration", check_calibration_invariance),
+          ("S6.2 FEMTO valid alarms", check_femto_valid),
+          ("N-20 invariance rule", check_n20_rule)]
 
 def run(verbose=True):
     bad, total = [], 0
