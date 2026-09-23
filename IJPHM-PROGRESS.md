@@ -2949,3 +2949,29 @@ room to spare" in §6.4 -- flag for author. Captions still > 70 words: tab:imsde
 tab:crossds 107, tab:d17label 94, tab:robust 83, tab:mechanism 79, fig:crossdataset,
 tab:imsongc, fig:conformal 75 -- all reading-instruction (symbol/column) definitions.
 verify_tables 895 OK.
+
+### Phase 4 — prose compression (IN PROGRESS)
+Scripts `revision-artifacts/phase4/apply_p4*.py` via `p4lib.Doc` (unique-prefix paragraph
+replacement; refuses to save if a citation key disappears or a new backslash-apostrophe
+appears). Done so far (all build clean, 26 pages):
+- 4a abstract (260 rendered words, conservative count) + Intro (arc and duplicated ±1 h / PH
+  statements folded into one paragraph + contributions) + Related Work (D1/F1/G6 paragraphs
+  and six citations kept) + Datasets.
+- F9: `\PHMslashbreak` was defined but never applied; a rewrite put FEMTO/PRONOSTIA at a line
+  end and overprinted p.3 (seen in render). Applied in 11 body sites; 0 overfull since.
+- 4b Methodology + Setup (§4.8 untouched; latch-on proof's single home is §4.4).
+Next: 4c Results, 4d Discussion/Limitations/Conclusion/DA, 4e Appendices.
+- 4c Results (tables no longer narrated; IMS per-run lists -> tab:imsongc), 4d Discussion /
+  Limitations / Conclusion (§7.1 -> 2 sentences; §7.3, G8, DA untouched), 4e Appendices
+  (App C contradiction fixed: "guaranteed miss for every detector" vs six of ten -> "most
+  detectors", exact six kept). All applied; verify_tables still 895 OK.
+
+### Phase 4 — prose compression ✅ 24 pages (was 27)
+Prose 16,120 -> 12,953 words (-20%); captions 1,228. Abstract 260 rendered words. Redundancy
+targets done: latch-on proof once in §4.4 (+ results mention), PH-vs-gated in full once
+(§6.11), the bounded ±1 h sentence removed from §7.2 and Contribution 4, IMS per-run lists
+out of prose (in tab:imsongc), sign-test floor defined once in §4.9 (pointers elsewhere).
+§7.1 condensed to two sentences; §7.3, G8 and the DA statement untouched. Wording flags for
+author: §7.1 "consistent but non-significant trend" -> "non-significant trend" (the IMS
+trend is not direction-consistent); App C "guaranteed miss for every detector" -> "most
+detectors" (six of ten, as its own third paragraph says).
