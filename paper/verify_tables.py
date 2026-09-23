@@ -1161,6 +1161,46 @@ def check_equivalence_wording(bad):
     return n
 
 
+# ------------------------------------------- final-pass factual corrections (Part 4)
+def check_factual_corrections(bad):
+    n = 0
+    body = tex_source()
+
+    def need(cond, label, printed="", expected=""):
+        nonlocal n
+        n += 1
+        if not cond:
+            bad.append(("facts: " + label, printed, expected))
+
+    on = {}
+    for r in load("onset_sensitivity.csv"):
+        if r["kind"] == "rms_kurt" and r["method"] == "terminal":
+            on.setdefault(r["run"], []).append(float(r["onset_pct"]))
+    sp = {k: max(v) - min(v) for k, v in on.items()}
+    need(sp["1st_test"] < 0.1, "S6.2 test 1 k-spread < 0.1 pt", "%.3f" % sp["1st_test"])
+    need("moves by less than 0.1 percentage points of run span on test~1, %.1f on test~3 and %.1f on the "
+         "slow-degrading test~2" % (sp["3rd_test"], sp["2nd_test"]) in body, "S6.2 per-run onset spread")
+    need("less than two percent of run span" not in body, "S6.2 false 'under two percent' removed")
+    need("%.1f on IMS" % statistics.median(sp.values()) in body, "S6.2 IMS median spread")
+    fer = [abs(float(r["median_diff_h"])) * 60 for r in load("n20_raw_contrast_old_vs_new.csv")
+           if r["arm"] == "new" and r["dataset"] == "Ferrara"]
+    need(len(fer) == 11 and max(fer) < 1.0 and "within $\\pm1$~min, no detector" in body,
+         "S6.5 Ferrara medians within 1 min", "%.3f" % max(fer))
+    win = {}
+    for r in load("femto_training_sweep_long.csv"):
+        win[(r["bearing"], r["train_fraction"])] = int(r["n_train_windows"])
+    at_default = sorted(v for (b, t), v in win.items() if t == "0.5")
+    need((min(win.values()), max(win.values()), statistics.median(at_default)) == (20, 335, 88)
+         and "across FEMTO bearings and training fractions" in body, "S4.5 FEMTO 20-335, median 88")
+    ew = [float(r["far_preonset_pct_mean"]) for r in load("tradeoff_IMS.csv") if r["short_name"] == "ewma"]
+    need(round(max(ew), 1) > 22.1 and "across the tabulated thresholds (Table" in body,
+         "S6.9 19.0-22.1% scoped to tabulated thresholds", "%.1f" % max(ew))
+    for gone in ("refuted on every dataset tested", "tidy but unsupported", "dataset-specific noise",
+                 "a property of that draw", "does not cost", "decimated raw samples"):
+        need(gone not in body, "removed: " + gone)
+    return n
+
+
 CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Table 19 label contrast", check_d17label),
           ("Table 4b gap injection", check_gap),
@@ -1177,7 +1217,8 @@ CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("S6.2 FEMTO valid alarms", check_femto_valid),
           ("N-20 invariance rule", check_n20_rule),
           ("Eq. 5 validity counts", check_eq5),
-          ("Abstract equivalence", check_equivalence_wording)]
+          ("Abstract equivalence", check_equivalence_wording),
+          ("Part 4 factual fixes", check_factual_corrections)]
 
 def run(verbose=True):
     bad, total = [], 0
