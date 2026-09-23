@@ -34,6 +34,8 @@ is kept for the Response to Review.
 | `tab:hyperparams` | 16, 17 `tab:compute` | panel (a) `src/config.py`; panel (b) `compute_cost_IMS_invariant.csv`, `compute_cost_IMS_extra_invariant.csv` | (a) *[doc]*, (b) **[auto]** |
 | `fig:conformal` caption, panel (a) values | 11 `tab:conformal` | `calibration_IMS.csv` via `gen/conformal_values.tex` | **[auto]** |
 
+| `fig:crossdataset` (forest plot) | Figure 2 bar chart | `paper/make_forest.py` -> `paper/files/fig_forest.pdf` (vector); means/CIs from `n20_d15_bootstrap_new_11det.csv`, IMS per-run differences from the run-level files, ONGC from `n20_ongc_minutes.csv` (`new_min`) -- every plotted value is printed in `tab:crossds` or `tab:imsongc` | **[auto]** via those tables |
+
 Defect N-29 (2026-09-23): three published values were double-rounded (2 dp, then 1 dp):
 one-class SVM IMS raw lead 180.3 -> **180.2** (source 180.2496 h); denoiser aggregate and
 Kalman mean lead 75.7 -> **75.6** (source 75.6469 h). The generated tables print the

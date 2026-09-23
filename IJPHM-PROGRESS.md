@@ -2930,3 +2930,11 @@ clear tau=10%. The text reports raw lead; not changed here.
 imsdet (with PH/L re-derivation), mechanism, compute, conformal (a), prose G3/D18/ONGC/N-29.
 Negative tests (`revision-artifacts/phase1/negative_tests.py`): all 7 guards go red on a
 wrong source or tampered value.
+
+### Phase 2 — forest plot ✅ 29 pages (no change)
+`paper/make_forest.py` -> `paper/files/fig_forest.pdf` (vector), label `fig:crossdataset` kept.
+Panels IMS | XJTU-SY | FEMTO | Ferrara | ONGC; ±1 h band shaded; ONGC hollow. IMS shows the
+three per-run differences + median (IMS bootstrap CIs are printed nowhere, so by constraint 4
+they are not drawn). Rendered at 300 dpi and in-page at 150 dpi: legible. One-class SVM has no
+colour in `config.PLOT["method_colors"]`; drawn black explicitly (flag: N-25 family). Optional
+slopegraph not built (PH ranking already one table; would add height).
