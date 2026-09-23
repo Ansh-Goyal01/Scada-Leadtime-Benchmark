@@ -2984,3 +2984,9 @@ detectors" (six of ten, as its own third paragraph says).
   -> `fig_conformal_strip.pdf`, same calibration CSVs and encodings); rendered at 300 dpi,
   legible. Old 2x2 raster composite no longer referenced.
 - fig:sweep / fig:tradeoffs not re-plotted: each would save ~0.07 page; left as they are.
+
+### Phase 4 second pass (4f/4g) ✅ 22 pages (no page change; last page ~55% full)
+Itemize lists -> prose; 6.10 recommendation kept (7.4 no longer carries it); 7.3 P2 no longer
+re-quotes D.1; tab:deeparch identical rows (Adam, 1e-3, 32, 42, no early stopping) -> one
+caption sentence; imsdet caption trimmed; DA first sentence tightened (G7 paths untouched).
+**Stop rule §11: 21 pages not reached without content loss.** Remaining gap ~0.55 page.
