@@ -17,3 +17,14 @@
 
 - OLD: the aggregate-vs-decimate contrast is taken from the post-N-20 files named above
 - NEW: the aggregate-vs-decimate contrast is taken from the corrected files named above
+
+## Part 3: abstract equivalence wording, IMS equivalence sentence in S6.6
+
+- OLD: none favouring decimation beyond $-0.45$~h; IMS is too wide to decide in 9 of 11 cells and favours aggregation beyond the margin in 2.
+- NEW: every 95\% interval lying inside $\pm 0.6$~h; IMS is too wide to decide in 9 of 11 cells, favours aggregation beyond the margin for CUSUM, and touches it for Hotelling $T^2$ (lower bound exactly $+1.00$~h).
+
+- OLD: The powered campaigns are short-lived bearings
+- NEW: The campaigns that supply this statistical power are short-lived bearings
+
+- OLD: the defensible reading is a null result with a positive median direction for the magnitude-monitoring detectors.
+- NEW: the defensible reading is a null result with a positive median direction for the magnitude-monitoring detectors. Against the $\pm 1$~h margin the IMS intervals are too wide to decide for nine of the eleven detectors; CUSUM's lies wholly above it ([$+4.15$, $+4.67$]~h), favouring aggregation beyond the margin, and Hotelling $T^2$'s lower bound sits exactly on it ([$+1.00$, $+81.74$]~h).

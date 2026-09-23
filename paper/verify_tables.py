@@ -1124,6 +1124,43 @@ def check_eq5(bad):
     return n
 
 
+# ------------------------------------ abstract / S6.4 / S6.6 equivalence wording (final pass)
+def check_equivalence_wording(bad):
+    n = 0
+    body = tex_source()
+    abstract = body[body.find(BS + "begin{abstract}"):body.find(BS + "end{abstract}")]
+
+    def need(cond, label, printed="", expected=""):
+        nonlocal n
+        n += 1
+        if not cond:
+            bad.append(("equivalence: " + label, printed, expected))
+
+    rows = load("n20_d15_bootstrap_new_11det.csv")
+    multi = [r for r in rows if r["dataset"] in ("XJTU-SY", "FEMTO", "Ferrara")]
+    need(len(multi) == 33 and all(r["verdict"] == "equivalent" for r in multi), "33 of 33 equivalent")
+    ends = [abs(float(r[k])) for r in multi for k in ("ci_lo_h", "ci_hi_h")]
+    need(max(ends) < 0.6 and round(max(ends), 3) == 0.560, "max |endpoint| 0.560 < 0.6", "%.6f" % max(ends))
+    need("every 95\\% interval lying inside $\\pm 0.6$~h" in abstract and "-0.45" not in abstract,
+         "abstract: inside +-0.6 h, no -0.45")
+    below = [r for r in multi if float(r["ci_hi_h"]) < 0]
+    need(len(below) == 5 and "Exactly five cells" in body, "S6.4 exactly five cells wholly below zero",
+         str(len(below)), 5)
+    ims = {r["method"]: r for r in rows if r["dataset"].startswith("IMS (invariant")}
+    cu, ho = ims.pop("CUSUM (k=0.5, h=5.0)"), ims.pop("Hotelling T²")
+    need(float(cu["ci_lo_h"]) > 1.0, "IMS CUSUM strictly beyond +1 h", cu["ci_lo_h"])
+    need(float(ho["ci_lo_h"]) == 1.0, "IMS Hotelling T2 lower bound exactly +1 h", ho["ci_lo_h"])
+    need(len(ims) == 9 and all(float(r["ci_lo_h"]) < 1.0 < float(r["ci_hi_h"]) for r in ims.values()),
+         "IMS nine intervals straddle the margin")
+    need("too wide to decide in 9 of 11 cells, favours aggregation beyond the margin for CUSUM" in abstract,
+         "abstract IMS sentence")
+    frag = ("CUSUM's lies wholly above it ([$%+.2f$, $%+.2f$]~h)" % (float(cu["ci_lo_h"]), float(cu["ci_hi_h"])),
+            "sits exactly on it ([$%+.2f$, $%+.2f$]~h)" % (float(ho["ci_lo_h"]), float(ho["ci_hi_h"])))
+    for f in frag:
+        need(f in body, "S6.6 " + f[:30], f)
+    return n
+
+
 CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Table 19 label contrast", check_d17label),
           ("Table 4b gap injection", check_gap),
@@ -1139,7 +1176,8 @@ CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Prose: G3/D18/ONGC/N-29", check_prose_additions),
           ("S6.2 FEMTO valid alarms", check_femto_valid),
           ("N-20 invariance rule", check_n20_rule),
-          ("Eq. 5 validity counts", check_eq5)]
+          ("Eq. 5 validity counts", check_eq5),
+          ("Abstract equivalence", check_equivalence_wording)]
 
 def run(verbose=True):
     bad, total = [], 0
