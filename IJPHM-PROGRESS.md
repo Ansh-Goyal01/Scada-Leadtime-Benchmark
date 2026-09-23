@@ -2828,3 +2828,61 @@ values cannot be recovered and no absolute amplitude is disclosed.
 ### N-4 resolved
 `.zenodo.json` and `CITATION.cff` both retitled to the submission title and corrected to
 five datasets with Ferrara included; version 1.1.0, released 2026-09-20.
+
+---
+
+## SHORTENING PLAN — PHASE 0 (measurement only) — 2026-09-23, IN PROGRESS
+
+Governing doc: `IJPHM-SHORTENING-PLAN.md` (overrides the "Page target CLOSED at 24 pages"
+note above; manuscript is now **30 pages**). No manuscript, code or result-file edits.
+
+- ✅ Fresh build of `paper/files/scada_ijphm.tex` (HEAD `06b6d8b`, tex last touched `7ee007c`,
+  1047 lines, sha256 `8d96954d…57b3`): **30 pages**, tectonic exit 0.
+- ⚠️ PyMuPDF blocked again by Application Control (`_extra` DLL). Substitutes: pypdf 6.13.2
+  for text; xpdf `pdftotext` 4.00 (no bbox). **No page renderer is available** — Rule 10
+  image checks for later phases need PyMuPDF back, or another renderer.
+- ✅ Measurement method: an instrumented COPY (`revision-artifacts/phase0/instrument.py`)
+  records `\pdfsavepos` at every heading (in the first paragraph, horizontal mode), and at the
+  top and bottom of every float box (`\@floatboxreset` / `\AtEndEnvironment`) and caption.
+  Validated: all 30 pages' extracted text is identical to the real build.
+  Two failed attempts, kept for the record: (1) a marker in vertical mode after a heading
+  added a page-break point and moved §6.2 from p.9 to p.8; (2) `\AtBeginEnvironment` markers
+  fire outside the float box, measuring the anchor instead of the float.
+  Raw positions: `revision-artifacts/phase0/positions.mpos`.
+- ✅ Text source: xpdf `pdftotext` on MediaBox-cropped copies of each region (section piece,
+  float body, caption). pypdf mis-orders math-mode runs (`+0.030` → `+0` `.030`), so it is used
+  only for page count. Scripts (all in `revision-artifacts/phase0/`, rerunnable in Phase 6):
+  `measure.py` → `page_map.csv`, `floats.csv`, `sections_text.json`; `inventory.py` +
+  `claims_catalog.py` (133 claims, paraphrase regex lists) → `revision-artifacts/inventory_before.csv`,
+  `redundancy_report.md`, `table_cell_crosscheck.txt`; `labels_and_merges.py` → `label_map.csv`;
+  `rollup.py` → `section_rollup.csv`.
+- ✅ **Inventory** `inventory_before.csv`: 625 sentences, 688 claim-locations (133 IDs, all located),
+  789 prose/caption numbers, 875 table cells, 58 citations. 435/625 sentences map to a catalogued
+  claim; the rest stay as sentence units. Every numeric table cell of 22 tables is present in the
+  rendered float text (tab:basestats differs only in formula exponents).
+- ✅ **Totals:** prose 16,301 words (excl. references), 543 sentences, mean 30.0 / p90 51 words
+  (own splitter; the audit's "38" used an unrecorded method). Captions 2,187 words over 30 floats.
+  Floats = 6.77 page-equivalents (tables 4.46, figures 2.23, algorithm 0.08).
+- ✅ **Merge pre-checks (printed values):** M1 — all 44 `tab:holm` raw p equal the printed p of
+  `tab:crossds` (33) + `tab:imssweep` (11); verify_tables sources them from two different post-N-20
+  files (`n20_raw_contrast_old_vs_new.csv` arm new vs `*_runlevel_test_n20.csv`). M2 — PH =
+  max `tab:tradeoff` lead and L = `tab:farbudget` τ=0.10 for all 7 rows. verify_tables: 558 OK.
+- ⚠️ **Findings for the author (not fixed — Phase 0 is read-only):**
+  1. Protected G3 "0.000 h across 99 cells" and Corrections "Hotelling T² collapses in 2 of 5
+     draws at 20%" are **not in the current PDF** (only "contains no onset term" and "bimodal
+     across draws, 0 to 128.1 h").
+  2. `tab:gatedcontrast` is per-dataset (median across detectors), not per detector: M1's
+     "gated median Δ with its p" column would be new generated numbers.
+  3. `tab:farbudget`/`tab:phrank` carry 7 detectors, `tab:imslead` 11: an 11-row M2 table needs
+     deep-model τ/PH cells (derivable from `tab:tradeoff`) and OC-SVM is in no threshold sweep.
+  4. `tab:ongc` has 5 of 11 detectors; §7.2 says Deep SVDD never alarms before failure on ONGC
+     while D.2 says "every detector achieves a long warning" — a live inconsistency.
+  5. XJTU rows of `tab:crossds` (Δ, n₊/n₋, S-c.) are checked by no verify_tables guard.
+  6. `tab:imssweep` (left column, +21.5 pt overfull) reaches x≈318 bp, past the right column's
+     315 bp: possible overprint on p.14 — needs a render to confirm.
+  7. Appendix float pages are near-empty: p.25 ≈15% full (tab:compute only), p.26 ≈42%
+     (tab:deeparch only), p.28 ≈36%, p.30 ≈49% — roughly 2 pages of stranded space (Phase 5).
+  8. Numbers visible only in raster figures today: fig:sweep curves, fig:conformal (b) XJTU and
+     most of (c) FEMTO, fig:tradeoffs (b) XJTU, 6 ONGC detector medians in fig:crossdataset.
+- **Phase 0 COMPLETE. Stopped for author approval before Phase 1.** Not committed (awaiting
+  instruction; branch is `main`).

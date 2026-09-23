@@ -1,0 +1,50 @@
+src_line,level,title,page_start,page_end,words,sentences,mean_sent,p90_sent
+0,front,"Front matter: title, abstract, keywords",1,1,453,12,37.8,55
+80,section,Introduction,1,3,1229,41,29.9,46
+112,section,Related Work,,,0,0,,0
+114,subsection,"Prognostics, CBM, and Lead-Time Metrics",3,3,436,16,27.2,48
+121,subsection,Anomaly Detectors and Control Charts,3,4,485,14,34.6,63
+128,subsection,Uncertainty Quantification and Conformal Prediction,4,4,78,3,26,33
+131,subsection,Vibration Features,4,4,60,2,30,39
+134,subsection,SCADA-Based Condition Monitoring,4,4,66,2,33,43
+137,section,Datasets,4,5,524,19,27.4,44
+170,section,Methodology,,,0,0,,0
+172,subsection,Problem Formulation and Notation,5,5,119,6,19.8,26
+175,subsection,Channel-Invariant Feature Schema,5,5,203,7,29,41
+180,subsection,Leakage-Free Degradation Onset,5,6,550,17,32.4,51
+217,subsection,Onset-Relative Lead-Time Metric,6,7,268,13,20.6,35
+237,subsection,Detectors,7,7,459,13,35.3,64
+253,subsection,Conformal Calibration,7,7,81,4,20.2,34
+256,subsection,SCADA Sampling Sweep,7,7,104,4,26,46
+264,subsection,At What Level Coarsening Is Applied,7,8,192,8,24,33
+270,subsection,Statistical Protocol,8,8,353,14,25.2,40
+278,section,Experimental Setup,8,8,101,4,25.2,34
+281,section,Results,8,8,43,3,14.3,22
+285,subsection,Lead Time and Confidence Intervals on IMS,8,9,285,9,31.7,49
+322,subsection,Sensitivity of the Onset Definition,9,10,764,28,27.2,47
+384,subsection,Generalization to XJTU-SY ($n=10$ bearings),10,10,291,7,41.6,56
+468,subsection,Generalization to FEMTO/PRONOSTIA ($n=6$ bearings),10,11,274,7,39.1,45
+471,subsection,Generalization to University of Ferrara ($n=6$ bearings),11,11,141,4,35.2,47
+474,subsection,Aggregate vs Decimate on IMS: a Positive but Inconsistent Median Shift,11,12,378,11,34.4,65
+511,subsection,Multiple-Comparison Correction,12,14,622,22,28.2,47
+594,subsection,Conformal Calibration,14,15,415,13,31.9,44
+623,subsection,Lead-Time--vs--False-Alarm Trade-off,15,16,780,30,26,45
+688,subsection,Feature-Group Ablation,16,17,358,7,51.1,64
+712,subsection,Comparison with the Saxena Prognostic Horizon,17,18,493,20,24.6,40
+744,subsection,Minimum Training Data for Deep Anomaly Detectors,18,19,750,20,37.5,58
+760,section,Discussion,,,0,0,,0
+763,subsection,What Changed the Story,19,19,131,6,21.8,30
+766,subsection,Why the IMS Trend Appears but Is Neutral Elsewhere,19,20,319,9,35.4,62
+771,subsection,Why Aggregation Preserves What Decimation Loses,20,20,351,14,25.1,47
+781,subsection,Practical Implications,20,20,201,8,25.1,33
+784,section,Limitations and Threats to Validity,20,22,1030,36,28.5,54
+804,section,Conclusion,22,22,310,8,38.8,58
+808,section,Acknowledgments,22,22,62,3,20.7,24
+811,section,Data and Code Availability,22,23,518,11,47.1,66
+-1,section*,References,23,24,892,100,8.1,13
+821,section,Appendix A: Reproducibility Settings,24,27,140,6,23.3,30
+922,section,Appendix B: The 49-Dimensional Invariant Feature Space,27,27,123,4,30.8,71
+945,section,Appendix C: IMS Test-3 Relabeling Justification,27,29,691,26,26.6,41
+979,section,Appendix D: Mechanism Analysis and ONGC Case Study,,,0,0,,0
+981,subsection,D.1 Generic Smoothing vs.\ Historian Averaging,29,30,498,18,27.7,38
+1024,subsection,D.2 Single-Asset ONGC Case Study,30,30,238,9,26.4,37
