@@ -3022,3 +3022,22 @@ claim only non-destruction or calibration for ONGC, not detection quality — un
 verify_tables: new ONGC gating guard, 906 values OK; negative tests 9/9 RED.
 Build: 22 pages, 0 undefined, 0 overfull; pages 15, 21, 22 rendered clean.
 Script: `revision-artifacts/final/apply_part1_ongc.py`.
+
+### Part 2 — last page: 22 pages (accepted per instruction)
+After Part 1 the D.2 rewrite filled more of p.22 (Table 14 full-width + Table 15 + ~half a column):
+~1.4 columns overflow, and pages 19-21 carry no stranded space.
+- Option 3 (done, kept): Figures 3 and 5 re-plotted at printed size (7.0 in) as vector PDFs by
+  new `paper/make_print_figures.py` (same data/aggregation/colours; no detector re-run). Old
+  rasters were drawn at 8.6 in and 2 x 8 in and scaled down (legend ~3.5 pt in print). Fig 3 now
+  shades the few-windows regime (1000 min: 2 runs, 1160 min: 1 run -- checked in the data), which
+  the text already claimed was annotated. Fig 5 labels are placed next to their markers inside
+  the axes; coincident percentiles merged (e.g. 95/99/99.5); 4 IMS labels in the dense elbow are
+  omitted (values in Table 9). Captions gained one clause each. Saved ~0.1 page (App. C now starts
+  on p.19); still 22.
+- Option 1 (tried on a scratch copy, not kept): Tables 14/15 moved to the start of App. A, with
+  and without the FloatBarrier before App. A -> 22 pages both ways.
+- Option 2 (bounded on a scratch copy, not applied): deleting ALL App. C prose (-800 words) -> 22;
+  deleting all App. C AND all D.1 prose (-1244 words) -> still 22 (last page 261 words). No
+  content-preserving tightening of App. C / D.1 can reach 21, so none was applied (it would add
+  content-loss risk for zero page gain).
+Build: 22 pages, 0 undefined, 0 overfull; pages 11 and 13 rendered at print size -- clean.
