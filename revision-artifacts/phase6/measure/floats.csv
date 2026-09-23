@@ -4,7 +4,7 @@ n,label,env,width,page,height_bp,frac_textheight,page_equiv,caption_words,src_li
 3,tab:imsdet,table,single,7,229.9,0.355,0.19,95,265
 4,fig:health,figure,single,8,180.4,0.278,0.151,37,291
 5,tab:onset,table,single,8,121.5,0.188,0.106,57,301
-6,tab:robust,table,single,8,254.5,0.393,0.209,75,325
+6,tab:robust,table,single,8,254.5,0.393,0.209,73,325
 7,tab:crossds,table,single,9,427.0,0.659,0.342,97,363
 8,fig:crossdataset,figure*,full,10,211.8,0.327,0.355,75,418
 9,fig:sweep,figure*,full,11,187.5,0.289,0.317,39,436

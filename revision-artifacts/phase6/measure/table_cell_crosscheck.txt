@@ -10,6 +10,6 @@ tab:tradeoff           cells= 66 numeric-tokens=  66 missing-in-PDF-float-text=0
 tab:ablation_general   cells= 42 numeric-tokens=  42 missing-in-PDF-float-text=0 
 tab:hyperparams        cells= 47 numeric-tokens=  52 missing-in-PDF-float-text=0 
 tab:deeparch           cells= 51 numeric-tokens=  35 missing-in-PDF-float-text=0 
-tab:basestats          cells= 12 numeric-tokens=  10 missing-in-PDF-float-text=3 {'1': 2, '2': 1}
+tab:basestats          cells= 12 numeric-tokens=  10 missing-in-PDF-float-text=2 {'1': 2}
 tab:d17label           cells= 80 numeric-tokens= 170 missing-in-PDF-float-text=0 
 tab:mechanism          cells= 24 numeric-tokens=  42 missing-in-PDF-float-text=0 

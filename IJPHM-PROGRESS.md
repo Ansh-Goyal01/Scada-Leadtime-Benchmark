@@ -3079,3 +3079,13 @@ pre-N-20); no TOST in the paper; Appendix C "six of the ten"; OC-SVM absent from
 gated IMS median survives pca1. Seven manuscript sentences the letter relied on were wrong or
 missing and were corrected in the manuscript (M1-M7 in letter_changes.md), incl. the pre-existing
 dangling "Section 8 names it as the complementary study".
+
+### Part 6 — final build and verify ✅ (22 pages)
+Build: 22 pages, 0 undefined refs, 0 undefined cites, 0 multiply-defined labels, 0 overfull h/vboxes.
+All 22 pages rendered (pdf.js/Chrome, 75 dpi strips) -- no clipping, column overrun or overprint.
+Figures 1-6 inspected at print resolution (Figs 2-5 at 110-150 dpi in Parts 2-3; Figs 1 and 6 at
+150 dpi) -- legible, no label collisions. Tests (JUnit XML): 181 collected, 180 passed, 1 failed:
+test_metropt_loads_with_expected_parameters ('real' != 'fixture': the real MetroPT3 CSV is present
+in data/raw -- environmental, same as Phase 6; no src/tests change touches it). Provenance:
+verify_tables 906 values all match; negative tests 9/9 RED. Inventory re-proof after the Part 5
+manuscript edits: 0 unlocated, 0 review, 57 documented; protected quotes 0 missing.

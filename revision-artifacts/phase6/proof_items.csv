@@ -109,7 +109,7 @@ S03.014,sentence,,located,1.00,A parallel line of work revises evaluation itself
 S03.015,sentence,,located,,"Tatbul, Lee, Zdonik, Alam, and Gottschlich (2018) generalise precision and recall from points to ranges with a tunable positional bias, so that early detection within an anomalous interval can be rewa"
 S03.016,sentence,,located,,"Our metric shares the diagnosis and differs in what it reports: rather than a score on a bounded scale, the gated lead time is a physical quantity— hours of warning—that a maintenance planner can act "
 S04.001,sentence,,located,0.96,"Univariate and multivariate statistical-process-control charts—the 3σ rule, the exponentially weighted moving average (EWMA) (Roberts, 1959), and Hotelling’s T 2 (Hotelling, 1947)—remain workhorses of"
-S04.002,sentence,,located,0.92,"In the unsupervised machinelearning family, Isolation Forest (Liu, Ting, & Zhou, 2008) and the one-class support vector machine (SVM) (Schölkopf, Platt, Shawe-Taylor, Smola, & Williamson, 2001) are wi"
+S04.002,sentence,,located,0.81,"In the unsupervised machinelearning family, Isolation Forest (Liu, Ting, & Zhou, 2008) and the one-class support vector machine (SVM) (Schölkopf, Platt, Shawe-Taylor, Smola, & Williamson, 2001) are wi"
 S04.003,sentence,,located,,"We evaluate representatives of both the classical and learning families under a single, fixed hyperparameter protocol so that the comparison is about the evaluation and the sampling question, not abou"
 S04.004,sentence,,located,1.00,Relation to published FEMTO/XJTU results.
 S04.005,sentence,,located,,"The FEMTO/PRONOSTIA and XJTU-SY campaigns are best known through the IEEE PHM 2012 challenge and subsequent remaining-useful-life (RUL) studies (Wang, Lei, Li, & Li, 2020; Nectoux et al., 2012), whose"
@@ -1150,7 +1150,7 @@ S46.002,sentence,,located,,"If that is the mechanism, two predictions follow, an
 S46.002.n01,number,5,located,,"If that is the mechanism, two predictions follow, and we test both directly on IMS (controlling window content at sampling factor 5 so only the smoothing differs)."
 S46.003,sentence,,located,1.00,Prediction 1: the aggregate advantage should grow with noise.
 S46.003.n01,number,1,located,,Prediction 1: the aggregate advantage should grow with noise.
-S46.004,sentence,,located,0.85,"We add zero-mean Gaussian noise to the per-window health statistic at signal-to-noise ratios of 30, 20, and 10 dB and recompute the (aggregate - decimate) lead time."
+S46.004,sentence,,located,0.62,"We add zero-mean Gaussian noise to the per-window health statistic at signal-to-noise ratios of 30, 20, and 10 dB and recompute the (aggregate - decimate) lead time."
 S46.004.n01,number,30,located,,"We add zero-mean Gaussian noise to the per-window health statistic at signal-to-noise ratios of 30, 20, and 10 dB and recompute the (aggregate - decimate) lead time."
 S46.004.n02,number,20,located,,"We add zero-mean Gaussian noise to the per-window health statistic at signal-to-noise ratios of 30, 20, and 10 dB and recompute the (aggregate - decimate) lead time."
 S46.004.n03,number,10,located,,"We add zero-mean Gaussian noise to the per-window health statistic at signal-to-noise ratios of 30, 20, and 10 dB and recompute the (aggregate - decimate) lead time."
