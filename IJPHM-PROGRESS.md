@@ -3066,3 +3066,16 @@ test count -> measured 181). protected_quotes.md: 0 MISSING. Protected items quo
   174.7 h and EWMA 89.1 h -- have no valid operating point ... so their gated lead is L = 0 ...
   3sigma, which PH ranks only eighth (77.0 h raw), is the one that clears the budget" (+ Intro).
 verify_tables: 906 values, all match (>= 895).
+
+### Part 5 — Response to Review audit ✅ (22 pages)
+`IJPHM-Response-to-Review-FINAL.md` committed as received (42a22e9), then 21 minimal corrections by
+`revision-artifacts/final/apply_part5_letter.py`; every change with old/new text and evidence in
+`revision-artifacts/final/letter_changes.md`. Author box resolved and deleted. Key corrections: tag
+v1.3.0; 906 verified values; 181 tests; disclosure 4 replaced by the verified 5%/20% statement; new
+disclosure 8 (ONGC gating), items renumbered; ONGC breakdown + N-29 (75.6, 180.2) in smaller
+corrections; Reviewer D length passage (22 vs 24 pages; 15 vs 29 tables; 6 vs 11 figures -- the
+letter's "30 tables" was wrong, submission PDF has 29); 195 -> 171 non-zero raw differences (195 was
+pre-N-20); no TOST in the paper; Appendix C "six of the ten"; OC-SVM absent from Tables 10/14; IF's
+gated IMS median survives pca1. Seven manuscript sentences the letter relied on were wrong or
+missing and were corrected in the manuscript (M1-M7 in letter_changes.md), incl. the pre-existing
+dangling "Section 8 names it as the complementary study".

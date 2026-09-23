@@ -6,19 +6,6 @@
 
 ---
 
-> **FOR THE AUTHOR — delete this box before sending.**
->
-> This letter was rebuilt from the final audit. It supersedes `IJPHM-Response-to-Review.md`, which contains stale and false claims.
->
-> **Confirm against the final PDF before sending:**
-> 1. Appendix C: the number of detectors for which test 3 becomes a guaranteed miss under the original label. The letter says "most detectors" rather than a count — check whether that table has ten or eleven rows before adding one.
-> 2. Table 4(b): the multi-seed gap results as quoted below.
-> 3. The repository claims are true only after you push `main`, cut `v1.2.3`, and create the Release. Do those first.
->
-> Deliberately **not** cited: em-dash counts and headline-restatement counts. Successive audits measured them differently, and a contestable number invites scrutiny that a described action does not.
-
----
-
 ## Opening
 
 I thank the three reviewers for reviews that were unusually specific. Several comments identified genuine mismatches between what the paper did and what it claimed. Following them up meant opening the code, and that uncovered further defects of the same kind that no reviewer had seen. All are disclosed below.
@@ -33,7 +20,7 @@ Every point raised has been addressed. The changes that alter what the paper cla
 
 The correction family is now N = 44. No hypothesis is rejected at any family size, and the non-destruction conclusion is unchanged.
 
-All analyses are reproducible from the public repository at tag v1.2.3. A script in the test suite re-derives 558 printed table values from the released result files and fails on any mismatch.
+All analyses are reproducible from the public repository at tag v1.3.0. A script in the 181-test suite re-derives 906 printed values from the released result files and fails on any mismatch.
 
 ---
 
@@ -43,13 +30,13 @@ None of the following was raised by a reviewer. Each was present in the submitte
 
 ### Defects that changed results
 
-**1. The headline dataset used a feature scheme the paper argues against.** Section 4.2 argues that a 445-dimensional, channel-count-dependent feature space is ill-posed at p ≫ n, and presents a 49-dimensional invariant space as the methodology. The IMS results were produced on the 445-dimensional path, on 78 test windows. All IMS results are re-baselined onto the invariant space. The 3σ run-level median moves from +18.4 h to +15.1 h, and the direction is no longer consistent across the three runs, so the submitted abstract's "consistent positive trend" is withdrawn. The Holm verdict is unchanged under both schemes.
+**1. The headline dataset used a feature scheme the paper argues against.** Section 4.2 argues that a 445-dimensional, channel-count-dependent feature space is ill-posed at p ≫ n, and presents a 49-dimensional invariant space as the methodology. The IMS results were produced on the 445-dimensional path, on runs with as few as 78 test windows. All IMS results are re-baselined onto the invariant space. The 3σ run-level median moves from +18.4 h to +15.1 h, and the direction is no longer consistent across the three runs, so the submitted abstract's "consistent positive trend" is withdrawn. The Holm verdict is unchanged under both schemes.
 
 **2. A resampling defect coarsened the two arms unequally.** The aggregation bin width was rounded to whole minutes with a one-minute floor. On FEMTO, Ferrara and ONGC, whose native spacing is sub-minute, the aggregate and decimate arms therefore ran at different effective logging intervals at the same nominal factor. Section 4.7 states that the controlled sweep holds everything constant except the logging interval; this defect sat inside that exact mechanism. It is fixed. IMS and XJTU-SY have integer-minute spacing, so the rounding was a no-op there, and both reproduce byte-identically after the fix, which confirms the correction is scoped. On the three affected datasets, every factor-1 row and every decimate row is unchanged; only aggregate rows at factor > 1 moved. The defect handicapped the aggregate arm, so the observed equivalence held despite it.
 
 **3. The training-fraction sweep did not vary the training fraction.** The sweep changed a configuration value the pipeline never read, so all five settings ran at the same split; a released column records the number of training windows as constant across the sweep. What varied was the onset anchor. This is fixed and the sweep re-run. The conclusion is unchanged and now actually tested: no crossover appears in [0.20, 0.60].
 
-**4. The robustness claim for historian gaps rested on one random draw.** The submitted manuscript stated that dropping a fifth of the historian's records does not cost the control charts their warning time, from a single random draw of which rows to remove. Re-running with five independent draws shows the claim holds at 5% missing rows, where no chart's lead changes in any draw. At 20% it holds for the univariate charts but fails for Hotelling T², which collapses in 2 of 5 draws — a single run's alarm survives or does not depending on which rows are removed. Table 4(b) now reports across-draw means with ranges, and the text states the Hotelling T² vulnerability.
+**4. The robustness claim for historian gaps rested on one random draw.** The submitted manuscript stated that dropping a fifth of the historian's records does not cost the control charts their warning time, from a single random draw of which rows to remove. Re-running with five independent draws shows the claim holds at 5% missing rows: on IMS, Hotelling T² and EWMA are unchanged in every draw, and no chart's per-draw mean lead moves by more than 0.83 h on either dataset. At 20% it holds for the univariate charts and Isolation Forest, whose across-draw mean lead changes by at most 0.92 h on IMS and XJTU-SY, but fails for Hotelling T² on IMS, which collapses in 2 of 5 draws (across-draw mean 134.9 h, range 58.0–186.1 h, against 186.1 h without gaps) — a single run's alarm survives or does not depending on which rows are removed. Table 4(b) now reports across-draw means, and the text gives the ranges and states the Hotelling T² vulnerability.
 
 ### Claims that did not match the evidence
 
@@ -59,21 +46,23 @@ None of the following was raised by a reviewer. Each was present in the submitte
 
 **7. A sentence named the wrong detector as its worked example.** The text stated that EWMA attains the highest raw lead in the trade-off table, where it does not. The gating argument is unaffected and is stronger with the correct detector: Hotelling T² genuinely has the highest raw lead among the control charts and no valid operating point at any tested threshold.
 
+**8. The ONGC case study reported raw lead as if it were detection quality.** Nine of the eleven detectors alarm 30–35 h before the labeled shutdown, but under the paper's own gated metric at τ = 10% only Hotelling T² (pre-onset false-alarm rate 6.5%) and the RMS-trend baseline (0.1%) have valid alarms; the other eight alarming detectors exceed the budget, at 11.7% (Isolation Forest) to 95.2% (CUSUM). The data-derived onset lies only about 6 h before the shutdown, so their first alarms precede it by 28–29 h and count as pre-onset false alarms. That verdict is itself ambiguous: the onset estimator is systematically late under gradual degradation (the bias analysis Reviewer G requested, Section 4.3), so some of those alarms may be genuine early detection, and with a single asset and no ground-truth defect-initiation time the case study cannot distinguish the two. Appendix D.2 and Section 7.2 now state both readings. The aggregate-versus-decimate contrast on ONGC uses raw lead and is unaffected.
+
 ### Figure defects
 
-**8. The trade-off figure omitted the detectors its argument depends on.** It plotted five of the seven detectors in its source file. The missing two were CUSUM and Deep SVDD, and Deep SVDD's low-false-alarm operating point is the basis of the complementary recommendation in Sections 6.9 and 7.4.
+**9. The trade-off figure omitted the detectors its argument depends on.** It plotted five of the seven detectors in its source file. The missing two were CUSUM and Deep SVDD, and Deep SVDD's low-false-alarm operating point is the basis of the complementary recommendation in Sections 6.9 and 7.4.
 
-**9. Detectors shared colours.** A second, divergent colour table meant that EWMA and LSTM-AE were drawn in the same colour, as were Hotelling T² and Deep SVDD. All eleven detectors now have distinct colours. Eleven categories cannot be made fully dichromat-safe by hue alone; I have not added a redundant encoding.
+**10. Detectors shared colours.** A second, divergent colour table meant that EWMA and LSTM-AE were drawn in the same colour, as were Hotelling T² and Deep SVDD. All eleven detectors now have distinct colours. Eleven categories cannot be made fully dichromat-safe by hue alone; I have not added a redundant encoding.
 
-**10. The ONGC bars in Figure 2 were drawn 60 times too small**, owing to a unit conversion applied twice in the plotting script.
+**11. The ONGC bars in Figure 2 were drawn 60 times too small**, owing to a unit conversion applied twice in the plotting script.
 
 ### The reproducibility statement
 
-**11. The Data and Code Availability section made claims that were false of the public repository.** The result tables were excluded from version control, so the statement that every table and figure is generated from released result files was untrue of what a reader could obtain. The statement also claimed that a derived ONGC series was released when it was not, gave a stale test count, and cited a file that did not exist. All result files are now released, with a manifest mapping each table and figure to its source file and superseded files separated from current ones. The ONGC derived artifacts are generated by a released exporter, and a released test recomputes the published ONGC degradation onset from those files alone, touching no proprietary input. Each claim was verified from a clean clone of the public repository rather than the working tree.
+**12. The Data and Code Availability section made claims that were false of the public repository.** The result tables were excluded from version control, so the statement that every table and figure is generated from released result files was untrue of what a reader could obtain. The statement also claimed that a derived ONGC series was released when it was not, gave a stale test count, and cited a file that did not exist. All result files are now released, with a manifest mapping each table and figure to its source file and superseded files separated from current ones. The ONGC derived artifacts are generated by a released exporter, and a released test recomputes the published ONGC degradation onset from those files alone, touching no proprietary input. Each claim was verified from a clean clone of the public repository rather than the working tree.
 
 ### Smaller corrections
 
-A caption claimed ten evaluated detectors against a nine-row table. A caption claimed valid-alarm fractions were unchanged under injected gaps while showing one that changed. The ONGC case study stated that every detector alarmed roughly 35 h ahead, when nine of eleven do, with RMS-trend at about 23 h and Deep SVDD not alarming before failure.
+A caption claimed ten evaluated detectors against a nine-row table. A caption claimed valid-alarm fractions were unchanged under injected gaps while showing one that changed. The ONGC case study stated that every detector alarmed roughly 35 h ahead; nine of eleven alarm 30–35 h ahead (seven within 34.9–35.3 h, CUSUM at 33.9 h and Hotelling T² at 30.4 h), RMS-trend at 22.8 h, and Deep SVDD does not alarm before failure (disclosure item 8 gives the gated reading). Two values were double-rounded: the historian-averaging arm of the denoiser comparison (Table 15b) is 75.6 h, not 75.7 h (source 75.647 h), and the one-class SVM's prognostic horizon (Table 2) is 180.2 h, not 180.3 h (source 180.250 h).
 
 ---
 
@@ -101,7 +90,7 @@ The circularity has been probed empirically at Reviewer G's request. The contras
 
 > "one-class SVM is described as evaluated (Section 4.5) but appears in no results table. It should be reported or the mention removed."
 
-**Response.** Reported. The code produced the results; they had not been included. One-class SVM now appears alongside Deep SVDD in every table covering the additionally-evaluated detectors.
+**Response.** Reported. The code produced the results; they had not been included. One-class SVM now appears alongside Deep SVDD in the results tables (Tables 2, 5, 6 and 9) and the compute table (Table 11); the feature-group ablation (Table 10) and the relabel contrast (Table 14) report Deep SVDD without it.
 
 Adding it widens the correction family from N = 40 to N = 44 and raises the uncorrected family-wise error rate from approximately 0.87 to approximately 0.90. No hypothesis is rejected at either family size, and the smallest raw p-value is 0.125. The requested addition widens the evidence base without altering any conclusion.
 
@@ -121,7 +110,7 @@ We have also narrowed the framing, as the reviewer's overall evaluation anticipa
 
 **Response.** Both. The claim is bounded throughout, and supported by an equivalence analysis at a margin of δ = 1 h, stated and justified at first use: a maintenance planner cannot act on sub-hour differences in warning time.
 
-Equivalence holds in 33 of 33 detector × dataset cells across XJTU-SY, FEMTO and Ferrara, using two-sided bootstrap confidence intervals on run-level differences; no interval endpoint exceeds 0.56 h. No cell shows decimation superior beyond the margin. On IMS, equivalence cannot be established and we say so: the exact one-sided sign test at n = 3 floors at p = 0.125, so no margin can reach α = 0.05, just as significance cannot be reached in the other direction. TOST results are reported where the non-zero-difference count supports them; the remaining cells are marked untestable rather than given a p-value that could not have reached significance.
+Equivalence holds in 33 of 33 detector × dataset cells across XJTU-SY, FEMTO and Ferrara, using two-sided bootstrap confidence intervals on run-level differences; no interval endpoint exceeds 0.56 h. No cell shows decimation superior beyond the margin. On IMS, equivalence cannot be established and we say so: the exact one-sided sign test at n = 3 floors at p = 0.125, so no margin can reach α = 0.05, just as significance cannot be reached in the other direction. Equivalence is judged by whether each run-level 95% bootstrap interval lies inside ±δ, and the exact sign-test p-value is reported beside each cell (Table 5).
 
 ---
 
@@ -141,7 +130,7 @@ The replacement is bounded around the margin rather than around an absence of ne
 
 We lead with the result that runs against our own framing. Under the original label, the third test's aggregate-minus-decimate difference for the 3σ chart is exactly zero and drops out under the zero-difference rule of Section 4.9, leaving two positive runs and none negative. The withdrawn claim that aggregation shortens lead time in no run would therefore have been true under the original label, and is false only under the corrected one. The relabelling made the paper's own claim harder to support.
 
-The effect on sample size is detector-dependent: for most detectors the third test becomes a guaranteed miss and the effective n falls, while others retain n = 3. No IMS detector reaches significance under either label, since the best attainable floor is p = 0.25.
+The effect on sample size is detector-dependent: for six of the ten detectors in that table the third test becomes a guaranteed miss and the effective n falls, while the other four retain n = 3. No IMS detector reaches significance under either label, since the best attainable floor is p = 0.25.
 
 ---
 
@@ -153,9 +142,9 @@ The effect on sample size is detector-dependent: for most detectors the third te
 
 > "the paper is much longer than needed: the headline finding is restated many times, Table 21 and Table 23 can be cut, Section 7.4 duplicates Section 6's summaries"
 
-**Response.** Every named item is done. Table 21 is deleted and replaced by one sentence; Table 23 is deleted and the figure carries the result alone; Section 7.4 is deleted in full. Section 6's opening summary list, which previewed subsections that immediately follow, is also deleted. The five-cell exception, which had been enumerated in full four times, now appears once, in the results where the cells are reported. The term "non-destruction" falls from 21 occurrences to 8. Tables are consolidated from 30 to 23 and figures from 11 to 6, with no result removed.
+**Response.** Every named item is done. Table 21 is deleted and replaced by one sentence; Table 23 is deleted and the figure carries the result alone; Section 7.4 is deleted in full. Section 6's opening summary list, which previewed subsections that immediately follow, is also deleted. The five-cell exception, which had been enumerated in full four times, now appears once, in the results where the cells are reported. The term "non-destruction" falls from 21 occurrences to 8. Tables are consolidated from 29 to 15 and figures from 11 to 6, with no result removed.
 
-I should be direct about the net effect: the paper is 30 pages against 24 as submitted. The reduction in repetition is real and every cut the reviewer named was made, but the revision also adds an equivalence analysis, a gated-metric contrast table, an architecture table, a signal-theoretic section, an onset-estimator analysis, Appendix C, a per-dataset coarsening statement, scoping paragraphs and three related-work paragraphs — all requested by the reviewers. I judged that removing the sensitivity and ablation work to reclaim pages would be the wrong trade.
+The net effect: the revised paper is 22 pages against 24 as submitted, with 15 tables against 29 and 6 figures against 11. It is shorter although the revision adds an equivalence analysis, a gated-metric contrast table, an architecture table, a signal-theoretic section, an onset-estimator analysis, Appendix C, a per-dataset coarsening statement, scoping paragraphs and three related-work paragraphs — all requested by the reviewers. The pages were recovered by merging tables that reported overlapping results, redrawing figures at print size and removing repetition, not by removing the sensitivity and ablation work: every sentence, number, table cell and citation of the longer intermediate draft is accounted for in the final version.
 
 ---
 
@@ -181,7 +170,7 @@ I should be direct about the net effect: the paper is 30 pages against 24 as sub
 
 **Response.** Both regenerated. The cause was a character-encoding fault in the plotting scripts that corrupted Δ, −, σ, ≈ and ²; these now render through mathtext. A doubled parenthesis in Figure 2's legend is also fixed.
 
-Checking the remaining figures, as asked, surfaced disclosure items 8, 9 and 10, together with a clipped axis label, annotations that overlapped plotted series, and percentile labels that were illegible where curves cross. All are fixed and were verified by rendering each figure at print size.
+Checking the remaining figures, as asked, surfaced disclosure items 9, 10 and 11, together with a clipped axis label, annotations that overlapped plotted series, and percentile labels that were illegible where curves cross. All are fixed and were verified by rendering each figure at print size.
 
 ---
 
@@ -215,7 +204,7 @@ Checking the remaining figures, as asked, surfaced disclosure items 8, 9 and 10,
 
 **Response.** The reviewer identified a real tension between the paper's argument and its own headline analysis. A new table reports the aggregate-versus-decimate contrast under both the raw and the gated metric, per dataset. The conclusion is unchanged: no hypothesis is rejected under either.
 
-We retain raw lead as the primary contrast and now give the reason explicitly. The gated quantity depends on the onset through the pre-onset false-alarm rate, whereas the raw-lead difference contains no onset term and is invariant to the onset definition — which Reviewer G's sensitivity check now confirms by measurement. We also report the cost: gating produces exact ties, so the number of non-zero paired differences falls from 195 to 98 and the gated test is strictly less powerful.
+We retain raw lead as the primary contrast and now give the reason explicitly. The gated quantity depends on the onset through the pre-onset false-alarm rate, whereas the raw-lead difference contains no onset term and is invariant to the onset definition — which Reviewer G's sensitivity check now confirms by measurement. We also report the cost: gating produces exact ties, so the number of non-zero paired differences falls from 171 to 98 and the gated test is strictly less powerful.
 
 ---
 
@@ -251,13 +240,13 @@ We retain raw lead as the primary contrast and now give the reason explicitly. T
 
 > "there are many tables, and some of the secondary results could be moved to supplementary material"
 
-**Response.** Rather than move them, we consolidated. Four ablation tables reporting the same finding are now one; the three per-dataset sign-test tables are one table with a dataset column; the four conformal calibration figures are one four-panel figure. Tables fall from 30 to 23 and figures from 11 to 6, with no result removed.
+**Response.** Rather than move them, we consolidated. Four ablation tables reporting the same finding are now one; the three per-dataset sign-test tables, the equivalence table and the Holm table are one table grouped by dataset (Table 5); the four conformal calibration figures are one four-panel figure. Tables fall from 29 to 15 and figures from 11 to 6, with no result removed.
 
 ---
 
 > "some tables are quite dense and would benefit from slightly improved formatting or simplification."
 
-**Response.** The Holm correction table, the densest, is restructured from a 45-row list into an 11 × 4 matrix. Its adjusted-p and rejection columns were identical in every row, so they are replaced by a single sentence in the caption. The rendered manuscript now has no table extending beyond its column.
+**Response.** The Holm correction table, the densest, was a 45-row list. Its raw p-values are now a column of Table 5 (Table 6 for IMS), eleven detectors by four datasets, and its adjusted-p and rejection columns, identical in every row, are replaced by a single sentence in the Table 5 caption. The rendered manuscript now has no table extending beyond its column.
 
 ---
 
@@ -289,7 +278,7 @@ We stop short of a conservation result and say so. The detectors monitor a scala
 
 The raw-lead differences are exactly invariant, with maximum absolute deviation 0.000 h across 99 dataset × detector × indicator cells. This confirms by measurement what the manuscript previously argued by construction.
 
-The gated differences do move, and we bound the claim accordingly. The three multi-bearing campaigns stay within ±1 h under every indicator, while on IMS every positive gated median falls to zero under both alternatives. We therefore state that raw-lead non-destruction does not depend on the onset definition, whereas any gated directional pattern on IMS does and is not claimed.
+The gated differences do move, and we bound the claim accordingly. The three multi-bearing campaigns stay within ±1 h under every indicator, while on IMS the positive gated medians of CUSUM, EWMA and Hotelling T² fall to zero under both alternatives and Isolation Forest's under the kurtosis-only indicator (under the first principal component it is unchanged, at +3.43 h). The manuscript therefore claims only that raw-lead non-destruction does not depend on the onset definition; it claims no gated directional pattern on IMS, which does depend on it.
 
 ---
 
@@ -319,7 +308,7 @@ Two footnotes record findings from the transcription: no model uses early stoppi
 
 **Response.** The statement now names the released ONGC artifacts file by file, and states what is withheld: raw waveforms, channel-level measurements and asset identifiers. The released health indicator is a single baseline-standardised scalar aggregated over all four channels, so no per-channel value or absolute vibration amplitude can be recovered from it.
 
-Acting on this comment uncovered disclosure item 11. The guarantee is now a test rather than a claim: a released test recomputes the published ONGC degradation onset from the released files alone, and the exporter refuses to write output if the onset does not reproduce. This was verified from a clean clone of the public repository.
+Acting on this comment uncovered disclosure item 12. The guarantee is now a test rather than a claim: a released test recomputes the published ONGC degradation onset from the released files alone, and the exporter refuses to write output if the onset does not reproduce. This was verified from a clean clone of the public repository.
 
 ---
 
@@ -341,4 +330,4 @@ Every point raised by the three reviewers has been addressed. Two original choic
 
 The revision also corrects defects that no reviewer identified. I report them in full because the standard the reviewers applied — that the paper claim exactly what the evidence supports — does not depend on which defects happened to be visible from outside.
 
-The analyses are reproducible from the public repository at tag v1.2.3, with a pinned environment and a test suite that includes a script re-deriving 558 printed table values from the released result files and an assertion that the ONGC case study reproduces from released files alone.
+The analyses are reproducible from the public repository at tag v1.3.0, with a pinned environment and a 181-test suite that includes a script re-deriving 906 printed values from the released result files and an assertion that the ONGC case study reproduces from released files alone.
