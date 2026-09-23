@@ -1,21 +1,21 @@
 """Guarded manuscript edits: every old string must occur exactly once. Overwritten per batch;
 each batch's old/new text is appended to revision-artifacts/final2/edit_log.md.
-
-Batch: Part 1 layout -- the per-bearing paragraph repeats Table 7's n.s. notes.
 """
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 TEX = ROOT / "paper" / "files" / "scada_ijphm.tex"
 LOG = ROOT / "revision-artifacts" / "final2" / "edit_log.md"
-BATCH = "Part 1 layout: per-bearing paragraph"
+BATCH = "Part 2: internal tracking IDs removed from Data Availability"
 EDITS = [
-    (r"they differ only where valid detectors disagree, which happens on none of the scoreable "
-     r"bearings here. Only 5 of the ten bearings are scoreable at full resolution: Bearing1\_2 has no "
-     r"detectable onset, and on Bearing1\_3, 1\_5, 2\_2 and 2\_5 the onset precedes the first scored "
-     r"window.",
-     r"they differ only where valid detectors disagree, which happens on none of the five scoreable "
-     r"bearings (Table~\ref{tab:perbearing} marks the other five and why)."),
+    (r"(the pre-D-2 legacy feature schema, or the pre-N-20 rerun)",
+     r"(an earlier feature schema, or results computed before the aggregation bin width was corrected)"),
+    (r"together with the full post-N-20 sampling sweep",
+     r"together with the full sampling sweep"),
+    (r"both of which are the pre-N-20 arm, retained as provenance",
+     r"both of which were computed before the aggregation bin width was corrected, retained as provenance"),
+    (r"the aggregate-vs-decimate contrast is taken from the post-N-20 files named above",
+     r"the aggregate-vs-decimate contrast is taken from the corrected files named above"),
 ]
 
 
