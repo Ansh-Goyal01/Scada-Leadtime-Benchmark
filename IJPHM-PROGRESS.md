@@ -3052,3 +3052,17 @@ Build: 22 pages, 0 undefined, 0 overfull; pages 11 and 13 rendered at print size
   and rendered at print size (p.10) -- distinct from 3sigma sky-blue and Transformer navy.
 - Test count: pytest --collect-only = 181 (170 before + 11 new colour-pair tests) ->
   "a 181-test suite" (was "168").
+
+### Part 4 — content-loss re-proof ✅ (22 pages)
+Re-measured (phase6/measure), rebuilt inventory_after.csv, re-ran proof.py vs inventory_before.csv:
+**0 unlocated**, 0 review; located 585 sentences (+40 by recorded decision), 688 claim-locations,
+784 numbers, 819 table cells (+4 by decision), 58 citations; 57 documented changes (new: "168"
+test count -> measured 181). protected_quotes.md: 0 MISSING. Protected items quoted from the PDF:
+- G3: "...a maximum absolute deviation of 0.000 h across all 99 dataset x detector x indicator cells."
+- D18: "It collapses in 2 of the 5 draws at 20%, giving an across-draw mean of 134.9 h over a range
+  of 58.0-186.1 h, and the collapse is driven by a single run (test 3 falls from 315.9 to 59.7 h)."
+- 11-detector ranking (Sec. 6.11): "The seven detectors PH ranks highest -- LSTM-AE 199.6 h, TCN-AE
+  185.4 h, Transformer-AD 184.0 h, the one-class SVM 180.2 h, Hotelling T2 176.9 h, Isolation Forest
+  174.7 h and EWMA 89.1 h -- have no valid operating point ... so their gated lead is L = 0 ...
+  3sigma, which PH ranks only eighth (77.0 h raw), is the one that clears the budget" (+ Intro).
+verify_tables: 906 values, all match (>= 895).

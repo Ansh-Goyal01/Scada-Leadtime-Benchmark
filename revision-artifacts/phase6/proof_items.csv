@@ -387,7 +387,7 @@ S18.014,sentence,,located,,"We use a single fixed hyperparameter proto- col thro
 S19.001,sentence,,located,,"All experiments use a fixed random-seed protocol; stochastic detectors (Isolation Forest, the conformal wrapper) inject the seed explicitly so that runs are bit-reproducible."
 S19.002,sentence,,located,,"The feature pipeline caches extracted features to Parquet so that the sampling sweep, ablations, calibration, and trade-off analyses all consume identical features."
 S19.003,sentence,,located,,"The released environment is pinned to the exact package versions that produced the numbers reported here, and a test suite (168 tests) asserts the metric’s ungameability properties, the leakage-free o"
-S19.003.n01,number,168,located,,"The released environment is pinned to the exact package versions that produced the numbers reported here, and a test suite (168 tests) asserts the metric’s ungameability properties, the leakage-free o"
+S19.003.n01,number,168,documented,test count corrected to the measured suite (final pass Part 3): pytest --collect-only = 181 -> 'a 181-test suite',"The released environment is pinned to the exact package versions that produced the numbers reported here, and a test suite (168 tests) asserts the metric’s ungameability properties, the leakage-free o"
 S19.004,sentence,,located,,The figures and tables in this paper are generated directly from the released result tables; no number in this manuscript is hand-edited.
 S20.001,sentence,,located,,We present IMS first for its raw-waveform access and the mechanism analysis it permits; XJTU-SY (n = 10) is the primary inferential test.
 S20.001.n01,number,10,located,,We present IMS first for its raw-waveform access and the mechanism analysis it permits; XJTU-SY (n = 10) is the primary inferential test.
@@ -761,7 +761,7 @@ S28.028.n01,number,0.05,located,,"The strict τ = 0.05 column of Table 12 corre-
 S28.029,sentence,,located,,"We stress this is an order-of-magnitude anchor, not a site-specific optimisation: the true optimum requires an operator’s actual cI and cF , which we do not have, and Eq."
 S28.030,sentence,,located,0.67,(6) is offered so a practitioner can substitute their own.
 S28.030.n01,number,6,located,,(6) is offered so a practitioner can substitute their own.
-S29.001,sentence,,located-manual,"paraphrased: tab:ablation_general caption: six non-sequence detectors, mean over the three runs","We ablate feature families on IMS for all six non-sequence detectors, reporting the valid-alarm fraction by group across the three runs (Table 14)."
+S29.001,sentence,,located,0.62,"We ablate feature families on IMS for all six non-sequence detectors, reporting the valid-alarm fraction by group across the three runs (Table 14)."
 S29.002,sentence,,located,,"The pattern is consistent and somewhat against expectation: time-domain amplitude features (rms_only or time_only) give each detector its highest or tied-highest validity, and admitting spectral, enve"
 S29.003,sentence,,located,,"For the memory-based control charts it sharpens: rms_only is the unique group at which 3σ and EWMA reach full validity (1.00 at 0% pre-onset FAR), and spectral/envelope/all collapse all four SPC chart"
 S29.003.n01,number,1.00,located,,"For the memory-based control charts it sharpens: rms_only is the unique group at which 3σ and EWMA reach full validity (1.00 at 0% pre-onset FAR), and spectral/envelope/all collapse all four SPC chart"

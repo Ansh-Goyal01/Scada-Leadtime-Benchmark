@@ -42,6 +42,8 @@ SC_WORDS = {"yes", "no", "yes-", "1+,2 ties", "yes$^{-}$"}
 
 DOCUMENTED[("num", "34")] = ("ONGC corrected to the data (n20_rerun_long_ONGC.csv, factor 1): "
                              "'34-35 h' became '30-35 h (seven within 34.9-35.3 h, CUSUM 33.9, Hotelling 30.4)'")
+DOCUMENTED[("num", "168")] = ("test count corrected to the measured suite (final pass Part 3): "
+                              "pytest --collect-only = 181 -> 'a 181-test suite'")
 TEXSRC = re.sub(r"\\input\{(gen/[^}]+)\}",
                 lambda m: (ROOT / "paper/files" / (m.group(1) + ".tex")).read_text(encoding="utf-8"),
                 (ROOT / "paper/files/scada_ijphm.tex").read_text(encoding="utf-8"))

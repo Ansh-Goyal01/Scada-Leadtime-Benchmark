@@ -28,7 +28,7 @@
 
 ## D3 -- deep models as rows in the trade-off table; per-threshold statement
 - `checked per threshold` found in: tab:tradeoff
-  > The three deep reconstruction models and the one-class SVM are listed so the “no valid operating point” claim can 6 be checked per threshold: all twelve of their entries are dag- gered.
+  > The three deep reconstruction models and the one-class SVM are listed so the “no valid operating point” claim can be be checked per threshold: all twelve of their entries are dag- ch gered. on en
 
 ## D4 -- one-class SVM in results tables; N = 44
 - `N ?= ?44` found in: Conclusion; Front matter: title, abstract, keywords; Introduction; Multiple-Comparison Correction; tab:crossds
@@ -47,7 +47,7 @@
   > This is a statement about a data regime, not the architectures: across bearings and training fractions these runs furnish between 20 and 335 normal training windows, whereas the models carry 2.0-5.5×104 parameters, so the comparison is made where deep models are structurally disadvantaged.
 
 ## G1 -- onset-estimator bias k sigma_b/m, sigma_b/m after Algorithm 1
-- `late by approximately` found in: Leakage-Free Degradation Onset
+- `late by approximately` found in: D.2 Single-Asset ONGC Case Study; Leakage-Free Degradation Onset
   > For a degradation ramp of slope m the onset is late by approximately kσb/m, with a standard deviation of order σb/m.
 
 ## G2 -- Sec. 7.3 signal-theoretic argument; 'we claim no conservation result'
