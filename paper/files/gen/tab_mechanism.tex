@@ -1,0 +1,31 @@
+\begin{table}[t] \small
+	\setlength{\tabcolsep}{4pt}
+	\begin{center}
+	\caption{IMS mechanism tests at sampling factor 5, the four magnitude SPC charts. (a) Noise injection: aggregate$-$decimate lead-time difference (h) collapsed to one mean per run (tests 1, 2, 3; $n=3$), its mean, and the runs with a positive sign; a directional trend that cannot be significance-tested at $n=3$. (b) Denoisers applied to the decimated stream: mean lead (h) over the twelve chart-runs (four charts $\times$ three runs) and the valid alarms among them, against raw aggregation and raw decimation.}
+	\label{tab:mechanism}
+	\textbf{(a) Noise injection}\\[2pt]
+	\begin{tabular}{l l r c}
+		\hline \hline
+		\textbf{SNR} & \textbf{Per-run [t1, t2, t3]} & \textbf{Mean} & \textbf{Sign} \\
+		\hline
+		None (native) & $-7.94, +2.62, +4.28$ & $-0.35$ & 2/3 \\
+		30 dB & $-0.44, -2.59, +5.95$ & $+0.97$ & 1/3 \\
+		20 dB & $+10.60, +0.53, +0.12$ & $+3.75$ & 3/3 \\
+		10 dB & $+14.99, +0.53, +4.28$ & $+6.60$ & 3/3 \\
+		\hline \hline
+	\end{tabular}
+	\\[6pt]\textbf{(b) Denoisers}\\[2pt]
+	\begin{tabular}{l r r}
+		\hline \hline
+		\textbf{Stream / denoiser} & \textbf{Mean lead} & \textbf{Valid} \\
+		\hline
+		Aggregate (historian) & 75.6 & 7/12 \\
+		Decimate (raw) & 76.0 & 8/12 \\
+		Decimate + median & 69.6 & 8/12 \\
+		Decimate + moving avg & 76.0 & 8/12 \\
+		Decimate + Kalman & 75.6 & 8/12 \\
+		Decimate + wavelet & 73.2 & 6/12 \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table}

@@ -19,6 +19,8 @@ OUT.mkdir(parents=True, exist_ok=True)
 for f in SRC.iterdir():
     if f.suffix in {".cls", ".bib", ".png", ".bst", ".sty"}:
         shutil.copy2(f, OUT / f.name)
+if (SRC / "gen").is_dir():          # generated tables (Phase 1+)
+    shutil.copytree(SRC / "gen", OUT / "gen", dirs_exist_ok=True)
 
 lines = (SRC / "scada_ijphm.tex").read_text(encoding="utf-8").split("\n")
 

@@ -13,7 +13,8 @@ import pypdf
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PDF = ROOT / "paper/files/scada_ijphm.pdf"
 TEX = ROOT / "paper/files/scada_ijphm.tex"
-OUT = ROOT / "revision-artifacts/phase0"
+import os
+OUT = pathlib.Path(os.environ.get("MEASURE_OUT", ROOT / "revision-artifacts/phase0"))  # positions.mpos in, csv/json out
 SP_TO_BP = 72.0 / 72.27 / 65536.0
 PT_TO_BP = 72.0 / 72.27
 TEXTHEIGHT_BP = 650.43 * PT_TO_BP
@@ -46,9 +47,14 @@ def tex_structure():
         if m:
             title = re.split(r"\}\s*(\\label|$)", m.group(3))[0]
             heads[i] = (m.group(1), title)
+    # floats may live in \input{gen/...} files: scan the expanded source (order is all
+    # that matters for floats; heading line numbers above stay those of the main file)
+    expanded = re.sub(r"\\input\{(gen/[^}]+)\}",
+                      lambda mm: (TEX.parent / (mm.group(1) + ".tex")).read_text(encoding="utf-8"),
+                      "\n".join(tex)).split("\n")
     floats, cur = [], None
     env_re = re.compile(r"\\begin\{(figure\*?|table\*?|algorithm)\}")
-    for i, ln in enumerate(tex, 1):
+    for i, ln in enumerate(expanded, 1):
         m = env_re.search(ln)
         if m:
             cur = dict(env=m.group(1), line=i, label=None)

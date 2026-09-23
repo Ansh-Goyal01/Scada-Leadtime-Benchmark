@@ -1,0 +1,25 @@
+\begin{table}[t] \footnotesize
+	\begin{center}
+	\caption{IMS controlled sweep ($n=3$) and the ONGC case study ($n=1$). IMS: run differences (h) for tests 1, 2, 3, each collapsing the five within-run sampling factors to one mean aggregate$-$decimate difference, with the run-level median, $n_+/n_-$ and the exact two-sided sign-test $p$, which floors at 0.25 at $n=3$ ($^\ast$: one positive run and two ties, not counted as sign-consistent). ONGC: descriptive median over the five sampling factors, in minutes; no inference. Every ONGC difference is about a minute or less.}
+	\label{tab:imsongc}
+	\setlength{\tabcolsep}{2.5pt}
+	\begin{tabular}{l l r c r r}
+		\hline \hline
+		 & \multicolumn{4}{c}{\textbf{IMS} (h)} & \textbf{ONGC} \\
+		\textbf{Detector} & \textbf{Run diffs} & \textbf{Med.} & $n_+/n_-$ & $p$ & \textbf{(min)} \\
+		\hline
+		$3\sigma$ & $+25.8,+15.1,-1.0$ & $+15.1$ & 2/1 & 1.00 & 0.0 \\
+		Iso.\ Forest & $-0.7,+16.9,+3.4$ & $+3.4$ & 2/1 & 1.00 & $+1.2$ \\
+		EWMA & $-3.9,+4.3,+2.1$ & $+2.1$ & 2/1 & 1.00 & $-0.5$ \\
+		CUSUM & $+4.2,+4.7,+4.3$ & $+4.3$ & 3/0$^{\mathrm{s}}$ & 0.25 & 0.0 \\
+		Hotelling $T^2$ & $+1.0,+1.2,+81.7$ & $+1.2$ & 3/0$^{\mathrm{s}}$ & 0.25 & $+0.4$ \\
+		Deep SVDD & $+8.9,0.0,0.0$ & 0.0 & 1/0$^\ast$ & 1.00 & 0.0 \\
+		One-class SVM & $-2.4,-5.5,+1.5$ & $-2.4$ & 1/2 & 1.00 & $+0.2$ \\
+		RMS-trend & $-0.2,0.0,+2.4$ & 0.0 & 1/1 & 1.00 & $+1.2$ \\
+		LSTM-AE & $-1.4,-0.4,+56.1$ & $-0.4$ & 1/2 & 1.00 & $+0.2$ \\
+		TCN-AE & $-1.4,-0.4,+9.0$ & $-0.4$ & 1/2 & 1.00 & $+0.2$ \\
+		Transformer-AD & $-1.4,-0.4,+68.8$ & $-0.4$ & 1/2 & 1.00 & $+0.2$ \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table}

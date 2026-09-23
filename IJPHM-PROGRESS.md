@@ -2886,3 +2886,47 @@ note above; manuscript is now **30 pages**). No manuscript, code or result-file 
      most of (c) FEMTO, fig:tradeoffs (b) XJTU, 6 ONGC detector medians in fig:crossdataset.
 - **Phase 0 COMPLETE. Stopped for author approval before Phase 1.** Not committed (awaiting
   instruction; branch is `main`).
+
+## SHORTENING — PHASES 1-7 (branch `ijphm-shorten`, 2026-09-23)
+
+Author GO after Phase 0; decisions recorded in `IJPHM-SHORTENING-PLAN.md` §12.
+Phase 0 committed as `7755be3` (30 pages).
+
+**Renderer.** xpdf `pdftoppm` is NOT installed (filesystem search of C: and D:; no
+Ghostscript/ImageMagick/mutool either). Substitute, stated openly: Mozilla pdf.js in
+headless Chrome driven over the DevTools protocol (`revision-artifacts/tools/render_pages.py`)
+-- a full rasteriser. Build + checks: `revision-artifacts/tools/build.py`.
+
+**Stale memory corrected.** The "3 residual overfull tabulars" note is stale: the Phase 0
+build log and every build since show 0 overfull boxes. Phase 0 finding 6 (possible p.14
+overprint) rested on it; the rendered page shows no collision.
+
+### Phase 1 — table consolidation ✅ 29 pages
+Generator `paper/make_shortened_tables.py` -> `paper/files/gen/*.tex` (\input). Merges:
+M1 crossds+equiv+holm -> `tab:crossds`; imssweep+ongc(11 detectors) -> `tab:imsongc`;
+gated contrast compacted side by side; M2 imslead+farbudget+phrank -> `tab:imsdet`
+(eleven rows, PH order; 3σ PH's 8th; top seven L=0); OC-SVM row added to `tab:tradeoff`;
+M3 noise+denoise -> `tab:mechanism`; M4 hyperparams+compute; M5 tab:conformal values into
+the fig:conformal caption. Height (page-equivalents): M1 1.175->0.575, M2 0.533->0.244,
+gated 0.175->0.128, M4 0.358->0.313, M3 0.242->0.208, M5 -0.065. No merge reverted.
+Merge guard `revision-artifacts/phase1/compare_old_new.py`: every old table value survives
+except documented items (old 7-detector PH ranks superseded by the mandated 11-detector
+ranking; N-29 corrections).
+**New defect N-29 (double rounding):** OC-SVM IMS raw lead printed 180.3, source 180.2496 h
+-> 180.2; denoiser aggregate and Kalman mean lead printed 75.7, source 75.6469 h -> 75.6
+(table and D.1 prose). Response to Review impact: check for these values.
+**G3 added** (verified: `rg3_raw_invariance.csv`, 99 cells, max |dev| 0.000 h).
+**D18 added** (verified): Hotelling T2 collapses in 2 of 5 draws at 20%, mean 134.9 h,
+range 58.0-186.1 h, single run (test 3, 315.9 -> 59.7 h). The requested clause "no chart's
+lead changes in any draw at 5%" is FALSE (3σ/CUSUM/IF move in some draws); written instead:
+Hotelling and EWMA unchanged in every draw, no chart's per-draw mean moves > 0.83 h.
+**ONGC fixed** (verified, factor 1 post-fix): the requested "nine of eleven ~34-35 h" is
+not what the data say -- seven detectors 34.9-35.3 h, CUSUM 33.9 h, Hotelling T2 30.4 h,
+RMS-trend 22.8 h, Deep SVDD none. Written as "nine of eleven 30-35 h" with that breakdown
+in D.2; §7.2 corrected likewise. NOTE for author: most of these ONGC alarms are invalid
+under the gate (pre-onset FAR 39-95%); only Hotelling T2 (6.5%) and RMS-trend (0.1%)
+clear tau=10%. The text reports raw lead; not changed here.
+**verify_tables.py**: 895 values (floor 558), all OK; new XJTU-SY guard; checks for
+imsdet (with PH/L re-derivation), mechanism, compute, conformal (a), prose G3/D18/ONGC/N-29.
+Negative tests (`revision-artifacts/phase1/negative_tests.py`): all 7 guards go red on a
+wrong source or tampered value.
