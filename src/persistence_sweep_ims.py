@@ -51,7 +51,7 @@ def valid_fraction(df: pd.DataFrame, detector: str, factor_one_only: bool) -> fl
     return float(s["valid_alarm"].astype(str).str.lower().eq("true").mean())
 
 
-def sweep(schema: str, persistences: list) -> pd.DataFrame:
+def sweep(schema: str, persistences: list, long_rows: list = None) -> pd.DataFrame:
     rows = []
     original = THRESHOLD["alarm_persistence"]
     try:
@@ -60,6 +60,8 @@ def sweep(schema: str, persistences: list) -> pd.DataFrame:
             logger.info("=== alarm_persistence = %d (schema=%s) ===", p, schema)
             df = run_benchmark(dataset="IMS", methods=DETECTORS, control=True,
                                feature_mode=schema, save=False)
+            if long_rows is not None:              # row-level output for Eq. 5 recounts
+                long_rows.append(df.assign(persistence=p, schema=schema))
             stats = per_detector(df, "IMS").set_index("short_name")
             for det in DETECTORS:
                 if det not in stats.index:
@@ -87,6 +89,10 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--schema", default="invariant", choices=["invariant", "legacy"])
     ap.add_argument("--smoke", action="store_true", help="persistence=3 only")
+    ap.add_argument("--long-only", action="store_true",
+                    help="write only the row-level file persistence_sensitivity_IMS_"
+                         "<schema>_long.csv (read by src/eq5_validity.py), leaving the "
+                         "released summary file untouched")
     args = ap.parse_args()
 
     try:                                   # N-13: cp1252 console cannot print sigma
@@ -98,12 +104,26 @@ def main() -> None:
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     persistences = [3] if args.smoke else PERSISTENCES
-    out = sweep(args.schema, persistences)
+    long_rows = []
+    out = sweep(args.schema, persistences, long_rows)
 
     name = f"persistence_sensitivity_IMS_{args.schema}.csv"
     assert name != PUBLISHED, "must never write the published file"
     path = os.path.join(PATHS["results_tables"], name)
-    if not args.smoke:
+    if args.long_only:
+        long_path = path.replace(".csv", "_long.csv")
+        if os.path.exists(long_path):
+            raise SystemExit(f"refusing to overwrite existing {long_path}")
+        pd.concat(long_rows, ignore_index=True).to_csv(long_path, index=False)
+        print(f"\nWrote {long_path}")
+        # The row-level rerun must reproduce the released summary, or it backs nothing.
+        released = pd.read_csv(path).set_index(["persistence", "detector"]).sort_index()
+        rerun = out.set_index(["persistence", "detector"]).sort_index()
+        for col in ("median_agg_minus_dec_h", "valid_frac_f1_agg",
+                    "valid_frac_agg_all_factors", "n_pos", "n_neg", "n_zero"):
+            same = np.allclose(released[col].values, rerun[col].values, atol=1e-4)
+            print(f"  reproduces released {col}: {same}")
+    elif not args.smoke:
         if os.path.exists(path):
             raise SystemExit(f"refusing to overwrite existing {path}")
         out.to_csv(path, index=False)

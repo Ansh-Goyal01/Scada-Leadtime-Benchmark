@@ -1,0 +1,11 @@
+run,status,published_valid_of_5,eq5_valid_of_5,mean_valid_lead_h,best_valid_lead_h
+Bearing1_1,scoreable,0,0.0,,
+Bearing1_2,no_onset,1,,,
+Bearing1_3,empty_pre,4,,,
+Bearing1_4,scoreable,2,2.0,0.6833333333333333,0.6833333333333333
+Bearing1_5,empty_pre,3,,,
+Bearing2_1,scoreable,3,3.0,0.6666666666666666,0.6666666666666666
+Bearing2_2,empty_pre,2,,,
+Bearing2_3,scoreable,1,1.0,3.45,3.45
+Bearing2_4,scoreable,0,0.0,,
+Bearing2_5,empty_pre,4,,,

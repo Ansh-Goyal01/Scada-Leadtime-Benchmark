@@ -16,6 +16,7 @@ import csv
 import re
 import statistics
 import sys
+from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -164,6 +165,10 @@ def gap_cell(ds, det, gap):
     Hotelling T^2 on IMS (58.0 h) does not reproduce in any of five further
     draws. The manuscript states across-draw magnitudes, so this reads the
     multi-seed file.
+
+    Validity is Eq. 5: a row whose pre-onset FAR is undefined (empty pre-onset
+    region) is not scoreable and never enters the mean, although the released
+    `valid` column -- which follows the implementation -- marks it True.
     """
     global _GAPROWS
     if _GAPROWS is None:
@@ -171,7 +176,7 @@ def gap_cell(ds, det, gap):
     per_seed = {}
     for r in _GAPROWS:
         if (r["dataset"] != ds or r["short_name"] != det
-                or float(r["gap"]) != gap or r["valid"] != "True"):
+                or float(r["gap"]) != gap or not eq5_row(r, "lead")[1]):
             continue
         per_seed.setdefault(r["gap_seed"], []).append(float(r["lead"]))
     if not per_seed:
@@ -191,8 +196,13 @@ def check_gap(bad):
             continue
         for idx, (ds, gap) in enumerate(grid, start=1):
             exp = gap_cell(ds, GAP[k], gap)
+            label = "T4b %s %s %g%%" % (k, ds, gap * 100)
             if exp is not None:
-                n += cmp_cell("T4b %s %s %g%%" % (k, ds, gap * 100), cells[idx], exp, bad)
+                n += cmp_cell(label, cells[idx], exp, bad)
+            else:                       # no Eq.-5-valid alarm: the table must print "--"
+                n += 1
+                if plain(cells[idx]) != "--":
+                    bad.append((label, plain(cells[idx]), "--"))
     return n
 
 
@@ -896,6 +906,224 @@ def check_prose_additions(bad):
     return n
 
 
+# ------------------------------------------------ Eq. 5 validity counts (final pass)
+# The released valid_alarm column follows the implementation, which counts an alarm
+# valid when its pre-onset FAR is undefined and scores a no-onset run by a positional
+# fallback. The manuscript's counts apply Eq. 5 through src/eq5_validity.py. This
+# check re-derives every restated count here, independently of that script, and then
+# asserts the script's outputs agree.
+NA = ("", "nan", "NaN", "NaT", "None")
+
+
+def eq5_row(r, lead="lead_time_hours"):
+    """(scoreable, valid, empty_pre, no_onset) for one row under Eq. 5."""
+    has_lead = r[lead] not in NA
+    no_onset = r.get("t_onset", "defined") in NA
+    empty = has_lead and r["far_preonset_pct"] in NA and not no_onset
+    scoreable = not (no_onset or empty)
+    valid = (scoreable and has_lead and float(r[lead]) > 0
+             and float(r["far_preonset_pct"]) <= 10.0)
+    return scoreable, valid, empty, no_onset
+
+
+def _tally(rows, lead="lead_time_hours"):
+    t = [eq5_row(r, lead) for r in rows]
+    return (sum(v for _, v, _, _ in t), sum(s for s, _, _, _ in t),
+            sum(e for _, _, e, _ in t), sum(o for _, _, _, o in t))
+
+
+def check_eq5(bad):
+    n = 0
+    body = tex_source()
+
+    def need(cond, label, printed="", expected=""):
+        nonlocal n
+        n += 1
+        if not cond:
+            bad.append(("Eq.5: " + label, printed, expected))
+
+    audit = {r["site"]: r for r in load("eq5_validity_audit.csv")}
+
+    def agrees(site, tally):
+        a = audit[site]
+        got = (int(float(a["eq5_valid"])), int(float(a["eq5_scoreable"])),
+               int(float(a["excluded_empty_pre"])), int(float(a["excluded_no_onset"])))
+        need(got == tally, "eq5_validity_audit.csv agrees: " + site, str(got), str(tally))
+
+    # --- Section 6.3 headline: five window-magnitude detectors, all modes x factors
+    xj = load("benchmark_XJTU-SY_long.csv")
+    five = ("three_sigma", "ewma", "hotelling_t2", "isolation_forest", "rms_trend")
+    x5 = [r for r in xj if r["short_name"] in five]
+    v, s, e, o = _tally(x5)
+    need((v, s, e, o, len(x5)) == (48, 230, 170, 50, 450), "S6.3 48/230, 170+50 excluded of 450",
+         "%d/%d %d+%d of %d" % (v, s, e, o, len(x5)))
+    need(sum(r["valid_alarm"] == "True" for r in x5) == 209, "released column still gives 209 (implementation)")
+    need("%d of %d scoreable evaluations yield a valid alarm (%d of %d" % (v, s, e + o, len(x5)) in body,
+         "S6.3 headline sentence")
+    need("%d because the onset precedes the first scored window, %d because Bearing1" % (e, o) in body,
+         "S6.3 exclusion breakdown")
+    need("The %d/%d valid-alarm figure" % (v, s) in body, "S6.7 per-bearing restatement")
+    need("209/450" not in body and "20/50" not in body, "no pre-Eq.5 count survives")
+    agrees("S6.3 five window-magnitude detectors, all modes x factors", (v, s, e, o))
+
+    # --- Table 7, per bearing at full resolution (aggregate, factor 1)
+    full = [r for r in x5 if r["mode"] == "aggregate" and float(r["factor"]) == 1]
+    by = {}
+    for r in full:
+        by.setdefault(r["run"], []).append(r)
+    printed = {plain(c[0]).replace(BS, ""): c for c in rows_of("tab:perbearing") if c[0].startswith("Bearing")}
+    need(len(printed) == 10, "Table 7 has ten bearing rows", str(len(printed)), 10)
+    tot_v = tot_sc = none = 0
+    for run, rows in by.items():
+        cells = printed[run]
+        flags = [eq5_row(r) for r in rows]
+        if all(fl[3] for fl in flags):
+            need("n.s." in cells[3] and "^a" in cells[3], "T7 %s not scoreable (no onset)" % run, cells[3])
+            continue
+        if all(fl[2] for fl in flags):
+            need("n.s." in cells[3] and "^b" in cells[3], "T7 %s not scoreable (empty pre-onset)" % run, cells[3])
+            continue
+        need(all(fl[0] for fl in flags), "T7 %s wholly scoreable" % run)
+        leads = [float(r["lead_time_hours"]) for r, fl in zip(rows, flags) if fl[1]]
+        need(plain(cells[3]) == str(len(leads)), "T7 %s V/5" % run, cells[3], len(leads))
+        tot_v += len(leads)
+        tot_sc += 1
+        if leads:
+            n += cmp_cell("T7 %s mean" % run, cells[4], statistics.mean(leads), bad)
+            n += cmp_cell("T7 %s best" % run, cells[5], max(leads), bad)
+        else:
+            none += 1
+            need(plain(cells[4]) == "--" and plain(cells[5]) == "0.00", "T7 %s no valid detector" % run)
+    blk = table_block("tab:perbearing")
+    need("{%d/%d}" % (tot_v, 5 * tot_sc) in blk and "{%d/%d}" % (none, tot_sc) in blk,
+         "T7 totals %d/%d and %d/%d" % (tot_v, 5 * tot_sc, none, tot_sc))
+    agrees("Table 7 total (full resolution, aggregate)", _tally(full))
+
+    # --- Section 6.3 sequence length 15: the one extra bearing is not scoreable
+    b25 = [eq5_row(r) for r in xj if r["run"] == "Bearing2_5" and float(r["factor"]) == 1
+           and r["lead_time_hours"] not in NA]
+    need(b25 and all(fl[2] for fl in b25), "Bearing2_5 empty pre-onset at f=1 for every detector")
+    s15 = [r for r in load("seqlen15_xjtu.csv") if r["seq_len"] == "15" and r["na"] == "False"]
+    extra = {r["run"] for r in s15} - {r["run"] for r in load("seqlen15_xjtu.csv") if r["seq_len"] == "30"}
+    need(extra == {"Bearing2_5"}, "seq-len 15 adds only Bearing2_5", str(extra))
+    need(not any(r["valid"] == "True" for r in s15 if r["run"] != "Bearing2_5"),
+         "no deep valid alarm on the two scoreable bearings")
+    need("on the two scoreable bearings the deep models still yield no valid alarm" in body, "S6.3 seq-len sentence")
+
+    # --- Table 4(a): 3sigma pooled over factors, from the row-level persistence rerun
+    pl = [r for r in load("persistence_sensitivity_IMS_invariant_long.csv")
+          if r["short_name"] == "three_sigma" and r["mode"] == "aggregate"]
+    row = [c for c in rows_of("tab:robust") if "all factors" in c[0]][0]
+    fr = {}
+    for i, p in enumerate(("1", "3", "5", "10"), start=1):
+        sub = [r for r in pl if r["persistence"] == p]
+        v, s, _, _ = _tally(sub)
+        need(s == 13, "T4a persistence %s: 13 scoreable" % p, str(s), 13)
+        fr[p] = v / s
+        n += cmp_cell("T4a all factors, persistence " + p, row[i], v / s, bad)
+    need("falls from %.2f to %.2f by persistence 10" % (fr["1"], fr["10"]) in body, "S6.2 persistence prose")
+    agrees("Table 4a 3sigma valid-alarm frac., all factors (4 persistences)", _tally(pl))
+    rel = {(r["persistence"], r["detector"]): r for r in load("persistence_sensitivity_IMS_invariant.csv")}
+    for p in ("1", "3", "5", "10"):                     # the rerun reproduces the released summary
+        pub = [r for r in pl if r["persistence"] == p]
+        frac = sum(r["valid_alarm"] == "True" for r in pub) / len(pub)
+        need(abs(frac - float(rel[(p, "three_sigma")]["valid_frac_agg_all_factors"])) < 1e-9,
+             "persistence rerun reproduces released summary at %s" % p)
+
+    # --- Table 4(b) prose: XJTU-SY changes at 20% and the across-draw spread
+    for det in ("three_sigma", "ewma", "cusum", "isolation_forest"):
+        d = gap_cell("XJTU-SY", det, 0.2) - gap_cell("XJTU-SY", det, 0.0)
+        # leads are multiples of 1/60 h, so snap float noise before rounding a tie
+        txt = "%+.2f" % float(Decimal(repr(round(d, 9))).quantize(Decimal("0.01"), ROUND_HALF_EVEN))
+        need(("$%s$~h" % txt) in body, "S6.2 XJTU-SY 20%% change %s" % det, txt)
+    need(gap_cell("XJTU-SY", "hotelling_t2", 0.0) is None
+         and "Hotelling $T^2$ has no valid alarm on a scoreable XJTU-SY bearing" in body,
+         "S6.2 Hotelling T2 has no Eq.5-valid XJTU alarm")
+    gaps = load("d18_gap_injection_multiseed.csv")
+    spread = 0.0
+    for det in ("three_sigma", "ewma", "cusum", "isolation_forest"):
+        for g in (0.05, 0.2):
+            per = {}
+            for r in gaps:
+                if (r["dataset"] == "XJTU-SY" and r["short_name"] == det and float(r["gap"]) == g
+                        and eq5_row(r, "lead")[1]):
+                    per.setdefault(r["gap_seed"], []).append(float(r["lead"]))
+            m = [statistics.mean(x) for x in per.values()]
+            spread = max(spread, max(m) - min(m))
+    bound = -(-spread * 100 // 1) / 100
+    need("and %.2f~h on XJTU-SY" % bound in body, "S6.2 XJTU-SY across-draw spread", "%.3f" % spread)
+    sc_runs = {r["run"] for r in gaps if r["dataset"] == "XJTU-SY" and eq5_row(r, "lead")[0]}
+    need(len(sc_runs) == 6 and "two of the 6 scoreable bearings on XJTU-SY" in body, "S6.2 six scoreable XJTU bearings")
+    agrees("Table 4b historian gaps (mean over valid alarms)", _tally(gaps, "lead"))
+
+    # --- Section 6.10: at f=20 test 2 drops out of every feature-group cell
+    ab = load("feature_coarsening_ablation_IMS_long.csv")
+    runs = {}
+    for r in ab:
+        if eq5_row(r)[0]:
+            runs.setdefault(r["factor"], set()).add(r["run"])
+    need(len(runs["20"]) == 2 and all(len(runs[f]) == 3 for f in ("1", "2", "5", "10")),
+         "S6.10 steps of 1/3, 1/2 at f=20")
+    need("steps of 1/3 (1/2 at $f=20$" in body, "S6.10 sentence")
+
+    # --- Section 6.12 / Figure 5: training sweep
+    ts = load("femto_training_sweep_long.csv")
+    frac = {}
+    for det in ("three_sigma", "ewma", "cusum", "hotelling_t2", "isolation_forest"):
+        for t in ("0.2", "0.3", "0.4", "0.5", "0.6"):
+            sub = [r for r in ts if r["short_name"] == det and r["train_fraction"] == t]
+            v, s, _, _ = _tally(sub)
+            need(s == (5 if t == "0.2" else 6), "T sweep %s %s scoreable bearings" % (det, t), str(s))
+            frac[(det, t)] = v / s
+    T = ("0.2", "0.3", "0.4", "0.5", "0.6")
+    f3 = lambda det, t: "%.3f" % frac[(det, t)]  # noqa: E731
+    for frag in ("training fraction (%.2f) and falls to %s at $T=0.30$ and %s from $T=0.40$ on"
+                 % (frac[("three_sigma", "0.2")], f3("three_sigma", "0.3"), f3("three_sigma", "0.4")),
+                 "Hotelling $T^2$ starts at %s, falls to %s at $T=0.30$ and settles at %s"
+                 % (f3("hotelling_t2", "0.2"), f3("hotelling_t2", "0.3"), f3("hotelling_t2", "0.4")),
+                 "EWMA stays within %.3f--%.3f" % (min(frac[("ewma", t)] for t in T),
+                                                   max(frac[("ewma", t)] for t in T)),
+                 "CUSUM stays within %s--%s apart from a one-bearing rise to %s at $T=0.50$"
+                 % (f3("cusum", "0.2"), f3("cusum", "0.3"), f3("cusum", "0.5")),
+                 "Isolation Forest starts at %s, dips to %s at $T=0.30$ and ends at %s"
+                 % (f3("isolation_forest", "0.2"), f3("isolation_forest", "0.3"), f3("isolation_forest", "0.6"))):
+        need(frag in body, "S6.12 " + frag[:40], frag)
+    spc = []
+    for det in ("three_sigma", "ewma", "cusum", "hotelling_t2"):
+        for t in T:
+            spc.append(frac[(det, t)])
+    need("SPC baseline (${\\approx}%.2f$)" % statistics.mean(spc) in body, "Fig 5 caption SPC baseline",
+         "%.3f" % statistics.mean(spc))
+    fig = {(r["short_name"], r["train_fraction"]): float(r["valid_frac"]) for r in load("eq5_femto_training_sweep.csv")}
+    need(all(abs(fig[k] - frac[k]) < 1e-12 for k in frac), "Figure 5 source equals the Eq.5 recomputation")
+    agrees("S6.12 / Figure 5 training sweep, all cells", _tally(ts))
+
+    # --- counts that comply as printed: their sources hold no unscoreable row
+    for name, site in (("n20_rerun_long_FEMTO.csv", "S6.4 FEMTO eleven detectors, all modes x factors"),
+                       ("tradeoff_IMS_long.csv", "S6.1 / Table 9 IMS trade-off"),
+                       ("tradeoff_IMS_deepmodels_long.csv", "S6.1 / Table 9 IMS trade-off, deep models"),
+                       ("ablation_features_IMS_long.csv", "Table 10 feature-group ablation"),
+                       ("denoising_IMS.csv", "Appendix D.1 denoisers")):
+        rows = load(name)
+        v, s, e, o = _tally(rows)
+        need(s == len(rows), "%s: every row scoreable" % name, "%d/%d" % (s, len(rows)))
+        agrees(site, (v, s, e, o))
+    fem = load("n20_rerun_long_FEMTO.csv")
+    need(_tally(fem)[:2] == (211, 660) and "211/660 FEMTO evaluations" in body, "S6.4 FEMTO 211/660 under Eq.5")
+    for name, site in (("n20_rerun_long_ONGC.csv", "Appendix D.2 ONGC gating"),
+                       ("benchmark_IMS_long_invariant.csv", "S6.1 IMS full resolution (deep 0/3, Table 2 L_tau)")):
+        rows = [r for r in load(name) if r["mode"] == "aggregate" and float(r["factor"]) == 1]
+        v, s, e, o = _tally(rows)
+        need(s == len(rows), "%s f=1: every row scoreable" % name)
+        agrees(site, (v, s, e, o))
+
+    # --- Table 8: the gated arm already applies Eq. 5; independent re-derivation agrees
+    gc = load("eq5_gated_crosscheck.csv")
+    need(len(gc) == 44 and all(r["agrees"] == "True" for r in gc), "Table 8 gated arm re-derived under Eq.5",
+         "%d agree" % sum(r["agrees"] == "True" for r in gc), 44)
+    return n
+
+
 CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Table 19 label contrast", check_d17label),
           ("Table 4b gap injection", check_gap),
@@ -910,7 +1138,8 @@ CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Fig 4 calibration", check_calibration_invariance),
           ("Prose: G3/D18/ONGC/N-29", check_prose_additions),
           ("S6.2 FEMTO valid alarms", check_femto_valid),
-          ("N-20 invariance rule", check_n20_rule)]
+          ("N-20 invariance rule", check_n20_rule),
+          ("Eq. 5 validity counts", check_eq5)]
 
 def run(verbose=True):
     bad, total = [], 0

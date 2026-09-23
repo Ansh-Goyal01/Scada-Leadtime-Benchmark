@@ -1,0 +1,17 @@
+site,source,published_valid,published_den,eq5_valid,eq5_scoreable,excluded_empty_pre,excluded_no_onset,complies,note
+"S6.3 five window-magnitude detectors, all modes x factors",benchmark_XJTU-SY_long.csv,209.0,450.0,48.0,230.0,170.0,50.0,False,
+"Table 7 total (full resolution, aggregate)",benchmark_XJTU-SY_long.csv,20.0,50.0,6.0,25.0,20.0,5.0,False,
+Table 7 bearings with no valid detector,benchmark_XJTU-SY_long.csv,2.0,10.0,2.0,5.0,4.0,1.0,False,"counts bearings, not evaluations"
+S6.3 deep models at seq-len 15 (bearings with a valid alarm),seqlen15_xjtu.csv + benchmark_XJTU-SY_long.csv,1.0,10.0,0.0,2.0,1.0,0.0,False,excluded bearing(s): Bearing2_5
+"S6.4 FEMTO eleven detectors, all modes x factors",n20_rerun_long_FEMTO.csv,211.0,660.0,211.0,660.0,0.0,0.0,True,
+"S6.12 / Figure 5 training sweep, all cells",femto_training_sweep_long.csv,114.0,300.0,106.0,290.0,10.0,0.0,False,N/A cells stay in the denominator as no valid alarm (Section 4.5)
+"Table 4a 3sigma valid-alarm frac., all factors (4 persistences)",persistence_sensitivity_IMS_invariant_long.csv,33.0,60.0,28.0,52.0,8.0,0.0,False,
+S6.10 feature-group ablation repeated at every factor,feature_coarsening_ablation_IMS_long.csv,117.0,180.0,107.0,168.0,12.0,0.0,False,runs per cell by factor: f=1:3-3; f=2:3-3; f=5:3-3; f=10:3-3; f=20:2-2
+Table 4b historian gaps (mean over valid alarms),d18_gap_injection_multiseed.csv,441.0,858.0,250.0,594.0,264.0,0.0,False,"excluded runs: Bearing1_3,Bearing1_5,Bearing2_2,Bearing2_5"
+"S6.1 IMS full resolution (deep 0/3, Table 2 L_tau)",benchmark_IMS_long_invariant.csv,13.0,30.0,13.0,30.0,0.0,0.0,True,
+S6.1 / Table 9 IMS trade-off,tradeoff_IMS_long.csv,84.0,147.0,84.0,147.0,0.0,0.0,True,
+"S6.1 / Table 9 IMS trade-off, deep models",tradeoff_IMS_deepmodels_long.csv,1.0,27.0,1.0,27.0,0.0,0.0,True,
+Table 10 feature-group ablation,ablation_features_IMS_long.csv,63.0,126.0,63.0,126.0,0.0,0.0,True,
+Appendix D.1 denoisers,denoising_IMS.csv,63.0,108.0,63.0,108.0,0.0,0.0,True,
+Appendix D.2 ONGC gating,n20_rerun_long_ONGC.csv,2.0,11.0,2.0,11.0,0.0,0.0,True,
+Table 8 gated arm (independent re-derivation),rf2_gated_contrast_n20.csv,,,,,,,True,"44/44 (dataset, detector) cells agree"

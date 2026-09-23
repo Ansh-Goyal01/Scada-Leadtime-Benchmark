@@ -193,9 +193,12 @@ def fig_training_sweep():
     """Fig 8: valid-alarm fraction vs training fraction on FEMTO (n=6), one line per
     detector colored by family, with the SPC-chart baseline drawn as a dashed
     reference. There is no crossover: the deep models never reach the SPC baseline."""
-    path = os.path.join(TAB, "femto_training_sweep.csv")
+    # Eq. 5 fractions (src/eq5_validity.py): Bearing2_2 is not scoreable at T=0.20, so that
+    # column is over five bearings. femto_training_sweep.csv keeps the implementation's
+    # raw valid_alarm, which counted its empty-pre-onset alarms valid.
+    path = os.path.join(TAB, "eq5_femto_training_sweep.csv")
     if not os.path.exists(path):
-        print("skip fig_training_sweep — run `python -m src.training_sweep` first")
+        print("skip fig_training_sweep — run `python -m src.eq5_validity` first")
         return
     df = pd.read_csv(path)
 
@@ -242,7 +245,7 @@ def fig_training_sweep():
             fontsize=7.5, style="italic", ha="center", color="#555555")
 
     ax.set_xlabel("Training fraction $T$")
-    ax.set_ylabel("Valid-alarm fraction ($n{=}6$ bearings)")
+    ax.set_ylabel("Valid-alarm fraction (scoreable bearings)")
     ax.set_xlim(0.18, 0.62)
     ax.set_ylim(-0.02, 1.18)   # headroom so the legend clears the annotation
     ax.set_xticks([0.2, 0.3, 0.4, 0.5, 0.6])
