@@ -1,0 +1,51 @@
+\begin{table}[t] \footnotesize
+	\begin{center}
+	\caption{Run-level aggregate$-$decimate lead-time contrast on the three multi-bearing campaigns, collapsing the five sampling factors to one difference per run. Med., Mean: run-level median and mean difference (h), with the 95\% bootstrap CI over runs; $n_+/n_-$: non-zero runs ($^{\mathrm{s}}$: all of one sign); $p$: exact two-sided sign test. $^\ddagger$: length-30 sequence models, $n=3$ on XJTU-SY. Equivalent at $\delta=1$~h when the CI lies inside $[-\delta,+\delta]$: all 33 cells. Holm over $N=44$ (these 33 tests and the eleven IMS tests of Table~\ref{tab:imsongc}): every adjusted $p$ is 1.00. IMS and ONGC are outside the equivalence family.}
+	\label{tab:crossds}
+	\setlength{\tabcolsep}{2.5pt}
+	\begin{tabular}{l r r c r}
+		\hline \hline
+		\textbf{Detector} & \textbf{Med.} & \textbf{Mean [95\% CI]} & $n_+/n_-$ & $p$ \\
+		\hline
+		\multicolumn{5}{l}{\emph{XJTU-SY} ($n=10$)} \\
+		$3\sigma$ & 0.00 & $+0.030$\,[$+0.000$,\,$+0.065$] & 3/1 & 0.625 \\
+		EWMA & 0.00 & $-0.002$\,[$-0.012$,\,$+0.005$] & 2/2 & 1.000 \\
+		CUSUM & 0.00 & $-0.000$\,[$-0.012$,\,$+0.013$] & 1/2 & 1.000 \\
+		Hotelling $T^2$ & 0.00 & $+0.088$\,[$+0.000$,\,$+0.260$] & 2/0$^{\mathrm{s}}$ & 0.500 \\
+		Iso.\ Forest & $-0.10$ & $-0.100$\,[$-0.162$,\,$-0.041$] & 2/7 & 0.180 \\
+		Deep SVDD & 0.00 & $+0.015$\,[$-0.038$,\,$+0.065$] & 3/2 & 1.000 \\
+		One-class SVM & 0.00 & $+0.006$\,[$+0.000$,\,$+0.019$] & 1/0$^{\mathrm{s}}$ & 1.000 \\
+		LSTM-AE$^\ddagger$ & 0.00 & $+0.056$\,[$+0.000$,\,$+0.167$] & 1/0$^{\mathrm{s}}$ & 1.000 \\
+		TCN-AE$^\ddagger$ & 0.00 & $+0.000$\,[$+0.000$,\,$+0.000$] & 0/0 & 1.000 \\
+		Transf.-AD$^\ddagger$ & 0.00 & $+0.000$\,[$+0.000$,\,$+0.000$] & 0/0 & 1.000 \\
+		RMS-trend & 0.00 & $-0.015$\,[$-0.055$,\,$+0.015$] & 2/2 & 1.000 \\
+		\hline
+		\multicolumn{5}{l}{\emph{FEMTO} ($n=6$)} \\
+		$3\sigma$ & $-0.14$ & $-0.213$\,[$-0.449$,\,$-0.041$] & 1/5 & 0.219 \\
+		EWMA & 0.09 & $+0.078$\,[$-0.005$,\,$+0.163$] & 4/2 & 0.688 \\
+		CUSUM & 0.10 & $+0.098$\,[$-0.005$,\,$+0.207$] & 4/2 & 0.688 \\
+		Hotelling $T^2$ & 0.07 & $-0.019$\,[$-0.321$,\,$+0.194$] & 5/1 & 0.219 \\
+		Iso.\ Forest & $-0.07$ & $-0.180$\,[$-0.505$,\,$+0.025$] & 2/4 & 0.688 \\
+		Deep SVDD & $-0.00$ & $-0.015$\,[$-0.040$,\,$+0.002$] & 1/3 & 0.625 \\
+		One-class SVM & 0.02 & $-0.053$\,[$-0.259$,\,$+0.075$] & 4/1 & 0.375 \\
+		LSTM-AE & $-0.04$ & $-0.061$\,[$-0.113$,\,$-0.013$] & 0/3$^{\mathrm{s}}$ & 0.250 \\
+		TCN-AE & 0.00 & $-0.009$\,[$-0.040$,\,$+0.014$] & 1/2 & 1.000 \\
+		Transf.-AD & $-0.05$ & $-0.077$\,[$-0.153$,\,$-0.018$] & 0/4$^{\mathrm{s}}$ & 0.125 \\
+		RMS-trend & $-0.02$ & $-0.123$\,[$-0.327$,\,$-0.004$] & 1/3 & 0.625 \\
+		\hline
+		\multicolumn{5}{l}{\emph{Ferrara} ($n=6$)} \\
+		$3\sigma$ & $-0.01$ & $-0.122$\,[$-0.432$,\,$+0.080$] & 2/3 & 1.000 \\
+		EWMA & 0.01 & $-0.167$\,[$-0.560$,\,$+0.046$] & 4/2 & 0.688 \\
+		CUSUM & 0.01 & $+0.024$\,[$-0.001$,\,$+0.053$] & 5/1 & 0.219 \\
+		Hotelling $T^2$ & 0.01 & $-0.078$\,[$-0.351$,\,$+0.090$] & 4/1 & 0.375 \\
+		Iso.\ Forest & 0.00 & $-0.162$\,[$-0.495$,\,$+0.049$] & 3/2 & 1.000 \\
+		Deep SVDD & $-0.00$ & $-0.007$\,[$-0.016$,\,$+0.000$] & 1/4 & 0.375 \\
+		One-class SVM & 0.01 & $-0.009$\,[$-0.058$,\,$+0.023$] & 4/1 & 0.375 \\
+		LSTM-AE & 0.00 & $-0.073$\,[$-0.255$,\,$+0.039$] & 2/2 & 1.000 \\
+		TCN-AE & 0.00 & $-0.089$\,[$-0.292$,\,$+0.023$] & 3/1 & 0.625 \\
+		Transf.-AD & 0.00 & $-0.082$\,[$-0.353$,\,$+0.091$] & 3/1 & 0.625 \\
+		RMS-trend & 0.01 & $+0.005$\,[$-0.015$,\,$+0.023$] & 4/2 & 0.688 \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table}

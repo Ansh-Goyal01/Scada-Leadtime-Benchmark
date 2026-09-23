@@ -1,0 +1,47 @@
+\begin{table}[t] \small
+	\begin{center}
+	\caption{(a) Fixed hyperparameter protocol, from \texttt{config.py}; onset tolerances are in samples of the health-indicator series, and the pre-onset FAR is measured over the full window $t < t_o$ (Eq.~\ref{eq:valid}). (b) Compute cost on the largest IMS run (631 train / 506 test windows, 49 features, one core of an Intel Core i5-13420H, median of five repeats): training time and inference in $\mu$s per window.}
+	\label{tab:hyperparams}
+	\textbf{(a) Protocol}\\[2pt]
+\begin{tabular}{l l}
+		\hline \hline
+		\textbf{Setting} & \textbf{Value} \\
+		\hline
+		Feature window / overlap & 10 samples / 50\% \\
+		Feature schema & channel-invariant, 49-dim \\
+		Train-fit feature cap & top 50 (stratified) \\
+		Train / calib.\ / test & 0.50 / 0.10 / 0.40 \\
+		Pre-onset FAR region & full window $t < t_o$ \\
+		Onset health indicator & rms\_kurt \\
+		Onset method / persistence & terminal excursion / 5 \\
+		Onset $k\sigma$ / gap tolerance & $4\sigma$ / 10 samples \\
+		Alarm threshold / persistence & 97.5th pct / 3 windows \\
+		FAR budget $\tau$ & 0.10 \\
+		Isolation Forest & 200 trees, contam.\ auto \\
+		Hotelling $T^2$ & PCA rank 10, $\alpha=0.01$ \\
+		EWMA / CUSUM & $\lambda{=}0.2, k{=}3$ / $k{=}0.5, h{=}5$ \\
+		Deep models & seq-len 30, 40--50 epochs \\
+		Transformer & $d_{\text{model}}{=}32$, 2 heads, 2 layers \\
+		FEMTO channels & horiz.\ + vert.\ accel. \\
+		Conformal calib.\ fraction & 0.10 \\
+		Bootstrap resamples & runs, $B{=}2000$ \\
+		Random seed & 42 \\
+		Environment & Py 3.13, requirements.lock.txt \\
+		\hline \hline
+	\end{tabular}
+	\\[6pt]\textbf{(b) Compute}\\[2pt]
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{l r r | l r r}
+		\hline \hline
+		\textbf{Detector} & \textbf{Train} & \textbf{Inf.} & \textbf{Detector} & \textbf{Train} & \textbf{Inf.} \\
+		\hline
+		$3\sigma$ & $<1$ ms & 0.2 & EWMA & $<1$ ms & 1.0 \\
+		CUSUM & $<1$ ms & 2.1 & RMS-trend & $<1$ ms & 0.3 \\
+		Hotelling $T^2$ & 20 ms & 1.5 & One-class SVM & 11 ms & 26 \\
+		Iso.\ Forest & 0.73 s & 120 & Deep SVDD & 2.27 s & 2.3 \\
+		LSTM-AE & 49.5 s & 513 & TCN-AE & 46.2 s & 379 \\
+		Transf.-AD & 41.6 s & 300 & & & \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table}

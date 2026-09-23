@@ -1,0 +1,26 @@
+	\begin{tabular}{l l}
+		\hline \hline
+		\textbf{Setting} & \textbf{Value} \\
+		\hline
+		Feature window / overlap & 10 samples / 50\% \\
+		Feature schema & channel-invariant, 49-dim \\
+		Train-fit feature cap & top 50 (stratified) \\
+		Train / calib.\ / test & 0.50 / 0.10 / 0.40 \\
+		Pre-onset FAR region & full window $t < t_o$ \\
+		Onset health indicator & rms\_kurt \\
+		Onset method / persistence & terminal excursion / 5 \\
+		Onset $k\sigma$ / gap tolerance & $4\sigma$ / 10 samples \\
+		Alarm threshold / persistence & 97.5th pct / 3 windows \\
+		FAR budget $\tau$ & 0.10 \\
+		Isolation Forest & 200 trees, contam.\ auto \\
+		Hotelling $T^2$ & PCA rank 10, $\alpha=0.01$ \\
+		EWMA / CUSUM & $\lambda{=}0.2, k{=}3$ / $k{=}0.5, h{=}5$ \\
+		Deep models & seq-len 30, 40--50 epochs \\
+		Transformer & $d_{\text{model}}{=}32$, 2 heads, 2 layers \\
+		FEMTO channels & horiz.\ + vert.\ accel. \\
+		Conformal calib.\ fraction & 0.10 \\
+		Bootstrap resamples & runs, $B{=}2000$ \\
+		Random seed & 42 \\
+		Environment & Py 3.13, requirements.lock.txt \\
+		\hline \hline
+	\end{tabular}

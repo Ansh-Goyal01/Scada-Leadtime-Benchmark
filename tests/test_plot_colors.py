@@ -34,7 +34,9 @@ def _delta_e(a, b):
 
 
 def _expected_detectors():
-    return list(EXPERIMENT["methods_to_run"]) + ["conformal_if"]
+    # one_class_svm is run by the D4 pipeline, not methods_to_run, but it is plotted
+    # (forest plot) and so needs its own colour too.
+    return list(EXPERIMENT["methods_to_run"]) + ["conformal_if", "one_class_svm"]
 
 
 def test_every_detector_has_a_colour():
@@ -42,9 +44,9 @@ def test_every_detector_has_a_colour():
     assert not missing, f"unassigned detectors fall back to matplotlib's cycle: {missing}"
 
 
-def test_all_eleven_detectors_are_covered():
-    assert len(_expected_detectors()) == 11
-    assert len(PLOT["method_colors"]) == 11
+def test_all_plotted_detectors_are_covered():
+    assert len(_expected_detectors()) == 12
+    assert len(PLOT["method_colors"]) == 12
 
 
 def test_no_two_detectors_share_a_hex():

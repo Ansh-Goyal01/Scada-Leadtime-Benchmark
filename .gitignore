@@ -71,6 +71,11 @@ paper/files/*
 !paper/files/*.bib
 !paper/files/*.cls
 !paper/files/*.png
+# Generated result tables \input by the manuscript (paper/make_shortened_tables.py):
+# without them the tracked .tex does not compile.
+!paper/files/gen/
+!paper/files/fig_*.pdf
+!revision-artifacts/tools/
 
 # React frontend
 frontend/node_modules/

@@ -1,0 +1,24 @@
+\begin{table}[t] \footnotesize
+	\begin{center}
+	\caption{IMS, all eleven detectors in prognostic-horizon order (PH rank 1--11). Raw: mean ungated lead (h) at full resolution and the default 97.5th-percentile threshold, with 95\% bootstrap CI over the $n=3$ runs. PH: best raw lead over the 95th, 99th and 99.5th percentiles. $L_\tau$: best lead at an operating point whose pre-onset FAR, \emph{averaged across the three runs}, is within $\tau$ (0.0 = none). $^\dagger$: no valid operating point at $\tau=0.10$. Gated order at $\tau=0.10$: $3\sigma$, RMS-trend, Deep SVDD, then eight tied at 0. $^\ast$: valid only at the loosest threshold and on one of three runs.}
+	\label{tab:imsdet}
+	\setlength{\tabcolsep}{2pt}
+	\begin{tabular}{l r c r r r r}
+		\hline \hline
+		\textbf{Detector} & \textbf{Raw} & \textbf{95\% CI} & \textbf{PH} & $L_{0.05}$ & $L_{0.10}$ & $L_{0.20}$ \\
+		\hline
+		LSTM-AE$^\dagger$ & 197.6 & [65.5, 331.7] & 199.6 & 0.0 & 0.0 & 0.0 \\
+		TCN-AE$^\dagger$ & 183.7 & [65.5, 330.9] & 185.4 & 0.0 & 0.0 & 0.0 \\
+		Transformer-AD$^\dagger$ & 183.4 & [65.5, 330.9] & 184.0 & 0.0 & 0.0 & 0.0 \\
+		One-class SVM$^\dagger$ & 180.2 & [65.5, 316.7] & 180.2 & 0.0 & 0.0 & 0.0 \\
+		Hotelling $T^2$$^\dagger$ & 174.8 & [56.3, 315.9] & 176.9 & 0.0 & 0.0 & 73.9 \\
+		Iso.\ Forest$^\dagger$ & 87.2 & [49.7, 152.2] & 174.7 & 0.0 & 0.0 & 53.4 \\
+		EWMA$^\dagger$ & 78.6 & [28.0, 152.2] & 89.1 & 0.0 & 0.0 & 0.0 \\
+		$3\sigma$ & 64.6 & [28.8, 108.7] & 77.0 & 0.0 & 56.3 & 77.0 \\
+		CUSUM$^\dagger$ & 64.8 & [26.3, 114.9] & 65.0 & 0.0 & 0.0 & 65.0 \\
+		RMS-trend$^\ast$ & 3.2 & [0.0, 9.7] & 34.7 & 34.7 & 34.7 & 34.7 \\
+		Deep SVDD & 14.8 & [0.0, 34.0] & 14.8 & 14.8 & 14.8 & 14.8 \\
+		\hline \hline
+	\end{tabular}
+	\end{center}
+\end{table}

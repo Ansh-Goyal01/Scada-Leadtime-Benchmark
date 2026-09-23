@@ -338,5 +338,9 @@ PLOT = {
         "tcn":               "#00695C",   # dark teal
         "transformer_ad":    "#1A237E",   # navy
         "conformal_if":      "#00BCD4",   # cyan
+        # one_class_svm (D4) is evaluated outside methods_to_run and used to fall back to black
+        # in the forest plot. Chosen by the same max-min CIELAB search (L* 25-72, >= 30 from
+        # matplotlib's default cycle): dE >= 59.9 to every colour above; palette minimum stays 38.4.
+        "one_class_svm":     "#0000F8",   # electric blue
     },
 }

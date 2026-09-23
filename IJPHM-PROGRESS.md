@@ -2828,3 +2828,274 @@ values cannot be recovered and no absolute amplitude is disclosed.
 ### N-4 resolved
 `.zenodo.json` and `CITATION.cff` both retitled to the submission title and corrected to
 five datasets with Ferrara included; version 1.1.0, released 2026-09-20.
+
+---
+
+## SHORTENING PLAN — PHASE 0 (measurement only) — 2026-09-23, IN PROGRESS
+
+Governing doc: `IJPHM-SHORTENING-PLAN.md` (overrides the "Page target CLOSED at 24 pages"
+note above; manuscript is now **30 pages**). No manuscript, code or result-file edits.
+
+- ✅ Fresh build of `paper/files/scada_ijphm.tex` (HEAD `06b6d8b`, tex last touched `7ee007c`,
+  1047 lines, sha256 `8d96954d…57b3`): **30 pages**, tectonic exit 0.
+- ⚠️ PyMuPDF blocked again by Application Control (`_extra` DLL). Substitutes: pypdf 6.13.2
+  for text; xpdf `pdftotext` 4.00 (no bbox). **No page renderer is available** — Rule 10
+  image checks for later phases need PyMuPDF back, or another renderer.
+- ✅ Measurement method: an instrumented COPY (`revision-artifacts/phase0/instrument.py`)
+  records `\pdfsavepos` at every heading (in the first paragraph, horizontal mode), and at the
+  top and bottom of every float box (`\@floatboxreset` / `\AtEndEnvironment`) and caption.
+  Validated: all 30 pages' extracted text is identical to the real build.
+  Two failed attempts, kept for the record: (1) a marker in vertical mode after a heading
+  added a page-break point and moved §6.2 from p.9 to p.8; (2) `\AtBeginEnvironment` markers
+  fire outside the float box, measuring the anchor instead of the float.
+  Raw positions: `revision-artifacts/phase0/positions.mpos`.
+- ✅ Text source: xpdf `pdftotext` on MediaBox-cropped copies of each region (section piece,
+  float body, caption). pypdf mis-orders math-mode runs (`+0.030` → `+0` `.030`), so it is used
+  only for page count. Scripts (all in `revision-artifacts/phase0/`, rerunnable in Phase 6):
+  `measure.py` → `page_map.csv`, `floats.csv`, `sections_text.json`; `inventory.py` +
+  `claims_catalog.py` (133 claims, paraphrase regex lists) → `revision-artifacts/inventory_before.csv`,
+  `redundancy_report.md`, `table_cell_crosscheck.txt`; `labels_and_merges.py` → `label_map.csv`;
+  `rollup.py` → `section_rollup.csv`.
+- ✅ **Inventory** `inventory_before.csv`: 625 sentences, 688 claim-locations (133 IDs, all located),
+  789 prose/caption numbers, 875 table cells, 58 citations. 435/625 sentences map to a catalogued
+  claim; the rest stay as sentence units. Every numeric table cell of 22 tables is present in the
+  rendered float text (tab:basestats differs only in formula exponents).
+- ✅ **Totals:** prose 16,301 words (excl. references), 543 sentences, mean 30.0 / p90 51 words
+  (own splitter; the audit's "38" used an unrecorded method). Captions 2,187 words over 30 floats.
+  Floats = 6.77 page-equivalents (tables 4.46, figures 2.23, algorithm 0.08).
+- ✅ **Merge pre-checks (printed values):** M1 — all 44 `tab:holm` raw p equal the printed p of
+  `tab:crossds` (33) + `tab:imssweep` (11); verify_tables sources them from two different post-N-20
+  files (`n20_raw_contrast_old_vs_new.csv` arm new vs `*_runlevel_test_n20.csv`). M2 — PH =
+  max `tab:tradeoff` lead and L = `tab:farbudget` τ=0.10 for all 7 rows. verify_tables: 558 OK.
+- ⚠️ **Findings for the author (not fixed — Phase 0 is read-only):**
+  1. Protected G3 "0.000 h across 99 cells" and Corrections "Hotelling T² collapses in 2 of 5
+     draws at 20%" are **not in the current PDF** (only "contains no onset term" and "bimodal
+     across draws, 0 to 128.1 h").
+  2. `tab:gatedcontrast` is per-dataset (median across detectors), not per detector: M1's
+     "gated median Δ with its p" column would be new generated numbers.
+  3. `tab:farbudget`/`tab:phrank` carry 7 detectors, `tab:imslead` 11: an 11-row M2 table needs
+     deep-model τ/PH cells (derivable from `tab:tradeoff`) and OC-SVM is in no threshold sweep.
+  4. `tab:ongc` has 5 of 11 detectors; §7.2 says Deep SVDD never alarms before failure on ONGC
+     while D.2 says "every detector achieves a long warning" — a live inconsistency.
+  5. XJTU rows of `tab:crossds` (Δ, n₊/n₋, S-c.) are checked by no verify_tables guard.
+  6. `tab:imssweep` (left column, +21.5 pt overfull) reaches x≈318 bp, past the right column's
+     315 bp: possible overprint on p.14 — needs a render to confirm.
+  7. Appendix float pages are near-empty: p.25 ≈15% full (tab:compute only), p.26 ≈42%
+     (tab:deeparch only), p.28 ≈36%, p.30 ≈49% — roughly 2 pages of stranded space (Phase 5).
+  8. Numbers visible only in raster figures today: fig:sweep curves, fig:conformal (b) XJTU and
+     most of (c) FEMTO, fig:tradeoffs (b) XJTU, 6 ONGC detector medians in fig:crossdataset.
+- **Phase 0 COMPLETE. Stopped for author approval before Phase 1.** Not committed (awaiting
+  instruction; branch is `main`).
+
+## SHORTENING — PHASES 1-7 (branch `ijphm-shorten`, 2026-09-23)
+
+Author GO after Phase 0; decisions recorded in `IJPHM-SHORTENING-PLAN.md` §12.
+Phase 0 committed as `7755be3` (30 pages).
+
+**Renderer.** xpdf `pdftoppm` is NOT installed (filesystem search of C: and D:; no
+Ghostscript/ImageMagick/mutool either). Substitute, stated openly: Mozilla pdf.js in
+headless Chrome driven over the DevTools protocol (`revision-artifacts/tools/render_pages.py`)
+-- a full rasteriser. Build + checks: `revision-artifacts/tools/build.py`.
+
+**Stale memory corrected.** The "3 residual overfull tabulars" note is stale: the Phase 0
+build log and every build since show 0 overfull boxes. Phase 0 finding 6 (possible p.14
+overprint) rested on it; the rendered page shows no collision.
+
+### Phase 1 — table consolidation ✅ 29 pages
+Generator `paper/make_shortened_tables.py` -> `paper/files/gen/*.tex` (\input). Merges:
+M1 crossds+equiv+holm -> `tab:crossds`; imssweep+ongc(11 detectors) -> `tab:imsongc`;
+gated contrast compacted side by side; M2 imslead+farbudget+phrank -> `tab:imsdet`
+(eleven rows, PH order; 3σ PH's 8th; top seven L=0); OC-SVM row added to `tab:tradeoff`;
+M3 noise+denoise -> `tab:mechanism`; M4 hyperparams+compute; M5 tab:conformal values into
+the fig:conformal caption. Height (page-equivalents): M1 1.175->0.575, M2 0.533->0.244,
+gated 0.175->0.128, M4 0.358->0.313, M3 0.242->0.208, M5 -0.065. No merge reverted.
+Merge guard `revision-artifacts/phase1/compare_old_new.py`: every old table value survives
+except documented items (old 7-detector PH ranks superseded by the mandated 11-detector
+ranking; N-29 corrections).
+**New defect N-29 (double rounding):** OC-SVM IMS raw lead printed 180.3, source 180.2496 h
+-> 180.2; denoiser aggregate and Kalman mean lead printed 75.7, source 75.6469 h -> 75.6
+(table and D.1 prose). Response to Review impact: check for these values.
+**G3 added** (verified: `rg3_raw_invariance.csv`, 99 cells, max |dev| 0.000 h).
+**D18 added** (verified): Hotelling T2 collapses in 2 of 5 draws at 20%, mean 134.9 h,
+range 58.0-186.1 h, single run (test 3, 315.9 -> 59.7 h). The requested clause "no chart's
+lead changes in any draw at 5%" is FALSE (3σ/CUSUM/IF move in some draws); written instead:
+Hotelling and EWMA unchanged in every draw, no chart's per-draw mean moves > 0.83 h.
+**ONGC fixed** (verified, factor 1 post-fix): the requested "nine of eleven ~34-35 h" is
+not what the data say -- seven detectors 34.9-35.3 h, CUSUM 33.9 h, Hotelling T2 30.4 h,
+RMS-trend 22.8 h, Deep SVDD none. Written as "nine of eleven 30-35 h" with that breakdown
+in D.2; §7.2 corrected likewise. NOTE for author: most of these ONGC alarms are invalid
+under the gate (pre-onset FAR 39-95%); only Hotelling T2 (6.5%) and RMS-trend (0.1%)
+clear tau=10%. The text reports raw lead; not changed here.
+**verify_tables.py**: 895 values (floor 558), all OK; new XJTU-SY guard; checks for
+imsdet (with PH/L re-derivation), mechanism, compute, conformal (a), prose G3/D18/ONGC/N-29.
+Negative tests (`revision-artifacts/phase1/negative_tests.py`): all 7 guards go red on a
+wrong source or tampered value.
+
+### Phase 2 — forest plot ✅ 29 pages (no change)
+`paper/make_forest.py` -> `paper/files/fig_forest.pdf` (vector), label `fig:crossdataset` kept.
+Panels IMS | XJTU-SY | FEMTO | Ferrara | ONGC; ±1 h band shaded; ONGC hollow. IMS shows the
+three per-run differences + median (IMS bootstrap CIs are printed nowhere, so by constraint 4
+they are not drawn). Rendered at 300 dpi and in-page at 150 dpi: legible. One-class SVM has no
+colour in `config.PLOT["method_colors"]`; drawn black explicitly (flag: N-25 family). Optional
+slopegraph not built (PH ranking already one table; would add height).
+
+### Phase 3 — caption discipline ✅ 27 pages (was 29)
+Captions 2,187 words (Phase 0) -> 1,871 (Phase 1) -> 1,269. Every removed interpretive
+sentence was checked against the body; caption-only content moved to the text: LSTM-AE's
+62.00% across-run mean FAR and 59.67 h (now §6.1), the gap-draw bound "< 3.4 h IMS, < 0.37 h
+XJTU-SY" (now §6.2). Overclaim NOT propagated: the equivalence caption's "cleared with an
+order of magnitude to spare" (widest endpoint 0.56 h vs a 1 h margin is < 2x) became "with
+room to spare" in §6.4 -- flag for author. Captions still > 70 words: tab:imsdet 122,
+tab:crossds 107, tab:d17label 94, tab:robust 83, tab:mechanism 79, fig:crossdataset,
+tab:imsongc, fig:conformal 75 -- all reading-instruction (symbol/column) definitions.
+verify_tables 895 OK.
+
+### Phase 4 — prose compression (IN PROGRESS)
+Scripts `revision-artifacts/phase4/apply_p4*.py` via `p4lib.Doc` (unique-prefix paragraph
+replacement; refuses to save if a citation key disappears or a new backslash-apostrophe
+appears). Done so far (all build clean, 26 pages):
+- 4a abstract (260 rendered words, conservative count) + Intro (arc and duplicated ±1 h / PH
+  statements folded into one paragraph + contributions) + Related Work (D1/F1/G6 paragraphs
+  and six citations kept) + Datasets.
+- F9: `\PHMslashbreak` was defined but never applied; a rewrite put FEMTO/PRONOSTIA at a line
+  end and overprinted p.3 (seen in render). Applied in 11 body sites; 0 overfull since.
+- 4b Methodology + Setup (§4.8 untouched; latch-on proof's single home is §4.4).
+Next: 4c Results, 4d Discussion/Limitations/Conclusion/DA, 4e Appendices.
+- 4c Results (tables no longer narrated; IMS per-run lists -> tab:imsongc), 4d Discussion /
+  Limitations / Conclusion (§7.1 -> 2 sentences; §7.3, G8, DA untouched), 4e Appendices
+  (App C contradiction fixed: "guaranteed miss for every detector" vs six of ten -> "most
+  detectors", exact six kept). All applied; verify_tables still 895 OK.
+
+### Phase 4 — prose compression ✅ 24 pages (was 27)
+Prose 16,120 -> 12,953 words (-20%); captions 1,228. Abstract 260 rendered words. Redundancy
+targets done: latch-on proof once in §4.4 (+ results mention), PH-vs-gated in full once
+(§6.11), the bounded ±1 h sentence removed from §7.2 and Contribution 4, IMS per-run lists
+out of prose (in tab:imsongc), sign-test floor defined once in §4.9 (pointers elsewhere).
+§7.1 condensed to two sentences; §7.3, G8 and the DA statement untouched. Wording flags for
+author: §7.1 "consistent but non-significant trend" -> "non-significant trend" (the IMS
+trend is not direction-consistent); App C "guaranteed miss for every detector" -> "most
+detectors" (six of ten, as its own third paragraph says).
+
+### Phase 5 — layout ✅ 22 pages (was 24)
+- Removed `\FloatBarrier` before Appendices B, C, D (they stranded pp. 20-24 at 40-60% empty);
+  kept the one after the bibliography and those before Discussion / Acknowledgments (removing
+  those two gained nothing and would let results floats drift).
+- fig:conformal re-plotted as a 1x4 vector strip at print size (`paper/make_conformal_strip.py`
+  -> `fig_conformal_strip.pdf`, same calibration CSVs and encodings); rendered at 300 dpi,
+  legible. Old 2x2 raster composite no longer referenced.
+- fig:sweep / fig:tradeoffs not re-plotted: each would save ~0.07 page; left as they are.
+
+### Phase 4 second pass (4f/4g) ✅ 22 pages (no page change; last page ~55% full)
+Itemize lists -> prose; 6.10 recommendation kept (7.4 no longer carries it); 7.3 P2 no longer
+re-quotes D.1; tab:deeparch identical rows (Adam, 1e-3, 32, 42, no early stopping) -> one
+caption sentence; imsdet caption trimmed; DA first sentence tightened (G7 paths untouched).
+**Stop rule §11: 21 pages not reached without content loss.** Remaining gap ~0.55 page.
+
+### Phase 6 — proof ✅ (22 pages)
+Inventory proof (`revision-artifacts/phase6/proof_report.md`): **0 unlocated**. Located: 584
+sentences (+41 by recorded decision in `review_decisions.csv`), 688 claim-locations, 785
+numbers, 819 table cells (+4 by decision), 58 citations. 56 documented changes: N-29 (6),
+ONGC 34-35 h -> 30-35 h (1), 49 yes/no sign-consistency verdicts now encoded as ˢ marker.
+Protected items all located (`protected_quotes.md`). verify_tables 895 OK. Build: 22 pages,
+0 undefined refs/cites, 0 overfull boxes; all 22 pages rendered — no clipping, overrun or
+overprint. Tests: ~171 collected, 1 failure (test_metropt_loads_with_expected_parameters:
+the real MetroPT3 CSV is present in data/raw, test expects the fixture — environment, not
+this branch; no src/tests file changed). Manuscript still says "168-test suite" (stale).
+
+### Phase 7 — deliverables ✅ (22 pages)
+`revision-artifacts/phase7/renumbering_map.md`: tables 23 -> 15, figures 6 -> 6, algorithm 1;
+sections unchanged. 17 Response-to-Review lines cite table/figure numbers that changed;
+the letter's own numbering is stale (+~4 vs the build), so each must be re-mapped by label.
+
+## FINAL PASS (2026-09-23)
+
+### Part 1 — ONGC gating honesty ✅ (22 pages)
+Source: `n20_rerun_long_ONGC.csv` (factor 1, aggregate; post-N-20) + `ongc_onset_markers.csv`.
+Onset 03:44:01 -> shutdown 09:46:00 = 6.03 h. Valid at tau=10%: Hotelling T2 (30.37 h, FAR 6.49%)
+and RMS-trend (22.82 h, 0.14%) only. EIGHT alarming detectors invalid (3sigma, EWMA, CUSUM, IF,
+LSTM-AE, TCN-AE, Transformer-AD, OC-SVM), pre-onset FAR 11.75% (IF) .. 95.17% (CUSUM); first
+alarms 27.9-29.3 h before the estimated onset. Deep SVDD: no alarm. (First draft said "seven";
+the new guard caught it.) App. D.2 P2 and Sec. 7.2 rewritten: raw lead + gated verdict + G1
+ambiguity (onset late by ~k sigma_b/m, Algorithm 1; undecidable at n=1); aggregate-vs-decimate
+contrast kept on raw lead. Abstract / Intro / Conclusion / conformal paragraph checked: they
+claim only non-destruction or calibration for ONGC, not detection quality — unchanged.
+verify_tables: new ONGC gating guard, 906 values OK; negative tests 9/9 RED.
+Build: 22 pages, 0 undefined, 0 overfull; pages 15, 21, 22 rendered clean.
+Script: `revision-artifacts/final/apply_part1_ongc.py`.
+
+### Part 2 — last page: 22 pages (accepted per instruction)
+After Part 1 the D.2 rewrite filled more of p.22 (Table 14 full-width + Table 15 + ~half a column):
+~1.4 columns overflow, and pages 19-21 carry no stranded space.
+- Option 3 (done, kept): Figures 3 and 5 re-plotted at printed size (7.0 in) as vector PDFs by
+  new `paper/make_print_figures.py` (same data/aggregation/colours; no detector re-run). Old
+  rasters were drawn at 8.6 in and 2 x 8 in and scaled down (legend ~3.5 pt in print). Fig 3 now
+  shades the few-windows regime (1000 min: 2 runs, 1160 min: 1 run -- checked in the data), which
+  the text already claimed was annotated. Fig 5 labels are placed next to their markers inside
+  the axes; coincident percentiles merged (e.g. 95/99/99.5); 4 IMS labels in the dense elbow are
+  omitted (values in Table 9). Captions gained one clause each. Saved ~0.1 page (App. C now starts
+  on p.19); still 22.
+- Option 1 (tried on a scratch copy, not kept): Tables 14/15 moved to the start of App. A, with
+  and without the FloatBarrier before App. A -> 22 pages both ways.
+- Option 2 (bounded on a scratch copy, not applied): deleting ALL App. C prose (-800 words) -> 22;
+  deleting all App. C AND all D.1 prose (-1244 words) -> still 22 (last page 261 words). No
+  content-preserving tightening of App. C / D.1 can reach 21, so none was applied (it would add
+  content-loss risk for zero page gain).
+Build: 22 pages, 0 undefined, 0 overfull; pages 11 and 13 rendered at print size -- clean.
+
+### Part 3 — small fixes ✅ (22 pages)
+- One-class SVM colour: `src/config.py` PLOT["method_colors"]["one_class_svm"] = #0000F8 (electric
+  blue), chosen by max-min CIELAB search (L* 25-72, dE >= 30 from matplotlib's default cycle):
+  dE >= 59.9 to every other detector; palette minimum stays 38.4. Non-blue alternatives were
+  pastel pinks (poor as lines) or a rust close to Deep SVDD. `make_forest.py` no longer falls back
+  to black (a missing colour now raises). `tests/test_plot_colors.py` expects 12 entries
+  (one_class_svm added to the plotted set). Only the forest plot (Fig. 2) shows OC-SVM; regenerated
+  and rendered at print size (p.10) -- distinct from 3sigma sky-blue and Transformer navy.
+- Test count: pytest --collect-only = 181 (170 before + 11 new colour-pair tests) ->
+  "a 181-test suite" (was "168").
+
+### Part 4 — content-loss re-proof ✅ (22 pages)
+Re-measured (phase6/measure), rebuilt inventory_after.csv, re-ran proof.py vs inventory_before.csv:
+**0 unlocated**, 0 review; located 585 sentences (+40 by recorded decision), 688 claim-locations,
+784 numbers, 819 table cells (+4 by decision), 58 citations; 57 documented changes (new: "168"
+test count -> measured 181). protected_quotes.md: 0 MISSING. Protected items quoted from the PDF:
+- G3: "...a maximum absolute deviation of 0.000 h across all 99 dataset x detector x indicator cells."
+- D18: "It collapses in 2 of the 5 draws at 20%, giving an across-draw mean of 134.9 h over a range
+  of 58.0-186.1 h, and the collapse is driven by a single run (test 3 falls from 315.9 to 59.7 h)."
+- 11-detector ranking (Sec. 6.11): "The seven detectors PH ranks highest -- LSTM-AE 199.6 h, TCN-AE
+  185.4 h, Transformer-AD 184.0 h, the one-class SVM 180.2 h, Hotelling T2 176.9 h, Isolation Forest
+  174.7 h and EWMA 89.1 h -- have no valid operating point ... so their gated lead is L = 0 ...
+  3sigma, which PH ranks only eighth (77.0 h raw), is the one that clears the budget" (+ Intro).
+verify_tables: 906 values, all match (>= 895).
+
+### Part 5 — Response to Review audit ✅ (22 pages)
+`IJPHM-Response-to-Review-FINAL.md` committed as received (42a22e9), then 21 minimal corrections by
+`revision-artifacts/final/apply_part5_letter.py`; every change with old/new text and evidence in
+`revision-artifacts/final/letter_changes.md`. Author box resolved and deleted. Key corrections: tag
+v1.3.0; 906 verified values; 181 tests; disclosure 4 replaced by the verified 5%/20% statement; new
+disclosure 8 (ONGC gating), items renumbered; ONGC breakdown + N-29 (75.6, 180.2) in smaller
+corrections; Reviewer D length passage (22 vs 24 pages; 15 vs 29 tables; 6 vs 11 figures -- the
+letter's "30 tables" was wrong, submission PDF has 29); 195 -> 171 non-zero raw differences (195 was
+pre-N-20); no TOST in the paper; Appendix C "six of the ten"; OC-SVM absent from Tables 10/14; IF's
+gated IMS median survives pca1. Seven manuscript sentences the letter relied on were wrong or
+missing and were corrected in the manuscript (M1-M7 in letter_changes.md), incl. the pre-existing
+dangling "Section 8 names it as the complementary study".
+
+### Part 6 — final build and verify ✅ (22 pages)
+Build: 22 pages, 0 undefined refs, 0 undefined cites, 0 multiply-defined labels, 0 overfull h/vboxes.
+All 22 pages rendered (pdf.js/Chrome, 75 dpi strips) -- no clipping, column overrun or overprint.
+Figures 1-6 inspected at print resolution (Figs 2-5 at 110-150 dpi in Parts 2-3; Figs 1 and 6 at
+150 dpi) -- legible, no label collisions. Tests (JUnit XML): 181 collected, 180 passed, 1 failed:
+test_metropt_loads_with_expected_parameters ('real' != 'fixture': the real MetroPT3 CSV is present
+in data/raw -- environmental, same as Phase 6; no src/tests change touches it). Provenance:
+verify_tables 906 values all match; negative tests 9/9 RED. Inventory re-proof after the Part 5
+manuscript edits: 0 unlocated, 0 review, 57 documented; protected quotes 0 missing.
+
+### Part 7 — deliverables ✅ (22 pages)
+`submission/`: scada_ijphm_revised.pdf (22 pp, byte-identical to the verified build),
+response_to_review.pdf (13 pp; markdown-it -> HTML -> headless Chrome print-to-pdf; author box
+absent; rendered and checked), SUBMISSION_CHECKLIST.md (push main to origin + gitlab, push tag,
+GitHub Release on v1.3.0, confirm Zenodo mint on concept DOI 10.5281/zenodo.20719076, upload both
+PDFs into the EXISTING IJPHM submission). Builder: revision-artifacts/final/make_submission.py.
+CITATION.cff version 1.2.0 -> 1.3.0, date 2026-09-23. v1.3.0 checked absent locally and on both
+remotes before tagging. ijphm-shorten merged into main locally (--no-ff), annotated tag v1.3.0 on
+the merge commit. NOTHING pushed.
