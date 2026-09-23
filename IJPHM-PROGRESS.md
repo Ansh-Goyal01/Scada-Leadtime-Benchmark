@@ -3006,3 +3006,19 @@ this branch; no src/tests file changed). Manuscript still says "168-test suite" 
 `revision-artifacts/phase7/renumbering_map.md`: tables 23 -> 15, figures 6 -> 6, algorithm 1;
 sections unchanged. 17 Response-to-Review lines cite table/figure numbers that changed;
 the letter's own numbering is stale (+~4 vs the build), so each must be re-mapped by label.
+
+## FINAL PASS (2026-09-23)
+
+### Part 1 — ONGC gating honesty ✅ (22 pages)
+Source: `n20_rerun_long_ONGC.csv` (factor 1, aggregate; post-N-20) + `ongc_onset_markers.csv`.
+Onset 03:44:01 -> shutdown 09:46:00 = 6.03 h. Valid at tau=10%: Hotelling T2 (30.37 h, FAR 6.49%)
+and RMS-trend (22.82 h, 0.14%) only. EIGHT alarming detectors invalid (3sigma, EWMA, CUSUM, IF,
+LSTM-AE, TCN-AE, Transformer-AD, OC-SVM), pre-onset FAR 11.75% (IF) .. 95.17% (CUSUM); first
+alarms 27.9-29.3 h before the estimated onset. Deep SVDD: no alarm. (First draft said "seven";
+the new guard caught it.) App. D.2 P2 and Sec. 7.2 rewritten: raw lead + gated verdict + G1
+ambiguity (onset late by ~k sigma_b/m, Algorithm 1; undecidable at n=1); aggregate-vs-decimate
+contrast kept on raw lead. Abstract / Intro / Conclusion / conformal paragraph checked: they
+claim only non-destruction or calibration for ONGC, not detection quality — unchanged.
+verify_tables: new ONGC gating guard, 906 values OK; negative tests 9/9 RED.
+Build: 22 pages, 0 undefined, 0 overfull; pages 15, 21, 22 rendered clean.
+Script: `revision-artifacts/final/apply_part1_ongc.py`.

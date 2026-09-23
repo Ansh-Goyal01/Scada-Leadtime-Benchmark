@@ -43,7 +43,14 @@ vt.tex_source = lambda: orig_src().replace("Aggregate (historian) & 75.6", "Aggr
 expect_red("mechanism N-29 double rounding", vt.check_mechanism)
 vt.tex_source = lambda: orig_src().replace("collapses in 2 of the 5 draws", "collapses in some draws")
 expect_red("D18 sentence removed", vt.check_prose_additions)
+vt.tex_source = lambda: orig_src().replace("only Hotelling $T^2$ and RMS-trend are valid", "all detectors are valid")
+expect_red("ONGC gating sentence removed", vt.check_prose_additions)
 vt.tex_source = orig_src
+orig_load = vt.load
+vt.load = lambda name: [dict(r, valid_alarm="True") if r.get("short_name") == "isolation_forest" else r
+                        for r in orig_load(name)]                  # Isolation Forest flipped to valid
+expect_red("ONGC gating valid set tampered", vt.check_prose_additions)
+vt.load = orig_load
 vt.TRADEOFF_SOURCES = ("tradeoff_IMS.csv", "tradeoff_IMS_deepmodels.csv")      # drop OC-SVM source
 expect_red("tradeoff without OC-SVM source", vt.check_tradeoff)
 

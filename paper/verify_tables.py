@@ -872,6 +872,26 @@ def check_prose_additions(bad):
     for k, v in (("cusum", 33.9), ("hotelling_t2", 30.4), ("rms_trend", 22.8), ("deep_svdd", 0.0)):
         need(abs(round(lead[k], 1) - v) < 1e-9, "ONGC %s lead %.1f h" % (k, v), "%.1f" % lead[k], v)
     need("every detector achieves a long warning" not in body, "ONGC overclaim removed")
+    # ONGC gating (final pass): only Hotelling T2 and RMS-trend are valid at tau = 10%
+    ong = {r["short_name"]: r for r in load("n20_rerun_long_ONGC.csv")
+           if float(r["factor"]) == 1 and r["mode"] == "aggregate"}
+    valid = sorted(k for k, r in ong.items() if r["valid_alarm"] in ("True", "true", "1"))
+    need(valid == ["hotelling_t2", "rms_trend"], "ONGC valid at tau=10%: Hotelling T2 and RMS-trend only", str(valid))
+    far = {k: float(r["far_preonset_pct"]) for k, r in ong.items()}
+    inval = [k for k in ong if k not in valid and float(ong[k]["lead_time_hours"]) > 0]
+    need(len(inval) == 8, "ONGC eight alarming detectors invalid", str(len(inval)), 8)
+    for v, label in ((far["hotelling_t2"], "6.5"), (far["rms_trend"], "0.1"),
+                     (min(far[k] for k in inval), "11.7"), (max(far[k] for k in inval), "95.2")):
+        need(abs(round(v, 1) - float(label)) < 1e-9, "ONGC pre-onset FAR " + label, "%.2f" % v, label)
+    need(min(inval, key=lambda k: far[k]) == "isolation_forest" and max(inval, key=lambda k: far[k]) == "cusum",
+         "ONGC FAR range endpoints Isolation Forest / CUSUM")
+    gap = float(load("ongc_onset_markers.csv")[0]["max_lead_hours"])
+    need(round(gap) == 6, "ONGC onset ~6 h before shutdown", "%.2f" % gap, 6)
+    early = [float(ong[k]["lead_time_hours"]) - gap for k in inval]
+    need(round(min(early)) == 28 and round(max(early)) == 29, "ONGC invalid alarms precede onset by 28-29 h",
+         "%.1f-%.1f" % (min(early), max(early)), "28-29")
+    need("only Hotelling $T^2$ (pre-onset FAR 6.5" in body, "ONGC gating sentence present (App. D.2)")
+    need("only Hotelling $T^2$ and RMS-trend are valid" in body, "ONGC gating sentence present (Sec. 7.2)")
     need("aggregation's 75.6~h" in body and "75.7" not in body, "N-29 corrected 75.6 in prose")
     return n
 
