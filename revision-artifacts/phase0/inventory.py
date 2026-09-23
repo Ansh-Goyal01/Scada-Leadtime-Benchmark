@@ -21,6 +21,8 @@ from claims_catalog import CLAIMS
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PH0 = ROOT / "revision-artifacts/phase0"
+import os
+MEAS = pathlib.Path(os.environ.get("MEASURE_OUT", PH0))   # sections_text.json in, reports out
 TEX = ROOT / "paper/files/scada_ijphm.tex"
 OUT_CSV = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "revision-artifacts/inventory_before.csv"
 NEW_CITES = {"lavin2015nab", "tatbul2018", "wu2023flawed", "lorden1971", "moustakides1986", "pollak1985"}
@@ -58,6 +60,12 @@ def numbers_in(s):
     return out
 
 
+def tex_text():
+    """Manuscript with \input{gen/...} expanded (Phase 1+ tables live in gen/)."""
+    src = TEX.read_text(encoding="utf-8")
+    return re.sub(r"\\input\{(gen/[^}]+)\}", lambda m: (TEX.parent / (m.group(1) + ".tex")).read_text(encoding="utf-8"), src)
+
+
 def strip_tex(c):
     c = re.sub(r"\\(multicolumn|multirow)\{[^}]*\}\{[^}]*\}\{", "{", c)
     c = re.sub(r"\\shortstack\[\w\]\{([^}]*)\}", lambda m: m.group(1).replace("\\\\", " "), c)
@@ -73,7 +81,7 @@ def strip_tex(c):
 
 def tex_tables():
     """Yield (label, rowname, colname, cell) for every non-empty tabular cell."""
-    tex = TEX.read_text(encoding="utf-8")
+    tex = tex_text()
     for m in re.finditer(r"\\begin\{(table\*?)\}(.*?)\\end\{\1\}", tex, re.S):
         body = m.group(2)
         label = re.search(r"\\label\{([^}]*)\}", body).group(1)
@@ -109,7 +117,7 @@ def tex_tables():
 
 
 def main():
-    data = json.loads((PH0 / "sections_text.json").read_text(encoding="utf-8"))
+    data = json.loads((MEAS / "sections_text.json").read_text(encoding="utf-8"))
     floats = data.pop("__floats__")
     rows = []
 
@@ -151,7 +159,7 @@ def main():
         miss = tex_n - pdf_n
         cross.append("%-22s cells=%3d numeric-tokens=%4d missing-in-PDF-float-text=%d %s" % (
             label, len(cells), sum(tex_n.values()), sum(miss.values()), dict(miss) if miss else ""))
-    (PH0 / "table_cell_crosscheck.txt").write_text("\n".join(cross) + "\n", encoding="utf-8")
+    (MEAS / "table_cell_crosscheck.txt").write_text("\n".join(cross) + "\n", encoding="utf-8")
 
     cur = "Front matter"
     for i, ln in enumerate(TEX.read_text(encoding="utf-8").split("\n"), 1):
@@ -204,7 +212,7 @@ def write_report(rows, compiled, hits):
     for v, locs in sorted(numloc.items(), key=lambda kv: (-len(kv[1]), kv[0])):
         if len(locs) >= 3:
             L.append("- `%s` — %d: %s" % (v, len(locs), "; ".join(sorted(locs))))
-    (PH0 / "redundancy_report.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+    (MEAS / "redundancy_report.md").write_text("\n".join(L) + "\n", encoding="utf-8")
     print(dict(counts), "mapped %d/%d" % (mapped, nsent))
 
 

@@ -2990,3 +2990,14 @@ Itemize lists -> prose; 6.10 recommendation kept (7.4 no longer carries it); 7.3
 re-quotes D.1; tab:deeparch identical rows (Adam, 1e-3, 32, 42, no early stopping) -> one
 caption sentence; imsdet caption trimmed; DA first sentence tightened (G7 paths untouched).
 **Stop rule §11: 21 pages not reached without content loss.** Remaining gap ~0.55 page.
+
+### Phase 6 — proof ✅ (22 pages)
+Inventory proof (`revision-artifacts/phase6/proof_report.md`): **0 unlocated**. Located: 584
+sentences (+41 by recorded decision in `review_decisions.csv`), 688 claim-locations, 785
+numbers, 819 table cells (+4 by decision), 58 citations. 56 documented changes: N-29 (6),
+ONGC 34-35 h -> 30-35 h (1), 49 yes/no sign-consistency verdicts now encoded as ˢ marker.
+Protected items all located (`protected_quotes.md`). verify_tables 895 OK. Build: 22 pages,
+0 undefined refs/cites, 0 overfull boxes; all 22 pages rendered — no clipping, overrun or
+overprint. Tests: ~171 collected, 1 failure (test_metropt_loads_with_expected_parameters:
+the real MetroPT3 CSV is present in data/raw, test expects the fixture — environment, not
+this branch; no src/tests file changed). Manuscript still says "168-test suite" (stale).
