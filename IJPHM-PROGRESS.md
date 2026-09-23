@@ -3089,3 +3089,13 @@ test_metropt_loads_with_expected_parameters ('real' != 'fixture': the real Metro
 in data/raw -- environmental, same as Phase 6; no src/tests change touches it). Provenance:
 verify_tables 906 values all match; negative tests 9/9 RED. Inventory re-proof after the Part 5
 manuscript edits: 0 unlocated, 0 review, 57 documented; protected quotes 0 missing.
+
+### Part 7 — deliverables ✅ (22 pages)
+`submission/`: scada_ijphm_revised.pdf (22 pp, byte-identical to the verified build),
+response_to_review.pdf (13 pp; markdown-it -> HTML -> headless Chrome print-to-pdf; author box
+absent; rendered and checked), SUBMISSION_CHECKLIST.md (push main to origin + gitlab, push tag,
+GitHub Release on v1.3.0, confirm Zenodo mint on concept DOI 10.5281/zenodo.20719076, upload both
+PDFs into the EXISTING IJPHM submission). Builder: revision-artifacts/final/make_submission.py.
+CITATION.cff version 1.2.0 -> 1.3.0, date 2026-09-23. v1.3.0 checked absent locally and on both
+remotes before tagging. ijphm-shorten merged into main locally (--no-ff), annotated tag v1.3.0 on
+the merge commit. NOTHING pushed.
