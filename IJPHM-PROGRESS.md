@@ -3041,3 +3041,14 @@ After Part 1 the D.2 rewrite filled more of p.22 (Table 14 full-width + Table 15
   content-preserving tightening of App. C / D.1 can reach 21, so none was applied (it would add
   content-loss risk for zero page gain).
 Build: 22 pages, 0 undefined, 0 overfull; pages 11 and 13 rendered at print size -- clean.
+
+### Part 3 — small fixes ✅ (22 pages)
+- One-class SVM colour: `src/config.py` PLOT["method_colors"]["one_class_svm"] = #0000F8 (electric
+  blue), chosen by max-min CIELAB search (L* 25-72, dE >= 30 from matplotlib's default cycle):
+  dE >= 59.9 to every other detector; palette minimum stays 38.4. Non-blue alternatives were
+  pastel pinks (poor as lines) or a rust close to Deep SVDD. `make_forest.py` no longer falls back
+  to black (a missing colour now raises). `tests/test_plot_colors.py` expects 12 entries
+  (one_class_svm added to the plotted set). Only the forest plot (Fig. 2) shows OC-SVM; regenerated
+  and rendered at print size (p.10) -- distinct from 3sigma sky-blue and Transformer navy.
+- Test count: pytest --collect-only = 181 (170 before + 11 new colour-pair tests) ->
+  "a 181-test suite" (was "168").

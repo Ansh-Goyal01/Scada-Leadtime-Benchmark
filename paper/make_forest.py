@@ -43,9 +43,9 @@ LABEL = {"3sigma": r"$3\sigma$", "ewma": "EWMA", "cusum": "CUSUM", "hotelling": 
 
 
 def colour(k):
-    # config.PLOT["method_colors"] has no one-class SVM entry; black, set here explicitly
-    # rather than letting matplotlib's default cycle collide with another detector (N-25).
-    return PLOT["method_colors"].get(SHORT[k], "#000000")
+    # Every plotted detector, the one-class SVM included, has its own entry in
+    # config.PLOT["method_colors"]; a missing one fails loudly rather than defaulting (N-25).
+    return PLOT["method_colors"][SHORT[k]]
 
 
 def main():
