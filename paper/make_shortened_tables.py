@@ -124,7 +124,7 @@ def tab_crossds(src, holm):
     write("tab_crossds", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{Run-level aggregate$-$decimate lead-time contrast on the three multi-bearing campaigns, all eleven detectors, collapsing the five within-run sampling factors to one difference per run. Med.\ and Mean: run-level median and mean difference (h), with the 95\%% bootstrap CI over runs; $n_+/n_-$ counts non-zero runs only ($^{\mathrm{s}}$: sign-consistent, every non-zero run of one sign); $p$: exact two-sided sign test. A cell is equivalent when its CI lies inside $[-\delta,+\delta]$, $\delta = 1$~h: all 33 of 33 are, and no endpoint reaches $\pm 0.6$~h, clearing the margin with an order of magnitude to spare. $^\ddagger$: length-30 sequence models, $n=3$ on XJTU-SY. Holm--Bonferroni over the $N=44$ family (these 33 tests and the eleven IMS tests of Table~\ref{tab:imsongc}; ONGC, $n=1$, excluded): no raw $p$ is below 0.05, the smallest is 0.125 (Transformer-AD, FEMTO), and every adjusted $p$ is 1.00, so no hypothesis is rejected. IMS is equivalent in no cell at $n=3$ (intervals too wide) and ONGC is untestable at $n=1$; neither enters the equivalence family.}
+	\caption{Run-level aggregate$-$decimate lead-time contrast on the three multi-bearing campaigns, collapsing the five sampling factors to one difference per run. Med., Mean: run-level median and mean difference (h), with the 95\%% bootstrap CI over runs; $n_+/n_-$: non-zero runs ($^{\mathrm{s}}$: all of one sign); $p$: exact two-sided sign test. $^\ddagger$: length-30 sequence models, $n=3$ on XJTU-SY. Equivalent at $\delta=1$~h when the CI lies inside $[-\delta,+\delta]$: all 33 cells. Holm over $N=44$ (these 33 tests and the eleven IMS tests of Table~\ref{tab:imsongc}): every adjusted $p$ is 1.00. IMS and ONGC are outside the equivalence family.}
 	\label{tab:crossds}
 	\setlength{\tabcolsep}{2.5pt}
 	\begin{tabular}{l r r c r}
@@ -167,7 +167,7 @@ def tab_imsongc(src, holm):
     write("tab_imsongc", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{IMS controlled sweep ($n=3$) and the ONGC case study ($n=1$). IMS: run differences (h) for tests 1, 2, 3, each collapsing the five within-run sampling factors to one mean aggregate$-$decimate difference, with the run-level median, $n_+/n_-$ and the exact two-sided sign-test $p$, which floors at 0.25 at $n=3$ ($^\ast$: one positive run and two ties, not counted as sign-consistent). ONGC: descriptive median over the five sampling factors, in minutes; no inference. Every ONGC difference is about a minute or less.}
+	\caption{IMS controlled sweep ($n=3$) and the ONGC case study ($n=1$). IMS: run differences (h) for tests 1, 2, 3, each collapsing the five within-run sampling factors to one mean aggregate$-$decimate difference, with the run-level median, $n_+/n_-$ and the exact two-sided sign-test $p$, which floors at 0.25 at $n=3$ ($^\ast$: one positive run and two ties, not counted as sign-consistent). ONGC: descriptive median over the five sampling factors, in minutes; no inference.}
 	\label{tab:imsongc}
 	\setlength{\tabcolsep}{2.5pt}
 	\begin{tabular}{l l r c r r}
@@ -197,7 +197,7 @@ def tab_gated():
     write("tab_gatedcontrast", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%%$ pre-onset FAR) metric, post-N-20 reruns, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped. Under both metrics no hypothesis survives Holm correction across the $N=44$ family.}
+	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%%$ pre-onset FAR) metric, post-N-20 reruns, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped.}
 	\label{tab:gatedcontrast}
 	\setlength{\tabcolsep}{3pt}
 	\begin{tabular}{l r c r | r c r}
@@ -271,7 +271,7 @@ def tab_imsdet():
     write("tab_imsdet", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{IMS, all eleven detectors, rows in prognostic-horizon order (PH rank 1--11). Raw: mean ungated lead (h) at full resolution and the default 97.5th-percentile threshold, with 95\%% bootstrap CI over the $n=3$ runs. PH: Saxena prognostic horizon, the best raw lead over the 95th, 99th and 99.5th percentiles, with no false-alarm constraint. $L_\tau$: best lead at an operating point whose pre-onset FAR, \emph{averaged across the three runs}, is within budget $\tau$ (0.0 = none). $^\dagger$: no valid operating point at $\tau=0.10$; the long raw leads of these detectors come from flooding the pre-onset region. The gated ranking at $\tau=0.10$ is $3\sigma$, RMS-trend, Deep SVDD, then the eight detectors tied at $L=0$. $^\ast$: RMS-trend is valid only at the loosest threshold and on one of three runs. Because the gate uses the across-run mean, a zero here does not exclude a valid point on one run: LSTM-AE has a mean pre-onset FAR of 62.00\%% at the 99.5th percentile but 4.19\%% FAR and 59.67~h of valid lead on \texttt{3rd\_test} alone (Table~\ref{tab:tradeoff}).}
+	\caption{IMS, all eleven detectors, in prognostic-horizon order (PH rank 1--11). Raw: mean ungated lead (h) at full resolution and the default 97.5th-percentile threshold, with 95\%% bootstrap CI over the $n=3$ runs. PH: Saxena prognostic horizon, the best raw lead over the 95th, 99th and 99.5th percentiles. $L_\tau$: best lead at an operating point whose pre-onset FAR, \emph{averaged across the three runs}, is within budget $\tau$ (0.0 = none), so a zero does not exclude a valid point on a single run. $^\dagger$: no valid operating point at $\tau=0.10$. Gated order at $\tau=0.10$: $3\sigma$, RMS-trend, Deep SVDD, then eight tied at 0. $^\ast$: valid only at the loosest threshold and on one of three runs.}
 	\label{tab:imsdet}
 	\setlength{\tabcolsep}{2pt}
 	\begin{tabular}{l r c r r r r}
@@ -305,7 +305,7 @@ def tab_tradeoff():
 \begin{table}[t] \small
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
-	\caption{IMS lead-time--vs--false-alarm trade-off (mean across runs) at three threshold percentiles: lead (Ld, h) and pre-onset FAR (\%%). $\dagger$: pre-onset FAR above the $\tau=10\%%$ budget, so the operating point is invalid under the gated metric. The three deep reconstruction models and the one-class SVM are included so that the ``no valid operating point'' claim can be checked per threshold: all twelve of their entries are daggered. LSTM-AE's 99.5th-percentile entry is daggered on the across-run mean (62.0\%%) although it is within budget on \texttt{3rd\_test} alone.}
+	\caption{IMS lead-time--vs--false-alarm trade-off (mean across runs) at three threshold percentiles: lead (Ld, h) and pre-onset FAR (\%%). $\dagger$: pre-onset FAR above the $\tau=10\%%$ budget, so the operating point is invalid under the gated metric. The three deep reconstruction models and the one-class SVM are listed so the ``no valid operating point'' claim can be checked per threshold: all twelve of their entries are daggered.}
 	\label{tab:tradeoff}
 	\begin{tabular}{l r r r r r r}
 		\hline \hline
@@ -349,7 +349,7 @@ def tab_mechanism():
 \begin{table}[t] \small
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
-	\caption{IMS mechanism tests at sampling factor 5, the four magnitude SPC charts. (a) Noise injection: aggregate$-$decimate lead-time difference (h) collapsed to one mean per run (tests 1, 2, 3; $n=3$), its mean, and the runs with a positive sign; a directional trend that cannot be significance-tested at $n=3$. (b) Denoisers applied to the decimated stream: mean lead (h) over the twelve chart-runs (four charts $\times$ three runs) and the valid alarms among them, against raw aggregation and raw decimation.}
+	\caption{IMS mechanism tests at sampling factor 5, the four magnitude SPC charts. (a) Noise injection: aggregate$-$decimate lead-time difference (h) collapsed to one mean per run (tests 1, 2, 3; $n=3$), its mean, and the runs with a positive sign. (b) Denoisers applied to the decimated stream: mean lead (h) over the twelve chart-runs (four charts $\times$ three runs) and the valid alarms among them, against raw aggregation and raw decimation.}
 	\label{tab:mechanism}
 	\textbf{(a) Noise injection}\\[2pt]
 	\begin{tabular}{l l r c}
@@ -406,7 +406,7 @@ def tab_hyperparams():
     write("tab_hyperparams", r"""
 \begin{table}[t] \small
 	\begin{center}
-	\caption{(a) Fixed hyperparameter protocol, from \texttt{config.py}; onset tolerances are in samples of the health-indicator series, and the pre-onset FAR is measured over the full window $t < t_o$ (Eq.~\ref{eq:valid}). (b) Compute cost on the largest IMS run (631 train / 506 test windows, 49 features, one core of an Intel Core i5-13420H, median of five repeats): training time and inference in $\mu$s per window, every one $\ll$ the 10~s SCADA polling interval.}
+	\caption{(a) Fixed hyperparameter protocol, from \texttt{config.py}; onset tolerances are in samples of the health-indicator series, and the pre-onset FAR is measured over the full window $t < t_o$ (Eq.~\ref{eq:valid}). (b) Compute cost on the largest IMS run (631 train / 506 test windows, 49 features, one core of an Intel Core i5-13420H, median of five repeats): training time and inference in $\mu$s per window.}
 	\label{tab:hyperparams}
 	\textbf{(a) Protocol}\\[2pt]
 %s

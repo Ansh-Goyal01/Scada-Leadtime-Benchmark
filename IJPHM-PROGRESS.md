@@ -2938,3 +2938,14 @@ three per-run differences + median (IMS bootstrap CIs are printed nowhere, so by
 they are not drawn). Rendered at 300 dpi and in-page at 150 dpi: legible. One-class SVM has no
 colour in `config.PLOT["method_colors"]`; drawn black explicitly (flag: N-25 family). Optional
 slopegraph not built (PH ranking already one table; would add height).
+
+### Phase 3 — caption discipline ✅ 27 pages (was 29)
+Captions 2,187 words (Phase 0) -> 1,871 (Phase 1) -> 1,269. Every removed interpretive
+sentence was checked against the body; caption-only content moved to the text: LSTM-AE's
+62.00% across-run mean FAR and 59.67 h (now §6.1), the gap-draw bound "< 3.4 h IMS, < 0.37 h
+XJTU-SY" (now §6.2). Overclaim NOT propagated: the equivalence caption's "cleared with an
+order of magnitude to spare" (widest endpoint 0.56 h vs a 1 h margin is < 2x) became "with
+room to spare" in §6.4 -- flag for author. Captions still > 70 words: tab:imsdet 122,
+tab:crossds 107, tab:d17label 94, tab:robust 83, tab:mechanism 79, fig:crossdataset,
+tab:imsongc, fig:conformal 75 -- all reading-instruction (symbol/column) definitions.
+verify_tables 895 OK.

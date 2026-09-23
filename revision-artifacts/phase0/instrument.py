@@ -17,7 +17,7 @@ SRC = pathlib.Path(r"D:\scada\paper\files")
 OUT = pathlib.Path(sys.argv[1])
 OUT.mkdir(parents=True, exist_ok=True)
 for f in SRC.iterdir():
-    if f.suffix in {".cls", ".bib", ".png", ".bst", ".sty"}:
+    if f.suffix in {".cls", ".bib", ".png", ".bst", ".sty"} or (f.suffix == ".pdf" and f.name.startswith("fig_")):
         shutil.copy2(f, OUT / f.name)
 if (SRC / "gen").is_dir():          # generated tables (Phase 1+)
     shutil.copytree(SRC / "gen", OUT / "gen", dirs_exist_ok=True)
