@@ -2975,3 +2975,12 @@ out of prose (in tab:imsongc), sign-test floor defined once in §4.9 (pointers e
 author: §7.1 "consistent but non-significant trend" -> "non-significant trend" (the IMS
 trend is not direction-consistent); App C "guaranteed miss for every detector" -> "most
 detectors" (six of ten, as its own third paragraph says).
+
+### Phase 5 — layout ✅ 22 pages (was 24)
+- Removed `\FloatBarrier` before Appendices B, C, D (they stranded pp. 20-24 at 40-60% empty);
+  kept the one after the bibliography and those before Discussion / Acknowledgments (removing
+  those two gained nothing and would let results floats drift).
+- fig:conformal re-plotted as a 1x4 vector strip at print size (`paper/make_conformal_strip.py`
+  -> `fig_conformal_strip.pdf`, same calibration CSVs and encodings); rendered at 300 dpi,
+  legible. Old 2x2 raster composite no longer referenced.
+- fig:sweep / fig:tradeoffs not re-plotted: each would save ~0.07 page; left as they are.

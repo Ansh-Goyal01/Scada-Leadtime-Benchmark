@@ -425,7 +425,7 @@ On IMS (Figure~\ref{fig:conformal}a, values in its caption) the distribution-fre
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{fig_conformal_panels}
+\includegraphics[width=\textwidth]{fig_conformal_strip.pdf}
 \caption{Conformal calibration: empirical pre-onset FAR vs target $\alpha$ for (a) IMS, (b) XJTU-SY, (c) FEMTO/PRONOSTIA and (d) the ONGC turbine ($n=1$ case study, Appendix~D.2). Points on or below the diagonal satisfy the distribution-free guarantee; bearings with only one or two pre-onset windows are flagged uncalibrated. \ConformalPanelA}
 \label{fig:conformal}
 \end{figure*}
@@ -609,7 +609,6 @@ Table~\ref{tab:hyperparams}a lists the fixed hyperparameters, taken verbatim fro
 	so at one layer the configured 0.1 has no effect on LSTM-AE.}
 \end{table*}
 
-\FloatBarrier
 \section*{Appendix B: The 49-Dimensional Invariant Feature Space}
 Each snapshot's raw waveform yields the six per-channel time-domain statistics of Table~\ref{tab:basestats}. Each family is made channel-count-invariant by the channel mean and the channel max, and each aggregated series is summarised over the rolling window (10 samples, 50\% overlap) by its mean, standard deviation, maximum and least-squares trend slope, giving $6 \times 2 \times 4 = 48$ features; a cross-channel RMS-coherence feature (the mean pairwise Pearson correlation of the physical RMS channels within the window) brings the total to 49. A train-fit variance top-$k$ selection ($k \le 50$) keeps $p < n$, every statistic is fit on the training split only, and feature naming and the exact construction are in the released code.
 
@@ -632,7 +631,6 @@ Each snapshot's raw waveform yields the six per-channel time-domain statistics o
 	\end{center}
 \end{table}
 
-\FloatBarrier
 \section*{Appendix C: IMS Test-3 Relabeling Justification}
 An earlier label placed the failure of the third IMS test on 2004-04-08, leaving 21.5\% of the recorded data after the nominal ``failure''---impossible for a run-to-failure series. We relabel it to the last recorded sample (2004-04-18 02:42), at which the mean-RMS health indicator has ramped from its flat baseline (${\sim}0.068$) to ${\sim}0.228$ before the final machine-off reading: within the flat normal-region baseline band at the old label, but well above the $4\sigma$ onset band at the corrected one. The relabeling moves the third test toward harder, not easier, detection: a run that was a guaranteed miss for most detectors becomes evaluable, and because the aggregate-vs-decimate contrast is computed within each run, the relabeling cannot artificially inflate it. It affects only the single hardest run and is not a tuning choice. We present it as an author relabeling based on the health-indicator trajectory, not independently verified ground truth: we know of no published benchmark that corrects this label, so we do not claim it as a community-established correction. It is the labeling we use throughout.
 
@@ -666,7 +664,6 @@ The relabeling is also narrower than one might expect. Under the original label 
 
 \emph{The effective sample size is detector-dependent, and neither label can reach significance.} Because the zero-difference exclusion operates per detector, the original label does not simply reduce IMS to $n=2$: it leaves $n_{\text{eff}}=3$ for the four detectors that still warn on the third test, $n_{\text{eff}}=2$ for $3\sigma$, CUSUM, EWMA and Isolation Forest, and $n_{\text{eff}}=1$ for Deep SVDD and RMS-trend. The exact two-sided sign test floors at $p=0.25$, $0.50$ and $1.00$ at those sample sizes, so under the original label six of the ten detectors could not have reached $\alpha=0.05$ at any effect size, and the four with $n_{\text{eff}}=3$ floor at $p=0.25$, already above $\alpha$. The corrected label retains every run, but $n=3$ still bounds the attainable $p$ at $0.25$, so no IMS detector reaches significance under either label and the best attainable $p$ is $0.25$ in both arms (Hotelling $T^2$). The label does not change the direction: no median flips sign between the arms, $3\sigma$ holding at $+15.10$~h and Hotelling $T^2$ at $+1.17$~h, and the Holm verdict of Section~\ref{sec:results} and the headline are untouched.
 
-\FloatBarrier
 \section*{Appendix D: Mechanism Analysis and ONGC Case Study}
 
 \subsection*{D.1 Generic Smoothing vs.\ Historian Averaging}
