@@ -3001,3 +3001,8 @@ Protected items all located (`protected_quotes.md`). verify_tables 895 OK. Build
 overprint. Tests: ~171 collected, 1 failure (test_metropt_loads_with_expected_parameters:
 the real MetroPT3 CSV is present in data/raw, test expects the fixture — environment, not
 this branch; no src/tests file changed). Manuscript still says "168-test suite" (stale).
+
+### Phase 7 — deliverables ✅ (22 pages)
+`revision-artifacts/phase7/renumbering_map.md`: tables 23 -> 15, figures 6 -> 6, algorithm 1;
+sections unchanged. 17 Response-to-Review lines cite table/figure numbers that changed;
+the letter's own numbering is stale (+~4 vs the build), so each must be re-mapped by label.
