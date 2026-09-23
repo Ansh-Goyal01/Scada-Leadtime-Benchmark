@@ -17,7 +17,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIGS = os.path.join(ROOT, "paper", "figs")
 TAB = os.path.join(ROOT, "results", "tables")
 RFIG = os.path.join(ROOT, "results", "figures")
+FILES = os.path.join(ROOT, "paper", "files")        # figures the manuscript includes
 os.makedirs(FIGS, exist_ok=True)
+
+import sys as _sys  # noqa: E402
+_sys.path.insert(0, os.path.join(ROOT, "paper"))
+import fig_style  # noqa: E402
 
 # Single source of truth for detector colours: src.config.PLOT["method_colors"],
 # keyed by short_name. This module previously kept its own five-entry table keyed by
@@ -51,25 +56,26 @@ def fig_rms_degradation():
     t_fail = pd.Timestamp(pipe["failure_time"])
     onset = onset_for_run(df, train_end=train_end, t_fail=t_fail)
 
-    # Height 3.1in left the rotated y-label taller than the canvas, so its
-    # closing ")" was cut off even with bbox_inches="tight" (D16 audit). The
-    # axes must be tall enough to hold the label; 3.8in clears it.
-    fig, ax = plt.subplots(figsize=(7, 3.8))
-    ax.plot(hi.index, hi.values, color="#1565C0", linewidth=1.0, label="mean RMS")
+    # Drawn at print size (\columnwidth) as vector PDF in the shared style, so text prints
+    # at 7 pt and the PDF text layer is Unicode (fig_style).
+    fig_style.apply(7, **{"axes.linewidth": 0.6})
+    fig, ax = plt.subplots(figsize=(fig_style.COLUMN_WIDTH_IN, 1.85))
+    ax.plot(hi.index, hi.values, color="#1565C0", linewidth=0.8, label="mean RMS")
     ax.axvspan(hi.index[0], train_end, alpha=0.08, color="green")
-    ax.axvline(train_end, color="green", linestyle=":", linewidth=1.2, label="train boundary")
+    ax.axvline(train_end, color="green", linestyle=":", linewidth=1.0, label="train boundary")
     if onset is not None:
-        ax.axvline(onset, color="#FB8C00", linestyle="--", linewidth=1.6, label="degradation onset")
-    ax.axvline(t_fail, color="#B71C1C", linestyle="-", linewidth=1.8, label="failure")
+        ax.axvline(onset, color="#FB8C00", linestyle="--", linewidth=1.2, label="degradation onset")
+    ax.axvline(t_fail, color="#B71C1C", linestyle="-", linewidth=1.3, label="failure")
     ax.set_xlabel("Time")
     ax.set_ylabel("Health indicator $h(t)$ (mean RMS)")
     # No in-plot title (D13/D16): the LaTeX caption carries it - IJPHM house style.
-    ax.legend(fontsize=7, loc="upper left")
-    ax.grid(alpha=0.3)
+    ax.legend(fontsize=6, loc="upper left", handlelength=1.8)
+    ax.grid(alpha=0.3, lw=0.4)
+    ax.tick_params(length=2, pad=1.5)
     fig.autofmt_xdate()
-    plt.tight_layout()
-    out = os.path.join(FIGS, "fig_rms_degradation.png")
-    fig.savefig(out, dpi=200, bbox_inches="tight")
+    fig.tight_layout(pad=0.3)
+    out = os.path.join(FILES, "figure1.pdf")
+    fig.savefig(out)
     plt.close(fig)
     print("wrote", out)
 
@@ -212,51 +218,46 @@ def fig_training_sweep():
         "lstm_ae": ("deep recon.", "#C62828"), "tcn": ("deep recon.", "#EF5350"),
         "transformer_ad": ("deep recon.", "#FF8A80"),
     }
-    # Mathtext, not literal Greek/superscripts — see the note in fig_crossdataset.
-    labels = {"three_sigma": r"$3\sigma$", "ewma": "EWMA", "cusum": "CUSUM",
-              "hotelling_t2": r"Hot. $T^2$", "isolation_forest": "IsoForest",
-              "deep_svdd": "Deep SVDD", "lstm_ae": "LSTM-AE", "tcn": "TCN-AE",
-              "transformer_ad": "Transformer-AD"}
-
-    fig, ax = plt.subplots(figsize=(7.0, 3.6))
+    # Table names from fig_style; drawn at print size (\columnwidth) as vector PDF.
+    fig_style.apply(7, **{"axes.linewidth": 0.6})
+    fig, ax = plt.subplots(figsize=(fig_style.COLUMN_WIDTH_IN, 1.9))
     for sn, (fam, color) in families.items():
         sub = df[df.short_name == sn].sort_values("train_fraction")
         if sub.empty:
             continue
         ls = {"SPC": "-", "tree/one-class": "--", "deep recon.": ":"}[fam]
-        ax.plot(sub["train_fraction"], sub["valid_frac"], marker="o", markersize=4,
-                linewidth=1.6, linestyle=ls, color=color, label=labels[sn])
+        ax.plot(sub["train_fraction"], sub["valid_frac"], marker="o", markersize=2.6,
+                linewidth=1.0, linestyle=ls, color=color, label=fig_style.label(sn))
 
     # SPC-chart baseline = mean valid fraction over the four SPC charts, drawn as a
     # horizontal dashed reference the deep models are compared against.
     spc = df[df.short_name.isin(["three_sigma", "ewma", "cusum", "hotelling_t2"])]
     if not spc.empty:
         base = float(spc["valid_frac"].mean())
-        ax.axhline(base, color="#1565C0", linestyle="--", linewidth=1.0, alpha=0.6)
-        # Below the baseline the descending Hot. T^2 line crossed this label
-        # (final D16 pass). Above it, at T in [0.205,0.27], every series is
-        # either <=0.667 (EWMA, IsoForest) or >=0.87 (3sigma), so 0.74 is clear.
+        ax.axhline(base, color="#1565C0", linestyle="--", linewidth=0.8, alpha=0.6)
+        # At T in [0.205, 0.27] every series is <=0.667 or, for 3sigma, >=0.87, so a
+        # label at 0.74 is clear of every line.
         ax.text(0.205, 0.74, "SPC baseline $\\approx$ %.2f" % base,
-                fontsize=7, color="#1565C0")
-    # D16 audit: at y=0.06 this sat in the densest part of the plot and four
-    # series crossed it. For T>=0.42 no detector exceeds 0.667, and the legend
-    # is lifted into headroom above 0.98, so y=0.82 is provably clear.
-    ax.text(0.50, 0.82, "no crossover: deep models never reach the SPC baseline",
-            fontsize=7.5, style="italic", ha="center", color="#555555")
+                fontsize=6, color="#1565C0")
+    # For T>=0.30 no series exceeds 0.833 (3sigma at T=0.30), and the legend sits in the
+    # headroom above ~0.94, so a line whose baseline is 0.86, spanning T of about
+    # 0.31-0.61, is clear of both.
+    ax.text(0.46, 0.86, "no crossover: deep models never reach the SPC baseline",
+            fontsize=6, style="italic", ha="center", va="bottom", color="#555555")
 
     ax.set_xlabel("Training fraction $T$")
-    ax.set_ylabel("Valid-alarm fraction (scoreable bearings)")
+    ax.set_ylabel("Valid-alarm fraction\n(scoreable bearings)")
     ax.set_xlim(0.18, 0.62)
-    ax.set_ylim(-0.02, 1.18)   # headroom so the legend clears the annotation
+    ax.set_ylim(-0.02, 1.25)   # headroom so the legend clears the annotation
     ax.set_xticks([0.2, 0.3, 0.4, 0.5, 0.6])
-    # No in-plot title (RD-11..RD-14): the old title asserted the deep models
-    # "match SPC charts", which the LaTeX caption correctly denies — there is no
-    # crossover. The caption carries the title; that is IJPHM house style.
-    ax.legend(fontsize=6.5, ncol=3, loc="upper right")
-    ax.grid(alpha=0.3)
-    plt.tight_layout()
-    out = os.path.join(FIGS, "fig_training_sweep.png")
-    fig.savefig(out, dpi=200, bbox_inches="tight")
+    # No in-plot title: the LaTeX caption carries it (IJPHM house style).
+    ax.legend(fontsize=5.5, ncol=3, loc="upper right", handlelength=2.2, columnspacing=0.8,
+              borderpad=0.3, labelspacing=0.25)
+    ax.grid(alpha=0.3, lw=0.4)
+    ax.tick_params(length=2, pad=1.5)
+    fig.tight_layout(pad=0.3)
+    out = os.path.join(FILES, "fig_mintrain.pdf")
+    fig.savefig(out)
     plt.close(fig)
     print("wrote", out)
 

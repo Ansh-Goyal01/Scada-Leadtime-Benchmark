@@ -346,7 +346,7 @@ def tab_mechanism():
         nvalid = sum(1 for r in sub if r["valid_alarm"] == "True")
         den.append(r"%s & %.1f & %d/12 \\" % (label, lead, nvalid))
     write("tab_mechanism", r"""
-\begin{table}[t] \small
+\begin{table}[t] \footnotesize
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
 	\caption{IMS mechanism tests at sampling factor 5, the four magnitude SPC charts. (a) Noise injection: aggregate$-$decimate lead-time difference (h) collapsed to one mean per run (tests 1, 2, 3; $n=3$), its mean, and the runs with a positive sign. (b) Denoisers applied to the decimated stream: mean lead (h) over the twelve chart-runs (four charts $\times$ three runs) and the valid alarms among them, against raw aggregation and raw decimation.}
@@ -404,7 +404,7 @@ def tab_hyperparams():
     rows = [(" & ".join(p) if len(p) == 2 else p[0] + " & & &") + r" \\" for p in pairs]
     static = (GEN / "hyperparams_static.tex").read_text(encoding="utf-8")
     write("tab_hyperparams", r"""
-\begin{table}[t] \small
+\begin{table}[t] \footnotesize
 	\begin{center}
 	\caption{(a) Fixed hyperparameter protocol, from \texttt{config.py}; onset tolerances are in samples of the health-indicator series, and the pre-onset FAR is measured over the full window $t < t_o$ (Eq.~\ref{eq:valid}). (b) Compute cost on the largest IMS run (631 train / 506 test windows, 49 features, one core of an Intel Core i5-13420H, median of five repeats): training time and inference in $\mu$s per window.}
 	\label{tab:hyperparams}

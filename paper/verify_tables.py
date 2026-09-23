@@ -1066,7 +1066,7 @@ def check_eq5(bad):
          "S6.10 steps of 1/3, 1/2 at f=20")
     need("steps of 1/3 (1/2 at $f=20$" in body, "S6.10 sentence")
 
-    # --- Section 6.12 / Figure 5: training sweep
+    # --- Section 6.12 / Figure 6: training sweep
     ts = load("femto_training_sweep_long.csv")
     frac = {}
     for det in ("three_sigma", "ewma", "cusum", "hotelling_t2", "isolation_forest"):
@@ -1092,11 +1092,11 @@ def check_eq5(bad):
     for det in ("three_sigma", "ewma", "cusum", "hotelling_t2"):
         for t in T:
             spc.append(frac[(det, t)])
-    need("SPC baseline (${\\approx}%.2f$)" % statistics.mean(spc) in body, "Fig 5 caption SPC baseline",
+    need("SPC baseline (${\\approx}%.2f$)" % statistics.mean(spc) in body, "Fig 6 caption SPC baseline",
          "%.3f" % statistics.mean(spc))
     fig = {(r["short_name"], r["train_fraction"]): float(r["valid_frac"]) for r in load("eq5_femto_training_sweep.csv")}
-    need(all(abs(fig[k] - frac[k]) < 1e-12 for k in frac), "Figure 5 source equals the Eq.5 recomputation")
-    agrees("S6.12 / Figure 5 training sweep, all cells", _tally(ts))
+    need(all(abs(fig[k] - frac[k]) < 1e-12 for k in frac), "Figure 6 source equals the Eq.5 recomputation")
+    agrees("S6.12 / Figure 6 training sweep, all cells", _tally(ts))
 
     # --- counts that comply as printed: their sources hold no unscoreable row
     for name, site in (("n20_rerun_long_FEMTO.csv", "S6.4 FEMTO eleven detectors, all modes x factors"),

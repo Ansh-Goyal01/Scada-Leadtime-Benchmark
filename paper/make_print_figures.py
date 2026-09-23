@@ -27,6 +27,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "paper"))
 from src.config import PLOT                                            # noqa: E402
+import fig_style                                                       # noqa: E402
 from make_tradeoff_panels import LABELLED_PERCENTILES, _overlaps      # noqa: E402
 
 TAB = os.path.join(ROOT, "results", "tables")
@@ -36,6 +37,7 @@ FONT_PT = 7.5
 FEW_WINDOWS_FROM_MIN = 1000  # factors at which only one or two IMS runs keep enough windows
 COLORS = PLOT["method_colors"]
 
+fig_style.apply(FONT_PT)
 plt.rcParams.update({"font.size": FONT_PT, "axes.labelsize": FONT_PT, "axes.titlesize": FONT_PT + 0.5,
                      "xtick.labelsize": FONT_PT - 0.5, "ytick.labelsize": FONT_PT - 0.5,
                      "legend.fontsize": FONT_PT - 1, "pdf.fonttype": 42})
@@ -59,7 +61,7 @@ def fig_sweep():
         for (m, sn), ms in g[g["mode"] == mode].groupby(["method", "short_name"]):
             ms = ms.sort_values("effective_interval_min")
             ax.plot(ms.effective_interval_min, ms.lead_time_hours, "o-", ms=2.6, lw=1.1,
-                    color=COLORS[sn], label=m)
+                    color=COLORS[sn], label=fig_style.label(sn))
         ax.axvspan(FEW_WINDOWS_FROM_MIN * 0.93, xmax * 1.12, color="0.88", zorder=0, lw=0)
         ax.text(FEW_WINDOWS_FROM_MIN * 1.04, 0.97, "few\nwindows", transform=ax.get_xaxis_transform(),
                 ha="center", va="top", fontsize=FONT_PT - 1.5, color="0.35")
@@ -125,7 +127,7 @@ def _tradeoff_axis(ax, csv_name, title):
     for sn, sub in agg.groupby("short_name"):
         sub = sub.sort_values("far_preonset_pct_mean")
         ax.plot(sub.far_preonset_pct_mean, sub.lead_time_hours_mean, "o-", color=COLORS[sn],
-                lw=1.1, ms=2.8, label=sub["method"].iloc[0], zorder=3)
+                lw=1.1, ms=2.8, label=fig_style.label(sn), zorder=3)
         pending += [(r.far_preonset_pct_mean, r.lead_time_hours_mean, f"{r.percentile:g}", COLORS[sn])
                     for r in sub.itertuples() if float(r.percentile) in LABELLED_PERCENTILES]
     ax.axvline(10.0, color="#FF9800", lw=1.1, ls=":", label="10% FAR budget")

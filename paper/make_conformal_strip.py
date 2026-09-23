@@ -18,6 +18,8 @@ logging.getLogger("fontTools").setLevel(logging.WARNING)
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 
+import fig_style  # noqa: E402  (same directory)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAB = os.path.join(ROOT, "results", "tables")
 OUT = os.path.join(ROOT, "paper", "files", "fig_conformal_strip.pdf")
@@ -26,8 +28,7 @@ PANELS = [("IMS", "(a) IMS"), ("XJTU-SY", "(b) XJTU-SY"),
 
 
 def main():
-    plt.rcParams.update({"font.size": 7, "font.family": "serif", "mathtext.fontset": "cm",
-                         "pdf.fonttype": 42, "axes.linewidth": 0.6})
+    fig_style.apply(7, **{"axes.linewidth": 0.6})
     fig, axes = plt.subplots(1, 4, figsize=(7.0, 1.95))
     for ax, (ds, title) in zip(axes, PANELS):
         long = pd.read_csv(os.path.join(TAB, "calibration_%s.csv" % ds))

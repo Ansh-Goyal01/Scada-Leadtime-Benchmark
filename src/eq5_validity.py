@@ -160,7 +160,7 @@ def training_sweep(audit: list) -> pd.DataFrame:
                      "n_excluded": int((~g.scoreable).sum()),
                      "published_valid_frac": published_valid(g).mean()})
     out = pd.DataFrame(rows)
-    audit.append(audit_row("S6.12 / Figure 5 training sweep, all cells", src, d,
+    audit.append(audit_row("S6.12 / Figure 6 training sweep, all cells", src, d,
                            int(published_valid(d).sum()), len(d),
                            "N/A cells stay in the denominator as no valid alarm (Section 4.5)"))
     return out

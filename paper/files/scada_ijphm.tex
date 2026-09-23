@@ -57,7 +57,7 @@
 % Author Affiliations
 \address{%
 	\affiliation{1}{Jaypee Institute of Information Technology, Noida, India}{%
-		{\email{anshgoyal500@gmail.com}}
+		{\email{anshgoyal5500@gmail.com}}
 		}
 }
 
@@ -110,9 +110,9 @@ The cost asymmetry between a missed detection and a false alarm has been treated
 A parallel line of work revises evaluation itself for time-series detection. \citeA{tatbul2018} generalise precision and recall from points to ranges with a tunable positional bias, so early detection within an anomalous interval can be rewarded, and \citeA{wu2023flawed} argue that widely used benchmarks admit trivial solutions and overstate progress. Our metric shares the diagnosis but reports a physical quantity---hours of warning---that a planner can act on, rather than a score on a bounded scale, and the false-alarm constraint gates validity rather than weighting the score.
 
 \subsection{Anomaly Detectors and Control Charts}
-Univariate and multivariate statistical-process-control charts---the $3\sigma$ rule, the exponentially weighted moving average (EWMA) \cite{roberts1959control} and Hotelling's $T^2$ \cite{hotelling1947multivariate}---remain workhorses of industrial monitoring \cite{montgomery2009introduction} because they are interpretable and need little training data. Isolation Forest \cite{liu2008isolation} and the one-class SVM \cite{scholkopf2001estimating} are widely deployed unsupervised learners; LSTM autoencoders \cite{hochreiter1997long,malhotra2016lstm,hundman2018detecting} and Deep SVDD \cite{ruff2018deep} have been applied to machine-health monitoring \cite{zhao2019deep}. We evaluate both families under one fixed hyperparameter protocol, so the comparison is about evaluation and sampling, not tuning.
+Univariate and multivariate statistical-process-control charts---the $3\sigma$ rule, the EWMA chart \cite{roberts1959control} and Hotelling's $T^2$ \cite{hotelling1947multivariate}---remain workhorses of industrial monitoring \cite{montgomery2009introduction} because they are interpretable and need little training data. Isolation Forest \cite{liu2008isolation} and the one-class SVM \cite{scholkopf2001estimating} are widely deployed unsupervised learners; LSTM autoencoders \cite{hochreiter1997long,malhotra2016lstm,hundman2018detecting} and Deep SVDD \cite{ruff2018deep} have been applied to machine-health monitoring \cite{zhao2019deep}. We evaluate both families under one fixed hyperparameter protocol, so the comparison is about evaluation and sampling, not tuning.
 
-\emph{Relation to published FEMTO/XJTU results.} The IEEE PHM 2012 challenge and later remaining-useful-life (RUL) studies on FEMTO/\PHMslashbreak PRONOSTIA and XJTU-SY \cite{wang2020hybrid,nectoux2012pronostia} report a RUL-error score on deliberately truncated Test and Validation copies. It is not comparable to ours: they estimate a continuous RUL on runs with no observed failure and report no false-alarm rate, so their scores say nothing about whether an alarm would survive our $\tau$ gate, whereas we measure early-warning lead time on complete run-to-failure trajectories; tabulating one against the other would be a category error. The classic normalized-RMS health indicator with a first-prediction-time threshold, the baseline underlying most of that literature, is our rms\_trend detector; re-evaluating specific published architectures under the gated metric (which requires their original code) is future work.
+\emph{Relation to published FEMTO/XJTU results.} The IEEE PHM 2012 challenge and later RUL studies on FEMTO/\PHMslashbreak PRONOSTIA and XJTU-SY \cite{wang2020hybrid,nectoux2012pronostia} report a RUL-error score on deliberately truncated Test and Validation copies. It is not comparable to ours: they estimate a continuous RUL on runs with no observed failure and report no false-alarm rate, so their scores say nothing about whether an alarm would survive our $\tau$ gate, whereas we measure early-warning lead time on complete run-to-failure trajectories; tabulating one against the other would be a category error. The classic normalized-RMS health indicator with a first-prediction-time threshold, the baseline underlying most of that literature, is our rms\_trend detector; re-evaluating specific published architectures under the gated metric (which requires their original code) is future work.
 
 The pairing of detection delay with a false-alarm constraint is the founding formulation of sequential change detection. \citeA{lorden1971} posed the minimax problem of minimising worst-case detection delay subject to a lower bound on the average run length to false alarm, \citeA{moustakides1986} showed that the cumulative sum (CUSUM) chart of \citeA{page1954continuous} is exactly optimal under that criterion, and \citeA{pollak1985} gives the corresponding result for a revised delay measure. Our gate inherits the premise but applies it when a detector is \emph{scored}, against a rate measured on the data, rather than when it is \emph{designed} by choosing a threshold that meets a run-length bound. The two can disagree: CUSUM has no valid operating point on IMS at a 10\% budget, because its pre-onset false-alarm rate sits at 19.0--19.8\% across every threshold we sweep.
 
@@ -266,7 +266,7 @@ On raw (ungated) lead, with 95\% bootstrap CIs over the $n=3$ runs, the three de
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figure1}
+\includegraphics[width=\columnwidth]{figure1.pdf}
 \caption{Health-indicator trajectory for IMS Bearing test 2 with the leakage-free degradation onset and failure markers. The baseline mean and standard deviation use only the shaded training region, so the onset cannot see the test data.}
 \label{fig:health}
 \end{figure}
@@ -301,7 +301,7 @@ On raw (ungated) lead, with 95\% bootstrap CIs over the $n=3$ runs, the three de
 \begin{table}[t] \small
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
-	\caption{Robustness on IMS and XJTU-SY. (a) Alarm persistence on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction, at full resolution and pooled over the five sampling factors, at persistence $\in \{1,3,5,10\}$ windows; pooled fractions are over the 13 scoreable aggregate evaluations (test~2 at $f \in \{10,20\}$ has an empty pre-onset region). (b) Historian gaps: mean valid lead time (h) under random gaps of 0\%, 5\% and 20\%, averaged over the runs with a valid alarm (Eq.~\ref{eq:valid}) and then over \emph{five independent gap draws} per level. XJTU-SY Bearing1\_3, 1\_5, 2\_2 and 2\_5 are not scoreable at full resolution and are excluded; --: no valid alarm on the six that remain.}
+	\caption{Robustness on IMS and XJTU-SY. (a) Alarm persistence on IMS: run-level median aggregate$-$decimate lead-time difference (h) and the $3\sigma$ valid-alarm fraction, at full resolution and pooled over the five sampling factors, at persistence $\in \{1,3,5,10\}$ windows, pooled over the 13 scoreable aggregate evaluations (Eq.~\ref{eq:valid}). (b) Historian gaps: mean valid lead time (h) under random gaps of 0\%, 5\% and 20\%, averaged over the runs with a valid alarm (Eq.~\ref{eq:valid}) and then over \emph{five independent gap draws} per level. XJTU-SY: the four bearings not scoreable at full resolution (Table~\ref{tab:perbearing}) are excluded; --: no valid alarm on the other six.}
 	\label{tab:robust}
 	\textbf{(a) Alarm persistence (IMS)}\\[2pt]
 	\begin{tabular}{l c c c c}
@@ -436,7 +436,7 @@ For rolling-element bearings an unplanned failure typically costs $\rho = 10^2$-
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_tradeoff_panels.pdf}
-\caption{Lead-time vs pre-onset-FAR trade-off, threshold percentile swept (mean across runs): (a) IMS, (b) the ten XJTU-SY bearings; labels mark the 95th, 99th and 99.5th-percentile operating points (tabulated for IMS in Table~\ref{tab:tradeoff}) where they fit legibly. Up and to the left is better.}
+\caption{Lead-time vs pre-onset-FAR trade-off, threshold percentile swept (mean across runs): (a) IMS, (b) the ten XJTU-SY bearings; labels mark the 95th, 99th and 99.5th-percentile operating points (tabulated for IMS in Table~\ref{tab:tradeoff}) where they fit legibly. Up and to the left is better. The deep reconstruction models and the one-class SVM, above the budget at every threshold, appear in Table~\ref{tab:tradeoff} only.}
 \label{fig:tradeoffs}
 \end{figure*}
 
@@ -450,7 +450,7 @@ On IMS, time-domain amplitude features (rms\_only or time\_only) give each of th
 
 \begin{table}[t] \small
 	\begin{center}
-	\caption{Feature-group ablation on IMS: valid-alarm fraction (mean over the three runs) by feature group, for the six non-sequence detectors.}
+	\caption{Feature-group ablation on IMS: valid-alarm fraction (mean over the three runs) by feature group, for the six non-sequence detectors. EW: EWMA; CU: CUSUM; DS: Deep SVDD; IF: Isolation Forest.}
 	\label{tab:ablation_general}
 	\begin{tabular}{l c c c c c c}
 		\hline \hline
@@ -470,7 +470,7 @@ On IMS, time-domain amplitude features (rms\_only or time\_only) give each of th
 
 \subsection{Comparison with the Saxena Prognostic Horizon}
 \label{sec:saxena}
-If the false-alarm gate is what separates a usable warning from a manufactured one, a metric without it should reward detectors ours rejects. We test this against the most widely used ungated warning-time metric, the Saxena prognostic horizon (PH) \cite{saxena2008metrics,saxena2010metrics}: $\text{PH} = \max(0, (t_f - \text{FAT})/3600)$~hours, with no false-alarm constraint. It is exactly our lead time $L$ before the validity gate (Eq.~\ref{eq:valid}) is applied, and that one missing conjunct is decisive.
+If the false-alarm gate is what separates a usable warning from a manufactured one, a metric without it should reward detectors ours rejects. We test this against the most widely used ungated warning-time metric, the Saxena prognostic horizon \cite{saxena2008metrics,saxena2010metrics}: $\text{PH} = \max(0, (t_f - \text{FAT})/3600)$~hours, with no false-alarm constraint. It is exactly our lead time $L$ before the validity gate (Eq.~\ref{eq:valid}) is applied, and that one missing conjunct is decisive.
 
 \emph{PH is maximized by the latch-on detector.} On the three IMS runs the constant-on detector earns the full run length as PH (164--1073~h) while flooding the pre-onset region ($\text{FAR}_{\text{pre}} \approx 1$), so the gated metric scores it $L=0$ on every run; the onset oracle is the mirror image, with zero pre-onset false alarms and the maximum achievable lead (12.9, 62.5 and 44.5~h).
 
@@ -482,7 +482,7 @@ If the false-alarm gate is what separates a usable warning from a manufactured o
 
 \subsection{Minimum Training Data for Deep Anomaly Detectors}
 \label{sec:mintrain}
-How much normal run-in history must a new asset collect before a deep model can be trusted over a simple control chart? We sweep the training fraction $T \in \{0.20, \dots, 0.60\}$ on FEMTO, the one dataset where all six bearings are long enough for every detector, including the seq-len-30 deep models (calibration fixed at 0.10, test $= 1-T-0.10$, no per-$T$ retuning). At $T=0.20$ the shortest bearing (Bearing3\_1) forms only 20 training windows, fewer than the 30 a sequence requires, so LSTM-AE, TCN-AE and Transformer-AD are explicit N/A there (Section~\ref{sec:detectors}); these are the only three N/A cells among the 300 (detector, bearing, $T$) cells. At $T=0.20$ the onset of Bearing2\_2 precedes the first scored window, so its ten cells are not scoreable (Eq.~\ref{eq:valid}). Valid-alarm fractions are over $n=6$ bearings ($n=5$ at $T=0.20$), with an N/A counted as no valid alarm, the conservative choice; the released sweep records the N/A count separately.
+How much normal run-in history must a new asset collect before a deep model can be trusted over a simple control chart? We sweep the training fraction $T \in \{0.20, \dots, 0.60\}$ on FEMTO, the one dataset where all six bearings are long enough for every detector, including the seq-len-30 deep models (calibration fixed at 0.10, test $= 1-T-0.10$, no per-$T$ retuning). At $T=0.20$ the shortest bearing (Bearing3\_1) forms only 20 training windows, fewer than the 30 a sequence requires, so LSTM-AE, TCN-AE and Transformer-AD are explicit N/A there (Section~\ref{sec:detectors}); these are the only three N/A cells among the 300 (detector, bearing, $T$) cells. Valid-alarm fractions are over $n=6$ bearings, or five at $T=0.20$, where Bearing2\_2's onset precedes the first scored window (Eq.~\ref{eq:valid}); an N/A counts as no valid alarm, the conservative choice; the released sweep records the N/A count separately.
 
 There is no crossover (Figure~\ref{fig:mintrain}). More commissioning data does not systematically improve the four SPC charts: $3\sigma$ is at its best at the \emph{smallest} training fraction (1.00) and falls to 0.833 at $T=0.30$ and 0.667 from $T=0.40$ on; Hotelling $T^2$ starts at 0.600, falls to 0.333 at $T=0.30$ and settles at 0.500; EWMA stays within 0.600--0.667; and CUSUM stays within 0.400--0.500 apart from a one-bearing rise to 0.667 at $T=0.50$. Isolation Forest starts at 0.600, dips to 0.167 at $T=0.30$ and ends at 0.667; only the naive RMS-trend baseline rises steadily with $T$, from a far lower base (0.000 to 0.500). This is a consequence of the design, not reverse data-hunger: the test fraction $1-T-0.10$ shrinks as $T$ grows, so on bearings this short a better-estimated baseline comes with a shorter window in which to use it. The three deep reconstruction models sit far below the charts at every training fraction (LSTM-AE and Transformer-AD 0.000--0.333, TCN-AE 0.000--0.167) and do not close the gap. Deep SVDD has no valid alarm below $T=0.60$ and 0.167, one bearing, at $T=0.60$, the shortest test window: as on IMS test~1 it fires very late, because its threshold requires substantial encoder-distance growth from the trained center, so on these 1.4--7.8~h bearings its first alarm arrives at or after failure on all six bearings below $T=0.60$ and on five of the six at $T=0.60$. That is a bearing-lifetime constraint, not a training-data constraint.
 
@@ -490,8 +490,8 @@ On bearings of the lifetimes tested here, control charts should therefore be pre
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig_mintrain}
-\caption{Valid-alarm fraction vs.\ training fraction $T$ on FEMTO ($n=6$): SPC charts in blue, deep reconstruction models in red, Deep SVDD separately; dashed: the SPC baseline (${\approx}0.60$). The three N/A cells at $T=0.20$ (Bearing3\_1, 20 training windows) count as no valid alarm; at $T=0.20$ fractions are over five bearings, Bearing2\_2 being not scoreable (Eq.~\ref{eq:valid}).}
+\includegraphics[width=\columnwidth]{fig_mintrain.pdf}
+\caption{Valid-alarm fraction vs.\ training fraction $T$ on FEMTO ($n=6$): SPC charts in blue, deep reconstruction models in red, Deep SVDD separately; dashed: the SPC baseline (${\approx}0.60$). The three N/A cells at $T=0.20$ (Bearing3\_1, 20 training windows) count as no valid alarm; $T=0.20$ is over five bearings (Section~\ref{sec:mintrain}).}
 \label{fig:mintrain}
 \end{figure}
 
@@ -541,7 +541,6 @@ A structural asymmetry limits what the cross-dataset null can establish. The thr
 \section{Conclusion}
 We presented a lead-time-centric evaluation protocol for bearing anomaly detection, whose onset-gated, false-alarm-budgeted metric defeats the latch-on exploit, and used it to test whether SCADA-rate logging destroys detection lead time. Across four inferential run-to-failure datasets (XJTU-SY $n=10$, FEMTO/\PHMslashbreak PRONOSTIA $n=6$, University of Ferrara $n=6$ and NASA IMS $n=3$) and a real single-asset turbine SCADA case study (Appendix~D.2), coarse aggregation does not destroy lead time; on IMS it shows a positive median shift for most control charts that is not consistent across the three runs, not significant at $n=3$ and not surviving multiple-comparison correction across the $N=44$ family. No dataset $\times$ detector cell shows decimation superior beyond a $\pm 1$~h operational margin. That null is bounded by the scale of the evidence: the three campaigns supplying the statistical power comprise bearings of 0.7--8.9~h total life, on which an aggregation effect of the IMS magnitude could not have been observed, so the result bounds the effect at the scale of minutes and the multi-week runway remains untested. On the short-lived bearings tested, the deep reconstruction models do not overtake the control charts at any training fraction in $[0.20, 0.60]$; whether a crossover exists on long-runway assets is left open. The contribution is a reproducible methodology and a counter-intuitive empirical result: non-destruction, not a guaranteed positive effect. Future work will learn the degradation onset jointly with the detector, so that the metric's anchor no longer depends on a hand-set health indicator (closing the circularity noted in Section~\ref{sec:limitations}), and extend the conformal guarantee to the non-exchangeable early-degradation regime in which it currently fails. We release the full harness, detectors, tests, and the exact tables and figures of this paper to support replication and extension.
 
-\FloatBarrier
 \section*{Acknowledgments}
 The author thanks the operators and data engineers at ONGC who collected and maintained the gas-turbine SCADA record used in the single-asset case study. The NASA/IMS, XJTU-SY, FEMTO/\PHMslashbreak PRONOSTIA, and University of Ferrara run-to-failure datasets are publicly released by their respective providers and are gratefully acknowledged. All experiments were conducted on personal computing resources; no external funding was received for this work.
 
@@ -556,13 +555,7 @@ All code (detectors, leakage-free onset, gated metric, sampling sweep, conformal
 
 \FloatBarrier
 \section*{Appendix A: Reproducibility Settings}
-Table~\ref{tab:hyperparams}a lists the fixed hyperparameters, taken verbatim from the released config.py, and Table~\ref{tab:deeparch} the architectures and training protocol of the four deep models, with trainable parameter counts measured at the 49-dimensional invariant feature width; one protocol applies to every detector, dataset, run and sampling factor, with no per-condition tuning. Table~\ref{tab:hyperparams}b gives the wall-clock training and per-window inference cost on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step, and inference is at most ${\sim}0.5$~ms per window (LSTM-AE), more than four orders of magnitude below the fastest historian polling interval in our study (10~s), so streaming condition monitoring at native SCADA rates is not compute-bound for any of the eleven detectors.
-
-\input{gen/tab_hyperparams}
-
-% tab:compute merged into tab:hyperparams (Phase 1, M4)
-
-\begin{table*}[t] \small
+\begin{table*}[t] \footnotesize
 	\begin{center}
 	\caption{Deep-model architectures and training protocol, from the released \texttt{config.py} and model definitions; no per-dataset tuning, and every model runs its full epoch budget. Parameters are counted at the 49-dimensional input (Appendix~B). All four use the Adam optimiser at learning rate $10^{-3}$, batch size 32 and seed 42, with no early stopping. Deep SVDD scores single windows.}
 	\label{tab:deeparch}
@@ -593,10 +586,18 @@ Table~\ref{tab:hyperparams}a lists the fixed hyperparameters, taken verbatim fro
 	so at one layer the configured 0.1 has no effect on LSTM-AE.}
 \end{table*}
 
-\section*{Appendix B: The 49-Dimensional Invariant Feature Space}
-Each snapshot's raw waveform yields the six per-channel time-domain statistics of Table~\ref{tab:basestats}. Each family is made channel-count-invariant by the channel mean and the channel max, and each aggregated series is summarised over the rolling window (10 samples, 50\% overlap) by its mean, standard deviation, maximum and least-squares trend slope, giving $6 \times 2 \times 4 = 48$ features; a cross-channel RMS-coherence feature (the mean pairwise Pearson correlation of the physical RMS channels within the window) brings the total to 49. A train-fit variance top-$k$ selection ($k \le 50$) keeps $p < n$, every statistic is fit on the training split only, and feature naming and the exact construction are in the released code.
+\input{gen/tab_hyperparams}
 
-\begin{table}[t] \small
+Table~\ref{tab:hyperparams}a lists the fixed hyperparameters, taken verbatim from the released config.py, and Table~\ref{tab:deeparch} the architectures and training protocol of the four deep models, with trainable parameter counts measured at the 49-dimensional invariant feature width; one protocol applies to every detector, dataset, run and sampling factor, with no per-condition tuning. Table~\ref{tab:hyperparams}b gives the wall-clock training and per-window inference cost on the largest IMS run ($X_{\text{train}}=631$, $X_{\text{test}}=506$ windows, single CPU core, median of five repeats). Training is a one-off offline step, and inference is at most ${\sim}0.5$~ms per window (LSTM-AE), more than four orders of magnitude below the fastest historian polling interval in our study (10~s), so streaming condition monitoring at native SCADA rates is not compute-bound for any of the eleven detectors.
+
+
+
+% tab:compute merged into tab:hyperparams (Phase 1, M4)
+
+
+
+\section*{Appendix B: The 49-Dimensional Invariant Feature Space}
+\begin{table}[t] \footnotesize
 	\begin{center}
 	\caption{The six per-snapshot base statistics from which the 49-dim invariant space is built. Each is computed per physical channel on the snapshot waveform $x$ (mean $\mu$, std $\sigma$), then channel-aggregated (mean, max) and window-summarised (mean, std, max, slope).}
 	\label{tab:basestats}
@@ -615,13 +616,11 @@ Each snapshot's raw waveform yields the six per-channel time-domain statistics o
 	\end{center}
 \end{table}
 
+Each snapshot's raw waveform yields the six per-channel time-domain statistics of Table~\ref{tab:basestats}. Each family is made channel-count-invariant by the channel mean and the channel max, and each aggregated series is summarised over the rolling window (10 samples, 50\% overlap) by its mean, standard deviation, maximum and least-squares trend slope, giving $6 \times 2 \times 4 = 48$ features; a cross-channel RMS-coherence feature (the mean pairwise Pearson correlation of the physical RMS channels within the window) brings the total to 49. A train-fit variance top-$k$ selection ($k \le 50$) keeps $p < n$, every statistic is fit on the training split only, and feature naming and the exact construction are in the released code.
+
+
+
 \section*{Appendix C: IMS Test-3 Relabeling Justification}
-An earlier label placed the failure of the third IMS test on 2004-04-08, leaving 21.5\% of the recorded data after the nominal ``failure''---impossible for a run-to-failure series. We relabel it to the last recorded sample (2004-04-18 02:42), at which the mean-RMS health indicator has ramped from its flat baseline (${\sim}0.068$) to ${\sim}0.228$ before the final machine-off reading: within the flat normal-region baseline band at the old label, but well above the $4\sigma$ onset band at the corrected one. The relabeling moves the third test toward harder, not easier, detection: a run that was a guaranteed miss for most detectors becomes evaluable, and because the aggregate-vs-decimate contrast is computed within each run, the relabeling cannot artificially inflate it. It affects only the single hardest run and is not a tuning choice. We present it as an author relabeling based on the health-indicator trajectory, not independently verified ground truth: we know of no published benchmark that corrects this label, so we do not claim it as a community-established correction. It is the labeling we use throughout.
-
-\emph{The relabeling made our own claim harder to support, not easier.} Because a reader may ask whether the label was chosen for the result it produces, we re-ran the entire IMS sweep under the original 2004-04-08 label and report both arms side by side (Table~\ref{tab:d17label}). The decisive case is $3\sigma$: under the original label the third test is a guaranteed miss, both lead times are zero, the run's collapsed difference is exactly $0.00$~h, and the zero-difference rule of Section~\ref{sec:statproto} leaves $3\sigma$ at two positive and zero negative runs. An earlier version of this work claimed that in no run does aggregation shorten the lead time of the magnitude-monitoring detectors. That claim would have been \emph{true} under the original label; it is false only under the corrected one, where the third test contributes $-1.00$~h, and we have withdrawn it. The relabeling moved the evidence against the paper's own claim rather than in its favor, the opposite of what a result-motivated relabeling would do.
-
-The relabeling is also narrower than one might expect. Under the original label the third test is a guaranteed miss for six of the ten detectors, not for all ten: $3\sigma$, CUSUM, EWMA, Isolation Forest, Deep SVDD, and RMS-trend all score $L=0$ in both modes. The remaining four---Hotelling $T^2$, LSTM-AE, TCN-AE, and Transformer-AD---alarm early enough to precede even the earlier failure time, so they retain a positive lead in both modes and their third run survives the zero-difference exclusion.
-
 \begin{table*}[t] \footnotesize
 	\begin{center}
 	\caption{IMS aggregate$-$decimate lead-time difference under the original (2004-04-08) and corrected (2004-04-18) third-test failure labels, all ten detectors. Run differences are (\texttt{1st\_test}, \texttt{2nd\_test}, \texttt{3rd\_test}) in hours, collapsing the five within-run sampling factors to one mean difference per run (Section~\ref{sec:statproto}). $n_+/n_-/0$ counts positive, negative and exactly-zero runs; zero-difference runs are excluded from the sign test, so $n_{\text{eff}}$ is the effective sample size under the original label. ``Floor'' is the smallest two-sided exact sign-test $p$ attainable at that $n_{\text{eff}}$. Both arms use the 49-dimensional invariant feature schema, so the contrast isolates the label.}
@@ -646,18 +645,28 @@ The relabeling is also narrower than one might expect. Under the original label 
 	\end{center}
 \end{table*}
 
+An earlier label placed the failure of the third IMS test on 2004-04-08, leaving 21.5\% of the recorded data after the nominal ``failure''---impossible for a run-to-failure series. We relabel it to the last recorded sample (2004-04-18 02:42), at which the mean-RMS health indicator has ramped from its flat baseline (${\sim}0.068$) to ${\sim}0.228$ before the final machine-off reading: within the flat normal-region baseline band at the old label, but well above the $4\sigma$ onset band at the corrected one. The relabeling moves the third test toward harder, not easier, detection: a run that was a guaranteed miss for most detectors becomes evaluable, and because the aggregate-vs-decimate contrast is computed within each run, the relabeling cannot artificially inflate it. It affects only the single hardest run and is not a tuning choice. We present it as an author relabeling based on the health-indicator trajectory, not independently verified ground truth: we know of no published benchmark that corrects this label, so we do not claim it as a community-established correction. It is the labeling we use throughout.
+
+\emph{The relabeling made our own claim harder to support, not easier.} Because a reader may ask whether the label was chosen for the result it produces, we re-ran the entire IMS sweep under the original 2004-04-08 label and report both arms side by side (Table~\ref{tab:d17label}). The decisive case is $3\sigma$: under the original label the third test is a guaranteed miss, both lead times are zero, the run's collapsed difference is exactly $0.00$~h, and the zero-difference rule of Section~\ref{sec:statproto} leaves $3\sigma$ at two positive and zero negative runs. An earlier version of this work claimed that in no run does aggregation shorten the lead time of the magnitude-monitoring detectors. That claim would have been \emph{true} under the original label; it is false only under the corrected one, where the third test contributes $-1.00$~h, and we have withdrawn it. The relabeling moved the evidence against the paper's own claim rather than in its favor, the opposite of what a result-motivated relabeling would do.
+
+The relabeling is also narrower than one might expect. Under the original label the third test is a guaranteed miss for six of the ten detectors, not for all ten: $3\sigma$, CUSUM, EWMA, Isolation Forest, Deep SVDD, and RMS-trend all score $L=0$ in both modes. The remaining four---Hotelling $T^2$, LSTM-AE, TCN-AE, and Transformer-AD---alarm early enough to precede even the earlier failure time, so they retain a positive lead in both modes and their third run survives the zero-difference exclusion.
+
+
+
 \emph{The effective sample size is detector-dependent, and neither label can reach significance.} Because the zero-difference exclusion operates per detector, the original label does not simply reduce IMS to $n=2$: it leaves $n_{\text{eff}}=3$ for the four detectors that still warn on the third test, $n_{\text{eff}}=2$ for $3\sigma$, CUSUM, EWMA and Isolation Forest, and $n_{\text{eff}}=1$ for Deep SVDD and RMS-trend. The exact two-sided sign test floors at $p=0.25$, $0.50$ and $1.00$ at those sample sizes, so under the original label six of the ten detectors could not have reached $\alpha=0.05$ at any effect size, and the four with $n_{\text{eff}}=3$ floor at $p=0.25$, already above $\alpha$. The corrected label retains every run, but $n=3$ still bounds the attainable $p$ at $0.25$, so no IMS detector reaches significance under either label and the best attainable $p$ is $0.25$ in both arms (Hotelling $T^2$). The label does not change the direction: no median flips sign between the arms, $3\sigma$ holding at $+15.10$~h and Hotelling $T^2$ at $+1.17$~h, and the Holm verdict of Section~\ref{sec:results} and the headline are untouched.
 
 \section*{Appendix D: Mechanism Analysis and ONGC Case Study}
 
 \subsection*{D.1 Generic Smoothing vs.\ Historian Averaging}
+\input{gen/tab_mechanism}
+
 If bin-averaging helps on IMS because it is a low-pass filter suppressing single-window noise in the health statistic, letting the alarm threshold be crossed earlier and held more persistently than under decimation, two predictions follow. We test both on IMS at sampling factor 5, controlling window content so that only the smoothing differs. Here aggregation and decimation act on the per-snapshot series before windowing, whereas the IMS sweep coarsens the windowed feature vectors (Section~\ref{sec:coarsenlevel}), so this corroborates the mechanism on a related but not identical operation.
 
 \emph{Prediction 1: the aggregate advantage should grow with noise.} We add zero-mean Gaussian noise to the per-snapshot channel statistics (RMS and kurtosis), scaled per channel, at signal-to-noise ratios of 30, 20 and 10~dB and recompute the aggregate$-$decimate lead time, collapsing the four magnitude-monitoring SPC charts to one mean difference per run ($n=3$ per level) to avoid the pseudoreplication corrected in the main analysis. The mean advantage rises monotonically with noise (Table~\ref{tab:mechanism}a), from $-0.35$~h at the native noise level to $+6.60$~h at 10~dB, and at the two highest noise levels all three runs share the positive sign. The lone large negative, the $-7.94$~h native-noise entry, is IMS test~1, the abrupt near-coincident-onset run whose degradation begins only ${\sim}12$~h before failure, which also violates the conformal guarantee (Figure~\ref{fig:conformal}a) and is unwarnable under every feature set. This is the qualitative signature of a low-pass mechanism, the noisier the signal the more bin-averaging helps, but at $n=3$ it is a directional trend, not a significant effect (the exact sign test floors at $p=0.25$, and at 30~dB the per-run signs are mixed): it corroborates the mechanism and cannot, at this sample size, establish it statistically.
 
 \emph{Prediction 2: any smoother on the decimated stream should recover the advantage.} We compare a median filter, a moving average, a constant-velocity Kalman filter and a wavelet denoiser, each applied to the decimated stream, against raw aggregation and raw decimation (Table~\ref{tab:mechanism}b). The moving average and Kalman filter recover essentially the full aggregate lead time (76.0 and 75.6~h vs.\ aggregation's 75.6~h), while the median and wavelet filters fall slightly short, so the effect is generic smoothing of the health signal, not a property unique to historian bin-averaging: an operator who decimates and then lightly smooths recovers the same warning time. The wavelet denoiser drops to 6/12 valid alarms, below even raw decimation, because soft-thresholding the detail coefficients perturbs the pre-onset baseline enough to lift the pre-onset false-alarm rate past the budget: smoothing that preserves the normal baseline recovers the lead time, while smoothing that distorts it can cost validity. The one-alarm gap between raw decimation (8/12) and aggregation (7/12) at statistically indistinguishable lead times (76.0 vs.\ 75.6~h) is sampling noise at $n=12$, not evidence that decimation is preferable.
 
-\input{gen/tab_mechanism}
+
 
 % tab:denoise merged into tab:mechanism (Phase 1, M3)
 

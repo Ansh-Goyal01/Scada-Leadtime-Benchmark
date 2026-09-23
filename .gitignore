@@ -75,6 +75,7 @@ paper/files/*
 # without them the tracked .tex does not compile.
 !paper/files/gen/
 !paper/files/fig_*.pdf
+!paper/files/figure1.pdf
 !revision-artifacts/tools/
 
 # React frontend

@@ -79,3 +79,55 @@
 
 - OLD: retained as provenance for the indicator comparison; no number reported here depends on them, and the aggregate-vs-decimate contrast is taken from the corrected files named above.
 - NEW: retained as provenance for the indicator comparison; the invariance they establish compares onset indicators within one arm, so it does not depend on that correction, and the aggregate-vs-decimate contrast is taken from the corrected files named above.
+
+## Part 5: email, abbreviations, Figure 5 and Table 10 captions
+
+- OLD: {\email{anshgoyal500@gmail.com}}
+- NEW: {\email{anshgoyal5500@gmail.com}}
+
+- OLD: The IEEE PHM 2012 challenge and later remaining-useful-life (RUL) studies
+- NEW: The IEEE PHM 2012 challenge and later RUL studies
+
+- OLD: the $3\sigma$ rule, the exponentially weighted moving average (EWMA) \cite{roberts1959control}
+- NEW: the $3\sigma$ rule, the EWMA chart \cite{roberts1959control}
+
+- OLD: the Saxena prognostic horizon (PH) \cite{saxena2008metrics,saxena2010metrics}:
+- NEW: the Saxena prognostic horizon \cite{saxena2008metrics,saxena2010metrics}:
+
+- OLD: where they fit legibly. Up and to the left is better.}
+- NEW: where they fit legibly. Up and to the left is better. The deep reconstruction models and the one-class SVM, above the budget at every threshold, appear in Table~\ref{tab:tradeoff} only.}
+
+- OLD: by feature group, for the six non-sequence detectors.}
+- NEW: by feature group, for the six non-sequence detectors. EW: EWMA; CU: CUSUM; DS: Deep SVDD; IF: Isolation Forest.}
+
+## Part 5 layout: drop the FloatBarrier that left p17's second column 40% empty
+
+- OLD: '\\FloatBarrier\n\\section*{Acknowledgments}'
+- NEW: '\\section*{Acknowledgments}'
+
+## Part 5 layout: test without the FloatBarrier before the Discussion
+
+- OLD: '\\FloatBarrier\n\\section{Discussion}'
+- NEW: '\\section{Discussion}'
+
+(reverted: no page effect; the barrier keeps Results floats ahead of the Discussion)
+
+## Part 5 layout: tighten wording added in Parts 1-5 (no fact removed)
+
+- OLD: At $T=0.20$ the onset of Bearing2\_2 precedes the first scored window, so its ten cells are not scoreable (Eq.~\ref{eq:valid}). Valid-alarm fractions are over $n=6$ bearings ($n=5$ at $T=0.20$), with an N/A counted as no valid alarm, the conservative choice;
+- NEW: Valid-alarm fractions are over $n=6$ bearings, or five at $T=0.20$, where Bearing2\_2's onset precedes the first scored window (Eq.~\ref{eq:valid}); an N/A counts as no valid alarm, the conservative choice;
+
+- OLD: count as no valid alarm; at $T=0.20$ fractions are over five bearings, Bearing2\_2 being not scoreable (Eq.~\ref{eq:valid}).}
+- NEW: count as no valid alarm; $T=0.20$ is over five bearings (Section~\ref{sec:mintrain}).}
+
+- OLD: windows; pooled fractions are over the 13 scoreable aggregate evaluations (test~2 at $f \in \{10,20\}$ has an empty pre-onset region).
+- NEW: windows, pooled over the 13 scoreable aggregate evaluations (Eq.~\ref{eq:valid}).
+
+- OLD: XJTU-SY Bearing1\_3, 1\_5, 2\_2 and 2\_5 are not scoreable at full resolution and are excluded; --: no valid alarm on the six that remain.}
+- NEW: XJTU-SY: the four bearings not scoreable at full resolution (Table~\ref{tab:perbearing}) are excluded; --: no valid alarm on the other six.}
+
+## Part 5 layout: appendix floats read at the start of their sections
+
+Tables 11-15 moved (source only, order kept) to the start of Appendix A, A, B, C and D.1 respectively.
+
+## Part 5 layout: Appendix A table* read before the single-column table (renumbers 11<->12)

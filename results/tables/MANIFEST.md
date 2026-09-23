@@ -31,7 +31,7 @@ by the legacy positional 5 % marker. Eq. 5 excludes both from the validity denom
 | `eq5_xjtu_perbearing.csv` | `tab:perbearing` (Table 7) and the Section 6.3 / 6.7 XJTU-SY counts (48 of 230 scoreable; 220 of 450 excluded) |
 | `eq5_gap_table4b.csv` | `tab:robust` (b), both datasets, and the Section 6.2 gap prose |
 | `eq5_persistence_IMS.csv` | `tab:robust` (a) "all factors" row, from `persistence_sensitivity_IMS_invariant_long.csv` |
-| `eq5_femto_training_sweep.csv` | Section 6.12 and Figure 5 (`fig:mintrain`) -- `femto_training_sweep.csv` keeps the raw column |
+| `eq5_femto_training_sweep.csv` | Section 6.12 and Figure 6 (`fig:mintrain`) -- `femto_training_sweep.csv` keeps the raw column |
 | `eq5_gated_crosscheck.csv` | independent Eq. 5 re-derivation of `tab:gatedcontrast`'s gated arm (44/44 cells agree) |
 
 `persistence_sensitivity_IMS_invariant_long.csv` is the row-level rerun of the persistence
@@ -97,14 +97,18 @@ correctly rounded values and the guards pin them.
 
 ## Figures
 
+All six are vector PDFs drawn at print size in one shared style, `paper/fig_style.py`: STIX for
+text and mathematics (Unicode text layer, so sigma, alpha, minus, +- and T^2 extract correctly),
+`pdf.fonttype` 42 (no Type 3 fonts), and detector names equal to the table names.
+
 | # | Label | Image | Generator | Inputs |
 |---|-------|-------|-----------|--------|
-| 1 | `fig:health` | `figure1.png` | `paper/make_figures.py::fig_rms_degradation` | `data/processed/2nd_test_features.parquet` |
-| 2 | `fig:crossdataset` | `fig_crossdataset.png` | `paper/make_figures.py::fig_crossdataset` | `ims_runlevel_test_invariant.csv`, `xjtu_sy_runlevel_test.csv`, `femto_runlevel_test_n20.csv`, `ferrara_runlevel_test_n20.csv`, `benchmark_ONGC_paired_test_n20.csv` |
-| 3 | `fig:sweep` | `fig_sweep.png` | `paper/make_figures.py::fig_leadtime_vs_sampling` | `benchmark_IMS_long_invariant.csv` |
-| 4 | `fig:conformal` | `fig_conformal_panels.png` | `paper/make_conformal_panels.py` + `paper/make_panels.py` | `calibration_{IMS,XJTU-SY,FEMTO,ONGC}.csv` |
-| 5 | `fig:tradeoffs` | `fig_tradeoff_panels.png` | `paper/make_tradeoff_panels.py` + `paper/make_panels.py` | `tradeoff_IMS.csv`, `tradeoff_IMS_deepmodels.csv`, `tradeoff_XJTU-SY.csv` |
-| 6 | `fig:mintrain` | `fig_mintrain.png` | `paper/make_figures.py::fig_training_sweep` | `eq5_femto_training_sweep.csv` (Eq. 5, from `femto_training_sweep_long.csv`) |
+| 1 | `fig:health` | `figure1.pdf` | `paper/make_figures.py::fig_rms_degradation` | `data/processed/2nd_test_features.parquet` |
+| 2 | `fig:crossdataset` | `fig_forest.pdf` | `paper/make_forest.py` | `n20_d15_bootstrap_new_11det.csv`, the run-level files, `n20_ongc_minutes.csv` (`new_min`) |
+| 3 | `fig:sweep` | `fig_sweep.pdf` | `paper/make_print_figures.py::fig_sweep` | `benchmark_IMS_long_invariant.csv` |
+| 4 | `fig:conformal` | `fig_conformal_strip.pdf` | `paper/make_conformal_strip.py` | `calibration_{IMS,XJTU-SY,FEMTO,ONGC}[_pooled].csv` |
+| 5 | `fig:tradeoffs` | `fig_tradeoff_panels.pdf` | `paper/make_print_figures.py::fig_tradeoffs` | `tradeoff_IMS.csv`, `tradeoff_XJTU-SY.csv` |
+| 6 | `fig:mintrain` | `fig_mintrain.pdf` | `paper/make_figures.py::fig_training_sweep` | `eq5_femto_training_sweep.csv` (Eq. 5, from `femto_training_sweep_long.csv`) |
 
 ## Provenance rule (N-20)
 

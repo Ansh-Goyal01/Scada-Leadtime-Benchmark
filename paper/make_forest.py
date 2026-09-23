@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
+import fig_style  # noqa: E402
 import make_shortened_tables as mst  # noqa: E402
 import verify_tables as vt  # noqa: E402
 from src.config import PLOT  # noqa: E402
@@ -36,10 +37,7 @@ ORDER = mst.DET_ORDER
 SHORT = {"3sigma": "three_sigma", "ewma": "ewma", "cusum": "cusum", "hotelling": "hotelling_t2",
          "isoforest": "isolation_forest", "deepsvdd": "deep_svdd", "ocsvm": "one_class_svm",
          "lstmae": "lstm_ae", "tcnae": "tcn", "transformerad": "transformer_ad", "rmstrend": "rms_trend"}
-LABEL = {"3sigma": r"$3\sigma$", "ewma": "EWMA", "cusum": "CUSUM", "hotelling": r"Hotelling $T^2$",
-         "isoforest": "Iso. Forest", "deepsvdd": "Deep SVDD", "ocsvm": "One-class SVM",
-         "lstmae": "LSTM-AE", "tcnae": "TCN-AE", "transformerad": "Transformer-AD",
-         "rmstrend": "RMS-trend"}
+LABEL = {k: fig_style.label(sn) for k, sn in SHORT.items()}
 
 
 def colour(k):
@@ -52,9 +50,8 @@ def main():
     src = mst.runlevel_sources()
     eq = vt.index(vt.load("n20_d15_bootstrap_new_11det.csv"), ds_field="dataset")
     ongc = {r["short_name"]: float(r[vt.ONGC_MINUTES_COL]) for r in vt.load(vt.ONGC_MINUTES)}
-    plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "font.family": "serif",
-                         "mathtext.fontset": "cm", "pdf.fonttype": 42, "axes.linewidth": 0.6,
-                         "xtick.major.width": 0.6, "ytick.major.width": 0.6})
+    fig_style.apply(7, **{"axes.titlesize": 7.5, "axes.linewidth": 0.6,
+                          "xtick.major.width": 0.6, "ytick.major.width": 0.6})
     panels = [("IMS", "IMS ($n=3$)", (-10, 85)), ("XJTU-SY", "XJTU-SY ($n=10$)", (-1.15, 1.15)),
               ("FEMTO", "FEMTO ($n=6$)", (-1.15, 1.15)), ("Ferrara", "Ferrara ($n=6$)", (-1.15, 1.15)),
               ("ONGC", "ONGC ($n=1$)", (-1.15, 1.15))]
