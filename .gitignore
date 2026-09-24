@@ -76,7 +76,18 @@ paper/files/*
 !paper/files/gen/
 !paper/files/fig_*.pdf
 !paper/files/figure1.pdf
-!revision-artifacts/tools/
+
+# ── Confidential and internal — never track, never archive ───────────────────
+# Zenodo permanently archives the whole tree of a released tag, and peer-review
+# comments are confidential while the paper is under review. These files quote
+# the reviewers verbatim or are internal working notes; local copies are kept.
+IJPHM-*.md
+submission/
+revision-artifacts/
+NOTES.md
+INVENTORY.md
+CHANGES.md
+ONGC_Summer_Training_Report_*.pdf
 
 # React frontend
 frontend/node_modules/

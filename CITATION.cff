@@ -8,7 +8,7 @@ authors:
   - given-names: Ansh
     family-names: Goyal
     affiliation: "Jaypee Institute of Information Technology, Noida, India"
-    email: anshgoyal500@gmail.com
+    email: anshgoyal5500@gmail.com
     # orcid: "https://orcid.org/0000-0000-0000-0000"  # add your ORCID, then uncomment
 repository-code: "https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark"
 abstract: >-
@@ -37,5 +37,5 @@ keywords:
   - conformal prediction
   - statistical process control
 license: MIT
-version: 1.3.0
+version: 1.3.1
 date-released: "2026-09-24"
