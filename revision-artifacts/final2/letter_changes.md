@@ -89,3 +89,11 @@
 **Old:** The scoping is quantitative: across bearings and training fractions these runs provide between 20 and 335 normal training windows,
 
 **New:** The scoping is quantitative: across FEMTO bearings and training fractions the runs provide between 20 and 335 normal training windows,
+
+## 15 (last corrections)
+
+**Old:** A script in the 181-test suite re-derives 1039 printed values ... / a 181-test suite that includes a script re-deriving 1039 printed values
+
+**New:** ... 1040 printed values (both sites; one new guard asserts the gap sweep scores the same XJTU-SY bearings as Table 7).
+
+Disclosure item 9's "220 being excluded (170 with an empty pre-onset region, 50 on the bearing with no detectable onset)" re-counted from the files and left unchanged: Bearing1_2 has all five factors in both modes, so it contributes 5 x 2 x 5 = 50 rows; 450 - 170 - 50 = 230.

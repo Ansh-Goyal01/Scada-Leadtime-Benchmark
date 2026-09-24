@@ -73,7 +73,7 @@ correctly rounded values and the guards pin them.
 | 2 | `tab:imslead` | `benchmark_IMS_leadtime_ci_invariant.csv` (`mode=aggregate`, `factor=1`) | **[auto]** |
 | 3 | `tab:onset` | `onset_sensitivity.csv`; decoupled-indicator columns from `rg3_onsets.csv` | *[doc]* |
 | 4 | `tab:robust` (a) | `persistence_sensitivity_IMS_invariant.csv`; "all factors" row under Eq. 5 from `persistence_sensitivity_IMS_invariant_long.csv` | **[auto]** (all-factors row) |
-| 4 | `tab:robust` (b) | `d18_gap_injection_multiseed.csv` — mean `lead` over rows valid under Eq. 5 (`valid == True` and a defined pre-onset FAR), then over the five gap draws — **not** `gap_injection.csv`, which holds one draw | **[auto]** |
+| 4 | `tab:robust` (b) | `d18_gap_injection_multiseed.csv` — mean `lead` over rows valid under Eq. 5 (`valid == True`, a defined pre-onset FAR, and a run with an onset -- the file has no `t_onset` column, so Bearing1_2's no-onset status is carried over from `benchmark_XJTU-SY_long.csv`; the gap sweep uses the same `compute_run_onset`), then over the five gap draws — **not** `gap_injection.csv`, which holds one draw | **[auto]** |
 | 5 | `tab:crossds` | `xjtu_sy_runlevel_test.csv`, `femto_runlevel_test_n20.csv`, `ferrara_runlevel_test_n20.csv`, `ims_runlevel_test_invariant.csv`; the eleventh (one-class SVM) row of each block from `n20_raw_contrast_old_vs_new.csv` (`arm=new`) | **[auto]** (FEMTO/Ferrara blocks) |
 | 6 | `tab:equiv` | `n20_d15_bootstrap_new_11det.csv` — **not** `d15_equivalence_bootstrap.csv` | **[auto]** |
 | 7 | `tab:imssweep` | `ims_runlevel_test_invariant.csv`; one-class SVM row from `n20_raw_contrast_old_vs_new.csv` (`arm=new`) | **[auto]** |

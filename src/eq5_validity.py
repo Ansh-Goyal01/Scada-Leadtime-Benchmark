@@ -195,9 +195,24 @@ def ims_sites(audit: list) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def no_onset_runs() -> dict:
+    """Runs with no detectable onset, per dataset, from the benchmark files. The gap sweep
+    (src/d18_gap_multiseed.py) calls the same compute_run_onset on the same runs but writes no
+    t_onset column, and for a no-onset run its far_preonset_pct is the positional legacy FAR --
+    so the no-onset status must be carried over, or Bearing1_2 is silently scored."""
+    out = {}
+    for ds, f in (("IMS", "benchmark_IMS_long_invariant.csv"), ("XJTU-SY", "benchmark_XJTU-SY_long.csv")):
+        b = read(f)
+        out[ds] = set(b[b.t_onset.isna()].run)
+    return out
+
+
 def gap_table(audit: list) -> pd.DataFrame:
     src = "d18_gap_injection_multiseed.csv"
-    g = classify(read(src).assign(t_onset="defined"), lead="lead")
+    raw = read(src)
+    none = no_onset_runs()
+    on = [np.nan if r in none.get(ds, set()) else "defined" for ds, r in zip(raw.dataset, raw.run)]
+    g = classify(raw.assign(t_onset=on), lead="lead")
     rows = []
     for (ds, det, gap), s in g[g.short_name.isin(GAP_DETS)].groupby(["dataset", "short_name", "gap"]):
         per_eq5 = s[s.eq5].groupby("gap_seed").lead.mean()

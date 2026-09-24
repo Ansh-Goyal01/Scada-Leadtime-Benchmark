@@ -3126,3 +3126,18 @@ Commits: fe930a2 (Part 1), 7fba81b (2), e1ea46d (3), ef9088f (4), 16a2e35 (5), 0
   180 pass, 1 known environmental failure (MetroPT real CSV); negative tests 9/9 + 3/3 RED; inventory
   proof 0 unlocated (13 documented Part 1/4 corrections, 2 date fragments located manually).
   v1.3.0 recreated on the final commit (never pushed). Nothing pushed.
+
+### Last corrections (2026-09-24, after the final pass)
+- **Table 4b / S6.2 scoreable set.** The gap sweep writes no `t_onset`; for no-onset Bearing1_2 its
+  `far_preonset_pct` is the positional legacy FAR (same `compute_run_onset` as the benchmark -- the
+  pipelines AGREE Bearing1_2 has no onset). Part 1 had therefore scored Bearing1_2 in Table 4b. Now
+  excluded (eq5_validity.no_onset_runs; verify_tables.gap_rows): 5 scoreable bearings, same as Table 7.
+  XJTU columns: EWMA 1.6/1.6/1.3 -> 2.1/2.0/1.5, CUSUM 1.4/1.5/1.3 -> 1.6/1.9/1.5 (3sigma and IF
+  0.7 unchanged, Hotelling --); 20% changes 3sigma/IF 0.00, EWMA -0.54, CUSUM -0.11; spread 0.87 ->
+  1.34 h; caption "four ... six" -> "five ... five"; S6.2 "of the 6" -> "of the 5".
+- **220 split re-counted: 170 + 50 is correct** (Bearing1_2 has 5 factors x 2 modes x 5 detectors =
+  50 rows; 1_3, 1_5, 2_4 are short and lack f=10/20, hence the 90-per-detector average). No change.
+- **Sequence length.** Bearing2_5 forms a length-30 sequence only at f=2; at full resolution only 2_1
+  and 2_3 do (matches seqlen15's seq-30 arm). S6.3 now states both scopes.
+- S6.2 test-1 onset spread: 0.020 points (Table 3 rounds 98.46 up) -> "by 0.02". S1 scope and S7.1
+  aligned to "no dataset tested supports it". verify_tables 1040 values OK; 22 pages.

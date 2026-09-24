@@ -172,7 +172,7 @@ def gap_cell(ds, det, gap):
     """
     global _GAPROWS
     if _GAPROWS is None:
-        _GAPROWS = load("d18_gap_injection_multiseed.csv")
+        _GAPROWS = gap_rows()
     per_seed = {}
     for r in _GAPROWS:
         if (r["dataset"] != ds or r["short_name"] != det
@@ -182,6 +182,22 @@ def gap_cell(ds, det, gap):
     if not per_seed:
         return None
     return statistics.mean([statistics.mean(v) for v in per_seed.values()])
+
+
+def gap_rows():
+    """The gap sweep's rows, with the no-onset status carried over from the benchmark files.
+
+    src/d18_gap_multiseed.py calls the same compute_run_onset on the same runs as the benchmark
+    but writes no t_onset column; for a run with no onset (XJTU-SY Bearing1_2) its
+    far_preonset_pct is the positional legacy FAR. Without this, Eq. 5 would score that run.
+    """
+    none = {}
+    for ds, f in (("IMS", "benchmark_IMS_long_invariant.csv"), ("XJTU-SY", "benchmark_XJTU-SY_long.csv")):
+        none[ds] = {r["run"] for r in load(f) if r["t_onset"] in ("", "nan", "NaT")}
+    rows = load("d18_gap_injection_multiseed.csv")
+    for r in rows:
+        r["t_onset"] = "" if r["run"] in none.get(r["dataset"], set()) else "defined"
+    return rows
 
 
 def check_gap(bad):
@@ -1034,12 +1050,13 @@ def check_eq5(bad):
     for det in ("three_sigma", "ewma", "cusum", "isolation_forest"):
         d = gap_cell("XJTU-SY", det, 0.2) - gap_cell("XJTU-SY", det, 0.0)
         # leads are multiples of 1/60 h, so snap float noise before rounding a tie
-        txt = "%+.2f" % float(Decimal(repr(round(d, 9))).quantize(Decimal("0.01"), ROUND_HALF_EVEN))
+        q = float(Decimal(repr(round(d, 9))).quantize(Decimal("0.01"), ROUND_HALF_EVEN))
+        txt = "0.00" if q == 0 else "%+.2f" % q
         need(("$%s$~h" % txt) in body, "S6.2 XJTU-SY 20%% change %s" % det, txt)
     need(gap_cell("XJTU-SY", "hotelling_t2", 0.0) is None
          and "Hotelling $T^2$ has no valid alarm on a scoreable XJTU-SY bearing" in body,
          "S6.2 Hotelling T2 has no Eq.5-valid XJTU alarm")
-    gaps = load("d18_gap_injection_multiseed.csv")
+    gaps = gap_rows()
     spread = 0.0
     for det in ("three_sigma", "ewma", "cusum", "isolation_forest"):
         for g in (0.05, 0.2):
@@ -1053,7 +1070,12 @@ def check_eq5(bad):
     bound = -(-spread * 100 // 1) / 100
     need("and %.2f~h on XJTU-SY" % bound in body, "S6.2 XJTU-SY across-draw spread", "%.3f" % spread)
     sc_runs = {r["run"] for r in gaps if r["dataset"] == "XJTU-SY" and eq5_row(r, "lead")[0]}
-    need(len(sc_runs) == 6 and "two of the 6 scoreable bearings on XJTU-SY" in body, "S6.2 six scoreable XJTU bearings")
+    t7_scoreable = {run for run, rows in by.items() if all(eq5_row(r)[0] for r in rows)}
+    need(sc_runs == t7_scoreable, "gap sweep scores the same XJTU bearings as Table 7",
+         str(sorted(sc_runs)), str(sorted(t7_scoreable)))
+    need("two of the %d scoreable bearings on XJTU-SY" % len(sc_runs) in body
+         and "the %s bearings not scoreable at full resolution (Table~\\ref{tab:perbearing})"
+         % {5: "five"}[10 - len(sc_runs)] in body, "S6.2 / T4b caption scoreable-bearing count")
     agrees("Table 4b historian gaps (mean over valid alarms)", _tally(gaps, "lead"))
 
     # --- Section 6.10: at f=20 test 2 drops out of every feature-group cell
@@ -1178,8 +1200,9 @@ def check_factual_corrections(bad):
             on.setdefault(r["run"], []).append(float(r["onset_pct"]))
     sp = {k: max(v) - min(v) for k, v in on.items()}
     need(sp["1st_test"] < 0.1, "S6.2 test 1 k-spread < 0.1 pt", "%.3f" % sp["1st_test"])
-    need("moves by less than 0.1 percentage points of run span on test~1, %.1f on test~3 and %.1f on the "
-         "slow-degrading test~2" % (sp["3rd_test"], sp["2nd_test"]) in body, "S6.2 per-run onset spread")
+    need("moves by %.2f percentage points of run span on test~1, %.1f on test~3 and %.1f on the "
+         "slow-degrading test~2" % (sp["1st_test"], sp["3rd_test"], sp["2nd_test"]) in body,
+         "S6.2 per-run onset spread")
     need("less than two percent of run span" not in body, "S6.2 false 'under two percent' removed")
     need("%.1f on IMS" % statistics.median(sp.values()) in body, "S6.2 IMS median spread")
     fer = [abs(float(r["median_diff_h"])) * 60 for r in load("n20_raw_contrast_old_vs_new.csv")

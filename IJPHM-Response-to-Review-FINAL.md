@@ -20,7 +20,7 @@ Every point raised has been addressed. The changes that alter what the paper cla
 
 The correction family is now N = 44. No hypothesis is rejected at any family size, and the non-destruction conclusion is unchanged.
 
-All analyses are reproducible from the public repository at tag v1.3.0. A script in the 181-test suite re-derives 1039 printed values from the released result files and fails on any mismatch.
+All analyses are reproducible from the public repository at tag v1.3.0. A script in the 181-test suite re-derives 1040 printed values from the released result files and fails on any mismatch.
 
 ---
 
@@ -332,4 +332,4 @@ Every point raised by the three reviewers has been addressed. Two original choic
 
 The revision also corrects defects that no reviewer identified. I report them in full because the standard the reviewers applied — that the paper claim exactly what the evidence supports — does not depend on which defects happened to be visible from outside.
 
-The analyses are reproducible from the public repository at tag v1.3.0, with a pinned environment and a 181-test suite that includes a script re-deriving 1039 printed values from the released result files and an assertion that the ONGC case study reproduces from released files alone.
+The analyses are reproducible from the public repository at tag v1.3.0, with a pinned environment and a 181-test suite that includes a script re-deriving 1040 printed values from the released result files and an assertion that the ONGC case study reproduces from released files alone.

@@ -61,7 +61,7 @@ FINAL2 = {
     "S31.004.n01": ("documented", _EQ5 + "'the other 297 of the 300 cells being genuine evaluations' -> "
                     "fractions over n=6 bearings, or five at T=0.20 (Bearing2_2 not scoreable)"),
     "S46.006.n02": ("documented", "Part 4: App. D.1 '+6.6 h' -> '+6.60 h' (matches S7.3 and Table 15a)"),
-    "tab:robust.cap05.n05": ("documented", _EQ5 + "Table 4b XJTU-SY across-draw spread bound 0.37 -> 0.87 h"),
+    "tab:robust.cap05.n05": ("documented", _EQ5 + "Table 4b XJTU-SY across-draw spread bound 0.37 -> 1.34 h (five scoreable bearings)"),
     "tab:perbearing.cap03.n01": ("documented", _EQ5 + "Table 7 caption '(0/5)' sentence replaced by the "
                                  "n.s. legend; totals 6/25 and 2/5"),
     "tab:perbearing.c407": ("documented", _EQ5 + "Bearing1_3 1.03 -> n.s. (empty pre-onset region)"),

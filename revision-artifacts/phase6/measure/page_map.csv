@@ -1,6 +1,6 @@
 src_line,level,title,page_start,page_end,words,sentences,mean_sent,p90_sent
 0,front,"Front matter: title, abstract, keywords",1,1,321,11,29.2,49
-81,section,Introduction,1,2,918,30,30.5,45
+81,section,Introduction,1,2,919,30,30.6,45
 103,section,Related Work,,,0,0,,0
 105,subsection,"Prognostics, CBM, and Lead-Time Metrics",2,3,346,14,24.7,47
 112,subsection,Anomaly Detectors and Control Charts,3,3,376,12,31.3,54
@@ -21,8 +21,8 @@ src_line,level,title,page_start,page_end,words,sentences,mean_sent,p90_sent
 255,section,Experimental Setup,7,7,83,4,20.8,28
 258,section,Results,7,7,35,3,11.7,21
 262,subsection,Lead Time and Confidence Intervals on IMS,7,7,226,6,37.7,54
-274,subsection,Sensitivity of the Onset Definition,7,9,747,21,35.5,57
-336,subsection,Generalization to XJTU-SY ($n=10$ bearings),9,9,258,6,43,49
+274,subsection,Sensitivity of the Onset Definition,7,9,745,21,35.4,57
+336,subsection,Generalization to XJTU-SY ($n=10$ bearings),9,9,261,6,43.5,49
 350,subsection,Generalization to FEMTO/PRONOSTIA ($n=6$ bearings),9,9,181,5,36.2,66
 353,subsection,Generalization to University of Ferrara ($n=6$ bearings),9,10,106,3,35.3,48
 356,subsection,Aggregate vs Decimate on IMS: a Positive but Inconsistent Median Shift,10,10,303,7,43.3,51

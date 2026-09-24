@@ -24,7 +24,7 @@ Rebuild both with `python revision-artifacts/final/make_submission.py` if the so
 ## 1. Pre-flight (read-only)
 
 - [ ] `git log --oneline -3 main` shows the merge commit, and `git describe --tags main` prints `v1.3.0`.
-- [ ] `python paper/verify_tables.py` ends with "All checked table numbers match their source files." (1039 values).
+- [ ] `python paper/verify_tables.py` ends with "All checked table numbers match their source files." (1040 values).
 - [ ] `python -m src.eq5_validity` regenerates the `eq5_*.csv` files with no diff (validity counts under Eq. 5).
 - [ ] `python revision-artifacts/phase1/negative_tests.py` exits 0 (all 9 guards RED).
 - [ ] `python revision-artifacts/final2/negative_tests_final2.py` exits 0 (the 3 final-pass guards RED).

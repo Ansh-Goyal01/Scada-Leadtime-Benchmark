@@ -22,7 +22,7 @@
 - 1 x ONGC corrected to the data (n20_rerun_long_ONGC.csv, factor 1): '34-35 h' became '30-35 h (seven within 34.9-35.3 h, CUSUM 33.9, Hotelling 30.4)'
 - 1 x Part 4: App. D.1 '+6.6 h' -> '+6.60 h' (matches S7.3 and Table 15a)
 - 5 x N-29 double rounding corrected to 75.6 (source 75.6469 h)
-- 1 x Part 1 (Eq. 5 validity restatement): Table 4b XJTU-SY across-draw spread bound 0.37 -> 0.87 h
+- 1 x Part 1 (Eq. 5 validity restatement): Table 4b XJTU-SY across-draw spread bound 0.37 -> 1.34 h (five scoreable bearings)
 - 1 x Part 1 (Eq. 5 validity restatement): Table 7 caption '(0/5)' sentence replaced by the n.s. legend; totals 6/25 and 2/5
 - 1 x N-29 double rounding corrected to 180.2 (source 180.2496 h)
 - 49 x sign-consistency verdict now encoded as the s-superscript on n+/n- (verify_tables checks it)

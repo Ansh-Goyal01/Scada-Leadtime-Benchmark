@@ -131,3 +131,63 @@
 Tables 11-15 moved (source only, order kept) to the start of Appendix A, A, B, C and D.1 respectively.
 
 ## Part 5 layout: Appendix A table* read before the single-column table (renumbers 11<->12)
+
+## Last corrections: Table 4b set, sequence-length scope, onset spread, 'not supported' wording
+
+- OLD: $3\sigma$ & 42.6 & 42.8 & 43.4 & 0.7 & 0.7 & 0.7 \\
+- NEW: $3\sigma$ & 42.6 & 42.8 & 43.4 & 0.7 & 0.7 & 0.7 \\
+
+- OLD: EWMA & 41.8 & 41.8 & 41.7 & 1.6 & 1.6 & 1.3 \\
+- NEW: EWMA & 41.8 & 41.8 & 41.7 & 2.1 & 2.0 & 1.5 \\
+
+- OLD: CUSUM & 39.7 & 39.3 & 39.0 & 1.4 & 1.5 & 1.3 \\
+- NEW: CUSUM & 39.7 & 39.3 & 39.0 & 1.6 & 1.9 & 1.5 \\
+
+- OLD: Iso.\ Forest & 54.7 & 54.3 & 53.8 & 0.7 & 0.7 & 0.7 \\
+- NEW: Iso.\ Forest & 54.7 & 54.3 & 53.8 & 0.7 & 0.7 & 0.7 \\
+
+- OLD: XJTU-SY: the four bearings not scoreable at full resolution (Table~\ref{tab:perbearing}) are excluded; --: no valid alarm on the other six.}
+- NEW: XJTU-SY: the five bearings not scoreable at full resolution (Table~\ref{tab:perbearing}) are excluded; --: no valid alarm on the other five.}
+
+- OLD: $+0.83$~h for $3\sigma$ on IMS and $-0.02$~h on XJTU-SY, $-0.08$ and $-0.32$~h for EWMA, $-0.67$ and $-0.06$~h for CUSUM, and $-0.92$ and $-0.02$~h for Isolation Forest;
+- NEW: $+0.83$~h for $3\sigma$ on IMS and $0.00$~h on XJTU-SY, $-0.08$ and $-0.54$~h for EWMA, $-0.67$ and $-0.11$~h for CUSUM, and $-0.92$ and $0.00$~h for Isolation Forest;
+
+- OLD: and move by at most two of the 6 scoreable bearings on XJTU-SY;
+- NEW: and move by at most two of the 5 scoreable bearings on XJTU-SY;
+
+- OLD: by less than 3.4~h on IMS and 0.87~h on XJTU-SY.
+- NEW: by less than 3.4~h on IMS and 1.34~h on XJTU-SY.
+
+- OLD: Only the three longest-lived bearings form a length-30 sequence, so each deep sequence model is N/A in 76/90 cells,
+- NEW: Only the three longest-lived bearings form a length-30 sequence anywhere in the sweep, Bearing2\_5 only at $f=2$, so each deep sequence model is N/A in 76/90 cells,
+
+- OLD: Halving the sequence length to 15 windows makes only one more short bearing usable, Bearing2\_5, whose onset precedes the first scored window, so it cannot be scored;
+- NEW: At full resolution, halving the sequence length to 15 windows adds only Bearing2\_5 to Bearing2\_1 and 2\_3, and its onset precedes the first scored window, so it cannot be scored;
+
+- OLD: moves by less than 0.1 percentage points of run span on test~1,
+- NEW: moves by 0.02 percentage points of run span on test~1,
+
+- OLD: into a refutation on every dataset tested,
+- NEW: into one that is not supported on any dataset tested,
+
+- OLD: It does not, and we report the refutation, with its dataset-dependent direction explicit.
+- NEW: It is not supported on any dataset tested, and we report that result with its dataset-dependent direction explicit.
+
+## Last corrections, layout: tighten the wording just added (22 pages)
+
+- OLD: At full resolution, halving the sequence length to 15 windows adds only Bearing2\_5 to Bearing2\_1 and 2\_3, and its onset precedes the first scored window, so it cannot be scored;
+- NEW: At full resolution, halving the sequence length to 15 windows adds only Bearing2\_5, whose onset precedes the first scored window, so it cannot be scored;
+
+- OLD: into one that is not supported on any dataset tested,
+- NEW: into one that no dataset tested supports,
+
+- OLD: It is not supported on any dataset tested, and we report that result with its dataset-dependent direction explicit.
+- NEW: No dataset tested supports it, and we report that with its dataset-dependent direction explicit.
+
+## Last corrections, layout: compact sequence-length scope in S6.3 (22 pages)
+
+- OLD: Only the three longest-lived bearings form a length-30 sequence anywhere in the sweep, Bearing2\_5 only at $f=2$, so each deep sequence model is N/A in 76/90 cells,
+- NEW: Only the three longest-lived bearings form a length-30 sequence (Bearing2\_5 only at $f=2$), so each deep sequence model is N/A in 76/90 cells,
+
+- OLD: At full resolution, halving the sequence length to 15 windows adds only Bearing2\_5, whose onset precedes the first scored window, so it cannot be scored;
+- NEW: Halving the sequence length to 15 windows adds Bearing2\_5 at full resolution, but its onset precedes the first scored window, so it cannot be scored;
