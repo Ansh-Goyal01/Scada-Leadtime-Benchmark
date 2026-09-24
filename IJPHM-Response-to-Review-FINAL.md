@@ -20,7 +20,7 @@ Every point raised has been addressed. The changes that alter what the paper cla
 
 The correction family is now N = 44. No hypothesis is rejected at any family size, and the non-destruction conclusion is unchanged.
 
-All analyses are reproducible from the public repository at tag v1.3.0. A script in the 181-test suite re-derives 906 printed values from the released result files and fails on any mismatch.
+All analyses are reproducible from the public repository at tag v1.3.0. A script in the 181-test suite re-derives 1039 printed values from the released result files and fails on any mismatch.
 
 ---
 
@@ -48,21 +48,23 @@ None of the following was raised by a reviewer. Each was present in the submitte
 
 **8. The ONGC case study reported raw lead as if it were detection quality.** Nine of the eleven detectors alarm 30–35 h before the labeled shutdown, but under the paper's own gated metric at τ = 10% only Hotelling T² (pre-onset false-alarm rate 6.5%) and the RMS-trend baseline (0.1%) have valid alarms; the other eight alarming detectors exceed the budget, at 11.7% (Isolation Forest) to 95.2% (CUSUM). The data-derived onset lies only about 6 h before the shutdown, so their first alarms precede it by 28–29 h and count as pre-onset false alarms. That verdict is itself ambiguous: the onset estimator is systematically late under gradual degradation (the bias analysis Reviewer G requested, Section 4.3), so some of those alarms may be genuine early detection, and with a single asset and no ground-truth defect-initiation time the case study cannot distinguish the two. Appendix D.2 and Section 7.2 now state both readings. The aggregate-versus-decimate contrast on ONGC uses raw lead and is unaffected.
 
+**9. Validity counts included alarms the gate could not evaluate.** Where the onset estimator places the onset at or before the first scored window, the pre-onset region is empty and the false-alarm rate is undefined. The submitted manuscript's XJTU-SY counts, and its per-bearing table, counted such alarms as valid whenever their lead was positive, and one bearing with no detectable onset was scored by a positional criterion the paper did not state. Equation 5 now states the rule explicitly — such alarms are excluded from the validity denominator — and every count is restated under it. The XJTU-SY figure of 209/450 becomes 48 of 230 scoreable evaluations, 220 being excluded (170 with an empty pre-onset region, 50 on the bearing with no detectable onset); in the per-bearing table five of the ten bearings cannot be scored at full resolution, and the total becomes 6/25 rather than 20/50. The same rule moves the pooled persistence fractions and the XJTU-SY gap columns of Table 4 and the smallest training fraction of the deep-model sweep; the FEMTO count and the gated contrast already applied it. No aggregate-versus-decimate result is affected, since those are computed on raw lead.
+
 ### Figure defects
 
-**9. The trade-off figure omitted the detectors its argument depends on.** It plotted five of the seven detectors in its source file. The missing two were CUSUM and Deep SVDD, and Deep SVDD's low-false-alarm operating point is the basis of the complementary recommendation in Sections 6.9 and 7.4.
+**10. The trade-off figure omitted the detectors its argument depends on.** It plotted five of the seven detectors in its source file. The missing two were CUSUM and Deep SVDD, and Deep SVDD's low-false-alarm operating point is the basis of the complementary recommendation in Sections 6.9 and 7.4.
 
-**10. Detectors shared colours.** A second, divergent colour table meant that EWMA and LSTM-AE were drawn in the same colour, as were Hotelling T² and Deep SVDD. All eleven detectors now have distinct colours. Eleven categories cannot be made fully dichromat-safe by hue alone; I have not added a redundant encoding.
+**11. Detectors shared colours.** A second, divergent colour table meant that EWMA and LSTM-AE were drawn in the same colour, as were Hotelling T² and Deep SVDD. All eleven detectors now have distinct colours. Eleven categories cannot be made fully dichromat-safe by hue alone; I have not added a redundant encoding.
 
-**11. The ONGC bars in Figure 2 were drawn 60 times too small**, owing to a unit conversion applied twice in the plotting script.
+**12. The ONGC bars in Figure 2 were drawn 60 times too small**, owing to a unit conversion applied twice in the plotting script.
 
 ### The reproducibility statement
 
-**12. The Data and Code Availability section made claims that were false of the public repository.** The result tables were excluded from version control, so the statement that every table and figure is generated from released result files was untrue of what a reader could obtain. The statement also claimed that a derived ONGC series was released when it was not, gave a stale test count, and cited a file that did not exist. All result files are now released, with a manifest mapping each table and figure to its source file and superseded files separated from current ones. The ONGC derived artifacts are generated by a released exporter, and a released test recomputes the published ONGC degradation onset from those files alone, touching no proprietary input. Each claim was verified from a clean clone of the public repository rather than the working tree.
+**13. The Data and Code Availability section made claims that were false of the public repository.** The result tables were excluded from version control, so the statement that every table and figure is generated from released result files was untrue of what a reader could obtain. The statement also claimed that a derived ONGC series was released when it was not, gave a stale test count, and cited a file that did not exist. All result files are now released, with a manifest mapping each table and figure to its source file and superseded files separated from current ones. The ONGC derived artifacts are generated by a released exporter, and a released test recomputes the published ONGC degradation onset from those files alone, touching no proprietary input. Each claim was verified from a clean clone of the public repository rather than the working tree.
 
 ### Smaller corrections
 
-A caption claimed ten evaluated detectors against a nine-row table. A caption claimed valid-alarm fractions were unchanged under injected gaps while showing one that changed. The ONGC case study stated that every detector alarmed roughly 35 h ahead; nine of eleven alarm 30–35 h ahead (seven within 34.9–35.3 h, CUSUM at 33.9 h and Hotelling T² at 30.4 h), RMS-trend at 22.8 h, and Deep SVDD does not alarm before failure (disclosure item 8 gives the gated reading). Two values were double-rounded: the historian-averaging arm of the denoiser comparison (Table 15b) is 75.6 h, not 75.7 h (source 75.647 h), and the one-class SVM's prognostic horizon (Table 2) is 180.2 h, not 180.3 h (source 180.250 h).
+A caption claimed ten evaluated detectors against a nine-row table. A caption claimed valid-alarm fractions were unchanged under injected gaps while showing one that changed. The ONGC case study stated that every detector alarmed roughly 35 h ahead; nine of eleven alarm 30–35 h ahead (seven within 34.9–35.3 h, CUSUM at 33.9 h and Hotelling T² at 30.4 h), RMS-trend at 22.8 h, and Deep SVDD does not alarm before failure (disclosure item 8 gives the gated reading). Two values were double-rounded: the historian-averaging arm of the denoiser comparison (Table 15b) is 75.6 h, not 75.7 h (source 75.647 h), and the one-class SVM's prognostic horizon (Table 2) is 180.2 h, not 180.3 h (source 180.250 h). Section 6.2 stated that the default onset moves by less than two percent of run span on every IMS run as k varies; on the second test it moves 5.4 percentage points (60.4% to 65.8% of span), and the text now gives the spread per run.
 
 ---
 
@@ -90,7 +92,7 @@ The circularity has been probed empirically at Reviewer G's request. The contras
 
 > "one-class SVM is described as evaluated (Section 4.5) but appears in no results table. It should be reported or the mention removed."
 
-**Response.** Reported. The code produced the results; they had not been included. One-class SVM now appears alongside Deep SVDD in the results tables (Tables 2, 5, 6 and 9) and the compute table (Table 11); the feature-group ablation (Table 10) and the relabel contrast (Table 14) report Deep SVDD without it.
+**Response.** Reported. The code produced the results; they had not been included. One-class SVM now appears alongside Deep SVDD in the results tables (Tables 2, 5, 6 and 9) and the compute table (Table 12); the feature-group ablation (Table 10) and the relabel contrast (Table 14) report Deep SVDD without it.
 
 Adding it widens the correction family from N = 40 to N = 44 and raises the uncorrected family-wise error rate from approximately 0.87 to approximately 0.90. No hypothesis is rejected at either family size, and the smallest raw p-value is 0.125. The requested addition widens the evidence base without altering any conclusion.
 
@@ -102,7 +104,7 @@ It also sharpens Section 6.11. With all eleven detectors ranked, the seven that 
 
 **Response.** The reviewer is correct: the two descriptions corresponded to different operations on different datasets. Both sentences are removed, and a new Section 4.8 states the level per dataset. IMS coarsens the windowed feature vectors; XJTU-SY, FEMTO, Ferrara and ONGC coarsen the per-snapshot feature series. No dataset coarsens the raw waveform.
 
-We have also narrowed the framing, as the reviewer's overall evaluation anticipated. The introduction had described the concern in terms of waveform averaging destroying impulsive transients — a different operation from the one tested. It now separates the two: averaging a raw waveform is a low-pass filter and does attenuate incipient-fault transients, which we neither test nor dispute; the question that governs historian design is whether bin-averaging the summary statistics a historian actually stores costs warning time relative to keeping every k-th summary. The ONGC record is the clearest case, since its channels are the historian stream and no coarsening is simulated. Raw-waveform coarsening is named in Section 8 as the complementary study.
+We have also narrowed the framing, as the reviewer's overall evaluation anticipated. The introduction had described the concern in terms of waveform averaging destroying impulsive transients — a different operation from the one tested. It now separates the two: averaging a raw waveform is a low-pass filter and does attenuate incipient-fault transients, which we neither test nor dispute; the question that governs historian design is whether bin-averaging the summary statistics a historian actually stores costs warning time relative to keeping every k-th summary. The ONGC record is the clearest case, since its channels are the historian stream and no coarsening is simulated. Raw-waveform coarsening is named in Section 8 as the complementary study. The practical-implications paragraph of Section 7.4 is aligned with Section 4.8 in the same way: it compares bin-averaged summary statistics with keeping every f-th stored value, bounded to the ±1 h margin on the datasets tested, and no longer refers to decimated raw samples.
 
 ---
 
@@ -144,7 +146,7 @@ The effect on sample size is detector-dependent: for six of the ten detectors in
 
 **Response.** Every named item is done. Table 21 is deleted and replaced by one sentence; Table 23 is deleted and the figure carries the result alone; Section 7.4 is deleted in full. Section 6's opening summary list, which previewed subsections that immediately follow, is also deleted. The five-cell exception, which had been enumerated in full four times, now appears once, in the results where the cells are reported. The term "non-destruction" falls from 21 occurrences to 8. Tables are consolidated from 29 to 15 and figures from 11 to 6, with no result removed.
 
-The net effect: the revised paper is 22 pages against 24 as submitted, with 15 tables against 29 and 6 figures against 11. It is shorter although the revision adds an equivalence analysis, a gated-metric contrast table, an architecture table, a signal-theoretic section, an onset-estimator analysis, Appendix C, a per-dataset coarsening statement, scoping paragraphs and three related-work paragraphs — all requested by the reviewers. The pages were recovered by merging tables that reported overlapping results, redrawing figures at print size and removing repetition, not by removing the sensitivity and ablation work: every sentence, number, table cell and citation of the longer intermediate draft is accounted for in the final version.
+The net effect: the revised paper is 22 pages against 24 as submitted, with 15 tables against 29 and 6 figures against 11. It is shorter although the revision adds an equivalence analysis, a gated-metric contrast table, an architecture table, a signal-theoretic section, an onset-estimator analysis, Appendix C, a per-dataset coarsening statement, scoping paragraphs and three related-work paragraphs — all requested by the reviewers. The pages were recovered by merging tables that reported overlapping results, redrawing figures at print size and removing repetition, not by removing the sensitivity and ablation work: no result from the submitted version has been removed; the results that changed are the corrections disclosed above.
 
 ---
 
@@ -170,7 +172,7 @@ The net effect: the revised paper is 22 pages against 24 as submitted, with 15 t
 
 **Response.** Both regenerated. The cause was a character-encoding fault in the plotting scripts that corrupted Δ, −, σ, ≈ and ²; these now render through mathtext. A doubled parenthesis in Figure 2's legend is also fixed.
 
-Checking the remaining figures, as asked, surfaced disclosure items 9, 10 and 11, together with a clipped axis label, annotations that overlapped plotted series, and percentile labels that were illegible where curves cross. All are fixed and were verified by rendering each figure at print size.
+Checking the remaining figures, as asked, surfaced disclosure items 10, 11 and 12, together with a clipped axis label, annotations that overlapped plotted series, and percentile labels that were illegible where curves cross. All are fixed and were verified by rendering each figure at print size.
 
 ---
 
@@ -210,7 +212,7 @@ We retain raw lead as the primary contrast and now give the reason explicitly. T
 
 > "The conclusions about deep models should also be kept within the tested conditions, since some of the datasets provide quite limited training data for these models."
 
-**Response.** Agreed, and now stated in the abstract, Section 6.12 and the conclusion. The scoping is quantitative: across bearings and training fractions these runs provide between 20 and 335 normal training windows, with a median of 88 at the default split, while the models carry 2.0–5.5 × 10⁴ parameters. The comparison is made where the deep models are structurally disadvantaged, and the text says so.
+**Response.** Agreed, and now stated in the abstract, Section 6.12 and the conclusion. The scoping is quantitative: across FEMTO bearings and training fractions the runs provide between 20 and 335 normal training windows, with a median of 88 at the default split, while the models carry 2.0–5.5 × 10⁴ parameters. The comparison is made where the deep models are structurally disadvantaged, and the text says so.
 
 ---
 
@@ -308,7 +310,7 @@ Two footnotes record findings from the transcription: no model uses early stoppi
 
 **Response.** The statement now names the released ONGC artifacts file by file, and states what is withheld: raw waveforms, channel-level measurements and asset identifiers. The released health indicator is a single baseline-standardised scalar aggregated over all four channels, so no per-channel value or absolute vibration amplitude can be recovered from it.
 
-Acting on this comment uncovered disclosure item 12. The guarantee is now a test rather than a claim: a released test recomputes the published ONGC degradation onset from the released files alone, and the exporter refuses to write output if the onset does not reproduce. This was verified from a clean clone of the public repository.
+Acting on this comment uncovered disclosure item 13. The guarantee is now a test rather than a claim: a released test recomputes the published ONGC degradation onset from the released files alone, and the exporter refuses to write output if the onset does not reproduce. This was verified from a clean clone of the public repository.
 
 ---
 
@@ -330,4 +332,4 @@ Every point raised by the three reviewers has been addressed. Two original choic
 
 The revision also corrects defects that no reviewer identified. I report them in full because the standard the reviewers applied — that the paper claim exactly what the evidence supports — does not depend on which defects happened to be visible from outside.
 
-The analyses are reproducible from the public repository at tag v1.3.0, with a pinned environment and a 181-test suite that includes a script re-deriving 906 printed values from the released result files and an assertion that the ONGC case study reproduces from released files alone.
+The analyses are reproducible from the public repository at tag v1.3.0, with a pinned environment and a 181-test suite that includes a script re-deriving 1039 printed values from the released result files and an assertion that the ONGC case study reproduces from released files alone.
