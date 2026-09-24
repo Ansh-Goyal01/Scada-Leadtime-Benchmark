@@ -108,8 +108,8 @@ S03.013,sentence,,located,,"That benchmark folds both into a single weighted sco
 S03.014,sentence,,located,1.00,A parallel line of work revises evaluation itself for time-series detection.
 S03.015,sentence,,located,,"Tatbul, Lee, Zdonik, Alam, and Gottschlich (2018) generalise precision and recall from points to ranges with a tunable positional bias, so that early detection within an anomalous interval can be rewa"
 S03.016,sentence,,located,,"Our metric shares the diagnosis and differs in what it reports: rather than a score on a bounded scale, the gated lead time is a physical quantity— hours of warning—that a maintenance planner can act "
-S04.001,sentence,,located,0.96,"Univariate and multivariate statistical-process-control charts—the 3σ rule, the exponentially weighted moving average (EWMA) (Roberts, 1959), and Hotelling’s T 2 (Hotelling, 1947)—remain workhorses of"
-S04.002,sentence,,located,0.81,"In the unsupervised machinelearning family, Isolation Forest (Liu, Ting, & Zhou, 2008) and the one-class support vector machine (SVM) (Schölkopf, Platt, Shawe-Taylor, Smola, & Williamson, 2001) are wi"
+S04.001,sentence,,located,0.78,"Univariate and multivariate statistical-process-control charts—the 3σ rule, the exponentially weighted moving average (EWMA) (Roberts, 1959), and Hotelling’s T 2 (Hotelling, 1947)—remain workhorses of"
+S04.002,sentence,,located,0.83,"In the unsupervised machinelearning family, Isolation Forest (Liu, Ting, & Zhou, 2008) and the one-class support vector machine (SVM) (Schölkopf, Platt, Shawe-Taylor, Smola, & Williamson, 2001) are wi"
 S04.003,sentence,,located,,"We evaluate representatives of both the classical and learning families under a single, fixed hyperparameter protocol so that the comparison is about the evaluation and the sampling question, not abou"
 S04.004,sentence,,located,1.00,Relation to published FEMTO/XJTU results.
 S04.005,sentence,,located,,"The FEMTO/PRONOSTIA and XJTU-SY campaigns are best known through the IEEE PHM 2012 challenge and subsequent remaining-useful-life (RUL) studies (Wang, Lei, Li, & Li, 2020; Nectoux et al., 2012), whose"
@@ -573,7 +573,7 @@ S24.007.n03,number,1.4,located,,"Across all eleven evaluated detectors (every on
 S24.007.n04,number,7.8,located,,"Across all eleven evaluated detectors (every one runs on the full n = 6), 211/660 evaluations yield a valid alarm; as on XJTU, the short-lived bearings (∼1.4-7.8 h) keep absolute lead times small."
 S25.001,sentence,,located,,"The University of Ferrara campaign (Arpa et al., 2024) adds a fifth, fully independent run-to-failure dataset and a second constant-condition multi-bearing rig beyond FEMTO."
 S25.002,sentence,,located,,"Table 5 (Ferrara rows) gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate-decimate difference is within ±5 min for every detector, no detector is sign-consistent across"
-S25.002.n01,number,±5,located,,"Table 5 (Ferrara rows) gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate-decimate difference is within ±5 min for every detector, no detector is sign-consistent across"
+S25.002.n01,number,±5,documented,Part 4: Ferrara bound '+-5 min' -> '+-1 min' (post-correction max |median| 0.875 min),"Table 5 (Ferrara rows) gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate-decimate difference is within ±5 min for every detector, no detector is sign-consistent across"
 S25.002.n02,number,0.219,located,,"Table 5 (Ferrara rows) gives the same verdict as XJTU-SY and FEMTO: at the run level the median aggregate-decimate difference is within ±5 min for every detector, no detector is sign-consistent across"
 S25.003,sentence,,located,,"Like the other short-lived campaigns, Ferrara’s 0.7-6.8 h lifetimes mean it cannot confirm or deny the IMS positive trend; what it does add is a second independent replication on a modern (2024) rig."
 S25.003.n01,number,0.7,located,,"Like the other short-lived campaigns, Ferrara’s 0.7-6.8 h lifetimes mean it cannot confirm or deny the IMS positive trend; what it does add is a second independent replication on a modern (2024) rig."
@@ -659,19 +659,19 @@ S27.008.n02,number,10,located,,"We note that the family is heterogeneous in powe
 S27.009,sentence,,located,,"Because every uncorrected p in the family already exceeds 0.1, this heterogeneity does not change any rejection decision; we flag it so the N = 44 count is not read as forty-four equallypowered tests."
 S27.009.n01,number,0.1,located,,"Because every uncorrected p in the family already exceeds 0.1, this heterogeneity does not change any rejection decision; we flag it so the N = 44 count is not read as forty-four equallypowered tests."
 S27.009.n02,number,44,located,,"Because every uncorrected p in the family already exceeds 0.1, this heterogeneity does not change any rejection decision; we flag it so the N = 44 count is not read as forty-four equallypowered tests."
-S27.010,sentence,,located-manual,table narration removed: tab:perbearing caption + Sec. 6.7 per-bearing paragraph,"Table 9 breaks the XJTU result down by bearing at full resolution (aggregate mechanism, valid alarms counted over the five detectors)."
-S27.011,sentence,,located,0.70,"We report the mean lead over the valid detectors as the realistic singledeployed-detector expectation, alongside the oracle “best lead” (the maximum over five, which presumes foreknowledge of which de"
-S27.012,sentence,,located,1.00,Bearing2_2: 1.00 h mean vs. 1.08 h oracle).
+S27.010,sentence,,located,0.60,"Table 9 breaks the XJTU result down by bearing at full resolution (aggregate mechanism, valid alarms counted over the five detectors)."
+S27.011,sentence,,located,0.75,"We report the mean lead over the valid detectors as the realistic singledeployed-detector expectation, alongside the oracle “best lead” (the maximum over five, which presumes foreknowledge of which de"
+S27.012,sentence,,located,0.67,Bearing2_2: 1.00 h mean vs. 1.08 h oracle).
 S27.012.n01,number,1.00,located,,Bearing2_2: 1.00 h mean vs. 1.08 h oracle).
-S27.012.n02,number,1.08,located,,Bearing2_2: 1.00 h mean vs. 1.08 h oracle).
+S27.012.n02,number,1.08,documented,Part 1 (Eq. 5 validity restatement): Bearing2_2 mean-vs-oracle example (1.00 vs 1.08 h) dropped; the bearing is not scoreable and mean = best on every scoreable bearing,Bearing2_2: 1.00 h mean vs. 1.08 h oracle).
 S27.013,sentence,,located,,The aggregate 209/450 valid-alarm figure quoted above is not uniform: it is the sum of a strongly heterogeneous per-bearing picture.
-S27.013.n01,number,209/450,located,,The aggregate 209/450 valid-alarm figure quoted above is not uniform: it is the sum of a strongly heterogeneous per-bearing picture.
+S27.013.n01,number,209/450,documented,Part 1 (Eq. 5 validity restatement): 209/450 -> 48/230 scoreable (220 excluded),The aggregate 209/450 valid-alarm figure quoted above is not uniform: it is the sum of a strongly heterogeneous per-bearing picture.
 S27.014,sentence,,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
 S27.014.n01,number,533,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
 S27.014.n02,number,158,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
 S27.014.n03,number,42,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
 S27.014.n04,number,123,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
-S27.014.n05,number,2/10,located,,"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
+S27.014.n05,number,2/10,documented,Part 1 (Eq. 5 validity restatement): '2/10 bearings' -> '2 of the 5 scoreable bearings',"Long-degrading bearings such as Bearing2_3 (533 min life) and Bearing1_3 (158 min) are warnable with multi-hour or near-hour lead, whereas the two shortest-lived, abrupt-failure bearings—Bearing2_4 (4"
 S27.015,sentence,,located,1.00,The metric credits no warning time on bearings that provide none.
 S27.016,sentence,,located,,The same contrast under the gated metric.
 S27.017,sentence,,located,,"The cross-dataset headline above is computed on raw lead time, the quantity a coarsening operation acts on directly and the one that carries no dependence on the budget τ ."
@@ -761,7 +761,7 @@ S28.028.n01,number,0.05,located,,"The strict τ = 0.05 column of Table 12 corre-
 S28.029,sentence,,located,,"We stress this is an order-of-magnitude anchor, not a site-specific optimisation: the true optimum requires an operator’s actual cI and cF , which we do not have, and Eq."
 S28.030,sentence,,located,0.67,(6) is offered so a practitioner can substitute their own.
 S28.030.n01,number,6,located,,(6) is offered so a practitioner can substitute their own.
-S29.001,sentence,,located,0.62,"We ablate feature families on IMS for all six non-sequence detectors, reporting the valid-alarm fraction by group across the three runs (Table 14)."
+S29.001,sentence,,located-manual,"paraphrased: tab:ablation_general caption: six non-sequence detectors, mean over the three runs","We ablate feature families on IMS for all six non-sequence detectors, reporting the valid-alarm fraction by group across the three runs (Table 14)."
 S29.002,sentence,,located,,"The pattern is consistent and somewhat against expectation: time-domain amplitude features (rms_only or time_only) give each detector its highest or tied-highest validity, and admitting spectral, enve"
 S29.003,sentence,,located,,"For the memory-based control charts it sharpens: rms_only is the unique group at which 3σ and EWMA reach full validity (1.00 at 0% pre-onset FAR), and spectral/envelope/all collapse all four SPC chart"
 S29.003.n01,number,1.00,located,,"For the memory-based control charts it sharpens: rms_only is the unique group at which 3σ and EWMA reach full validity (1.00 at 0% pre-onset FAR), and spectral/envelope/all collapse all four SPC chart"
@@ -849,9 +849,9 @@ S31.003.n01,number,0.20,located,,"At T = 0.20 the shortest bearing (Bearing3_1) 
 S31.003.n02,number,20,located,,"At T = 0.20 the shortest bearing (Bearing3_1) forms only 20 training windows, fewer than the 30 a sequence requires, so LSTM-AE, TCN-AE and Transformer-AD are recorded there as explicit N/A rather tha"
 S31.003.n03,number,30,located,,"At T = 0.20 the shortest bearing (Bearing3_1) forms only 20 training windows, fewer than the 30 a sequence requires, so LSTM-AE, TCN-AE and Transformer-AD are recorded there as explicit N/A rather tha"
 S31.004,sentence,,located,,"Those are the only three N/A cells in the sweep; the remaining 297 of the 300 (detector, bearing, T ) cells are genuine evaluations."
-S31.004.n01,number,297,located,,"Those are the only three N/A cells in the sweep; the remaining 297 of the 300 (detector, bearing, T ) cells are genuine evaluations."
+S31.004.n01,number,297,documented,"Part 1 (Eq. 5 validity restatement): 'the other 297 of the 300 cells being genuine evaluations' -> fractions over n=6 bearings, or five at T=0.20 (Bearing2_2 not scoreable)","Those are the only three N/A cells in the sweep; the remaining 297 of the 300 (detector, bearing, T ) cells are genuine evaluations."
 S31.004.n02,number,300,located,,"Those are the only three N/A cells in the sweep; the remaining 297 of the 300 (detector, bearing, T ) cells are genuine evaluations."
-S31.005,sentence,,located,0.87,Valid-alarm fractions below are computed over the full n = 6 with an N/A counted as no valid alarm—the conservative choice—and the released sweep records the N/A count separately.
+S31.005,sentence,,located,0.73,Valid-alarm fractions below are computed over the full n = 6 with an N/A counted as no valid alarm—the conservative choice—and the released sweep records the N/A count separately.
 S31.005.n01,number,6,located,,Valid-alarm fractions below are computed over the full n = 6 with an N/A counted as no valid alarm—the conservative choice—and the released sweep records the N/A count separately.
 S31.006,sentence,,located,,"The result (Figure 6) is unambiguous and, we think, more useful than a crossover point would have been: there is no crossover."
 S31.007,sentence,,located,,"The four SPC charts that define the baseline in Figure 6 (3σ, EWMA, CUSUM, Hotelling T 2) are already at or near their best at the smallest training fraction we tested—3σ at 1.00, EWMA and Hotelling T"
@@ -961,7 +961,7 @@ S36.005,sentence,,located,0.90,"Operators whose cost structure penalizes false a
 S36.006,sentence,,located,,"Deep SVDD consistently stays within budget at ≤ 0.6% pre-onset FAR across the swept threshold levels on IMS (Table 13), achieving 14.8 h of advance warning with near-zero false alarms."
 S36.006.n01,number,0.6%,located,,"Deep SVDD consistently stays within budget at ≤ 0.6% pre-onset FAR across the swept threshold levels on IMS (Table 13), achieving 14.8 h of advance warning with near-zero false alarms."
 S36.006.n02,number,14.8,located,,"Deep SVDD consistently stays within budget at ≤ 0.6% pre-onset FAR across the swept threshold levels on IMS (Table 13), achieving 14.8 h of advance warning with near-zero false alarms."
-S36.007,sentence,,located,0.71,"Where 3σ maximizes warning time within the 10% budget, Deep SVDD minimizes nuisance alarms for operators requiring near-zero tolerance."
+S36.007,sentence,,located,0.64,"Where 3σ maximizes warning time within the 10% budget, Deep SVDD minimizes nuisance alarms for operators requiring near-zero tolerance."
 S36.007.n01,number,10%,located,,"Where 3σ maximizes warning time within the 10% budget, Deep SVDD minimizes nuisance alarms for operators requiring near-zero tolerance."
 S36.008,sentence,,located,0.89,"Neither should be used on IMS test 1, which the conformal machinery flags as uncalibrated (Table 11)."
 S36.008.n01,number,1,located,,"Neither should be used on IMS test 1, which the conformal machinery flags as uncalibrated (Table 11)."
@@ -1057,11 +1057,11 @@ S40.006,sentence,,located,,"The IMS (NASA), XJTU-SY, and FEMTO/PRONOSTIA run-to-
 S40.007,sentence,,located,,The ONGC gas-turbine SCADA record is proprietary and covered by a non-disclosure agreement.
 S40.008,sentence,,located,,"Withheld, and not redistributable: the raw vibration waveforms, the channel-level measurements from which the features are built, and all asset identifiers."
 S40.009,sentence,,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
-S40.009.n01,number,03:44,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
+S40.009.n01,number,03:44,located-manual,"date '2023-11-13 03:44' present intact in Data Availability; the Phase 0 PDF split it across a line, so its fragments were inventoried as numbers","Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n02,number,1,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n03,number,10,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n04,number,2023,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
-S40.009.n05,number,1113,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
+S40.009.n05,number,1113,located-manual,"fragment '11-13' of the same date, present intact (see S40.009.n01)","Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n06,number,20,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n07,number,110,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
 S40.009.n08,number,20,located,,"Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradati"
@@ -1158,7 +1158,7 @@ S46.005,sentence,,located,,"To avoid the pseudoreplication we corrected in the m
 S46.005.n01,number,3,located,,"To avoid the pseudoreplication we corrected in the main analysis, we collapse the four magnitude-monitoring SPC charts to one mean difference per run and treat the run as the unit of inference (n = 3 "
 S46.006,sentence,,located,,"The mean advantage rises monotonically as noise increases (Table 21): from -0.35 h at the native noise level to +6.6 h at 10 dB, and at the two highest noise levels all three runs share the positive s"
 S46.006.n01,number,-0.35,located,,"The mean advantage rises monotonically as noise increases (Table 21): from -0.35 h at the native noise level to +6.6 h at 10 dB, and at the two highest noise levels all three runs share the positive s"
-S46.006.n02,number,6.6,located,,"The mean advantage rises monotonically as noise increases (Table 21): from -0.35 h at the native noise level to +6.6 h at 10 dB, and at the two highest noise levels all three runs share the positive s"
+S46.006.n02,number,6.6,documented,Part 4: App. D.1 '+6.6 h' -> '+6.60 h' (matches S7.3 and Table 15a),"The mean advantage rises monotonically as noise increases (Table 21): from -0.35 h at the native noise level to +6.6 h at 10 dB, and at the two highest noise levels all three runs share the positive s"
 S46.006.n03,number,10,located,,"The mean advantage rises monotonically as noise increases (Table 21): from -0.35 h at the native noise level to +6.6 h at 10 dB, and at the two highest noise levels all three runs share the positive s"
 S46.007,sentence,,located,,"The lone large negative in the table, the -7.94 h native-noise entry, is IMS test 1—the abrupt near-coincident-onset run whose degradation begins only ∼12 h before failure, the same run that violates "
 S46.007.n01,number,-7.94,located,,"The lone large negative in the table, the -7.94 h native-noise entry, is IMS test 1—the abrupt near-coincident-onset run whose degradation begins only ∼12 h before failure, the same run that violates "
@@ -1247,7 +1247,7 @@ tab:robust.cap05.n01,number,20%,located,,"Only one (c cell is materially draw-de
 tab:robust.cap05.n02,number,58.0,located,,"Only one (c cell is materially draw-dependent: Hotelling T 2 on IMS at te 20%, which ranges from 58.0 to 186.1 h over the five draws. sig Every other cell varies by less than 3.4 h on IMS and 0.37 h o"
 tab:robust.cap05.n03,number,186.1,located,,"Only one (c cell is materially draw-dependent: Hotelling T 2 on IMS at te 20%, which ranges from 58.0 to 186.1 h over the five draws. sig Every other cell varies by less than 3.4 h on IMS and 0.37 h o"
 tab:robust.cap05.n04,number,3.4,located,,"Only one (c cell is materially draw-dependent: Hotelling T 2 on IMS at te 20%, which ranges from 58.0 to 186.1 h over the five draws. sig Every other cell varies by less than 3.4 h on IMS and 0.37 h o"
-tab:robust.cap05.n05,number,0.37,located,,"Only one (c cell is materially draw-dependent: Hotelling T 2 on IMS at te 20%, which ranges from 58.0 to 186.1 h over the five draws. sig Every other cell varies by less than 3.4 h on IMS and 0.37 h o"
+tab:robust.cap05.n05,number,0.37,documented,Part 1 (Eq. 5 validity restatement): Table 4b XJTU-SY across-draw spread bound 0.37 -> 0.87 h,"Only one (c cell is materially draw-dependent: Hotelling T 2 on IMS at te 20%, which ranges from 58.0 to 186.1 h over the five draws. sig Every other cell varies by less than 3.4 h on IMS and 0.37 h o"
 tab:crossds.cap01,sentence,,located,,"Run-level sign test of aggregate vs decimate or lead time on the three multi-bearing datasets, collapsing the within-bearing sampling factors, for all eleven evaluated de- cl tectors."
 tab:crossds.cap02,sentence,,located,,Med. ∆ is the run-level median difference (h); m n+/n- count only non-zero-difference runs; S-c. marks sign Th consistency (yes-: every non-zero run negative). ‡: the three a deep sequence models need
 tab:crossds.cap02.n01,number,30,located,,Med. ∆ is the run-level median difference (h); m n+/n- count only non-zero-difference runs; S-c. marks sign Th consistency (yes-: every non-zero run negative). ‡: the three a deep sequence models need
@@ -1303,10 +1303,10 @@ tab:holm.cap04,sentence,,located,,After Holm correction every one of the forty-f
 tab:holm.cap04.n01,number,1.00,located,,After Holm correction every one of the forty-four adjusted p-values is 1.00 and no hypothesis is rejected at α = 0.05; the adjusted-p and rejection columns are therefore omitted rather than repeated f
 tab:holm.cap04.n02,number,0.05,located,,After Holm correction every one of the forty-four adjusted p-values is 1.00 and no hypothesis is rejected at α = 0.05; the adjusted-p and rejection columns are therefore omitted rather than repeated f
 tab:perbearing.cap01,sentence,,located,1.00,XJTU-SY per-bearing summary at full resolution (aggregate).
-tab:perbearing.cap02,sentence,,located,0.92,“Valid/5” counts the detectors (of five) that produce a valid alarm; “Mean valid” is the mean lead over those detectors; “Best” is the oracle maximum over the five.
+tab:perbearing.cap02,sentence,,located,1.00,“Valid/5” counts the detectors (of five) that produce a valid alarm; “Mean valid” is the mean lead over those detectors; “Best” is the oracle maximum over the five.
 tab:perbearing.cap02.n01,number,5,located,,“Valid/5” counts the detectors (of five) that produce a valid alarm; “Mean valid” is the mean lead over those detectors; “Best” is the oracle maximum over the five.
-tab:perbearing.cap03,sentence,,located,1.00,Two bearings are warned by no detector (0/5).
-tab:perbearing.cap03.n01,number,0/5,located,,Two bearings are warned by no detector (0/5).
+tab:perbearing.cap03,sentence,,located,0.67,Two bearings are warned by no detector (0/5).
+tab:perbearing.cap03.n01,number,0/5,documented,Part 1 (Eq. 5 validity restatement): Table 7 caption '(0/5)' sentence replaced by the n.s. legend; totals 6/25 and 2/5,Two bearings are warned by no detector (0/5).
 tab:gatedcontrast.cap01,sentence,,located,,"Aggregate-decimate contrast under the raw and the gated metric, on the post-N-20 reruns over all eleven detectors."
 tab:gatedcontrast.cap01.n01,number,20,located,,"Aggregate-decimate contrast under the raw and the gated metric, on the post-N-20 reruns over all eleven detectors."
 tab:gatedcontrast.cap02,sentence,,located,,“Med. ∆” is the median across detectors of each detector’s run-level median difference; n+/n-/0 counts detectors by the sign of that median; n¯eff is the mean effective sample size once zero-differenc
@@ -2507,8 +2507,8 @@ tab:perbearing.c403,table-cell,tab:perbearing,located,,Bearing1_2
 tab:perbearing.c404,table-cell,tab:perbearing,located,,Bearing1_3
 tab:perbearing.c405,table-cell,tab:perbearing,located,,Bearing1_3
 tab:perbearing.c406,table-cell,tab:perbearing,located,,Bearing1_3
-tab:perbearing.c407,table-cell,tab:perbearing,located,,Bearing1_3
-tab:perbearing.c408,table-cell,tab:perbearing,located,,Bearing1_3
+tab:perbearing.c407,table-cell,tab:perbearing,documented,Part 1 (Eq. 5 validity restatement): Bearing1_3 1.03 -> n.s. (empty pre-onset region),Bearing1_3
+tab:perbearing.c408,table-cell,tab:perbearing,documented,Part 1 (Eq. 5 validity restatement): Bearing1_3 1.03 -> n.s. (empty pre-onset region),Bearing1_3
 tab:perbearing.c409,table-cell,tab:perbearing,located,,Bearing1_4
 tab:perbearing.c410,table-cell,tab:perbearing,located,,Bearing1_4
 tab:perbearing.c411,table-cell,tab:perbearing,located,,Bearing1_4
@@ -2528,7 +2528,7 @@ tab:perbearing.c424,table-cell,tab:perbearing,located,,Bearing2_2
 tab:perbearing.c425,table-cell,tab:perbearing,located,,Bearing2_2
 tab:perbearing.c426,table-cell,tab:perbearing,located,,Bearing2_2
 tab:perbearing.c427,table-cell,tab:perbearing,located,,Bearing2_2
-tab:perbearing.c428,table-cell,tab:perbearing,located,,Bearing2_2
+tab:perbearing.c428,table-cell,tab:perbearing,documented,Part 1 (Eq. 5 validity restatement): Bearing2_2 1.08 -> n.s. (empty pre-onset region),Bearing2_2
 tab:perbearing.c429,table-cell,tab:perbearing,located,,Bearing2_3
 tab:perbearing.c430,table-cell,tab:perbearing,located,,Bearing2_3
 tab:perbearing.c431,table-cell,tab:perbearing,located,,Bearing2_3
@@ -2542,8 +2542,8 @@ tab:perbearing.c438,table-cell,tab:perbearing,located,,Bearing2_4
 tab:perbearing.c439,table-cell,tab:perbearing,located,,Bearing2_5
 tab:perbearing.c440,table-cell,tab:perbearing,located,,Bearing2_5
 tab:perbearing.c441,table-cell,tab:perbearing,located,,Bearing2_5
-tab:perbearing.c442,table-cell,tab:perbearing,located,,Bearing2_5
-tab:perbearing.c443,table-cell,tab:perbearing,located,,Bearing2_5
+tab:perbearing.c442,table-cell,tab:perbearing,documented,Part 1 (Eq. 5 validity restatement): Bearing2_5 2.30 -> n.s. (empty pre-onset region),Bearing2_5
+tab:perbearing.c443,table-cell,tab:perbearing,documented,Part 1 (Eq. 5 validity restatement): Bearing2_5 2.30 -> n.s. (empty pre-onset region),Bearing2_5
 tab:perbearing.c444,table-cell,tab:perbearing,located,,"Total (full-res, aggregate)"
 tab:perbearing.c445,table-cell,tab:perbearing,located,,Bearings with no valid detector
 tab:gatedcontrast.c446,table-cell,tab:gatedcontrast,located,,Raw lead time

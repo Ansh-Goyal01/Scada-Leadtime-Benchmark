@@ -1,15 +1,15 @@
 tab:datasets           cells= 18 numeric-tokens=  15 missing-in-PDF-float-text=0 
 tab:imsdet             cells= 66 numeric-tokens=  77 missing-in-PDF-float-text=0 
 tab:onset              cells= 15 numeric-tokens=  30 missing-in-PDF-float-text=0 
-tab:robust             cells= 50 numeric-tokens=  50 missing-in-PDF-float-text=0 
+tab:robust             cells= 50 numeric-tokens=  47 missing-in-PDF-float-text=0 
 tab:crossds            cells=135 numeric-tokens= 234 missing-in-PDF-float-text=0 
 tab:imsongc            cells= 55 numeric-tokens=  88 missing-in-PDF-float-text=0 
-tab:perbearing         cells= 52 numeric-tokens=  52 missing-in-PDF-float-text=0 
+tab:perbearing         cells= 52 numeric-tokens=  37 missing-in-PDF-float-text=0 
 tab:gatedcontrast      cells= 24 numeric-tokens=  40 missing-in-PDF-float-text=0 
 tab:tradeoff           cells= 66 numeric-tokens=  66 missing-in-PDF-float-text=0 
 tab:ablation_general   cells= 42 numeric-tokens=  42 missing-in-PDF-float-text=0 
-tab:hyperparams        cells= 47 numeric-tokens=  52 missing-in-PDF-float-text=0 
 tab:deeparch           cells= 51 numeric-tokens=  35 missing-in-PDF-float-text=0 
-tab:basestats          cells= 12 numeric-tokens=  10 missing-in-PDF-float-text=2 {'1': 2}
+tab:hyperparams        cells= 47 numeric-tokens=  52 missing-in-PDF-float-text=0 
+tab:basestats          cells= 12 numeric-tokens=  10 missing-in-PDF-float-text=3 {'1': 2, '2': 1}
 tab:d17label           cells= 80 numeric-tokens= 170 missing-in-PDF-float-text=0 
 tab:mechanism          cells= 24 numeric-tokens=  42 missing-in-PDF-float-text=0 

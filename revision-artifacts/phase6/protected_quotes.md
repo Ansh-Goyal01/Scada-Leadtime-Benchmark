@@ -8,13 +8,13 @@
 
 ## D17 -- +-1 h margin and its justification at first use
 - `resolution at which a (maintenance )?planner can act` found in: Front matter: title, abstract, keywords; Introduction
-  > Against a pre-specified ±1 h margin, the resolution at which a planner can act, the difference is equivalent to zero in all 33 cells of the three multi-bearing campaigns, none favouring decimation beyond -0.45 h; IMS is too wide to decide in 9 of 11 cells and favours aggregation beyond the margin in 2.
+  > Against a pre-specified ±1 h margin, the resolution at which a planner can act, the difference is equivalent to zero in all 33 cells of the three multi-bearing campaigns, every 95% interval lying inside ±0.6 h; IMS is too wide to decide in 9 of 11 cells, favours aggregation beyond the margin for CUSUM, and touches it for Hotelling T 2 (lower bound exactly +1.00 h).
 
 ## D18/D16 -- bounded margin; five below-zero cells; widest -0.45 h
 - `five cells have an interval` found in: Generalization to FEMTO/PRONOSTIA ($n=6$ bearings)
   > Exactly five cells have an interval lying wholly below zero—Isolation Forest on XJTU-SY, and 3σ (mean -0.21 h, [-0.45, -0.04]), LSTMAE, RMS-trend and Transformer-AD on FEMTO—and every one favours decimation by less than the ±1 h margin.
-- `-0\.45` found in: Front matter: title, abstract, keywords; Generalization to FEMTO/PRONOSTIA ($n=6$ bearings)
-  > Against a pre-specified ±1 h margin, the resolution at which a planner can act, the difference is equivalent to zero in all 33 cells of the three multi-bearing campaigns, none favouring decimation beyond -0.45 h; IMS is too wide to decide in 9 of 11 cells and favours aggregation beyond the margin in 2.
+- `-0\.45` found in: Generalization to FEMTO/PRONOSTIA ($n=6$ bearings)
+  > Exactly five cells have an interval lying wholly below zero—Isolation Forest on XJTU-SY, and 3σ (mean -0.21 h, [-0.45, -0.04]), LSTMAE, RMS-trend and Transformer-AD on FEMTO—and every one favours decimation by less than the ±1 h margin.
 
 ## D19 -- App. C both labels side by side, per-run differences, effective n
 - `report both arms side by side` found in: Appendix C: IMS Test-3 Relabeling Justification
@@ -28,7 +28,7 @@
 
 ## D3 -- deep models as rows in the trade-off table; per-threshold statement
 - `checked per threshold` found in: tab:tradeoff
-  > The three deep reconstruction models and the one-class SVM are listed so the “no valid operating point” claim can be be checked per threshold: all twelve of their entries are dag- ch gered. on en
+  > The three deep reconstruction models and the one-class al SVM are listed so the “no valid operating point” claim can al be checked per threshold: all twelve of their entries are dag- PH gered. th
 
 ## D4 -- one-class SVM in results tables; N = 44
 - `N ?= ?44` found in: Conclusion; Front matter: title, abstract, keywords; Introduction; Multiple-Comparison Correction; tab:crossds
@@ -42,12 +42,12 @@
 - `do not overtake` found in: Conclusion; Front matter: title, abstract, keywords; Minimum Training Data for Deep Anomaly Detectors
   > On these bearings deep models do not overtake the charts at any training fraction in [0.20, 0.60]; long-runway assets remain open.
 - `20 and 335` found in: Detectors; Minimum Training Data for Deep Anomaly Detectors
-  > The deep sequence models are data-starved: across bearings and training fractions the runs furnish between 20 and 335 normal training windows (median 88 at the default split).
+  > The deep sequence models are data-starved: across FEMTO bearings and training fractions the runs furnish between 20 and 335 normal training windows (median 88 at the default split), and the largest IMS run 631.
 - `2\.0-5\.5` found in: Minimum Training Data for Deep Anomaly Detectors
   > This is a statement about a data regime, not the architectures: across bearings and training fractions these runs furnish between 20 and 335 normal training windows, whereas the models carry 2.0-5.5×104 parameters, so the comparison is made where deep models are structurally disadvantaged.
 
 ## G1 -- onset-estimator bias k sigma_b/m, sigma_b/m after Algorithm 1
-- `late by approximately` found in: D.2 Single-Asset ONGC Case Study; Leakage-Free Degradation Onset
+- `late by approximately` found in: Leakage-Free Degradation Onset
   > For a degradation ramp of slope m the onset is late by approximately kσb/m, with a standard deviation of order σb/m.
 
 ## G2 -- Sec. 7.3 signal-theoretic argument; 'we claim no conservation result'
@@ -62,7 +62,7 @@
 
 ## G7 -- Data Availability enumeration of ONGC artifacts by path
 - `ongc_ ?health_ ?indicator` found in: Data and Code Availability
-  > Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradation health-indicator series in ongc_health_ indicator.csv, a single baseline-standardized scalar per 10 s timestamp aggregated over all four channels, with the run-level split, onset and failure marker
+  > Released, so that the n = 1 case study can be repeated rather than merely inspected, are the derived files behind every ONGC number in this paper (all paths relative to results/tables/): the degradation health-indicator series in ongc_health_indicator.csv, a single baseline-standardized scalar per 10 s timestamp aggregated over all four channels, with the run-level split, onset and failure markers
 
 ## G8 -- RUL-benchmarking limitation in Sec. 8
 - `Limited external benchmarking` found in: Limitations and Threats to Validity

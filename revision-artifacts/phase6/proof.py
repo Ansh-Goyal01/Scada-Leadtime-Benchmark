@@ -49,6 +49,31 @@ TEXSRC = re.sub(r"\\input\{(gen/[^}]+)\}",
                 (ROOT / "paper/files/scada_ijphm.tex").read_text(encoding="utf-8"))
 MANUAL = {r["item_id"]: r for r in csv.DictReader(open(RA / "phase6/review_decisions.csv", encoding="utf-8"))}
 
+# Final submission pass (2026-09-24), keyed by item: intentional corrections from Parts 1 and 4,
+# each with old -> new text, and two date fragments that are present but no longer tokenised.
+_EQ5 = "Part 1 (Eq. 5 validity restatement): "
+FINAL2 = {
+    "S25.002.n01": ("documented", "Part 4: Ferrara bound '+-5 min' -> '+-1 min' (post-correction max |median| 0.875 min)"),
+    "S27.012.n02": ("documented", _EQ5 + "Bearing2_2 mean-vs-oracle example (1.00 vs 1.08 h) dropped; the "
+                    "bearing is not scoreable and mean = best on every scoreable bearing"),
+    "S27.013.n01": ("documented", _EQ5 + "209/450 -> 48/230 scoreable (220 excluded)"),
+    "S27.014.n05": ("documented", _EQ5 + "'2/10 bearings' -> '2 of the 5 scoreable bearings'"),
+    "S31.004.n01": ("documented", _EQ5 + "'the other 297 of the 300 cells being genuine evaluations' -> "
+                    "fractions over n=6 bearings, or five at T=0.20 (Bearing2_2 not scoreable)"),
+    "S46.006.n02": ("documented", "Part 4: App. D.1 '+6.6 h' -> '+6.60 h' (matches S7.3 and Table 15a)"),
+    "tab:robust.cap05.n05": ("documented", _EQ5 + "Table 4b XJTU-SY across-draw spread bound 0.37 -> 0.87 h"),
+    "tab:perbearing.cap03.n01": ("documented", _EQ5 + "Table 7 caption '(0/5)' sentence replaced by the "
+                                 "n.s. legend; totals 6/25 and 2/5"),
+    "tab:perbearing.c407": ("documented", _EQ5 + "Bearing1_3 1.03 -> n.s. (empty pre-onset region)"),
+    "tab:perbearing.c408": ("documented", _EQ5 + "Bearing1_3 1.03 -> n.s. (empty pre-onset region)"),
+    "tab:perbearing.c428": ("documented", _EQ5 + "Bearing2_2 1.08 -> n.s. (empty pre-onset region)"),
+    "tab:perbearing.c442": ("documented", _EQ5 + "Bearing2_5 2.30 -> n.s. (empty pre-onset region)"),
+    "tab:perbearing.c443": ("documented", _EQ5 + "Bearing2_5 2.30 -> n.s. (empty pre-onset region)"),
+    "S40.009.n01": ("located-manual", "date '2023-11-13 03:44' present intact in Data Availability; the "
+                    "Phase 0 PDF split it across a line, so its fragments were inventoried as numbers"),
+    "S40.009.n05": ("located-manual", "fragment '11-13' of the same date, present intact (see S40.009.n01)"),
+}
+
 
 def located_num(v):
     v = v.lstrip("+").rstrip("%")
@@ -75,6 +100,8 @@ for r in before:
             pass
         elif ("num", r["group_id"].lstrip("+")) in DOCUMENTED:
             status, where = "documented", DOCUMENTED[("num", r["group_id"].lstrip("+"))]
+        elif r["item_id"] in FINAL2:
+            status, where = FINAL2[r["item_id"]]
         else:
             status = "UNLOCATED"
     elif t == "table-cell":
@@ -88,6 +115,8 @@ for r in before:
                     status, where = "documented", DOCUMENTED[("num", miss[0].lstrip("+"))]
                 elif r["group_id"] == "tab:imslead" and "operating point" in v:
                     status, where = "documented", "group heading; tau=10% stated as tau = 0.10 in the merged caption"
+                elif r["item_id"] in FINAL2:
+                    status, where = FINAL2[r["item_id"]]
                 else:
                     status, where = "UNLOCATED", "missing %s" % miss
         else:

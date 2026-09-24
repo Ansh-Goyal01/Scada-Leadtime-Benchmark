@@ -3099,3 +3099,30 @@ PDFs into the EXISTING IJPHM submission). Builder: revision-artifacts/final/make
 CITATION.cff version 1.2.0 -> 1.3.0, date 2026-09-23. v1.3.0 checked absent locally and on both
 remotes before tagging. ijphm-shorten merged into main locally (--no-ff), annotated tag v1.3.0 on
 the merge commit. NOTHING pushed.
+
+## FINAL SUBMISSION PASS (2026-09-24) -- branch main, 22 pages
+
+Commits: fe930a2 (Part 1), 7fba81b (2), e1ea46d (3), ef9088f (4), 16a2e35 (5), 0445cdf (6), then Part 7.
+- **Part 1 -- Eq. 5 validity counts.** The deferred DEC-7 restatement is now DONE. `src/eq5_validity.py`
+  applies Eq. 5 to the released files (writes `results/tables/eq5_*.csv`); `verify_tables::check_eq5`
+  re-derives every count independently (RED, 55 mismatches, on the raw `valid_alarm` column).
+  XJTU-SY 209/450 -> 48 of 230 scoreable (170 empty pre-onset + 50 no-onset excluded); Table 7
+  20/50 -> 6/25, 2/10 -> 2/5, five bearings n.s.; Table 4a all-factors 0.67/0.67/0.53/0.33 ->
+  0.62/0.62/0.54/0.38 (from new row-level `persistence_sensitivity_IMS_invariant_long.csv`, which
+  reproduces the released summary); Table 4b XJTU columns (Hotelling T2: no valid alarm on a scoreable
+  bearing); S6.10 steps 1/2 at f=20; S6.12/Fig. 6 T=0.20 over five bearings. FEMTO 211/660, Table 8
+  (44/44 re-derived), Tables 2/9/10, D.1, D.2 comply as printed. NOTE: the DEC-7 record's "strict
+  73/450" does not reproduce (strict = 48/450); the three-outcome 48/230 does.
+- **Part 2** internal IDs out of the PDF text (Table 8 caption, Data Availability x4).
+- **Part 3** abstract: +-0.6 h (max |endpoint| 0.559583); IMS Hotelling T2 lower bound is exactly
+  +1.000 h (on the margin, not beyond; d15 uses lo >= delta) -> abstract names CUSUM beyond, Hotelling
+  touching; S6.6 sentence added.
+- **Part 4** 12 factual corrections, verified (check_factual_corrections).
+- **Part 5** email 5500 restored (never deliberately changed); bib braced; figures in one style
+  (`paper/fig_style.py`: STIX, fonttype 42, table names; Figs 1 and 6 now vector); appendix layout:
+  deeparch now Table 11, protocol/compute Table 12, Tables 11-13 on p20.
+- **Part 6** letter: new disclosure 9, items renumbered to 13, 14 edits (`final2/letter_changes.md`).
+- **Part 7** 22 pp, 0 undefined, 0 overfull; all pages rendered; verify_tables 1039 OK; tests 181,
+  180 pass, 1 known environmental failure (MetroPT real CSV); negative tests 9/9 + 3/3 RED; inventory
+  proof 0 unlocated (13 documented Part 1/4 corrections, 2 date fragments located manually).
+  v1.3.0 recreated on the final commit (never pushed). Nothing pushed.

@@ -4,20 +4,31 @@
 |---|---|---|---|---|
 | sentence | 585 (+40 manual) | 0 | 0 | 0 |
 | claim | 688 (+0 manual) | 0 | 0 | 0 |
-| number | 784 (+0 manual) | 5 | 0 | 0 |
-| table-cell | 819 (+4 manual) | 52 | 0 | 0 |
+| number | 774 (+2 manual) | 13 | 0 | 0 |
+| table-cell | 814 (+4 manual) | 57 | 0 | 0 |
 | citation | 58 (+0 manual) | 0 | 0 | 0 |
 
 ## UNLOCATED (0)
 
 
-## Documented changes (57)
+## Documented changes (70)
 
 - 1 x test count corrected to the measured suite (final pass Part 3): pytest --collect-only = 181 -> 'a 181-test suite'
+- 1 x Part 4: Ferrara bound '+-5 min' -> '+-1 min' (post-correction max |median| 0.875 min)
+- 1 x Part 1 (Eq. 5 validity restatement): Bearing2_2 mean-vs-oracle example (1.00 vs 1.08 h) dropped; the bearing is not scoreable and mean = best on every scoreable bearing
+- 1 x Part 1 (Eq. 5 validity restatement): 209/450 -> 48/230 scoreable (220 excluded)
+- 1 x Part 1 (Eq. 5 validity restatement): '2/10 bearings' -> '2 of the 5 scoreable bearings'
+- 1 x Part 1 (Eq. 5 validity restatement): 'the other 297 of the 300 cells being genuine evaluations' -> fractions over n=6 bearings, or five at T=0.20 (Bearing2_2 not scoreable)
 - 1 x ONGC corrected to the data (n20_rerun_long_ONGC.csv, factor 1): '34-35 h' became '30-35 h (seven within 34.9-35.3 h, CUSUM 33.9, Hotelling 30.4)'
+- 1 x Part 4: App. D.1 '+6.6 h' -> '+6.60 h' (matches S7.3 and Table 15a)
 - 5 x N-29 double rounding corrected to 75.6 (source 75.6469 h)
+- 1 x Part 1 (Eq. 5 validity restatement): Table 4b XJTU-SY across-draw spread bound 0.37 -> 0.87 h
+- 1 x Part 1 (Eq. 5 validity restatement): Table 7 caption '(0/5)' sentence replaced by the n.s. legend; totals 6/25 and 2/5
 - 1 x N-29 double rounding corrected to 180.2 (source 180.2496 h)
 - 49 x sign-consistency verdict now encoded as the s-superscript on n+/n- (verify_tables checks it)
+- 2 x Part 1 (Eq. 5 validity restatement): Bearing1_3 1.03 -> n.s. (empty pre-onset region)
+- 1 x Part 1 (Eq. 5 validity restatement): Bearing2_2 1.08 -> n.s. (empty pre-onset region)
+- 2 x Part 1 (Eq. 5 validity restatement): Bearing2_5 2.30 -> n.s. (empty pre-onset region)
 
 ## Manual review queue (0)
 

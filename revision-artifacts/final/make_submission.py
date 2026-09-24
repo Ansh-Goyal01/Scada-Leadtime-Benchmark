@@ -68,7 +68,8 @@ def main(scratch):
         print("%-28s %2d pages %8d bytes" % (f.name, len(r.pages), f.stat().st_size))
         if f == target:
             assert "FOR THE AUTHOR" not in text
-            for s in ("v1.3.0", "906", "181", "22 pages", "only Hotelling T"):
+            for s in ("v1.3.0", "1039", "181", "22 pages", "only Hotelling T",
+                      "Validity counts included alarms the gate could not evaluate", "48 of 230"):
                 assert s in text, s
 
 
