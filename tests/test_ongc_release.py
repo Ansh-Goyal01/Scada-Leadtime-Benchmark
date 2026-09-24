@@ -1,8 +1,8 @@
 """The released ONGC artifacts must let a reader reproduce the paper's onset WITHOUT
 the proprietary data, and must not leak anything the NDA covers.
 
-Reviewer D's only reproducibility reservation was that one dataset could not be used to
-repeat the tests. These tests are the standing check that the released substitute
+The ONGC record is proprietary, so a reader cannot rerun the case study from the raw data.
+These tests are the standing check that the released substitute
 actually works and stays within the disclosure boundary.
 """
 

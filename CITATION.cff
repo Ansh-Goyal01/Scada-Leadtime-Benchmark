@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
 title: >-
   A Latch-On-Resistant, False-Alarm-Gated Lead-Time Metric for Bearing
-  Anomaly Detection - and What It Reveals About SCADA-Rate Logging
+  Anomaly Detection — and What It Reveals About SCADA-Rate Logging
 type: software
 authors:
   - given-names: Ansh
@@ -12,20 +12,18 @@ authors:
     # orcid: "https://orcid.org/0000-0000-0000-0000"  # add your ORCID, then uncomment
 repository-code: "https://github.com/Ansh-Goyal01/Scada-Leadtime-Benchmark"
 abstract: >-
-  A reproducible benchmark that makes lead time, gated by a leakage-free
-  false-alarm rate, the primary metric for evaluating rolling-element bearing
-  anomaly detectors, and uses it to test whether SCADA-rate bin-averaging
-  destroys detection lead time. Five datasets are used: four inferential
-  run-to-failure campaigns - XJTU-SY (n=10), FEMTO/PRONOSTIA (n=6), University
-  of Ferrara (n=6) and NASA IMS (n=3) - together with a single-asset
-  real-historian case study on an ONGC gas-turbine SCADA record (n=1,
-  descriptive only; no inferential claim depends on it). With run-level
-  statistics and Holm correction, the headline finding is non-destruction:
-  coarse SCADA-rate logging does not cost bearing-fault warning time. The
-  archive ships the full harness, the derived result tables under
-  results/tables/, and the derived ONGC artifacts; the ONGC raw waveforms,
-  channel-level measurements and asset identifiers are proprietary and are not
-  included.
+  Code, result files and manuscript source accompanying the IJPHM manuscript
+  'A Latch-On-Resistant, False-Alarm-Gated Lead-Time Metric for Bearing
+  Anomaly Detection — and What It Reveals About SCADA-Rate Logging'. The
+  benchmark scores bearing anomaly detectors by lead time gated on a pre-onset
+  false-alarm budget, and tests whether a SCADA historian's bin-averaged
+  logging changes warning time relative to decimation, across four
+  run-to-failure datasets (XJTU-SY, FEMTO/PRONOSTIA, University of Ferrara,
+  NASA IMS) and one industrial case study. On the three multi-bearing
+  campaigns the aggregate-minus-decimate difference is equivalent to zero
+  within a pre-specified ±1 h margin; because those bearings are short-lived,
+  the result bounds the effect at the scale of minutes. Every table and figure
+  is generated from results/tables/ and checked by paper/verify_tables.py.
 keywords:
   - predictive maintenance
   - prognostics and health management
@@ -37,5 +35,5 @@ keywords:
   - conformal prediction
   - statistical process control
 license: MIT
-version: 1.3.1
+version: 1.3.2
 date-released: "2026-09-24"

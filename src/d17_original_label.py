@@ -2,9 +2,9 @@
 """
 Reviewer D item D17 (register 1.4) -- the IMS sweep under the ORIGINAL test-3 label.
 
-Reviewer D: "The IMS test-3 failure relabel is author-chosen and affects one of the
-three runs carrying the paper's only directional trend; results under the original
-label should be shown."
+The corrected test-3 failure label is the author's relabeling (Appendix C), and test 3
+is one of the three IMS runs behind the directional trend, so this script also reports
+the full sweep under the original label.
 
 This reruns the full IMS controlled sweep -- all ten detectors -- with 3rd_test's
 failure time set back to the original 2004-04-08 09:16, and reports it beside the

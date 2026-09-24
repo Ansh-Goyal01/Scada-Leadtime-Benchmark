@@ -1,7 +1,7 @@
 # src/d15_equivalence.py
 """
-Reviewer D item D15 (register 1.2) -- equivalence evidence for the "does not cost
-warning time" claim, which is currently a null-acceptance argument.
+Reviewer D item D15 (register 1.2) -- equivalence evidence for the aggregate-vs-decimate
+headline: a margin-based test instead of reading a non-significant difference as no effect.
 
 Margin: delta = 1 hour, pre-specified on operational grounds (a maintenance planner
 cannot act on sub-hour differences in warning time -- mobilising a crew, ordering

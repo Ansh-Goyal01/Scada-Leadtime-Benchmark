@@ -2,8 +2,8 @@
 """
 Export the derived ONGC artifacts that the paper cites, for release under the NDA.
 
-Reviewer D's only reproducibility reservation was that one dataset could not be used to
-repeat the tests. The ONGC raw waveforms and channel-level measurements are proprietary
+The ONGC record is proprietary, so a reader cannot rerun its case study from the raw data.
+The ONGC raw waveforms and channel-level measurements are proprietary
 and stay unreleased; what a reader actually needs to check the n=1 case study is the
 DERIVED health-indicator series that fixes the degradation onset, plus the onset/failure
 markers. Every other ONGC number the paper cites already ships in results/tables/

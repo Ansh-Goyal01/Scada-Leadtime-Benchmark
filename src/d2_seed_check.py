@@ -4,8 +4,9 @@ Robustness check on the ONE cell that carries defect N-16.
 
 D2 (see src/d2_deep_tradeoff.py) found exactly one valid operating point in the whole
 deep-model threshold sweep: LSTM-AE, 3rd_test, 99.5th percentile -- FAR_pre 4.19%,
-lead 59.67 h, valid_alarm True. That single cell is what refutes tex:275's
-"regardless of threshold". Because the deep detectors are stochastic, this script
+lead 59.67 h, valid_alarm True. That single cell refutes the submitted claim that the deep
+models have no valid operating point at any threshold. Because the deep detectors are
+stochastic, this script
 re-runs that one cell across several seeds and reports how often a valid operating
 point appears and how far the pre-onset FAR moves.
 

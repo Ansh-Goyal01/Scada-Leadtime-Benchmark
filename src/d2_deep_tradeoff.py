@@ -3,8 +3,8 @@
 Reviewer D item D2 (register 1.3 / 0.2) — deep reconstruction models in the IMS
 threshold sweep that produced Table 16 (``tab:tradeoff``).
 
-Section 6.1 asserts that LSTM-AE, TCN-AE and Transformer-AD have no valid operating
-point "regardless of threshold", yet all three are absent from Table 16. This script
+The submitted Section 6.1 stated that LSTM-AE, TCN-AE and Transformer-AD have no valid
+operating point at any threshold, but the sweep behind Table 16 did not include them. This script
 runs exactly the same sweep that produced Table 16 -- ``src.tradeoff.tradeoff_for_run``,
 unmodified -- for the three deep models at the 95th, 99th and 99.5th percentiles, so
 the assertion becomes evidence.
@@ -131,7 +131,7 @@ def main():
 
     # The decisive question for Section 6.1.
     valid = agg[agg["valid_frac"] > 0]
-    print("\n=== D2: verdict on Section 6.1's 'regardless of threshold' ===")
+    print("\n=== D2: does any deep model have a valid operating point in the sweep? ===")
     if valid.empty:
         print("NO deep model attains a valid alarm at any percentile tested. "
               "Section 6.1's claim is SUPPORTED by this evidence.")
