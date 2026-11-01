@@ -247,3 +247,21 @@ manuscript is generated from them:
   not (`aggregate` at `factor > 1`).
 
 See `superseded/README.md` for arms moved out of the way.
+
+## ONGC data-availability release (moved here from the manuscript, Round 2)
+
+The manuscript's Data and Code Availability section points here for the
+file-by-file list. Every ONGC number in the paper is backed by these derived
+files (paths relative to `results/tables/`); the raw waveforms, channel-level
+measurements and asset identifiers are withheld under the NDA.
+
+| File | What it holds |
+|------|---------------|
+| `ongc_health_indicator.csv` | degradation health-indicator series: one baseline-standardized scalar per 10 s timestamp, aggregated over all four channels |
+| `ongc_onset_markers.csv` | run-level split, onset and failure markers; with the file above, recomputes the published onset 2023-11-13 03:44 (asserted by the test suite) |
+| `n20_rerun_long_ONGC.csv` | per-detector lead time and pre-onset FAR with the full sampling sweep (2 modes x 5 factors x 11 detectors, 110 rows) |
+| `benchmark_ONGC_aggregate_n20.csv`, `benchmark_ONGC_leadtime_ci_n20.csv` | aggregated and interval forms of the sweep |
+| `n20_ongc_minutes.csv` | per-detector ONGC median differences of the IMS/ONGC run-level table (`new_min`) |
+| `benchmark_ONGC_paired_test_n20.csv` | paired-test outputs |
+| `calibration_ONGC.csv`, `calibration_ONGC_pooled.csv` | conformal calibration series behind Figure 4d |
+| `rg3_rerun_long_ONGC_rms_kurt.csv`, `rg3_rerun_long_ONGC_pca1.csv` | onset reruns under the decoupled health indicators; computed before the aggregation bin width was corrected and retained as provenance for the indicator comparison, which compares indicators within one arm and so does not depend on that correction; the aggregate-vs-decimate contrast is taken from the corrected files above |

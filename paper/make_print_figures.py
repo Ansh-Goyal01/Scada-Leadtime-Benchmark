@@ -40,7 +40,7 @@ COLORS = PLOT["method_colors"]
 fig_style.apply(FONT_PT)
 plt.rcParams.update({"font.size": FONT_PT, "axes.labelsize": FONT_PT, "axes.titlesize": FONT_PT + 0.5,
                      "xtick.labelsize": FONT_PT - 0.5, "ytick.labelsize": FONT_PT - 0.5,
-                     "legend.fontsize": FONT_PT - 1, "pdf.fonttype": 42})
+                     "legend.fontsize": FONT_PT, "pdf.fonttype": 42})
 
 
 def _need_colours(names, what):

@@ -69,7 +69,7 @@ def fig_rms_degradation():
     ax.set_xlabel("Time")
     ax.set_ylabel("Health indicator $h(t)$ (mean RMS)")
     # No in-plot title (D13/D16): the LaTeX caption carries it - IJPHM house style.
-    ax.legend(fontsize=6, loc="upper left", handlelength=1.8)
+    ax.legend(fontsize=7.5, loc="upper left", handlelength=1.8)
     ax.grid(alpha=0.3, lw=0.4)
     ax.tick_params(length=2, pad=1.5)
     fig.autofmt_xdate()
@@ -220,7 +220,7 @@ def fig_training_sweep():
     }
     # Table names from fig_style; drawn at print size (\columnwidth) as vector PDF.
     fig_style.apply(7, **{"axes.linewidth": 0.6})
-    fig, ax = plt.subplots(figsize=(fig_style.COLUMN_WIDTH_IN, 1.9))
+    fig, ax = plt.subplots(figsize=(fig_style.COLUMN_WIDTH_IN, 2.4))
     for sn, (fam, color) in families.items():
         sub = df[df.short_name == sn].sort_values("train_fraction")
         if sub.empty:
@@ -251,11 +251,13 @@ def fig_training_sweep():
     ax.set_ylim(-0.02, 1.25)   # headroom so the legend clears the annotation
     ax.set_xticks([0.2, 0.3, 0.4, 0.5, 0.6])
     # No in-plot title: the LaTeX caption carries it (IJPHM house style).
-    ax.legend(fontsize=5.5, ncol=3, loc="upper right", handlelength=2.2, columnspacing=0.8,
-              borderpad=0.3, labelspacing=0.25)
+    # R2 (Reviewer B): legend text raised to 7.5 pt and moved below the axes so the
+    # larger text cannot collide with the series or the annotations.
+    ax.legend(fontsize=7.5, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.27),
+              handlelength=2.2, columnspacing=0.8, borderpad=0.3, labelspacing=0.25, frameon=False)
     ax.grid(alpha=0.3, lw=0.4)
     ax.tick_params(length=2, pad=1.5)
-    fig.tight_layout(pad=0.3)
+    fig.tight_layout(pad=0.3, rect=(0, 0.25, 1, 1))
     out = os.path.join(FILES, "fig_mintrain.pdf")
     fig.savefig(out)
     plt.close(fig)

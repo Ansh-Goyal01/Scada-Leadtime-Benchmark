@@ -654,6 +654,42 @@ def _tradeoff_src():
     return src
 
 
+SWEEP_LONG = ("tradeoff_IMS_long.csv", "tradeoff_IMS_deepmodels_long.csv", "d3_ocsvm_tradeoff_long.csv")
+
+
+def _sweep_long_rows():
+    rows = []
+    for fn in SWEEP_LONG:
+        rows += [r for r in load(fn) if r.get("dataset", "IMS") == "IMS"
+                 and float(r["percentile"]) in (95.0, 99.0, 99.5)]
+    return rows
+
+
+def _valid_runs_rederived():
+    """R2-B2: per-run Eq. 5 counts re-derived from the per-run sweep, NOT from the r2 file,
+    then cross-checked against r2_valid_runs_IMS.csv so the two cannot drift."""
+    per = {}
+    for r in _sweep_long_rows():
+        k = key_of(r["method"])
+        for tau in (5.0, 10.0, 20.0):
+            ok = float(r["lead_time_hours"]) > 0 and r["far_preonset_pct"] != "" \
+                and float(r["far_preonset_pct"]) <= tau
+            per.setdefault((k, tau, float(r["percentile"])), set())
+            if ok:
+                per[(k, tau, float(r["percentile"]))].add(r["run"])
+    best = {}
+    for (k, tau, _), runs in per.items():
+        best[(k, tau)] = max(best.get((k, tau), 0), len(runs))
+    short = {"three_sigma": "3sigma", "ewma": "ewma", "cusum": "cusum", "hotelling_t2": "hotelling",
+             "isolation_forest": "isoforest", "deep_svdd": "deepsvdd", "one_class_svm": "ocsvm",
+             "rms_trend": "rmstrend", "lstm_ae": "lstmae", "tcn": "tcnae", "transformer_ad": "transformerad"}
+    for r in load("r2_valid_runs_IMS.csv"):
+        key = (short[r["short_name"]], float(r["tau_pct"]))
+        if best[key] != int(r["best_over_thresholds"]):
+            raise AssertionError(("r2_valid_runs_IMS.csv drifted from the sweep", key))
+    return best
+
+
 def check_imsdet(bad):
     """tab:imsdet (old Tables 2, 12 and 15): raw lead + CI, PH, L at tau=.05/.10/.20 for all
     eleven IMS detectors. PH and L are ALSO re-derived from the threshold sweep, so the
@@ -661,8 +697,9 @@ def check_imsdet(bad):
     lead, trade = _imslead_src(), _tradeoff_src()
     d9 = {key_of(r["method"]): r for r in load("d9_tables_14_22_eleven.csv")}
     n, order = 0, []
+    vr = _valid_runs_rederived()
     for cells in rows_of("tab:imsdet"):
-        if len(cells) != 7 or key_of(cells[0]) is None:
+        if len(cells) != 8 or key_of(cells[0]) is None:
             continue
         k = key_of(cells[0])
         tag, ld, r = "T2 %s" % k, lead[k], d9[k]
@@ -685,6 +722,9 @@ def check_imsdet(bad):
             if abs((max(ok) if ok else 0.0) - float(r[col])) > 1e-9:
                 bad.append((tag + " L tau=%d%% re-derivation" % tau, r[col], max(ok) if ok else 0.0))
             n += 1
+        if plain(cells[7]) != str(vr[(k, 10.0)]):
+            bad.append((tag + " V/3 per-run count", plain(cells[7]), vr[(k, 10.0)]))
+        n += 1
         if ("dagger" in cells[0]) != (float(r["L_tau10_h"]) == 0.0):
             bad.append((tag + " dagger iff no valid point at tau=0.10", cells[0], r["L_tau10_h"]))
         n += 1
@@ -1086,7 +1126,9 @@ def check_eq5(bad):
             runs.setdefault(r["factor"], set()).add(r["run"])
     need(len(runs["20"]) == 2 and all(len(runs[f]) == 3 for f in ("1", "2", "5", "10")),
          "S6.10 steps of 1/3, 1/2 at f=20")
-    need("steps of 1/3 (1/2 at $f=20$" in body, "S6.10 sentence")
+    # R2 (Reviewer B, density): the step-size detail was condensed to the conclusion it supports
+    need("at $f \\ge 5$ too few windows survive per run to resolve the comparison at $n=3$" in body,
+         "S6.10 sentence")
 
     # --- Section 6.12 / Figure 6: training sweep
     ts = load("femto_training_sweep_long.csv")
@@ -1174,8 +1216,10 @@ def check_equivalence_wording(bad):
     need(float(ho["ci_lo_h"]) == 1.0, "IMS Hotelling T2 lower bound exactly +1 h", ho["ci_lo_h"])
     need(len(ims) == 9 and all(float(r["ci_lo_h"]) < 1.0 < float(r["ci_hi_h"]) for r in ims.values()),
          "IMS nine intervals straddle the margin")
-    need("too wide to decide in 9 of 11 cells, favours aggregation beyond the margin for CUSUM" in abstract,
-         "abstract IMS sentence")
+    # R2 Reviewer A item 1: the abstract states only the 9-of-11 count; the two IMS margin
+    # verdicts (CUSUM, Hotelling T2) stay in Section 6.6 and must not reappear in the abstract.
+    need("on IMS ($n=3$) the intervals are too wide to decide in 9 of 11 cells, and the other two are descriptive only." in abstract
+         and "CUSUM" not in abstract and "exactly $+1.00$" not in abstract, "abstract IMS sentence (R2 A-1)")
     frag = ("CUSUM's lies wholly above it ([$%+.2f$, $%+.2f$]~h)" % (float(cu["ci_lo_h"]), float(cu["ci_hi_h"])),
             "sits exactly on it ([$%+.2f$, $%+.2f$]~h)" % (float(ho["ci_lo_h"]), float(ho["ci_hi_h"])))
     for f in frag:
@@ -1224,6 +1268,65 @@ def check_factual_corrections(bad):
     return n
 
 
+# ------------------------------------------------------------ round-2 review additions
+def check_round2(bad):
+    n = 0
+    body = tex_source()
+    abstract = body[body.find(BS + "begin{abstract}"):body.find(BS + "end{abstract}")]
+
+    def need(cond, label, printed="", expected=""):
+        nonlocal n
+        n += 1
+        if not cond:
+            bad.append(("R2: " + label, printed, expected))
+
+    # A-4: 3sigma persistence range in the abstract, re-derived from the Table 4(a) source
+    med = [float(r["median_agg_minus_dec_h"]) for r in load("persistence_sensitivity_IMS_invariant.csv")
+           if r["detector"] == "three_sigma" and r["persistence"] in ("1", "3", "5", "10")]
+    dflt = [float(r["median_agg_minus_dec_h"]) for r in load("persistence_sensitivity_IMS_invariant.csv")
+            if r["detector"] == "three_sigma" and r["persistence"] == "3"]
+    need(len(med) == 4 and (round(min(med), 1), round(max(med), 1)) == (3.8, 15.1) and round(dflt[0], 1) == 15.1
+         and "($3\\sigma$ $+15.1$~h at the default persistence; 3.8--15.1~h across settings)" in abstract,
+         "A-4 abstract persistence qualifier", str(med))
+    # A-3: five of ten XJTU-SY bearings not scoreable at full resolution (4 empty pre-onset, 1 no onset)
+    ns = re.findall(r"n\.s\.\$\^([ab])\$", body[body.find("label{tab:perbearing}"):][:2500])
+    need(len(ns) == 5 and ns.count("b") == 4 and ns.count("a") == 1
+         and "five of the ten XJTU-SY bearings are not scoreable at full resolution, four because the onset "
+             "precedes the first scored window and one with no detectable onset" in body,
+         "A-3 Section 8 scoreability sentence", str(ns))
+    # B-3: margin sensitivity prose
+    ms = {float(r["delta_h"]): r for r in load("r2_margin_sensitivity.csv")}
+    eqn = {d: int(ms[d]["n_equivalent"]) for d in ms}
+    need((eqn[0.56], eqn[0.5], eqn[0.25], eqn[0.1]) == (33, 31, 20, 14)
+         and "all 33 cells remain equivalent down to $\\delta=0.56$~h, 31 at $\\delta=0.5$~h, 20 at 0.25~h "
+             "and 14 at 0.1~h" in body, "B-3 tighter-margin counts", str(eqn))
+    need(all(int(ms[d]["n_decimate_superior_beyond"]) == 0 for d in ms if d >= 0.05)
+         and abs(float(ms[1.0]["min_upper_of_negative_cis_h"])) < 0.05
+         and "at any margin of 0.05~h or more" in body, "B-3 no decimation superiority at delta >= 0.05 h")
+    # B-2: per-run claims of Section 6.1
+    per = {}
+    for r in _sweep_long_rows():
+        if float(r["lead_time_hours"]) > 0 and float(r["far_preonset_pct"]) <= 10.0:
+            per.setdefault((key_of(r["method"]), float(r["percentile"])), set()).add(r["run"])
+    five = ("3sigma", "ewma", "cusum", "hotelling", "isoforest")
+    need(all(per.get((k, pc), set()) == {"2nd_test", "3rd_test"} for k in five for pc in (95.0, 99.0, 99.5))
+         and "are each valid on tests~2 and~3 and invalid on test~1 at all three thresholds" in body,
+         "B-2 five classical charts valid on tests 2,3 only")
+    need(all(len(per.get((k, pc), set())) <= 1 for k in ("lstmae", "tcnae", "transformerad", "ocsvm")
+             for pc in (95.0, 99.0, 99.5)), "B-2 deep models and OC-SVM valid on at most one run")
+    # B-2: Table 8 exclusion counts in the caption
+    g = [r for r in load(GATED_SOURCE) if r["metric"] == "gated_D7"]
+    exc = {}
+    for r in g:
+        exc.setdefault(r["dataset"], set()).add((int(r["n_runs_excluded_unscoreable"]), int(r["n_runs_with_lead"])))
+    need(exc["XJTU-SY"] == {(3, 10), (1, 3)} and exc["Ferrara"] == {(1, 6)}
+         and exc["FEMTO"] == {(0, 6)} and exc["IMS"] == {(0, 3)}
+         and "(XJTU-SY 3 of 10 runs, 1 of 3 for the sequence models; Ferrara 1 of 6; none on FEMTO or IMS)"
+             in body + open(TEX.parent / "gen" / "tab_gatedcontrast.tex", encoding="utf-8").read(),
+         "B-2 Table 8 unscoreable-run exclusions", str(exc))
+    return n
+
+
 CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("Table 19 label contrast", check_d17label),
           ("Table 4b gap injection", check_gap),
@@ -1241,7 +1344,8 @@ CHECKS = [("Table imsdet (old 2/12/15)", check_imsdet),
           ("N-20 invariance rule", check_n20_rule),
           ("Eq. 5 validity counts", check_eq5),
           ("Abstract equivalence", check_equivalence_wording),
-          ("Part 4 factual fixes", check_factual_corrections)]
+          ("Part 4 factual fixes", check_factual_corrections),
+          ("Round-2 review additions", check_round2)]
 
 def run(verbose=True):
     bad, total = [], 0
