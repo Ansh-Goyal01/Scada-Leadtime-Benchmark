@@ -1126,7 +1126,9 @@ def check_eq5(bad):
             runs.setdefault(r["factor"], set()).add(r["run"])
     need(len(runs["20"]) == 2 and all(len(runs[f]) == 3 for f in ("1", "2", "5", "10")),
          "S6.10 steps of 1/3, 1/2 at f=20")
-    need("steps of 1/3 (1/2 at $f=20$" in body, "S6.10 sentence")
+    # R2 (Reviewer B, density): the step-size detail was condensed to the conclusion it supports
+    need("at $f \\ge 5$ too few windows survive per run to resolve the comparison at $n=3$" in body,
+         "S6.10 sentence")
 
     # --- Section 6.12 / Figure 6: training sweep
     ts = load("femto_training_sweep_long.csv")
