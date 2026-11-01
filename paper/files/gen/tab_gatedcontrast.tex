@@ -1,6 +1,6 @@
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%$ pre-onset FAR) metric, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped.}
+	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%$ pre-onset FAR) metric, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped. Gated lead of a (run, factor) cell: the lead if the alarm is valid (Eq.~\ref{eq:valid}), 0 if the cell is scoreable but invalid, undefined if unscoreable. Unscoreable cells are dropped before averaging over factors, and a run unscoreable at every factor is excluded (XJTU-SY 3 of 10 runs, 1 of 3 for the sequence models; Ferrara 1 of 6; none on FEMTO or IMS); a run invalid under both mechanisms has zero difference and drops out of the sign test as a tie.}
 	\label{tab:gatedcontrast}
 	\setlength{\tabcolsep}{3pt}
 	\begin{tabular}{l r c r | r c r}

@@ -122,11 +122,11 @@ def tab_crossds(src, holm):
         rows.append(r"\hline")
     assert widest < 0.6, widest
     write("tab_crossds", r"""
-\begin{table}[t] \footnotesize
+\begin{table}[t] \small
 	\begin{center}
 	\caption{Run-level aggregate$-$decimate lead-time contrast on the three multi-bearing campaigns, collapsing the five sampling factors to one difference per run. Med., Mean: run-level median and mean difference (h), with the 95\%% bootstrap CI over runs; $n_+/n_-$: non-zero runs ($^{\mathrm{s}}$: all of one sign); $p$: exact two-sided sign test. $^\ddagger$: length-30 sequence models, $n=3$ on XJTU-SY. Equivalent at $\delta=1$~h when the CI lies inside $[-\delta,+\delta]$: all 33 cells. Holm over $N=44$ (these 33 tests and the eleven IMS tests of Table~\ref{tab:imsongc}): every adjusted $p$ is 1.00. IMS and ONGC are outside the equivalence family.}
 	\label{tab:crossds}
-	\setlength{\tabcolsep}{2.5pt}
+	\setlength{\tabcolsep}{1.5pt}
 	\begin{tabular}{l r r c r}
 		\hline \hline
 		\textbf{Detector} & \textbf{Med.} & \textbf{Mean [95\%% CI]} & $n_+/n_-$ & $p$ \\
@@ -197,7 +197,7 @@ def tab_gated():
     write("tab_gatedcontrast", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%%$ pre-onset FAR) metric, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped.}
+	\caption{Aggregate$-$decimate contrast under the raw and the gated ($\tau=10\%%$ pre-onset FAR) metric, all eleven detectors. Med.: median across detectors of each detector's run-level median difference (h); $n_+/n_-/0$: detectors by the sign of that median; $\bar{n}_{\text{eff}}$: mean effective sample size once zero-difference runs are dropped. Gated lead of a (run, factor) cell: the lead if the alarm is valid (Eq.~\ref{eq:valid}), 0 if the cell is scoreable but invalid, undefined if unscoreable. Unscoreable cells are dropped before averaging over factors, and a run unscoreable at every factor is excluded (XJTU-SY 3 of 10 runs, 1 of 3 for the sequence models; Ferrara 1 of 6; none on FEMTO or IMS); a run invalid under both mechanisms has zero difference and drops out of the sign test as a tie.}
 	\label{tab:gatedcontrast}
 	\setlength{\tabcolsep}{3pt}
 	\begin{tabular}{l r c r | r c r}
@@ -242,7 +242,17 @@ def tradeoff_source():
     return src
 
 
+def valid_runs_source():
+    """R2-B2: runs (of 3) valid under Eq. 5 at tau = 10 %, best over the three thresholds."""
+    out = {}
+    for r in vt.load("r2_valid_runs_IMS.csv"):
+        if float(r["tau_pct"]) == 10.0:
+            out[D9_KEY[r["short_name"]]] = int(r["best_over_thresholds"])
+    return out
+
+
 def tab_imsdet():
+    vr = valid_runs_source()
     d9 = sorted(vt.load("d9_tables_14_22_eleven.csv"), key=lambda r: int(r["PH_rank"]))
     lead, trade = imslead_source(), tradeoff_source()
     assert len(d9) == 11 and set(lead) == set(DET_ORDER), sorted(lead)
@@ -261,22 +271,22 @@ def tab_imsdet():
         if k == "rmstrend":
             name += r"$^\ast$"
         ld = lead[k]
-        rows.append(r"%s & %.1f & [%.1f, %.1f] & %.1f & %.1f & %.1f & %.1f \\" % (
+        rows.append(r"%s & %.1f & [%.1f, %.1f] & %.1f & %.1f & %.1f & %.1f & %d \\" % (
             name, float(ld["lead_time_hours_mean"]), float(ld["lead_time_hours_lo"]),
             float(ld["lead_time_hours_hi"]), float(r["PH_h"]), float(r["L_tau05_h"]),
-            float(r["L_tau10_h"]), float(r["L_tau20_h"])))
+            float(r["L_tau10_h"]), float(r["L_tau20_h"]), vr[k]))
     lorder = sorted((r for r in d9 if float(r["L_tau10_h"]) > 0), key=lambda r: int(r["L_rank"]))
     assert [D9_KEY[r["short_name"]] for r in lorder] == ["3sigma", "rmstrend", "deepsvdd"]
     assert int(next(r for r in d9 if r["short_name"] == "three_sigma")["PH_rank"]) == 8
     write("tab_imsdet", r"""
 \begin{table}[t] \footnotesize
 	\begin{center}
-	\caption{IMS, all eleven detectors in prognostic-horizon order (PH rank 1--11). Raw: mean ungated lead (h) at full resolution and the default 97.5th-percentile threshold, with 95\%% bootstrap CI over the $n=3$ runs. PH: best raw lead over the 95th, 99th and 99.5th percentiles. $L_\tau$: best lead at an operating point whose pre-onset FAR, \emph{averaged across the three runs}, is within $\tau$ (0.0 = none). $^\dagger$: no valid operating point at $\tau=0.10$. Gated order at $\tau=0.10$: $3\sigma$, RMS-trend, Deep SVDD, then eight tied at 0. $^\ast$: valid only at the loosest threshold and on one of three runs.}
+	\caption{IMS, all eleven detectors in order of best raw lead (rank 1--11). Raw: mean ungated lead (h) at full resolution and the default 97.5th-percentile threshold, with 95\%% bootstrap CI over the $n=3$ runs. Best: best raw lead over the 95th, 99th and 99.5th percentiles. $L_\tau$ (across-run reading, Section~\ref{sec:metric}): best mean lead at an operating point whose pre-onset FAR, \emph{averaged across the three runs}, is within $\tau$ (0.0 = none). V/3 (per-run reading): runs valid under Eq.~(\ref{eq:valid}) at $\tau=0.10$, at the best of the three thresholds; identical at $\tau=0.05$, and at $\tau=0.20$ except RMS-trend (2/3). $^\dagger$: no valid operating point at $\tau=0.10$ under the across-run reading. Gated order at $\tau=0.10$ (across-run): $3\sigma$, RMS-trend, Deep SVDD, then eight tied at 0. $^\ast$: its $L_\tau$ is the three-run mean at the 95th percentile and is carried by test~1, which fails Eq.~(\ref{eq:valid}) there for $\tau \le 0.10$; per run it is valid on test~3 only.}
 	\label{tab:imsdet}
 	\setlength{\tabcolsep}{2pt}
-	\begin{tabular}{l r c r r r r}
+	\begin{tabular}{l r c r r r r c}
 		\hline \hline
-		\textbf{Detector} & \textbf{Raw} & \textbf{95\%% CI} & \textbf{PH} & $L_{0.05}$ & $L_{0.10}$ & $L_{0.20}$ \\
+		\textbf{Detector} & \textbf{Raw} & \textbf{95\%% CI} & \textbf{Best} & $L_{0.05}$ & $L_{0.10}$ & $L_{0.20}$ & \textbf{V/3} \\
 		\hline
 %s
 		\hline \hline
@@ -305,7 +315,7 @@ def tab_tradeoff():
 \begin{table}[t] \small
 	\setlength{\tabcolsep}{4pt}
 	\begin{center}
-	\caption{IMS lead-time--vs--false-alarm trade-off (mean across runs) at three threshold percentiles: lead (Ld, h) and pre-onset FAR (\%%). $\dagger$: pre-onset FAR above the $\tau=10\%%$ budget, so the operating point is invalid under the gated metric. The three deep reconstruction models and the one-class SVM are listed so the ``no valid operating point'' claim can be checked per threshold: all twelve of their entries are daggered.}
+	\caption{IMS lead-time--vs--false-alarm trade-off (mean across runs) at three threshold percentiles: lead (Ld, h) and pre-onset FAR (\%%). $\dagger$: mean pre-onset FAR above the $\tau=10\%%$ budget, so the operating point fails the across-run reading of the gate (Section~\ref{sec:metric}; per-run counts in Table~\ref{tab:imsdet}). The three deep reconstruction models and the one-class SVM are listed so the across-run ``no valid operating point'' claim can be checked per threshold: all twelve of their entries are daggered.}
 	\label{tab:tradeoff}
 	\begin{tabular}{l r r r r r r}
 		\hline \hline

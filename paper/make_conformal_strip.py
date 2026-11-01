@@ -49,7 +49,7 @@ def main():
         ax.grid(True, alpha=0.3, lw=0.4)
         ax.tick_params(length=2, pad=1.5)
     axes[0].set_ylabel("Empirical pre-onset FAR")
-    axes[3].legend(fontsize=6, loc="lower right", framealpha=0.95, handlelength=1.6)
+    axes[3].legend(fontsize=7.5, loc="lower right", framealpha=0.95, handlelength=1.6)
     fig.tight_layout(pad=0.3, w_pad=0.6)
     fig.savefig(OUT)
     print("wrote", OUT)
